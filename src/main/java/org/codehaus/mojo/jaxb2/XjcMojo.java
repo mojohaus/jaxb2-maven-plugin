@@ -317,7 +317,16 @@ public class XjcMojo extends AbstractMojo {
             args.add("-b");
             args.add(bindings[i].getAbsolutePath());
         }
-        args.add(schemaDirectory);
+
+        //XSDs
+        if (schemaFiles != null){
+            File xsds[] = getXSDFiles();
+            for (int i = 0; i < xsds.length; i++) {
+                args.add(xsds[i].getAbsolutePath());
+            }
+        } else {
+            args.add(schemaDirectory);
+        }
 
         getLog().debug("JAXB 2.0 args: " + args);
 
@@ -353,7 +362,7 @@ public class XjcMojo extends AbstractMojo {
     }
 
     /**
-     * Returns a file array of xjb files to translate to object models.
+     * Returns a file array of xsd files to translate to object models.
      * 
      * @return An array of schema files to be parsed by the schema compiler.
      */
