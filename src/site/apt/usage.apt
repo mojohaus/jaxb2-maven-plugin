@@ -1,0 +1,49 @@
+Usage
+
+  This plugin implements and runs the Xjc compiler driver natively, and integrates Xjc into
+  Maven2. Please be aware this plugin requires a Java 5.0 compiler.
+  
++------------------------------------------+
+<project>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>openejb</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.0EA3</version>
+        </dependency>
+        ...
+    </dependencies>
+    ...
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+               </executions>
+               <configuration>
+                    <packageName>com.example.myschema</packageName> <!-- The name of your generated source package -->
+               </configuration>
+           </plugin>
+           <!-- Don't forget Java 5!! -->
+           <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <configuration>
+                   <source>1.5</source>
+                   <target>1.5</target>
+               </configuration>
+           </plugin>
+           ...
+       </plugins>
+   <build>
+...
+</project>
++------------------------------------------+
