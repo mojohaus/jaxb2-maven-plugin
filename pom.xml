@@ -80,6 +80,7 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
+    <!--
     <repositories>
         <repository>
             <id>codehaus</id>
@@ -88,6 +89,7 @@
             <layout>legacy</layout>
         </repository> 
     </repositories>
+    -->
     <build>
         <plugins>
             <plugin>
