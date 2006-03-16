@@ -488,20 +488,24 @@ public class XjcMojo extends AbstractMojo {
     //Class to tap into Maven's logging facility
     class MojoXjcListener extends XJCListener {
 
+        private String location(SAXParseException e) {
+            return e.getPublicId() + "["+e.getLineNumber() + "," + e.getColumnNumber() + "]";
+        }
+
         public void error(SAXParseException arg0) {
-            getLog().error(arg0);
+            getLog().error(location(arg0), arg0);
         }
 
         public void fatalError(SAXParseException arg0) {
-            getLog().error(arg0);
+            getLog().error(location(arg0), arg0);
         }
 
         public void warning(SAXParseException arg0) {
-            getLog().warn(arg0);
+            getLog().warn(location(arg0), arg0);
         }
 
         public void info(SAXParseException arg0) {
-            getLog().warn(arg0);
+            getLog().warn(location(arg0), arg0);
         }
 
         public void message(String arg0) {
