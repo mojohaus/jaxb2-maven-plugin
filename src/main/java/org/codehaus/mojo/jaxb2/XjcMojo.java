@@ -238,8 +238,22 @@ public class XjcMojo extends AbstractMojo {
                 ArrayList<String> args = getXJCArgs(classPath.toString());
 
                 // Run XJC
-                Driver.run((String[]) args.toArray(new String[args.size()]),
-                        new MojoXjcListener());
+                if (0 != Driver.run((String[]) args.toArray(new String[args
+						.size()]), new MojoXjcListener())) {
+					String msg = "Could not process schema(s) ";
+					if (null != schemaFiles) {
+						File xsds[] = getXSDFiles();
+						for (int i = 0; i < xsds.length; i++) {
+							msg += xsds[i].getName();
+							if (i + 1 < xsds.length) {
+								msg += ", ";
+							}
+						}
+					} else {
+						msg += ("in directory " + schemaDirectory);
+					}
+					throw new MojoExecutionException(msg);
+				}
 
                 // Set back the old classloader
                 Thread.currentThread().setContextClassLoader(parent);
@@ -306,6 +320,11 @@ public class XjcMojo extends AbstractMojo {
             args.add("-catalog");
             args.add(catalog);
         }
+
+        if (extension) {
+            args.add("-extension");
+        }
+                 
         args.add("-d");
         args.add(outputDirectory);
         args.add("-classpath");
