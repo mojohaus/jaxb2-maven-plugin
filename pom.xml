@@ -3,7 +3,7 @@
     <parent>
         <artifactId>mojo</artifactId>
         <groupId>org.codehaus.mojo</groupId>
-        <version>6</version>
+        <version>7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.mojo</groupId>
@@ -60,17 +60,17 @@
             <version>1.0.2-rc4</version>
         </dependency>
         <dependency>
-            <groupId>openejb</groupId>
+            <groupId>javax.xml</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.0EA3</version>
         </dependency>
         <dependency>
-            <groupId>openejb</groupId>
+            <groupId>javax.xml</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.0EA3</version>
         </dependency>
         <dependency>
-            <groupId>openejb</groupId>
+            <groupId>javax.xml</groupId>
             <artifactId>jaxb-xjc</artifactId>
             <version>2.0EA3</version>
         </dependency>
