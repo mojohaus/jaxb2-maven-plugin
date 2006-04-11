@@ -59,7 +59,7 @@ public class XjcMojo extends AbstractMojo {
      * @parameter expression="${basedir}/target/jaxb-source"
      * @required
      */
-    protected String outputDirectory;
+    protected File outputDirectory;
 
     /**
      * The package in which the source files will be generated.
@@ -74,7 +74,7 @@ public class XjcMojo extends AbstractMojo {
      * 
      * @parameter
      */
-    protected String catalog;
+    protected File catalog;
 
     /**
      * Set HTTP/HTTPS proxy. Format is [user[:password]@]proxyHost[:proxyPort]
@@ -89,14 +89,14 @@ public class XjcMojo extends AbstractMojo {
      * @parameter expression="${basedir}/src/main/xsd"
      * @required
      */
-    protected String schemaDirectory;
+    protected File schemaDirectory;
 
     /**
      * The binding directory for xjb files
      * 
      * @parameter expression="${basedir}/src/main/xjb"
      */
-    protected String bindingDirectory;
+    protected File bindingDirectory;
 
     /**
      * List of files to use for bindings, comma delimited. If none, then all xjb 
@@ -204,15 +204,14 @@ public class XjcMojo extends AbstractMojo {
         try {
             if (isOutputStale()) {
                 getLog().info("Generating source...");
-                File outDir = new File(outputDirectory);
                 
                 //If the directory exists, whack it to start fresh
-                if (outDir.exists())
-                    deleteDir(outDir);
-                boolean success = outDir.mkdirs();
+                if (outputDirectory.exists())
+                    deleteDir(outputDirectory);
+                boolean success = outputDirectory.mkdirs();
                 if (!success) {
                     throw new MojoExecutionException(
-                            "Could not create directory " + outputDirectory);
+                            "Could not create directory " + outputDirectory.getAbsolutePath());
                 }
 
                 // Need to build a URLClassloader since Maven removed it form
@@ -262,7 +261,7 @@ public class XjcMojo extends AbstractMojo {
                 getLog().info("No changes detected in schema or binding files, skipping source generation.");
             }
 
-            project.addCompileSourceRoot(outputDirectory);
+            project.addCompileSourceRoot(outputDirectory.getAbsolutePath());
 
         } catch (MojoExecutionException e) {
             throw e;
@@ -318,7 +317,7 @@ public class XjcMojo extends AbstractMojo {
 
         if (catalog != null) {
             args.add("-catalog");
-            args.add(catalog);
+            args.add(catalog.getAbsolutePath());
         }
 
         if (extension) {
@@ -326,7 +325,7 @@ public class XjcMojo extends AbstractMojo {
         }
                  
         args.add("-d");
-        args.add(outputDirectory);
+        args.add(outputDirectory.getAbsolutePath());
         args.add("-classpath");
         args.add(classPath);
 
@@ -344,7 +343,7 @@ public class XjcMojo extends AbstractMojo {
                 args.add(xsds[i].getAbsolutePath());
             }
         } else {
-            args.add(schemaDirectory);
+            args.add(schemaDirectory.getAbsolutePath());
         }
 
         getLog().debug("JAXB 2.0 args: " + args);
@@ -368,8 +367,7 @@ public class XjcMojo extends AbstractMojo {
             }
         } else {
             getLog().debug("The binding Directory is " + bindingDirectory);
-            File bindingDir = new File(bindingDirectory);
-            File[] files = bindingDir.listFiles(new XJBFile());
+            File[] files = bindingDirectory.listFiles(new XJBFile());
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
                     bindings.add(files[i]);
@@ -396,8 +394,7 @@ public class XjcMojo extends AbstractMojo {
             }
         } else {
             getLog().debug("The schema Directory is " + schemaDirectory);
-            File schemaDir = new File(schemaDirectory);
-            File[] files = schemaDir.listFiles(new XSDFile());
+            File[] files = schemaDirectory.listFiles(new XSDFile());
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
                     xsdFiles.add(files[i]);
