@@ -192,6 +192,13 @@ public class XjcMojo extends AbstractMojo {
     protected boolean extension;
 
     /**
+     * Allow generation of explicit annotations that are needed for JAXB2 to work on RetroTranslator.
+     * 
+     * @parameter default-value="false"
+     */
+    protected boolean explicitAnnotation;
+
+    /**
      * The location of the flag file used to determine if the output is stale.
      * 
      * @parameter expression="${project.build.directory}/jaxb-source/.staleFlag"
@@ -303,6 +310,9 @@ public class XjcMojo extends AbstractMojo {
         }
         if (xmlschema) {
             args.add("-xmlschema");
+        }
+        if (explicitAnnotation) {
+            args.add("-XexplicitAnnotation");
         }
 
         if (httpproxy != null) {
