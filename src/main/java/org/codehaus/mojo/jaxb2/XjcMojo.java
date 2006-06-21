@@ -56,7 +56,7 @@ public class XjcMojo extends AbstractMojo {
     /**
      * The working directory to create the generated java source files.
      * 
-     * @parameter expression="${basedir}/target/jaxb-source"
+     * @parameter expression="${project.build.directory}/jaxb-source"
      * @required
      */
     protected File outputDirectory;
