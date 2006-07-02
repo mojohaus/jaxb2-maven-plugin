@@ -201,7 +201,7 @@ public class XjcMojo extends AbstractMojo {
     /**
      * The location of the flag file used to determine if the output is stale.
      * 
-     * @parameter expression="${project.build.directory}/jaxb-source/.staleFlag"
+     * @parameter default-value="${project.build.directory}/jaxb-source/.staleFlag"
      * @required
      */
     protected File staleFile;
