@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <project>
     <parent>
-        <artifactId>mojo</artifactId>
         <groupId>org.codehaus.mojo</groupId>
-        <version>7</version>
+        <artifactId>mojo</artifactId>
+        <version>9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.mojo</groupId>
@@ -71,23 +71,6 @@
             <version>1.0.1</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>mojo</id>
-            <name>Mojo Central Repository</name>
-            <url>dav:https://dav.codehaus.org/repository/mojo/</url>
-        </repository>
-        <snapshotRepository>
-            <id>mojo-snapshots</id>
-            <name>Mojo Central Development Repository</name>
-            <url>dav:https://dav.codehaus.org/dist/mojo/m2-snapshots</url>
-        </snapshotRepository>
-        <site>
-            <id>mojo-site</id>
-            <url>dav:https://dav.codehaus.org/mojo</url>
-        </site>
-    </distributionManagement>
 
     <repositories>
         <repository>
