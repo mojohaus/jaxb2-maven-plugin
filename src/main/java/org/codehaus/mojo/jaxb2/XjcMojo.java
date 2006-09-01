@@ -209,6 +209,7 @@ public class XjcMojo extends AbstractMojo {
     protected File staleFile;
 
     /**
+     * Clears the output directory on each run.  Defaults to 'true' but if false, will not clear the directory.
      *
      * @parameter default-value="true"
      */
