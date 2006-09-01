@@ -53,6 +53,8 @@ public class XjcMojo extends AbstractMojo {
      */
     private MavenProject project;
 
+
+
     /**
      * The working directory to create the generated java source files.
      * 
@@ -206,6 +208,12 @@ public class XjcMojo extends AbstractMojo {
      */
     protected File staleFile;
 
+    /**
+     *
+     * @parameter default-value="true"
+     */
+    protected boolean clearOutputDir;
+
     public void execute() throws MojoExecutionException {
 
         try {
@@ -213,12 +221,16 @@ public class XjcMojo extends AbstractMojo {
                 getLog().info("Generating source...");
                 
                 //If the directory exists, whack it to start fresh
-                if (outputDirectory.exists())
-                    deleteDir(outputDirectory);
-                boolean success = outputDirectory.mkdirs();
-                if (!success) {
-                    throw new MojoExecutionException(
-                            "Could not create directory " + outputDirectory.getAbsolutePath());
+                if (outputDirectory.exists()){
+                    if (clearOutputDir){
+                        deleteDir(outputDirectory);
+                    }
+                } else {
+                    boolean success = outputDirectory.mkdirs();
+                    if (!success) {
+                        throw new MojoExecutionException(
+                                "Could not create directory " + outputDirectory.getAbsolutePath());
+                    }
                 }
 
                 // Need to build a URLClassloader since Maven removed it form
