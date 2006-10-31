@@ -12,7 +12,11 @@
     <packaging>maven-plugin</packaging>
     <name>Maven JAXB 2.0 Plugin</name>
     <version>1.1-SNAPSHOT</version>
+    <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.0 implementation.</description>
     <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
+    <prerequisites>
+        <maven>2.0.4</maven>
+    </prerequisites>
     <ciManagement>
         <system>continuum</system>
         <notifiers>
@@ -23,6 +27,7 @@
             </notifier>
         </notifiers>
     </ciManagement>
+    <inceptionYear>2005</inceptionYear>
     <developers>
         <developer>
             <id>jgenender</id>
@@ -71,6 +76,11 @@
             <version>1.0.1</version>
         </dependency-->
     </dependencies>
+
+    <organization>
+        <name>Savoir Technologies, Inc</name>
+        <url>http://www.savoirtech.com</url>
+    </organization>
 
     <build>
         <plugins>

@@ -48,6 +48,8 @@ import com.sun.tools.xjc.XJCListener;
 public class XjcMojo extends AbstractMojo {
 
     /**
+     * The default maven project object 
+     *
      * @parameter expression="${project}"
      * @required
      */

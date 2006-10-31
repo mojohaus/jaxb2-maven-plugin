@@ -14,7 +14,10 @@
          <item name="mojo" href="http://mojo.codehaus.org"/>
       </menu>
       <menu name="JAXB2.0 plugin Quickstart">
-         <item name="Standard usage" href="./usage.html"/>
+         <item name="Introduction" href="index.html"/>
+         <item name="Goals" href="plugin-info.html"/>
+         <item name="Usage" href="usage.html"/>
+         <item name="FAQ" href="faq.html"/>
       </menu>
       ${reports}
    </body>

@@ -1,0 +1,11 @@
+<faqs id="FAQ" title="Frequently Asked Questions">
+    <part id="General">
+        <faq id="Multiple">
+            <question>I have different schemas and want different packages for those schemas, how do I do this?</question>
+            <answer>
+<p>You want to create multiple executions in your plugin declaration.  This will allow you to have multiple configuration declarations and you can specify the schema and package to be run for that execution.  In your configuation, you will need to have a different staleFile for each execution, so it will be able to determine if the xjc needs to be executed.
+</p>
+            </answer>
+        </faq>
+    </part>
+</faqs>
