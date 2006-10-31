@@ -57,20 +57,19 @@
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-xjc</artifactId>
-            <version>2.0.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml</groupId>
-                    <artifactId>jsr173</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-xjc</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <!--dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0.1</version>
-        </dependency>
+        </dependency-->
     </dependencies>
 
     <build>
