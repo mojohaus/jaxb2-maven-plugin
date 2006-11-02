@@ -8,90 +8,85 @@
     <version>11</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-    <artifactId>jaxb2-maven-plugin</artifactId>
-    <packaging>maven-plugin</packaging>
-    <name>Maven JAXB 2.0 Plugin</name>
-    <version>1.1-SNAPSHOT</version>
-    <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.0 implementation.</description>
-    <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
-    <prerequisites>
-        <maven>2.0.4</maven>
-    </prerequisites>
-    <ciManagement>
-        <system>continuum</system>
-        <notifiers>
-            <notifier>
-                <configuration>
-                    <address>dev@mojo.codehaus.org</address>
-                </configuration>
-            </notifier>
-        </notifiers>
-    </ciManagement>
-    <inceptionYear>2005</inceptionYear>
-    <developers>
-        <developer>
-            <id>jgenender</id>
-            <name>Jeff Genender</name>
-            <email>jgenender@codehaus.org</email>
-            <organization>Savoir Technologies, Inc</organization>
-            <organizationUrl>http://www.savoirtech.com</organizationUrl>
-            <roles>
-                <role>Maintainer</role>
-            </roles>
-            <timezone>MST</timezone>
-        </developer>
-    </developers>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-project</artifactId>
-            <version>2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-xjc</artifactId>
-            <version>2.0.3</version>
-        </dependency>
-        <!--dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <version>1.0.1</version>
-        </dependency-->
-    </dependencies>
+  <artifactId>jaxb2-maven-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+  <name>Maven JAXB 2.0 Plugin</name>
+  <version>1.1-SNAPSHOT</version>
+  <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.0 implementation.</description>
+  <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
+  <prerequisites>
+    <maven>2.0.4</maven>
+  </prerequisites>
+  <ciManagement>
+    <system>continuum</system>
+    <notifiers>
+      <notifier>
+        <configuration>
+          <address>dev@mojo.codehaus.org</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  <inceptionYear>2005</inceptionYear>
+  <developers>
+    <developer>
+      <id>jgenender</id>
+      <name>Jeff Genender</name>
+      <email>jgenender@codehaus.org</email>
+      <organization>Savoir Technologies, Inc</organization>
+      <organizationUrl>http://www.savoirtech.com</organizationUrl>
+      <roles>
+        <role>Maintainer</role>
+      </roles>
+      <timezone>MST</timezone>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>2.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-xjc</artifactId>
+      <version>2.0.3</version>
+    </dependency>
+  </dependencies>
 
-    <organization>
-        <name>Savoir Technologies, Inc</name>
-        <url>http://www.savoirtech.com</url>
-    </organization>
+  <organization>
+    <name>Savoir Technologies, Inc</name>
+    <url>http://www.savoirtech.com</url>
+  </organization>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
