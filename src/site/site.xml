@@ -10,10 +10,11 @@
       <href>http://www.codehaus.org</href>
    </bannerRight>
    <body>
-      <menu name="Mojo">
-         <item name="mojo" href="http://mojo.codehaus.org"/>
-      </menu>
-      <menu name="JAXB2.0 plugin Quickstart">
+      <links>
+         <item name="Mojo" href="http://mojo.codehaus.org"/>
+         <item name="Maven" href="http://maven.apache.org/"/>
+      </links>
+      <menu name="Overview">
          <item name="Introduction" href="index.html"/>
          <item name="Goals" href="plugin-info.html"/>
          <item name="Usage" href="usage.html"/>
