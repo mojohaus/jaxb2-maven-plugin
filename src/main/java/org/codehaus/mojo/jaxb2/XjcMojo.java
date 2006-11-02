@@ -60,7 +60,7 @@ public class XjcMojo extends AbstractMojo {
     /**
      * The working directory to create the generated java source files.
      * 
-     * @parameter expression="${project.build.directory}/jaxb-source"
+     * @parameter expression="${project.build.directory}/generated-sources/jaxb"
      * @required
      */
     protected File outputDirectory;
@@ -203,9 +203,17 @@ public class XjcMojo extends AbstractMojo {
     protected boolean explicitAnnotation;
 
     /**
+     * Space separated string of plugin names, for instance <code>fluent-api somethingelse</code>; These
+     * will be passed on to XJC as <code>"-Xfluent-api" "-Xsomethingelse"</code> options.
+     * 
+     * @parameter expression="${xjcPlugins}"
+     */
+    protected String xjcPlugins;
+
+    /**
      * The location of the flag file used to determine if the output is stale.
      * 
-     * @parameter default-value="${project.build.directory}/jaxb-source/.staleFlag"
+     * @parameter default-value="${project.build.directory}/generated-sources/jaxb/.staleFlag"
      * @required
      */
     protected File staleFile;
@@ -348,7 +356,15 @@ public class XjcMojo extends AbstractMojo {
         if (extension) {
             args.add("-extension");
         }
-                 
+ 
+        if ( xjcPlugins != null && xjcPlugins.trim().length() > 0 )
+        {
+            for ( String arg : xjcPlugins.trim().split( " " ) )
+            {
+                args.add( "-X" + arg );
+            }
+        }
+
         args.add("-d");
         args.add(outputDirectory.getAbsolutePath());
         args.add("-classpath");
