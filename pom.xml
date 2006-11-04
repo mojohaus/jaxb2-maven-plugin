@@ -8,7 +8,7 @@
   <artifactId>jaxb2-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <name>Maven JAXB 2.0 Plugin</name>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.0 implementation.</description>
   <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
   <prerequisites>
@@ -86,10 +86,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <connection>scm:svn:https://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.1</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.1</developerConnection>
-    <url>https://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.1</url>
-  </scm>
 </project>
