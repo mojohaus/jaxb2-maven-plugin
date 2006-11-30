@@ -18,9 +18,12 @@ package org.codehaus.mojo.jaxb2;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -29,6 +32,7 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.xml.sax.SAXParseException;
 
@@ -224,6 +228,13 @@ public class XjcMojo extends AbstractMojo {
      * @required
      */
     protected File staleFile;
+    
+    /**
+     * The output path to include in your jar/war/etc if you wish to include your schemas in your artifact.
+     * 
+     * @parameter
+     */
+    protected String includeSchemasOutputPath;
 
     /**
      * Clears the output directory on each run.  Defaults to 'true' but if false, will not clear the directory.
@@ -306,6 +317,18 @@ public class XjcMojo extends AbstractMojo {
                 resource.setDirectory( generatedResourcesDirectory.getAbsolutePath() );
                 project.addResource( resource );
             }
+            
+            if (includeSchemasOutputPath != null){
+                
+                FileUtils.forceMkdir( new File(project.getBuild().getOutputDirectory(), includeSchemasOutputPath));
+                
+                /**
+                Resource resource = new Resource();
+                resource.setDirectory( outputDirectory.getAbsolutePath() );
+                project.getResources().add( resource );
+                **/
+                copyXSDs();
+            }
 
         } catch (MojoExecutionException e) {
             throw e;
@@ -314,7 +337,34 @@ public class XjcMojo extends AbstractMojo {
         }
 
     }
-
+    
+    protected void copyXSDs() {
+        File srcFiles[] = getXSDFiles();
+        
+        File baseDir = new File(project.getBuild().getOutputDirectory(), includeSchemasOutputPath);
+        for (int j = 0; j < srcFiles.length; j++) {
+            File from = srcFiles[j]; 
+            File to = new File(baseDir, from.getName());
+            File parent = to.getParentFile();
+            if (!parent.exists())
+                parent.mkdirs();
+            copyFile(from, to);
+        }
+    }
+    
+    private void copyFile(File from, File to){
+        try {
+            FileChannel srcChannel = new FileInputStream(from).getChannel();
+            FileChannel dstChannel = new FileOutputStream(to).getChannel();
+        
+            dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+        
+            srcChannel.close();
+            dstChannel.close();
+        } catch (IOException e) {
+        }
+    }
+    
     private void prepareDirectory( File dir )
         throws MojoExecutionException
     {
@@ -426,7 +476,7 @@ public class XjcMojo extends AbstractMojo {
         } else {
             args.add(schemaDirectory.getAbsolutePath());
         }
-
+        
         getLog().debug("JAXB 2.0 args: " + args);
 
         return args;
