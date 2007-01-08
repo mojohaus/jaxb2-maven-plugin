@@ -19,6 +19,7 @@ package org.codehaus.mojo.jaxb2;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -26,6 +27,7 @@ import java.net.URLClassLoader;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import org.apache.maven.model.Resource;
@@ -122,12 +124,26 @@ public class XjcMojo extends AbstractMojo {
     protected String bindingFiles;
 
     /**
-     * List of files to use for bindings, comma delimited. If none, then all xsd
+     * List of files to use for schemas, comma delimited. If none, then all xsd
      * files are used in the schemaDirectory
+     *
+     * Note: you may use either the 'schemaFiles' or 'schemaListFileName' 
+     * option (you may use both at once)
      *
      * @parameter
      */
     protected String schemaFiles;
+
+    /**
+     * A filename containing the list of files to use for schemas, comma delimited.
+     * If none, then all xsd files are used in the schemaDirectory.  
+     *
+     * Note: you may use either the 'schemaFiles' or 'schemaListFileName' 
+     * option (you may use both at once)
+     *
+     * @parameter
+     */
+    protected String schemaListFileName;
 
     /**
      * Treat input schemas as XML DTD (experimental, unsupported).
@@ -338,7 +354,7 @@ public class XjcMojo extends AbstractMojo {
 
     }
     
-    protected void copyXSDs() {
+    protected void copyXSDs() throws MojoExecutionException {
         File srcFiles[] = getXSDFiles();
         
         File baseDir = new File(project.getBuild().getOutputDirectory(), includeSchemasOutputPath);
@@ -391,7 +407,7 @@ public class XjcMojo extends AbstractMojo {
         }
     }
 
-    private ArrayList<String> getXJCArgs(String classPath)
+    private ArrayList<String> getXJCArgs(String classPath) throws MojoExecutionException
     {
         ArrayList<String> args = new ArrayList<String>();
         if (npa) {
@@ -468,7 +484,7 @@ public class XjcMojo extends AbstractMojo {
         }
 
         //XSDs
-        if (schemaFiles != null){
+        if (schemaFiles != null || schemaListFileName != null) {
             File xsds[] = getXSDFiles();
             for (int i = 0; i < xsds.length; i++) {
                 args.add(xsds[i].getAbsolutePath());
@@ -480,6 +496,38 @@ public class XjcMojo extends AbstractMojo {
         getLog().debug("JAXB 2.0 args: " + args);
 
         return args;
+    }
+
+    
+    /**
+     * <code>getSchemasFromFileListing</code> gets all the entries
+     * in the given schemaListFileName and adds them to the list
+     * of files to send to xjc 
+     *
+     * @exception MojoExecutionException if an error occurs
+     */
+    protected void getSchemasFromFileListing(List<File> files) throws MojoExecutionException {
+
+        //check that the given file exists
+        File schemaListFile = new File( schemaListFileName );
+
+
+        //create a scanner over the input file
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner( schemaListFile ).useDelimiter( "," );
+        } catch (FileNotFoundException e ) {
+            throw new MojoExecutionException( "schemaListFileName: "+schemaListFileName+" could not be found - error:"+e.getMessage(), e );
+        }
+
+        //scan the file and add to the list for processing
+        String nextToken = null;
+        File nextFile = null;
+        while (scanner.hasNext()) {
+            nextToken = scanner.next();
+            nextFile = new File( schemaDirectory, nextToken.trim() );
+            files.add( nextFile );
+        }
     }
 
     /**
@@ -514,7 +562,15 @@ public class XjcMojo extends AbstractMojo {
      *
      * @return An array of schema files to be parsed by the schema compiler.
      */
-    public final File[] getXSDFiles() {
+    public final File[] getXSDFiles() throws MojoExecutionException {
+
+        //illegal option check
+        if (schemaFiles != null && schemaListFileName != null) {
+
+            //make sure user didn't specify both schema input options
+            throw new MojoExecutionException( "schemaFiles and schemaListFileName options were provided, these options may not be used together - schemaFiles: "+schemaFiles+" schemaListFileName: "+schemaListFileName );
+
+        } 
 
         List<File> xsdFiles = new ArrayList<File>();
         if (schemaFiles != null) {
@@ -523,6 +579,11 @@ public class XjcMojo extends AbstractMojo {
                 String schemaName = st.nextToken();
                 xsdFiles.add(new File(schemaDirectory, schemaName));
             }
+        } else if (schemaListFileName != null ) {
+
+            //add all the contents from the schemaListFileName file on disk
+            getSchemasFromFileListing( xsdFiles );
+
         } else {
             getLog().debug("The schema Directory is " + schemaDirectory);
             File[] files = schemaDirectory.listFiles(new XSDFile());
@@ -578,7 +639,7 @@ public class XjcMojo extends AbstractMojo {
      *
      * @return True if xsd files have been modified since the last build.
      */
-    private boolean isOutputStale() {
+    private boolean isOutputStale() throws MojoExecutionException {
         File[] sourceXsds = getXSDFiles();
         File[] sourceXjbs = getBindingFiles();
         boolean stale = !staleFile.exists();
