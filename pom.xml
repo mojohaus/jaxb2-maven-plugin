@@ -70,24 +70,10 @@
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-plugin-testing-harness</artifactId>
-            <version>1.0-beta-2-SNAPSHOT</version>
+            <version>1.0-beta-1</version>
             <scope>test</scope>
         </dependency>    
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>apache.org</id>
-            <name>Maven Snapshots</name>
-            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <organization>
         <name>Savoir Technologies, Inc</name>
