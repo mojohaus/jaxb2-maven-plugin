@@ -14,6 +14,10 @@
     <prerequisites>
         <maven>2.0.4</maven>
     </prerequisites>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://jira.codehaus.org/browse/MJAXB</url>
+    </issueManagement>
     <ciManagement>
         <system>continuum</system>
         <notifiers>
