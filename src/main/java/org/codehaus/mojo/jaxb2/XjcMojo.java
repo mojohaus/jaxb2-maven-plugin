@@ -16,14 +16,8 @@
 
 package org.codehaus.mojo.jaxb2;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.*;
+import java.net.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -302,10 +296,10 @@ public class XjcMojo extends AbstractMojo {
                     {
                         String msg = "Could not process schema";
                         if (null != schemaFiles) {
-                            File xsds[] = getXSDFiles();
+                            URL xsds[] = getXSDFiles();
                             msg += xsds.length > 1 ? "s:" : ":";
                             for (int i = 0; i < xsds.length; i++) {
-                                msg += "\n  " + xsds[i].getName();
+                                msg += "\n  " + xsds[i].getFile();
                             }
                         } else {
                             msg += " files in directory " + schemaDirectory;
@@ -355,12 +349,12 @@ public class XjcMojo extends AbstractMojo {
     }
     
     protected void copyXSDs() throws MojoExecutionException {
-        File srcFiles[] = getXSDFiles();
+        URL srcFiles[] = getXSDFiles();
         
         File baseDir = new File(project.getBuild().getOutputDirectory(), includeSchemasOutputPath);
         for (int j = 0; j < srcFiles.length; j++) {
-            File from = srcFiles[j]; 
-            File to = new File(baseDir, from.getName());
+            URL from = srcFiles[j];
+            File to = new File(baseDir, from.getFile());
             File parent = to.getParentFile();
             if (!parent.exists())
                 parent.mkdirs();
@@ -368,17 +362,20 @@ public class XjcMojo extends AbstractMojo {
         }
     }
     
-    private void copyFile(File from, File to){
-        try {
-            FileChannel srcChannel = new FileInputStream(from).getChannel();
-            FileChannel dstChannel = new FileOutputStream(to).getChannel();
-        
-            dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
-        
-            srcChannel.close();
-            dstChannel.close();
-        } catch (IOException e) {
+    private void copyFile(URL from, File to) throws MojoExecutionException {
+      try {
+        InputStream in = from.openStream();
+        OutputStream out = new FileOutputStream(to);
+        byte[] buffer = new byte[1024];
+        int len = in.read(buffer);
+        while (len >= 0) {
+          out.write(buffer, 0, len);
+          len = in.read(buffer);
         }
+      }
+      catch (IOException e) {
+        throw new MojoExecutionException("Error copying file", e);
+      }
     }
     
     private void prepareDirectory( File dir )
@@ -485,9 +482,9 @@ public class XjcMojo extends AbstractMojo {
 
         //XSDs
         if (schemaFiles != null || schemaListFileName != null) {
-            File xsds[] = getXSDFiles();
+            URL xsds[] = getXSDFiles();
             for (int i = 0; i < xsds.length; i++) {
-                args.add(xsds[i].getAbsolutePath());
+                args.add(xsds[i].toString());
             }
         } else {
             args.add(schemaDirectory.getAbsolutePath());
@@ -506,7 +503,7 @@ public class XjcMojo extends AbstractMojo {
      *
      * @exception MojoExecutionException if an error occurs
      */
-    protected void getSchemasFromFileListing(List<File> files) throws MojoExecutionException {
+    protected void getSchemasFromFileListing(List<URL> files) throws MojoExecutionException {
 
         //check that the given file exists
         File schemaListFile = new File( schemaListFileName );
@@ -524,9 +521,23 @@ public class XjcMojo extends AbstractMojo {
         String nextToken = null;
         File nextFile = null;
         while (scanner.hasNext()) {
-            nextToken = scanner.next();
+          nextToken = scanner.next();
+          URL url;
+          try {
+            url = new URL(nextToken);
+          }
+          catch (MalformedURLException e) {
+            getLog().debug(nextToken + " doesn't look like a URL...");
             nextFile = new File( schemaDirectory, nextToken.trim() );
-            files.add( nextFile );
+            try {
+              url = nextFile.toURI().toURL();
+            }
+            catch (MalformedURLException e2) {
+              throw new MojoExecutionException("Unable to convert file to a URL.", e2);
+            }
+          }
+          files.add(url);
+
         }
     }
 
@@ -562,7 +573,7 @@ public class XjcMojo extends AbstractMojo {
      *
      * @return An array of schema files to be parsed by the schema compiler.
      */
-    public final File[] getXSDFiles() throws MojoExecutionException {
+    public final URL[] getXSDFiles() throws MojoExecutionException {
 
         //illegal option check
         if (schemaFiles != null && schemaListFileName != null) {
@@ -572,12 +583,24 @@ public class XjcMojo extends AbstractMojo {
 
         } 
 
-        List<File> xsdFiles = new ArrayList<File>();
+        List<URL> xsdFiles = new ArrayList<URL>();
         if (schemaFiles != null) {
             for (StringTokenizer st = new StringTokenizer(schemaFiles, ","); st
                     .hasMoreTokens();) {
                 String schemaName = st.nextToken();
-                xsdFiles.add(new File(schemaDirectory, schemaName));
+              URL url = null;
+              try {
+                url = new URL(schemaName);
+              }
+              catch (MalformedURLException e) {
+                try {
+                  url = new File(schemaDirectory, schemaName).toURI().toURL();
+                }
+                catch (MalformedURLException e2) {
+                  throw new MojoExecutionException("Unable to convert file to a URL.", e2);
+                }
+              }
+              xsdFiles.add(url);
             }
         } else if (schemaListFileName != null ) {
 
@@ -589,12 +612,17 @@ public class XjcMojo extends AbstractMojo {
             File[] files = schemaDirectory.listFiles(new XSDFile());
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
-                    xsdFiles.add(files[i]);
+                  try {
+                    xsdFiles.add(files[i].toURI().toURL());
+                  }
+                  catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Unable to convert file to a URL.", e);
+                  }
                 }
             }
         }
 
-        return xsdFiles.toArray(new File[] {});
+        return xsdFiles.toArray(new URL[xsdFiles.size()]);
     }
 
     /**
@@ -640,7 +668,7 @@ public class XjcMojo extends AbstractMojo {
      * @return True if xsd files have been modified since the last build.
      */
     private boolean isOutputStale() throws MojoExecutionException {
-        File[] sourceXsds = getXSDFiles();
+        URL[] sourceXsds = getXSDFiles();
         File[] sourceXjbs = getBindingFiles();
         boolean stale = !staleFile.exists();
         if (!stale) {
@@ -648,12 +676,30 @@ public class XjcMojo extends AbstractMojo {
             long staleMod = staleFile.lastModified();
 
             for (int i = 0; i < sourceXsds.length; i++) {
-                if (sourceXsds[i].lastModified() > staleMod) {
-                    getLog().debug(
-                            sourceXsds[i].getName()
-                                    + " is newer than the stale flag file.");
-                    stale = true;
+              URLConnection connection;
+              try {
+                connection = sourceXsds[i].openConnection();
+                connection.connect();
+              }
+              catch (IOException e) {
+                stale = true;
+                break;
+              }
+
+              try {
+                if (connection.getLastModified() > staleMod) {
+                      getLog().debug(
+                              sourceXsds[i].toString()
+                                      + " is newer than the stale flag file.");
+                      stale = true;
+                      break;
+                  }
+              }
+              finally {
+                if (connection instanceof HttpURLConnection) {
+                  ((HttpURLConnection)connection).disconnect();
                 }
+              }
             }
 
             for (int i = 0; i < sourceXjbs.length; i++) {
@@ -662,6 +708,7 @@ public class XjcMojo extends AbstractMojo {
                             sourceXjbs[i].getName()
                                     + " is newer than the stale flag file.");
                     stale = true;
+                    break;
                 }
             }
         }
