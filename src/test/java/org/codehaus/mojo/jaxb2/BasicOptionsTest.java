@@ -41,11 +41,11 @@ public class BasicOptionsTest extends AbstractMojoTestCase { //extends TestCase 
      * @return a <code>XjcMojo</code> value
      * @exception Exception if an error occurs
      */
-    private XjcMojo configureMojo( String pomPath ) throws Exception {
+    private AbstractXjcMojo configureMojo( String pomPath ) throws Exception {
         //configure the mojo with our test pom
         File pom = new File( getBasedir(), pomPath );
-        XjcMojo xjcMojo = new XjcMojo();
-        xjcMojo = (XjcMojo) configureMojo( xjcMojo, "jaxb2-maven-plugin", pom );
+        AbstractXjcMojo xjcMojo = new XjcMojo();
+        xjcMojo = (AbstractXjcMojo) configureMojo( xjcMojo, "jaxb2-maven-plugin", pom );
         assertNotNull( xjcMojo );
 
         //return the configured mojo
@@ -111,7 +111,7 @@ public class BasicOptionsTest extends AbstractMojoTestCase { //extends TestCase 
     public void testSchemaListInputOption() throws Exception {
 
         //setup test #1
-        XjcMojo xjcMojo = configureMojo( "src/test/resources/test1-pom.xml" );
+        AbstractXjcMojo xjcMojo = configureMojo( "src/test/resources/test1-pom.xml" );
 
         //execute the project
         xjcMojo.execute();
@@ -132,7 +132,7 @@ public class BasicOptionsTest extends AbstractMojoTestCase { //extends TestCase 
     public void testSchemaListFileNameInputOption() throws Exception {
 
         //setup test #2
-        XjcMojo xjcMojo = configureMojo( "src/test/resources/test2-pom.xml" );
+        AbstractXjcMojo xjcMojo = configureMojo( "src/test/resources/test2-pom.xml" );
 
         //execute it
         xjcMojo.execute();
@@ -152,7 +152,7 @@ public class BasicOptionsTest extends AbstractMojoTestCase { //extends TestCase 
     public void testSchemaDirectoryOnlyInputOption() throws Exception {
 
         //setup test #2
-        XjcMojo xjcMojo = configureMojo( "src/test/resources/test3-pom.xml" );
+        AbstractXjcMojo xjcMojo = configureMojo( "src/test/resources/test3-pom.xml" );
 
         //execute it
         xjcMojo.execute();

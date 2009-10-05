@@ -1,51 +1,30 @@
-/*
- * Copyright 2005 Jeff Genender.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.codehaus.mojo.jaxb2;
 
-import java.io.*;
-import java.net.*;
-import java.nio.channels.FileChannel;
+import java.io.File;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.xml.sax.SAXParseException;
-
-import com.sun.tools.xjc.XJCListener;
 
 /**
  * <p>A Maven 2 plugin which parse xsd and binding files (xjb) and produces
  * a corresponding object model based on the JAXB Xjc parsing engine.</p>
  *
- * @goal xjc
- * @phase generate-sources
+ * @goal testXjc
+ * @phase generate-test-sources
  * @requiresDependencyResolution
  * @description JAXB 2.0 Plugin.
- * @author jgenender@apache.org
- * @author jgenender <jgenender@apache.org>
+ * @author rfscholte <rfscholte@codehaus.org>
  * @version $Id$
  */
-public class XjcMojo extends AbstractXjcMojo {
+public class TestXjcMojo
+    extends AbstractXjcMojo
+{
 
     /**
      * The working directory to create the generated java source files.
      *
-     * @parameter expression="${project.build.directory}/generated-sources/jaxb"
+     * @parameter expression="${project.build.directory}/generated-test-sources/jaxb"
      * @required
      */
     private File outputDirectory;
@@ -53,7 +32,7 @@ public class XjcMojo extends AbstractXjcMojo {
     /**
      * The location of the flag file used to determine if the output is stale.
      *
-     * @parameter default-value="${project.build.directory}/generated-sources/jaxb/.staleFlag"
+     * @parameter default-value="${project.build.directory}/generated-test-sources/jaxb/.staleFlag"
      * @required
      */
     private File staleFile;
@@ -61,7 +40,7 @@ public class XjcMojo extends AbstractXjcMojo {
 	/**
 	 * The schema directory or xsd files
 	 *
-	 * @parameter expression="${basedir}/src/main/xsd"
+	 * @parameter expression="${basedir}/src/test/xsd"
 	 * @required
 	 */
 	private File schemaDirectory;
@@ -69,7 +48,7 @@ public class XjcMojo extends AbstractXjcMojo {
 	/**
 	 * The binding directory for xjb files
 	 *
-	 * @parameter expression="${basedir}/src/main/xjb"
+	 * @parameter expression="${basedir}/src/test/xjb"
 	 */
 	private File bindingDirectory;
     
@@ -90,13 +69,13 @@ public class XjcMojo extends AbstractXjcMojo {
     @Override
     protected List getClasspathElements(MavenProject project) throws DependencyResolutionRequiredException
     {
-        return project.getCompileClasspathElements();
+        return project.getTestClasspathElements();
     }
 
-    @Override
+	@Override
     protected void addCompileSourceRoot(MavenProject project) 
     {
-      project.addCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
+      project.addTestCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
     }
 
 	@Override
@@ -108,5 +87,4 @@ public class XjcMojo extends AbstractXjcMojo {
 	protected File getBindingDirectory() {
 		return bindingDirectory;
 	}
-    
 }
