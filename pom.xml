@@ -41,6 +41,15 @@
             </roles>
             <timezone>-7</timezone>
         </developer>
+        <developer>
+          <id>rfscholte</id>
+          <name>Robert Scholte</name>
+          <email>rfscholte@codehaus.org</email>
+          <roles>
+            <role>Committer</role>
+          </roles>
+          <timezone>+1</timezone>
+        </developer>
     </developers>
     <licenses>
         <license>
