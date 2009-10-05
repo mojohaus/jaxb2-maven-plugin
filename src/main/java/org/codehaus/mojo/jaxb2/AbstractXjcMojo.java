@@ -278,7 +278,7 @@ public abstract class AbstractXjcMojo
             {
                 Resource resource = new Resource();
                 resource.setDirectory( generatedResourcesDirectory.getAbsolutePath() );
-                project.addResource( resource );
+                addResource( project, resource );
             }
             
             if (includeSchemasOutputPath != null){
@@ -301,7 +301,9 @@ public abstract class AbstractXjcMojo
     
     }
 
-	protected abstract void addCompileSourceRoot(MavenProject project);
+    protected abstract void addCompileSourceRoot(MavenProject project);
+
+    protected abstract void addResource(MavenProject project, Resource resource);
 
     protected void copyXSDs()
         throws MojoExecutionException

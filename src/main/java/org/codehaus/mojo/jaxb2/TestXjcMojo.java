@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -76,6 +77,12 @@ public class TestXjcMojo
     protected void addCompileSourceRoot(MavenProject project) 
     {
       project.addTestCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
+    }
+
+    @Override
+    protected void addResource(MavenProject project, Resource resource)
+    {
+        project.addTestResource( resource );
     }
 
 	@Override

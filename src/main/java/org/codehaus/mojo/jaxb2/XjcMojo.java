@@ -16,17 +16,13 @@
 
 package org.codehaus.mojo.jaxb2;
 
-import java.io.*;
-import java.net.*;
-import java.nio.channels.FileChannel;
+import java.io.File;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.xml.sax.SAXParseException;
 
-import com.sun.tools.xjc.XJCListener;
 
 /**
  * <p>A Maven 2 plugin which parse xsd and binding files (xjb) and produces
@@ -97,6 +93,12 @@ public class XjcMojo extends AbstractXjcMojo {
     protected void addCompileSourceRoot(MavenProject project) 
     {
       project.addCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
+    }
+
+    @Override
+    protected void addResource(MavenProject project, Resource resource)
+    {
+        project.addResource( resource );
     }
 
 	@Override
