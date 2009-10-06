@@ -346,31 +346,11 @@ public abstract class AbstractXjcMojo
         {
             URL from = srcFiles[j];
             File to = new File( baseDir, from.getFile() );
-            File parent = to.getParentFile();
-            if ( !parent.exists() )
-                parent.mkdirs();
-            copyFile( from, to );
-        }
-    }
-
-    private void copyFile( URL from, File to )
-        throws MojoExecutionException
-    {
-        try
-        {
-            InputStream in = from.openStream();
-            OutputStream out = new FileOutputStream( to );
-            byte[] buffer = new byte[1024];
-            int len = in.read( buffer );
-            while ( len >= 0 )
-            {
-                out.write( buffer, 0, len );
-                len = in.read( buffer );
+            try {
+                FileUtils.copyURLToFile(from, to);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Error copying file", e);
             }
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "Error copying file", e );
         }
     }
 
