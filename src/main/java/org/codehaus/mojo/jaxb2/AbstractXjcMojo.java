@@ -245,7 +245,7 @@ public abstract class AbstractXjcMojo
                 ClassLoader parent = this.getClass().getClassLoader();
                 List classpathFiles = getClasspathElements( project );
                 URL[] urls = new URL[classpathFiles.size() + 1];
-                StringBuffer classPath = new StringBuffer();
+                StringBuilder classPath = new StringBuilder();
                 for ( int i = 0; i < classpathFiles.size(); ++i )
                 {
                     getLog().debug( (String) classpathFiles.get( i ) );
