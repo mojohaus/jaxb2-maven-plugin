@@ -40,7 +40,7 @@ public class XjcMojo extends AbstractXjcMojo {
 
     /**
      * The working directory to create the generated java source files.
-     *
+     * 
      * @parameter expression="${project.build.directory}/generated-sources/jaxb"
      * @required
      */
@@ -48,28 +48,26 @@ public class XjcMojo extends AbstractXjcMojo {
 
     /**
      * The location of the flag file used to determine if the output is stale.
-     *
+     * 
      * @parameter default-value="${project.build.directory}/generated-sources/jaxb/.staleFlag"
      * @required
      */
     private File staleFile;
 
-	/**
-	 * The schema directory or xsd files
-	 *
-	 * @parameter expression="${basedir}/src/main/xsd"
-	 * @required
-	 */
-	private File schemaDirectory;
+    /**
+     * The schema directory or xsd files
+     * 
+     * @parameter expression="${basedir}/src/main/xsd"
+     * @required
+     */
+    private File schemaDirectory;
 
-	/**
-	 * The binding directory for xjb files
-	 *
-	 * @parameter expression="${basedir}/src/main/xjb"
-	 */
-	private File bindingDirectory;
-    
-    
+    /**
+     * The binding directory for xjb files
+     * 
+     * @parameter expression="${basedir}/src/main/xjb"
+     */
+    private File bindingDirectory;
 
     @Override
     protected File getOutputDirectory()
@@ -82,33 +80,36 @@ public class XjcMojo extends AbstractXjcMojo {
     {
         return staleFile;
     }
-    
+
     @Override
-    protected List getClasspathElements(MavenProject project) throws DependencyResolutionRequiredException
+    protected List getClasspathElements( MavenProject project )
+        throws DependencyResolutionRequiredException
     {
         return project.getCompileClasspathElements();
     }
 
     @Override
-    protected void addCompileSourceRoot(MavenProject project) 
+    protected void addCompileSourceRoot( MavenProject project )
     {
-      project.addCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
+        project.addCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
     }
 
     @Override
-    protected void addResource(MavenProject project, Resource resource)
+    protected void addResource( MavenProject project, Resource resource )
     {
         project.addResource( resource );
     }
 
-	@Override
-	protected File getSchemaDirectory() {
-		return schemaDirectory;
-	}
+    @Override
+    protected File getSchemaDirectory()
+    {
+        return schemaDirectory;
+    }
 
-	@Override
-	protected File getBindingDirectory() {
-		return bindingDirectory;
-	}
-    
+    @Override
+    protected File getBindingDirectory()
+    {
+        return bindingDirectory;
+    }
+
 }

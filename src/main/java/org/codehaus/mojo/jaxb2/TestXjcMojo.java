@@ -24,7 +24,7 @@ public class TestXjcMojo
 
     /**
      * The working directory to create the generated java source files.
-     *
+     * 
      * @parameter expression="${project.build.directory}/generated-test-sources/jaxb"
      * @required
      */
@@ -32,28 +32,26 @@ public class TestXjcMojo
 
     /**
      * The location of the flag file used to determine if the output is stale.
-     *
+     * 
      * @parameter default-value="${project.build.directory}/generated-test-sources/jaxb/.staleFlag"
      * @required
      */
     private File staleFile;
 
-	/**
-	 * The schema directory or xsd files
-	 *
-	 * @parameter expression="${basedir}/src/test/xsd"
-	 * @required
-	 */
-	private File schemaDirectory;
+    /**
+     * The schema directory or xsd files
+     * 
+     * @parameter expression="${basedir}/src/test/xsd"
+     * @required
+     */
+    private File schemaDirectory;
 
-	/**
-	 * The binding directory for xjb files
-	 *
-	 * @parameter expression="${basedir}/src/test/xjb"
-	 */
-	private File bindingDirectory;
-    
-    
+    /**
+     * The binding directory for xjb files
+     * 
+     * @parameter expression="${basedir}/src/test/xjb"
+     */
+    private File bindingDirectory;
 
     @Override
     protected File getOutputDirectory()
@@ -66,32 +64,35 @@ public class TestXjcMojo
     {
         return staleFile;
     }
-    
+
     @Override
-    protected List getClasspathElements(MavenProject project) throws DependencyResolutionRequiredException
+    protected List getClasspathElements( MavenProject project )
+        throws DependencyResolutionRequiredException
     {
         return project.getTestClasspathElements();
     }
 
-	@Override
-    protected void addCompileSourceRoot(MavenProject project) 
+    @Override
+    protected void addCompileSourceRoot( MavenProject project )
     {
-      project.addTestCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
+        project.addTestCompileSourceRoot( getOutputDirectory().getAbsolutePath() );
     }
 
     @Override
-    protected void addResource(MavenProject project, Resource resource)
+    protected void addResource( MavenProject project, Resource resource )
     {
         project.addTestResource( resource );
     }
 
-	@Override
-	protected File getSchemaDirectory() {
-		return schemaDirectory;
-	}
+    @Override
+    protected File getSchemaDirectory()
+    {
+        return schemaDirectory;
+    }
 
-	@Override
-	protected File getBindingDirectory() {
-		return bindingDirectory;
-	}
+    @Override
+    protected File getBindingDirectory()
+    {
+        return bindingDirectory;
+    }
 }
