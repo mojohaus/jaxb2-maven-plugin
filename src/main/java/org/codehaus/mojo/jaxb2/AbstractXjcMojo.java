@@ -38,6 +38,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.xml.sax.SAXParseException;
 
 import com.sun.tools.xjc.Driver;
@@ -792,7 +793,7 @@ public abstract class AbstractXjcMojo
 
         private String location( SAXParseException e )
         {
-            return e.getPublicId() + "[" + e.getLineNumber() + "," + e.getColumnNumber() + "]";
+            return StringUtils.defaultString( e.getPublicId(), e.getSystemId() ) + "[" + e.getLineNumber() + "," + e.getColumnNumber() + "]";
         }
 
         public void error( SAXParseException arg0 )
