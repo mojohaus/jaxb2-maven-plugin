@@ -171,6 +171,10 @@ public abstract class AbstractSchemagenMojo
                 throw new MojoExecutionException( "Failed to generate schema", e );
             }
         }
+        else
+        {
+            getLog().info( "no sources found skip generate schema" );
+        }
     }
 
     protected abstract File getOutputDirectory();
