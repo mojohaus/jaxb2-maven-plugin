@@ -19,6 +19,11 @@
     <url>http://jira.codehaus.org/browse/MJAXB</url>
   </issueManagement>
   <inceptionYear>2005</inceptionYear>
+  
+  <properties>
+    <maven-core.version>2.0.10</maven-core.version>
+  </properties>  
+  
   <developers>
     <developer>
       <id>jgenender</id>
@@ -153,8 +158,19 @@
       </build>
     </profile>
   </profiles>
-
-  <properties>
-    <maven-core.version>2.0.10</maven-core.version>
-  </properties>
+  
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <configuration>
+          <requirements>
+            <jdk>${maven.compiler.target}</jdk>
+          </requirements>
+        </configuration>
+      </plugin>    
+    </plugins>
+  </reporting>
+  
 </project>
