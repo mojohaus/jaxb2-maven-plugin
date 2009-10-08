@@ -164,6 +164,10 @@ public abstract class AbstractSchemagenMojo
                 args.add( "-classpath" );
                 args.add( classPath.toString() );
                 args.addAll( includedSources );
+                if (getLog().isDebugEnabled())
+                {
+                    getLog().debug( "args for SchemaGenerator " + args );
+                }
                 SchemaGenerator.run( args.toArray( new String[0] ) );
             }
             catch ( Exception e )
