@@ -65,8 +65,18 @@
       </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>${maven-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
             <artifactId>maven-project</artifactId>
-            <version>2.0.8</version>
+            <version>${maven-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>${maven-core.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -76,20 +86,25 @@
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-xjc</artifactId>
-            <version>2.0.3</version>
+            <version>2.1.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-plugin-testing-harness</artifactId>
-            <version>1.0-beta-1</version>
+            <version>1.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-api</artifactId>
+            <version>1.5.3</version>
         </dependency>    
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.5.5</version>
+        </dependency>
     </dependencies>
 
     <organization>
@@ -109,43 +124,47 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>run-its</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>1.4</version>
+                        <configuration>
+                            <debug>true</debug>
+                            <projectsDirectory>src/it</projectsDirectory>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                            <pomIncludes>
+                                <pomInclude>*/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <!--<preBuildHookScript>setup</preBuildHookScript>-->
+                            <!--<postBuildHookScript>verify</postBuildHookScript>-->
+                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+                            <settingsFile>src/it/settings.xml</settingsFile>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>generate-test-resources</goal>
+                            </goals>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     
-		<profiles>
-			<profile>
-				<id>run-its</id>
-				<build>
-					<plugins>
-						<plugin>
-							<artifactId>maven-invoker-plugin</artifactId>
-							<version>1.4</version>
-							<configuration>
-								<debug>true</debug>
-								<projectsDirectory>src/it</projectsDirectory>
-								<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-								<pomIncludes>
-									<pomInclude>*/pom.xml</pomInclude>
-								</pomIncludes>
-								<!--<preBuildHookScript>setup</preBuildHookScript>-->
-								<!--<postBuildHookScript>verify</postBuildHookScript>-->
-								<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-								<settingsFile>src/it/settings.xml</settingsFile>
-								<goals>
-									<goal>clean</goal>
-									<goal>generate-test-sources</goal>
-								</goals>
-							</configuration>
-							<executions>
-								<execution>
-									<id>integration-test</id>
-									<goals>
-										<goal>install</goal>
-										<goal>run</goal>
-									</goals>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</build>
-			</profile>
-		</profiles>
+    <properties>
+        <maven-core.version>2.0.10</maven-core.version>
+    </properties>
 </project>
