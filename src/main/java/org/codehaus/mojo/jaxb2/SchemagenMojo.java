@@ -24,6 +24,7 @@ import org.apache.maven.project.MavenProject;
  * @author rfscholte
  * @goal schemagen
  * @phase generate-resources
+ * @requiresDependencyResolution compile
  * @since 1.3
  */
 public class SchemagenMojo
