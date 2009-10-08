@@ -18,10 +18,7 @@ package org.codehaus.mojo.jaxb2;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -264,7 +261,6 @@ public abstract class AbstractXjcMojo
                 try
                 {
                     ArrayList<String> args = getXJCArgs( classPath.toString() );
-
                     // Run XJC
                     if ( 0 != Driver.run( args.toArray( new String[args.size()] ), new MojoXjcListener() ) )
                     {
@@ -760,7 +756,7 @@ public abstract class AbstractXjcMojo
          */
         public boolean accept( final java.io.File file )
         {
-            return file.getName().endsWith( ".xjb" );
+            return file.isFile() && file.getName().endsWith( ".xjb" );
         }
 
     }
@@ -781,7 +777,7 @@ public abstract class AbstractXjcMojo
          */
         public boolean accept( final java.io.File file )
         {
-            return file.getName().endsWith( ".xsd" );
+            return file.isFile() && file.getName().endsWith( ".xsd" );
         }
 
     }
