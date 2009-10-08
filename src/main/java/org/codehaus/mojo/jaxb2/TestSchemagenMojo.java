@@ -24,6 +24,7 @@ import org.apache.maven.project.MavenProject;
  * @author rfscholte
  * @goal testSchemagen
  * @phase generate-test-resources
+ * @requiresDependencyResolution test
  * @since 1.3
  */
 public class TestSchemagenMojo
