@@ -1,0 +1,11 @@
+<?xml   version="1.0" encoding="US-ASCII"   ?> 
+
+<!ELEMENT  library (fiction , biography ,science)> 
+
+<!ELEMENT   fiction (book)+> 
+
+<!ELEMENT   biography (book)+> 
+
+<!ELEMENT   science (book)+> 
+
+<!ELEMENT   book (#PCDATA)>
