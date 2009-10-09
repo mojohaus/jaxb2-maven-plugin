@@ -342,7 +342,8 @@ public abstract class AbstractXjcMojo
         for ( int j = 0; j < srcFiles.length; j++ )
         {
             URL from = srcFiles[j];
-            File to = new File( baseDir, from.getFile() );
+            // the '/' is the URL-separator
+            File to = new File( baseDir, FileUtils.removePath( from.getPath(), '/' ));
             try {
                 FileUtils.copyURLToFile(from, to);
             } catch (IOException e) {
