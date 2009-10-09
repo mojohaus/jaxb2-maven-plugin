@@ -12,7 +12,7 @@
   <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.0 implementation.</description>
   <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
   <prerequisites>
-    <maven>2.0.10</maven>
+    <maven>${maven-core.version}</maven>
   </prerequisites>
   <issueManagement>
     <system>JIRA</system>
