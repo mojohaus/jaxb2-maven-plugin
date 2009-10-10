@@ -216,6 +216,14 @@ public abstract class AbstractXjcMojo
      * @parameter default-value="true"
      */
     protected boolean clearOutputDir;
+    
+    /**
+     * Fails the mojo if no schemas has been found
+     * 
+     * @parameter default-value="true"
+     * @since 1.3
+     */    
+    protected boolean failOnNoSchemas;
 
     public AbstractXjcMojo()
     {
@@ -261,7 +269,11 @@ public abstract class AbstractXjcMojo
 
                 try
                 {
+                   
                     ArrayList<String> args = getXJCArgs( classPath.toString() );
+                    
+                    
+                    
                     // Run XJC
                     if ( 0 != Driver.run( args.toArray( new String[args.size()] ), new MojoXjcListener() ) )
                     {
@@ -317,7 +329,17 @@ public abstract class AbstractXjcMojo
                  **/
                 copyXSDs();
             }
-
+        }
+        catch ( NoSchemasException e )
+        {
+            if ( failOnNoSchemas )
+            {
+                throw new MojoExecutionException( "no schemas has been found" );
+            }
+            else
+            {
+                getLog().warn( "skip xjc execution, no schemas has been found" );
+            }
         }
         catch ( MojoExecutionException e )
         {
@@ -381,8 +403,13 @@ public abstract class AbstractXjcMojo
         }
     }
 
+    /**
+     * @param classPath
+     * @return null if no schemas found
+     * @throws MojoExecutionException
+     */
     private ArrayList<String> getXJCArgs( String classPath )
-        throws MojoExecutionException
+        throws MojoExecutionException, NoSchemasException
     {
         ArrayList<String> args = new ArrayList<String>();
         if ( npa )
@@ -474,24 +501,45 @@ public abstract class AbstractXjcMojo
             args.add( bindings[i].getAbsolutePath() );
         }
 
+        List<String> schemas = new ArrayList<String>();
+
         // XSDs
         if ( schemaFiles != null || schemaListFileName != null )
         {
             URL xsds[] = getXSDFiles();
             for ( int i = 0; i < xsds.length; i++ )
             {
-                args.add( xsds[i].toString() );
+                // args.add( xsds[i].toString() );
+                schemas.add( xsds[i].toString() );
             }
         }
         else
         {
-            args.add( getSchemaDirectory().getAbsolutePath() );
+            // args.add( getSchemaDirectory().getAbsolutePath() );
+
+            if ( getSchemaDirectory().exists() && getSchemaDirectory().isDirectory() )
+            {
+                File[] schemaFiles = getSchemaDirectory().listFiles( new XSDFile( getLog() ) );
+                if ( schemaFiles != null && schemaFiles.length > 0 )
+                {
+                    schemas.add( getSchemaDirectory().getAbsolutePath() );
+                }
+            }
         }
 
-        getLog().debug( "JAXB 2.0 args: " + args );
+        if ( schemas.isEmpty() )
+        {
+            throw new NoSchemasException();
+        }
 
+        args.addAll( schemas );
+        
+        getLog().debug( "JAXB 2.0 args: " + args );
+                
         return args;
     }
+    
+    
 
     /**
      * <code>getSchemasFromFileListing</code> gets all the entries
