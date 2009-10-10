@@ -41,10 +41,14 @@
             <goals>
               <goal>xjc</goal>
             </goals>
+            <configuration>
+              <failOnNoSchemas>false</failOnNoSchemas>
+            </configuration>
           </execution>
         </executions>
         <configuration>
           <packageName>com.example.myschema</packageName> <!-- The name of your generated source package -->
+          <includeSchemasOutputPath>xsd</includeSchemasOutputPath>
         </configuration>
       </plugin>
       <!-- Don't forget Java 5!! -->
@@ -59,12 +63,5 @@
       </plugin>
     </plugins>
   </build>
-  <dependencies>
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.1</version>
-    </dependency>
-  </dependencies>
 
 </project>
