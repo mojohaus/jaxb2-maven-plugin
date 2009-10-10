@@ -36,7 +36,9 @@ import org.apache.maven.project.MavenProject;
  * @author jgenender <jgenender@apache.org>
  * @version $Id$
  */
-public class XjcMojo extends AbstractXjcMojo {
+public class XjcMojo
+    extends AbstractXjcMojo
+{
 
     /**
      * The working directory to create the generated java source files.

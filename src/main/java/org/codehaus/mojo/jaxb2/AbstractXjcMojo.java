@@ -33,6 +33,7 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -343,11 +344,14 @@ public abstract class AbstractXjcMojo
         {
             URL from = srcFiles[j];
             // the '/' is the URL-separator
-            File to = new File( baseDir, FileUtils.removePath( from.getPath(), '/' ));
-            try {
-                FileUtils.copyURLToFile(from, to);
-            } catch (IOException e) {
-                throw new MojoExecutionException("Error copying file", e);
+            File to = new File( baseDir, FileUtils.removePath( from.getPath(), '/' ) );
+            try
+            {
+                FileUtils.copyURLToFile( from, to );
+            }
+            catch ( IOException e )
+            {
+                throw new MojoExecutionException( "Error copying file", e );
             }
         }
     }
@@ -632,7 +636,7 @@ public abstract class AbstractXjcMojo
         else
         {
             getLog().debug( "The schema Directory is " + getSchemaDirectory() );
-            File[] files = getSchemaDirectory().listFiles( new XSDFile() );
+            File[] files = getSchemaDirectory().listFiles( new XSDFile( getLog() ) );
             if ( files != null )
             {
                 for ( int i = 0; i < files.length; i++ )
@@ -755,7 +759,7 @@ public abstract class AbstractXjcMojo
          *            The filed being reviewed by the filter.
          * @return true if an xsd file.
          */
-        public boolean accept( final java.io.File file )
+        public boolean accept( final File file )
         {
             return file.isFile() && file.getName().endsWith( ".xjb" );
         }
@@ -769,6 +773,13 @@ public abstract class AbstractXjcMojo
         implements FileFilter
     {
 
+        private Log log;
+
+        public XSDFile( Log log )
+        {
+            this.log = log;
+        }
+
         /**
          * Returns true if the file ends with an xsd extension.
          * 
@@ -778,7 +789,12 @@ public abstract class AbstractXjcMojo
          */
         public boolean accept( final java.io.File file )
         {
-            return file.isFile() && file.getName().endsWith( ".xsd" );
+            boolean accept = file.isFile() && file.getName().endsWith( ".xsd" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "accept " + accept + " for file " + file.getPath() );
+            }
+            return accept;
         }
 
     }
@@ -790,7 +806,8 @@ public abstract class AbstractXjcMojo
 
         private String location( SAXParseException e )
         {
-            return StringUtils.defaultString( e.getPublicId(), e.getSystemId() ) + "[" + e.getLineNumber() + "," + e.getColumnNumber() + "]";
+            return StringUtils.defaultString( e.getPublicId(), e.getSystemId() ) + "[" + e.getLineNumber() + ","
+                + e.getColumnNumber() + "]";
         }
 
         public void error( SAXParseException arg0 )
