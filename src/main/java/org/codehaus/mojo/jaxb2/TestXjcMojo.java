@@ -8,7 +8,7 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 
 /**
- * <p>A Maven 2 plugin which parse xsd and binding files (xjb) and produces
+ * <p>parse xsd and binding test resources (xjb) to produce
  * a corresponding object model based on the JAXB Xjc parsing engine.</p>
  *
  * @goal testXjc

@@ -21,6 +21,8 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 
 /**
+ * Creates schema file for test sources
+ * 
  * @author rfscholte
  * @goal testSchemagen
  * @phase generate-test-resources
