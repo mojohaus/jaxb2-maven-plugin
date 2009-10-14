@@ -50,6 +50,7 @@ public abstract class AbstractSchemagenMojo
      * 
      * @parameter expression="${project}"
      * @required
+     * @readonly
      */
     private MavenProject project;
 

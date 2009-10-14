@@ -51,6 +51,7 @@ public abstract class AbstractXjcMojo
      * 
      * @parameter expression="${project}"
      * @required
+     * @readonly
      */
     private MavenProject project;
 
