@@ -22,6 +22,7 @@
   
   <properties>
     <maven-core.version>2.0.10</maven-core.version>
+    <project.build.java.target>1.5</project.build.java.target> <!-- overwriting parent -->
   </properties>
   <ciManagement>
   	<system>Bamboo</system>
