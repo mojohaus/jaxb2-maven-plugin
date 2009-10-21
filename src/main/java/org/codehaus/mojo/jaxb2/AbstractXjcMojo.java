@@ -1,19 +1,23 @@
-/*
- * Copyright 2005 Jeff Genender.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.codehaus.mojo.jaxb2;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 import java.io.File;
 import java.io.FileFilter;
@@ -42,6 +46,11 @@ import org.xml.sax.SAXParseException;
 import com.sun.tools.xjc.Driver;
 import com.sun.tools.xjc.XJCListener;
 
+/**
+ * 
+ * Abstract class for for parsing xsd and binding resources to produce a corresponding object model 
+ * based on the JAXB Xjc parsing engine
+ */
 public abstract class AbstractXjcMojo
     extends AbstractMojo
 {
@@ -271,7 +280,7 @@ public abstract class AbstractXjcMojo
                 try
                 {
                    
-                    ArrayList<String> args = getXJCArgs( classPath.toString() );
+                    ArrayList < String > args = getXJCArgs( classPath.toString() );
                     
                     
                     
@@ -409,10 +418,10 @@ public abstract class AbstractXjcMojo
      * @return null if no schemas found
      * @throws MojoExecutionException
      */
-    private ArrayList<String> getXJCArgs( String classPath )
+    private ArrayList < String > getXJCArgs( String classPath )
         throws MojoExecutionException, NoSchemasException
     {
-        ArrayList<String> args = new ArrayList<String>();
+        ArrayList < String > args = new ArrayList < String > ();
         if ( npa )
         {
             args.add( "-npa" );
@@ -502,7 +511,7 @@ public abstract class AbstractXjcMojo
             args.add( bindings[i].getAbsolutePath() );
         }
 
-        List<String> schemas = new ArrayList<String>();
+        List < String > schemas = new ArrayList < String > ();
 
         // XSDs
         if ( schemaFiles != null || schemaListFileName != null )
@@ -549,7 +558,7 @@ public abstract class AbstractXjcMojo
      * 
      * @exception MojoExecutionException if an error occurs
      */
-    protected void getSchemasFromFileListing( List<URL> files )
+    protected void getSchemasFromFileListing( List < URL > files )
         throws MojoExecutionException
     {
 
@@ -605,7 +614,7 @@ public abstract class AbstractXjcMojo
     public final File[] getBindingFiles()
     {
 
-        List<File> bindings = new ArrayList<File>();
+        List < File > bindings = new ArrayList < File > ();
         if ( bindingFiles != null )
         {
             for ( StringTokenizer st = new StringTokenizer( bindingFiles, "," ); st.hasMoreTokens(); )
@@ -644,13 +653,13 @@ public abstract class AbstractXjcMojo
         {
 
             // make sure user didn't specify both schema input options
-            throw new MojoExecutionException(
-                                              "schemaFiles and schemaListFileName options were provided, these options may not be used together - schemaFiles: "
-                                                  + schemaFiles + " schemaListFileName: " + schemaListFileName );
+            throw new MojoExecutionException( "schemaFiles and schemaListFileName options were provided, "
+                    + "these options may not be used together - schemaFiles: "
+                    + schemaFiles + " schemaListFileName: " + schemaListFileName );
 
         }
 
-        List<URL> xsdFiles = new ArrayList<URL>();
+        List < URL > xsdFiles = new ArrayList < URL > ();
         if ( schemaFiles != null )
         {
             for ( StringTokenizer st = new StringTokenizer( schemaFiles, "," ); st.hasMoreTokens(); )
@@ -848,7 +857,9 @@ public abstract class AbstractXjcMojo
 
     }
 
-    // Class to tap into Maven's logging facility
+    /**
+     * Class to tap into Maven's logging facility
+     */
     class MojoXjcListener
         extends XJCListener
     {

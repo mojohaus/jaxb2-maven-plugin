@@ -1,18 +1,23 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.codehaus.mojo.jaxb2;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 import java.io.File;
 import java.io.IOException;
@@ -59,14 +64,14 @@ public abstract class AbstractSchemagenMojo
      * 
      * @parameter
      */
-    private Set<String> includes = new HashSet<String>();
+    private Set < String > includes = new HashSet < String > ();
 
     /**
      * A list of exclusion filters for the generator.
      * 
      * @parameter
      */
-    private Set<String> excludes = new HashSet<String>();
+    private Set < String > excludes = new HashSet < String > ();
 
     /**
      * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation
@@ -87,10 +92,10 @@ public abstract class AbstractSchemagenMojo
         SourceInclusionScanner staleSourceScanner = new StaleSourceScanner( staleMillis, includes, excludes );
         SourceMapping mapping = new SingleTargetSourceMapping( ".java", "schema1.xsd" );
         staleSourceScanner.addSourceMapping( mapping );
-        Set<File> staleSources = new HashSet<File>();
+        Set < File > staleSources = new HashSet < File > ();
 
         // Look inside every compileSourceRoot
-        for ( String path : (List<String>) getCompileSourceRoots() )
+        for ( String path : (List < String > ) getCompileSourceRoots() )
         {
             File sourceDir = new File( path );
             try
@@ -107,7 +112,7 @@ public abstract class AbstractSchemagenMojo
         {
             String includePaths = StringUtils.join( includes.toArray(), "," );
             String excludePaths = StringUtils.join( excludes.toArray(), "," );
-            Set<String> includedSources = new HashSet<String>();
+            Set < String > includedSources = new HashSet < String > ();
 
             SourceInclusionScanner sourceScanner = new SimpleSourceInclusionScanner( includes, excludes );
             sourceScanner.addSourceMapping( mapping );
@@ -129,11 +134,11 @@ public abstract class AbstractSchemagenMojo
                 }
             }
 
-            List<String> args = new ArrayList<String>();
+            List < String > args = new ArrayList < String > ();
             StringBuilder classPath = new StringBuilder();
             try
             {
-                List<String> classpathFiles = getClasspathElements( project );
+                List < String > classpathFiles = getClasspathElements( project );
                 classPath = new StringBuilder();
                 for ( int i = 0; i < classpathFiles.size(); ++i )
                 {
@@ -165,7 +170,7 @@ public abstract class AbstractSchemagenMojo
                 args.add( "-classpath" );
                 args.add( classPath.toString() );
                 args.addAll( includedSources );
-                if (getLog().isDebugEnabled())
+                if ( getLog().isDebugEnabled() )
                 {
                     getLog().debug( "args for SchemaGenerator " + args );
                 }
@@ -184,9 +189,9 @@ public abstract class AbstractSchemagenMojo
 
     protected abstract File getOutputDirectory();
 
-    protected abstract List<String> getCompileSourceRoots();
+    protected abstract List < String > getCompileSourceRoots();
 
-    protected abstract List<String> getClasspathElements( MavenProject project )
+    protected abstract List < String > getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException;
 
 }
