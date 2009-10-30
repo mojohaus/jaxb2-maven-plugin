@@ -108,9 +108,6 @@
     </dependency>
   </dependencies>
 
-  <organization>
-  </organization>
-
   <build>
     <plugins>
       <plugin>
