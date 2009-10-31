@@ -25,8 +25,8 @@
     <project.build.java.target>1.5</project.build.java.target> <!-- overwriting parent -->
   </properties>
   <ciManagement>
-  	<system>Bamboo</system>
-  	<url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXBCI</url>
+    <system>Bamboo</system>
+    <url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXBCI</url>
   </ciManagement>  
   
   <developers>
