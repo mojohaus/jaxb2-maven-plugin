@@ -9,7 +9,7 @@
   <packaging>maven-plugin</packaging>
   <name>Maven JAXB 2.1 Plugin</name>
   <version>1.3-SNAPSHOT</version>
-  <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.0 implementation.</description>
+  <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.1 implementation.</description>
   <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
   <prerequisites>
     <maven>${maven-core.version}</maven>
