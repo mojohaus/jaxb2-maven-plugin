@@ -499,9 +499,10 @@ public abstract class AbstractXjcMojo
             args.add( "-extension" );
         }
 
-        if (target != null) {
-            args.add("-target");
-            args.add(target);
+        if ( target != null ) 
+        {
+            args.add( "-target" );
+            args.add( target );
         }
         if ( arguments != null && arguments.trim().length() > 0 )
         {
