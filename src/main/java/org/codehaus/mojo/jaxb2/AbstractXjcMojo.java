@@ -228,6 +228,15 @@ public abstract class AbstractXjcMojo
     protected boolean clearOutputDir;
     
     /**
+     * Avoid generating code that relies on any current JAXB 2.x features. 
+     * This will allow the generated code to run with earlier JAXB 2.x runtime
+     * 
+     * @parameter
+     * @since 1.3
+     */
+    protected String target;
+    
+    /**
      * Fails the mojo if no schemas has been found
      * 
      * @parameter default-value="true"
@@ -490,6 +499,10 @@ public abstract class AbstractXjcMojo
             args.add( "-extension" );
         }
 
+        if (target != null) {
+            args.add("-target");
+            args.add(target);
+        }
         if ( arguments != null && arguments.trim().length() > 0 )
         {
             for ( String arg : arguments.trim().split( " " ) )
