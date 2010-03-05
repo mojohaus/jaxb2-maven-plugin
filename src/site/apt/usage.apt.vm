@@ -1,7 +1,7 @@
 Usage
 
   This plugin implements and runs the Xjc compiler driver natively, and integrates Xjc into
-  Maven2. Please be aware this plugin requires a Java 5.0 compiler.
+  Maven2. Please be aware this plugin requires at least the Java 5.0 compiler.
   
 +------------------------------------------+
 <project>
