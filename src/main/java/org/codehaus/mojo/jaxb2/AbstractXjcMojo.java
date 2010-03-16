@@ -41,6 +41,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.xml.sax.SAXParseException;
 
 import com.sun.tools.xjc.Driver;
@@ -506,9 +507,18 @@ public abstract class AbstractXjcMojo
         }
         if ( arguments != null && arguments.trim().length() > 0 )
         {
-            for ( String arg : arguments.trim().split( " " ) )
+            try
             {
-                args.add( arg );
+                String[] argList = CommandLineUtils.translateCommandline( arguments );
+                
+                for ( int argIndex = 0; argIndex < argList.length; argIndex++ )
+                {
+                    args.add( argList[argIndex] );
+                }
+            }
+            catch ( Exception e )
+            {
+                throw new MojoExecutionException( "failed to split property arguments" );
             }
         }
 

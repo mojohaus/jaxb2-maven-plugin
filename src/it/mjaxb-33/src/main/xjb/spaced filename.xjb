@@ -1,0 +1,11 @@
+<jxb:bindings version="1.0"
+               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <jxb:bindings schemaLocation="src/main/xsd/address.xsd" node="//xsd:schema">
+      <jxb:schemaBindings>
+         <jxb:package name="com.example.myschema"/>
+      </jxb:schemaBindings>
+  </jxb:bindings>
+
+</jxb:bindings>
