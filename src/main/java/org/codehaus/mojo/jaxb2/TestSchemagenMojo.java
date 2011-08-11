@@ -50,7 +50,7 @@ public class TestSchemagenMojo
     /**
      * The working directory to place processor and javac generated class files.
      * 
-     * @parameter expression="${project.build.directory}/generated-test-resources/schemagen"
+     * @parameter default-value="${project.build.directory}/generated-test-resources/schemagen"
      * @required
      */
     private File outputDirectory;

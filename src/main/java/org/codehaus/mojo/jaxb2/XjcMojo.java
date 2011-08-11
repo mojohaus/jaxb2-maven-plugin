@@ -46,7 +46,7 @@ public class XjcMojo
     /**
      * The working directory to create the generated java source files.
      * 
-     * @parameter expression="${project.build.directory}/generated-sources/jaxb"
+     * @parameter default-value="${project.build.directory}/generated-sources/jaxb"
      * @required
      */
     private File outputDirectory;
@@ -62,7 +62,7 @@ public class XjcMojo
     /**
      * The schema directory or xsd files
      * 
-     * @parameter expression="${basedir}/src/main/xsd"
+     * @parameter default-value="${basedir}/src/main/xsd"
      * @required
      */
     private File schemaDirectory;
@@ -70,7 +70,7 @@ public class XjcMojo
     /**
      * The binding directory for xjb files
      * 
-     * @parameter expression="${basedir}/src/main/xjb"
+     * @parameter default-value="${basedir}/src/main/xjb"
      */
     private File bindingDirectory;
 

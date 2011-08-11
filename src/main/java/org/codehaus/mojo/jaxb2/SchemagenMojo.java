@@ -49,7 +49,7 @@ public class SchemagenMojo
     /**
      * The working directory to place processor and javac generated class files.
      * 
-     * @parameter expression="${project.build.directory}/generated-resources/schemagen"
+     * @parameter default-value="${project.build.directory}/generated-resources/schemagen"
      * @required
      */
     private File outputDirectory;
