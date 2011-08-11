@@ -57,7 +57,7 @@ public abstract class AbstractXjcMojo
 {
 
     /**
-     * The default maven project object
+     * The default maven project object.
      * 
      * @parameter expression="${project}"
      * @required
@@ -104,9 +104,9 @@ public abstract class AbstractXjcMojo
 
     /**
      * List of files to use for schemas, comma delimited. If none, then all xsd
-     * files are used in the schemaDirectory
+     * files are used in the schemaDirectory.
      * Note: you may use either the 'schemaFiles' or 'schemaListFileName'
-     * option (you may use both at once)
+     * option (you may use both at once).
      * 
      * @parameter
      */
@@ -116,7 +116,7 @@ public abstract class AbstractXjcMojo
      * A filename containing the list of files to use for schemas, comma delimited.
      * If none, then all xsd files are used in the schemaDirectory.
      * Note: you may use either the 'schemaFiles' or 'schemaListFileName'
-     * option (you may use both at once)
+     * option (you may use both at once).
      * 
      * @parameter
      */
@@ -130,14 +130,14 @@ public abstract class AbstractXjcMojo
     protected boolean dtd;
 
     /**
-     * Suppress generation of package level annotations (package-info.java)
+     * Suppress generation of package level annotations (package-info.java).
      * 
      * @parameter default-value="false"
      */
     protected boolean npa;
 
     /**
-     * Do not perform strict validation of the input schema(s)
+     * Do not perform strict validation of the input schema(s).
      * 
      * @parameter default-value="false"
      */
@@ -151,42 +151,42 @@ public abstract class AbstractXjcMojo
     protected boolean relaxng;
 
     /**
-     * Treat input as RELAX NG compact syntax (experimental,unsupported)
+     * Treat input as RELAX NG compact syntax (experimental,unsupported).
      * 
      * @parameter default-value="false"
      */
     protected boolean relaxngCompact;
 
     /**
-     * Suppress compiler output
+     * Suppress compiler output.
      * 
      * @parameter default-value="false"
      */
     protected boolean quiet;
 
     /**
-     * Generated files will be in read-only mode
+     * Generated files will be in read-only mode.
      * 
      * @parameter default-value="false"
      */
     protected boolean readOnly;
 
     /**
-     * Be extra verbose
+     * Be extra verbose.
      * 
      * @parameter default-value="false"
      */
     protected boolean verbose;
 
     /**
-     * Treat input as WSDL and compile schemas inside it (experimental,unsupported)
+     * Treat input as WSDL and compile schemas inside it (experimental,unsupported).
      * 
      * @parameter default-value="false"
      */
     protected boolean wsdl;
 
     /**
-     * Treat input as W3C XML Schema (default)
+     * Treat input as W3C XML Schema (default).
      * 
      * @parameter default-value="true"
      */
@@ -230,7 +230,7 @@ public abstract class AbstractXjcMojo
     
     /**
      * Avoid generating code that relies on any current JAXB 2.x features. 
-     * This will allow the generated code to run with earlier JAXB 2.x runtime
+     * This will allow the generated code to run with earlier JAXB 2.x runtime.
      * 
      * @parameter
      * @since 1.3
@@ -238,7 +238,7 @@ public abstract class AbstractXjcMojo
     protected String target;
     
     /**
-     * Fails the mojo if no schemas has been found
+     * Fails the mojo if no schemas are found.
      * 
      * @parameter default-value="true"
      * @since 1.3

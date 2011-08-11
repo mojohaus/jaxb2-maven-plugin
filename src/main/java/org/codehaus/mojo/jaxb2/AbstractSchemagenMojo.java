@@ -51,7 +51,7 @@ public abstract class AbstractSchemagenMojo
 {
 
     /**
-     * The default maven project object
+     * The default maven project object.
      * 
      * @parameter expression="${project}"
      * @required
@@ -74,7 +74,7 @@ public abstract class AbstractSchemagenMojo
     private Set < String > excludes = new HashSet < String > ();
 
     /**
-     * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation
+     * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation.
      * 
      * @parameter expression="${lastModGranularityMs}" default-value="0"
      */
