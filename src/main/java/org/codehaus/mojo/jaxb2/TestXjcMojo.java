@@ -27,8 +27,8 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 
 /**
- * <p>parse xsd and binding test resources (xjb) to produce
- * a corresponding object model based on the JAXB Xjc parsing engine.</p>
+ * Generates Java test sources from XML Schema(s) and binding file(s)
+ * using the JAXB Binding Compiler (XJC).
  *
  * @goal testXjc
  * @phase generate-test-sources
@@ -42,7 +42,7 @@ public class TestXjcMojo
 {
 
     /**
-     * The working directory to create the generated java source files.
+     * The working directory where the generated Java test source files are created.
      * 
      * @parameter default-value="${project.build.directory}/generated-test-sources/jaxb"
      * @required
@@ -58,7 +58,7 @@ public class TestXjcMojo
     private File staleFile;
 
     /**
-     * The schema directory or xsd files
+     * The directory for XML Schema files (XSDs).
      * 
      * @parameter default-value="${basedir}/src/test/xsd"
      * @required
@@ -66,7 +66,7 @@ public class TestXjcMojo
     private File schemaDirectory;
 
     /**
-     * The binding directory for xjb files
+     * The directory for JAXB binding files.
      * 
      * @parameter default-value="${basedir}/src/test/xjb"
      */

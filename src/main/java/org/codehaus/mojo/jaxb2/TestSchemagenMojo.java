@@ -26,7 +26,7 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Creates schema file for test sources
+ * Creates XML Schema file(s) for test sources.
  * 
  * @author rfscholte
  * @goal testSchemagen
@@ -39,7 +39,7 @@ public class TestSchemagenMojo
 {
 
     /**
-     * The source directories containing the test-source to be compiled.
+     * The source directories containing the test sources to be compiled.
      * 
      * @parameter expression="${project.testCompileSourceRoots}"
      * @required

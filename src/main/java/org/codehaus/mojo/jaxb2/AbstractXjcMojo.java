@@ -96,7 +96,7 @@ public abstract class AbstractXjcMojo
 
     /**
      * List of files to use for bindings, comma delimited. If none, then all xjb
-     * files are used in the bindingDirectory
+     * files are used in the bindingDirectory.
      * 
      * @parameter
      */

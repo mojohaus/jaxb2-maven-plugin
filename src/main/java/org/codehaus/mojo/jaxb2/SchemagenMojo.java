@@ -26,7 +26,7 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Creates schema file for sources
+ * Creates XML Schema file(s) for sources.
  * 
  * @author rfscholte
  * @goal schemagen
