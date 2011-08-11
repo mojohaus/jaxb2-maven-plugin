@@ -1,7 +1,7 @@
 Usage
 
-  This plugin implements and runs the Xjc compiler driver natively, and integrates Xjc into
-  Maven2. Please be aware this plugin requires at least the Java 5.0 compiler.
+  This plugin implements and runs the XJC compiler driver natively, and integrates XJC into
+  Maven. Please be aware that this plugin requires at least the Java 5.0 compiler.
   
 +------------------------------------------+
 <project>
@@ -13,7 +13,6 @@ Usage
             <artifactId>jaxb-api</artifactId>
             <version>2.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
@@ -30,6 +29,7 @@ Usage
                 <version>${project.version}</version>
                 <executions>
                     <execution>
+                        <id>xjc</id>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
