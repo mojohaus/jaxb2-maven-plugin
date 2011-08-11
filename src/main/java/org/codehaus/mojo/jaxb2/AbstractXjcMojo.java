@@ -276,12 +276,12 @@ public abstract class AbstractXjcMojo
                 for ( int i = 0; i < classpathFiles.size(); ++i )
                 {
                     getLog().debug( (String) classpathFiles.get( i ) );
-                    urls[i] = new File( (String) classpathFiles.get( i ) ).toURL();
+                    urls[i] = new File( (String) classpathFiles.get( i ) ).toURI().toURL();
                     classPath.append( (String) classpathFiles.get( i ) );
                     classPath.append( File.pathSeparatorChar );
                 }
 
-                urls[classpathFiles.size()] = new File( project.getBuild().getOutputDirectory() ).toURL();
+                urls[classpathFiles.size()] = new File( project.getBuild().getOutputDirectory() ).toURI().toURL();
                 URLClassLoader cl = new URLClassLoader( urls, parent );
 
                 // Set the new classloader
