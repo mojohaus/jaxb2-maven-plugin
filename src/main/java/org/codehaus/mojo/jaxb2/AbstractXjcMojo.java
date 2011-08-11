@@ -105,8 +105,8 @@ public abstract class AbstractXjcMojo
     /**
      * List of files to use for schemas, comma delimited. If none, then all xsd
      * files are used in the schemaDirectory.
-     * Note: you may use either the 'schemaFiles' or 'schemaListFileName'
-     * option (you may use both at once).
+     * Note: you can only use either the 'schemaFiles' or the 'schemaListFileName'
+     * option (you may not use both at once!).
      * 
      * @parameter
      */
@@ -115,8 +115,8 @@ public abstract class AbstractXjcMojo
     /**
      * A filename containing the list of files to use for schemas, comma delimited.
      * If none, then all xsd files are used in the schemaDirectory.
-     * Note: you may use either the 'schemaFiles' or 'schemaListFileName'
-     * option (you may use both at once).
+     * Note: you can only use either the 'schemaFiles' or the 'schemaListFileName'
+     * option (you may not use both at once!).
      * 
      * @parameter
      */
@@ -679,7 +679,7 @@ public abstract class AbstractXjcMojo
             // make sure user didn't specify both schema input options
             throw new MojoExecutionException( "schemaFiles and schemaListFileName options were provided, "
                     + "these options may not be used together - schemaFiles: "
-                    + schemaFiles + " schemaListFileName: " + schemaListFileName );
+                    + schemaFiles + "; schemaListFileName: " + schemaListFileName );
 
         }
 
