@@ -688,7 +688,7 @@ public abstract class AbstractXjcMojo
         {
             for ( StringTokenizer st = new StringTokenizer( schemaFiles, "," ); st.hasMoreTokens(); )
             {
-                String schemaName = st.nextToken();
+                String schemaName = st.nextToken().trim();
                 URL url = null;
                 try
                 {
