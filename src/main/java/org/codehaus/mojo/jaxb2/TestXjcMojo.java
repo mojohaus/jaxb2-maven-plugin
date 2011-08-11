@@ -52,7 +52,7 @@ public class TestXjcMojo
     /**
      * The location of the flag file used to determine if the output is stale.
      * 
-     * @parameter default-value="${project.build.directory}/generated-test-sources/jaxb/.staleFlag"
+     * @parameter default-value="${project.build.directory}/.testXjcStaleFlag"
      * @required
      */
     private File staleFile;
