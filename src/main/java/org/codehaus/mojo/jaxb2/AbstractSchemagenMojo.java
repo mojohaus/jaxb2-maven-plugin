@@ -64,14 +64,14 @@ public abstract class AbstractSchemagenMojo
      * 
      * @parameter
      */
-    private Set < String > includes = new HashSet < String > ();
+    private Set<String> includes = new HashSet<String>();
 
     /**
      * A list of exclusion filters for the generator.
      * 
      * @parameter
      */
-    private Set < String > excludes = new HashSet < String > ();
+    private Set<String> excludes = new HashSet<String>();
 
     /**
      * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation.
@@ -92,10 +92,10 @@ public abstract class AbstractSchemagenMojo
         SourceInclusionScanner staleSourceScanner = new StaleSourceScanner( staleMillis, includes, excludes );
         SourceMapping mapping = new SingleTargetSourceMapping( ".java", "schema1.xsd" );
         staleSourceScanner.addSourceMapping( mapping );
-        Set < File > staleSources = new HashSet < File > ();
+        Set<File> staleSources = new HashSet<File>();
 
         // Look inside every compileSourceRoot
-        for ( String path : (List < String > ) getCompileSourceRoots() )
+        for ( String path : getCompileSourceRoots() )
         {
             File sourceDir = new File( path );
             try
@@ -112,7 +112,7 @@ public abstract class AbstractSchemagenMojo
         {
             String includePaths = StringUtils.join( includes.toArray(), "," );
             String excludePaths = StringUtils.join( excludes.toArray(), "," );
-            Set < String > includedSources = new HashSet < String > ();
+            Set<String> includedSources = new HashSet<String>();
 
             SourceInclusionScanner sourceScanner = new SimpleSourceInclusionScanner( includes, excludes );
             sourceScanner.addSourceMapping( mapping );
@@ -134,19 +134,19 @@ public abstract class AbstractSchemagenMojo
                 }
             }
 
-            List < String > args = new ArrayList < String > ();
+            List<String> args = new ArrayList<String>();
             StringBuilder classPath = new StringBuilder();
             try
             {
-                List < String > classpathFiles = getClasspathElements( project );
+                List<String> classpathFiles = getClasspathElements( project );
                 classPath = new StringBuilder();
                 for ( int i = 0; i < classpathFiles.size(); ++i )
                 {
                     if ( getLog().isDebugEnabled() )
                     {
-                        getLog().debug( (String) classpathFiles.get( i ) );
+                        getLog().debug( classpathFiles.get( i ) );
                     }
-                    classPath.append( (String) classpathFiles.get( i ) );
+                    classPath.append( classpathFiles.get( i ) );
                     classPath.append( File.pathSeparatorChar );
                 }
             }
@@ -155,13 +155,10 @@ public abstract class AbstractSchemagenMojo
                 throw new MojoExecutionException( e.getMessage(), e );
             }
 
-            if ( !getOutputDirectory().exists() )
+            if ( !getOutputDirectory().exists() && !getOutputDirectory().mkdirs() )
             {
-                if ( !getOutputDirectory().mkdirs() )
-                {
-                    throw new MojoExecutionException( "Could not create directory "
-                        + getOutputDirectory().getAbsolutePath() );
-                }
+                throw new MojoExecutionException( "Could not create directory "
+                    + getOutputDirectory().getAbsolutePath() );
             }
             try
             {
@@ -189,9 +186,9 @@ public abstract class AbstractSchemagenMojo
 
     protected abstract File getOutputDirectory();
 
-    protected abstract List < String > getCompileSourceRoots();
+    protected abstract List<String> getCompileSourceRoots();
 
-    protected abstract List < String > getClasspathElements( MavenProject project )
+    protected abstract List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException;
 
 }
