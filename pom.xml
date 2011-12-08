@@ -18,22 +18,22 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>mojo-parent</artifactId>
     <groupId>org.codehaus.mojo</groupId>
-    <version>28</version>
+    <version>29</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <artifactId>jaxb2-maven-plugin</artifactId>
+  <version>1.4-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>Maven JAXB 2.1 Plugin</name>
-  <version>1.4-SNAPSHOT</version>
   <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.1 implementation.</description>
   <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
   <prerequisites>
-    <maven>${maven-core.version}</maven>
+    <maven>${mavenVersion}</maven>
   </prerequisites>
   <scm>
     <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</connection>
@@ -41,19 +41,19 @@
     <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/jaxb2-maven-plugin</url>
   </scm>
   
+  <properties>
+    <mavenVersion>2.0.10</mavenVersion>
+    <mojo.java.target>1.5</mojo.java.target> <!-- overwriting parent -->
+  </properties>
+  
   <issueManagement>
     <system>JIRA</system>
     <url>http://jira.codehaus.org/browse/MJAXB</url>
   </issueManagement>
   <inceptionYear>2005</inceptionYear>
-  
-  <properties>
-    <maven-core.version>2.0.10</maven-core.version>
-    <mojo.java.target>1.5</mojo.java.target> <!-- overwriting parent -->
-  </properties>
   <ciManagement>
     <system>Bamboo</system>
-    <url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXBCI</url>
+    <url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXB</url>
   </ciManagement>  
   
   <developers>
@@ -75,7 +75,7 @@
       <roles>
         <role>Committer</role>
       </roles>
-      <timezone>+1</timezone>
+      <timezone>Europe/Amsterdam</timezone>
     </developer>
   </developers>
   <licenses>
@@ -93,17 +93,17 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>${maven-core.version}</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
-      <version>${maven-core.version}</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>${maven-core.version}</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
@@ -163,15 +163,11 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
-            <version>1.4</version>
             <configuration>
               <debug>true</debug>
-              <projectsDirectory>src/it</projectsDirectory>
               <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-              <pomIncludes>
-                <pomInclude>*/pom.xml</pomInclude>
-              </pomIncludes>
               <!--<preBuildHookScript>setup</preBuildHookScript>-->
               <postBuildHookScript>verify</postBuildHookScript>
               <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
