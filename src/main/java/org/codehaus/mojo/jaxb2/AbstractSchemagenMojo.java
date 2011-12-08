@@ -49,6 +49,12 @@ import com.sun.tools.jxc.SchemaGenerator;
 public abstract class AbstractSchemagenMojo
     extends AbstractMojo
 {
+    /**
+     * Name of the generated schema file, emitted by the SchemaGenerator. <br/>
+     * According to the JAXB Schema Generator documentation:
+     * "There is no way to control the name of the generated schema files at this time."
+     */
+    public static final String SCHEMAGEN_EMITTED_FILENAME = "schema1.xsd";
 
     /**
      * The default maven project object.
@@ -90,7 +96,7 @@ public abstract class AbstractSchemagenMojo
 
         // First check out if there are stale sources
         SourceInclusionScanner staleSourceScanner = new StaleSourceScanner( staleMillis, includes, excludes );
-        SourceMapping mapping = new SingleTargetSourceMapping( ".java", "schema1.xsd" );
+        SourceMapping mapping = new SingleTargetSourceMapping( ".java", SCHEMAGEN_EMITTED_FILENAME );
         staleSourceScanner.addSourceMapping( mapping );
         Set<File> staleSources = new HashSet<File>();
 
@@ -140,13 +146,14 @@ public abstract class AbstractSchemagenMojo
             {
                 List<String> classpathFiles = getClasspathElements( project );
                 classPath = new StringBuilder();
-                for ( int i = 0; i < classpathFiles.size(); ++i )
+                for ( String classpathFile : classpathFiles )
                 {
                     if ( getLog().isDebugEnabled() )
                     {
-                        getLog().debug( classpathFiles.get( i ) );
+                        getLog().debug( classpathFile );
                     }
-                    classPath.append( classpathFiles.get( i ) );
+
+                    classPath.append( classpathFile );
                     classPath.append( File.pathSeparatorChar );
                 }
             }
@@ -180,7 +187,7 @@ public abstract class AbstractSchemagenMojo
         }
         else
         {
-            getLog().info( "no sources found skip generate schema" );
+            getLog().info( "No sources found. Skipping schema generation." );
         }
     }
 
@@ -190,5 +197,4 @@ public abstract class AbstractSchemagenMojo
 
     protected abstract List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException;
-
 }
