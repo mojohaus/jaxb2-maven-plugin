@@ -30,12 +30,12 @@ import org.apache.maven.project.MavenProject;
  * Generates Java test sources from XML Schema(s) and binding file(s)
  * using the JAXB Binding Compiler (XJC).
  *
+ * @author rfscholte <rfscholte@codehaus.org>
+ * @version $Id$
  * @goal testXjc
  * @phase generate-test-sources
  * @requiresDependencyResolution
  * @description JAXB 2.0 Plugin.
- * @author rfscholte <rfscholte@codehaus.org>
- * @version $Id$
  */
 public class TestXjcMojo
     extends AbstractXjcMojo
@@ -43,7 +43,7 @@ public class TestXjcMojo
 
     /**
      * The working directory where the generated Java test source files are created.
-     * 
+     *
      * @parameter default-value="${project.build.directory}/generated-test-sources/jaxb"
      * @required
      */
@@ -51,7 +51,7 @@ public class TestXjcMojo
 
     /**
      * The location of the flag file used to determine if the output is stale.
-     * 
+     *
      * @parameter default-value="${project.build.directory}/jaxb2/.testXjcStaleFlag"
      * @required
      */
@@ -59,7 +59,7 @@ public class TestXjcMojo
 
     /**
      * The directory for XML Schema files (XSDs).
-     * 
+     *
      * @parameter default-value="${basedir}/src/test/xsd"
      * @required
      */
@@ -67,7 +67,7 @@ public class TestXjcMojo
 
     /**
      * The directory for JAXB binding files.
-     * 
+     *
      * @parameter default-value="${basedir}/src/test/xjb"
      */
     private File bindingDirectory;

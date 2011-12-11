@@ -30,13 +30,13 @@ import org.apache.maven.project.MavenProject;
  * Generates Java sources from XML Schema(s) and binding file(s)
  * using the JAXB Binding Compiler (XJC).
  *
+ * @author jgenender@apache.org
+ * @author jgenender <jgenender@apache.org>
+ * @version $Id$
  * @goal xjc
  * @phase generate-sources
  * @requiresDependencyResolution
  * @description JAXB 2.0 Plugin.
- * @author jgenender@apache.org
- * @author jgenender <jgenender@apache.org>
- * @version $Id$
  */
 public class XjcMojo
     extends AbstractXjcMojo
@@ -44,7 +44,7 @@ public class XjcMojo
 
     /**
      * The working directory where the generated Java source files are created.
-     * 
+     *
      * @parameter default-value="${project.build.directory}/generated-sources/jaxb"
      * @required
      */
@@ -52,7 +52,7 @@ public class XjcMojo
 
     /**
      * The location of the flag file used to determine if the output is stale.
-     * 
+     *
      * @parameter default-value="${project.build.directory}/jaxb2/.xjcStaleFlag"
      * @required
      */
@@ -60,7 +60,7 @@ public class XjcMojo
 
     /**
      * The directory for XML Schema files (XSDs).
-     * 
+     *
      * @parameter default-value="${basedir}/src/main/xsd"
      * @required
      */
@@ -68,7 +68,7 @@ public class XjcMojo
 
     /**
      * The directory for JAXB binding files.
-     * 
+     *
      * @parameter default-value="${basedir}/src/main/xjb"
      */
     private File bindingDirectory;
