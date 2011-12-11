@@ -27,7 +27,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Creates XML Schema file(s) for test sources.
- * 
+ *
  * @author rfscholte
  * @goal testSchemagen
  * @phase generate-test-resources
@@ -40,16 +40,16 @@ public class TestSchemagenMojo
 
     /**
      * The source directories containing the test sources to be compiled.
-     * 
+     *
      * @parameter expression="${project.testCompileSourceRoots}"
      * @required
      * @readonly
      */
-    private List compileSourceRoots;
+    private List<String> compileSourceRoots;
 
     /**
      * The working directory to place processor and javac generated class files.
-     * 
+     *
      * @parameter default-value="${project.build.directory}/generated-test-resources/schemagen"
      * @required
      */
@@ -61,13 +61,15 @@ public class TestSchemagenMojo
         return outputDirectory;
     }
 
-    protected List getCompileSourceRoots()
+    @Override
+    protected List<String> getCompileSourceRoots()
     {
         return compileSourceRoots;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
-    protected List getClasspathElements( MavenProject project )
+    protected List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException
     {
         return project.getTestClasspathElements();

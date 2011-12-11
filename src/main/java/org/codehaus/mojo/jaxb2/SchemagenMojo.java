@@ -27,7 +27,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Creates XML Schema file(s) for sources.
- * 
+ *
  * @author rfscholte
  * @goal schemagen
  * @phase generate-resources
@@ -39,16 +39,16 @@ public class SchemagenMojo
 {
     /**
      * The source directories containing the sources to be compiled.
-     * 
+     *
      * @parameter expression="${project.compileSourceRoots}"
      * @required
      * @readonly
      */
-    private List compileSourceRoots;
+    private List<String> compileSourceRoots;
 
     /**
      * The working directory to place processor and javac generated class files.
-     * 
+     *
      * @parameter default-value="${project.build.directory}/generated-resources/schemagen"
      * @required
      */
@@ -60,14 +60,15 @@ public class SchemagenMojo
         return outputDirectory;
     }
 
-    protected List getCompileSourceRoots()
+    @Override
+    protected List<String> getCompileSourceRoots()
     {
         return compileSourceRoots;
     }
 
     @SuppressWarnings( "unchecked" )
     @Override
-    protected List < String > getClasspathElements( MavenProject project )
+    protected List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException
     {
         return project.getCompileClasspathElements();
