@@ -22,8 +22,6 @@ package org.codehaus.mojo.jaxb2;
 
 /**
  * @author <a href="mailto:Olivier.LAMY@accor.com">olamy</a>
- *
- * @since 
  * @version $Id$
  */
 public class NoSchemasException
