@@ -84,8 +84,9 @@ public class TestXjcMojo
         return staleFile;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
-    protected List getClasspathElements( MavenProject project )
+    protected List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException
     {
         return project.getTestClasspathElements();

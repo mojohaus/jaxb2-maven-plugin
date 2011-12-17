@@ -270,19 +270,19 @@ public abstract class AbstractXjcMojo
                 // Need to build a URLClassloader since Maven removed it form
                 // the chain
                 ClassLoader parent = this.getClass().getClassLoader();
-                List classpathFiles = getClasspathElements( project );
-                URL[] urls = new URL[classpathFiles.size() + 1];
+                List<String> classpathFiles = getClasspathElements( project );
+                List<URL> urls = new ArrayList<URL>( classpathFiles.size() + 1 );
                 StringBuilder classPath = new StringBuilder();
-                for ( int i = 0; i < classpathFiles.size(); ++i )
+                for ( String classpathFile : classpathFiles )
                 {
-                    getLog().debug( (String) classpathFiles.get( i ) );
-                    urls[i] = new File( (String) classpathFiles.get( i ) ).toURI().toURL();
-                    classPath.append( (String) classpathFiles.get( i ) );
+                    getLog().debug( classpathFile );
+                    urls.add( new File( classpathFile ).toURI().toURL() );
+                    classPath.append( classpathFile );
                     classPath.append( File.pathSeparatorChar );
                 }
 
-                urls[classpathFiles.size()] = new File( project.getBuild().getOutputDirectory() ).toURI().toURL();
-                URLClassLoader cl = new URLClassLoader( urls, parent );
+                urls.add( new File( project.getBuild().getOutputDirectory() ).toURI().toURL() );
+                URLClassLoader cl = new URLClassLoader( urls.toArray( new URL[0] ), parent );
 
                 // Set the new classloader
                 Thread.currentThread().setContextClassLoader( cl );
@@ -821,7 +821,7 @@ public abstract class AbstractXjcMojo
 
     protected abstract File getBindingDirectory();
 
-    protected abstract List getClasspathElements( MavenProject project )
+    protected abstract List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException;
 
     /**

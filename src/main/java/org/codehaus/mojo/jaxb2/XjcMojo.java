@@ -85,8 +85,9 @@ public class XjcMojo
         return staleFile;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
-    protected List getClasspathElements( MavenProject project )
+    protected List<String> getClasspathElements( MavenProject project )
         throws DependencyResolutionRequiredException
     {
         return project.getCompileClasspathElements();
@@ -115,5 +116,4 @@ public class XjcMojo
     {
         return bindingDirectory;
     }
-
 }
