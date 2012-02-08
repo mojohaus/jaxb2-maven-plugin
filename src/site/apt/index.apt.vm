@@ -11,9 +11,9 @@ ${project.name}
 
   General Information about the plugin goals:
 
-  * {{{./schemagen-mojo.html}jaxb2:schemagen}} Creates XML Schema file(s) for sources.
+  * {{{./schemagen-mojo.html}jaxb2:schemagen}} Creates XML Schema Definition (XSD) file(s) from annotated Java sources.
   
-  * {{{./testSchemagen-mojo.html}jaxb2:testSchemagen}} Creates XML Schema file(s) for test sources.
+  * {{{./testSchemagen-mojo.html}jaxb2:testSchemagen}} Creates XML Schema Definition (XSD) file(s) from annotated Java test sources.
 
   * {{{./xjc-mojo.html}jaxb2:xjc}} Generates Java sources from XML Schema(s).
 
@@ -22,7 +22,8 @@ ${project.name}
 
 * Usage
 
-  General instructions on how to use the Plugin Name can be found on the {{{./usage.html}usage page}}.
+  General instructions on how to use the ${project.name} can be found on the {{{./usage.html}XJC usage page}}
+  and the {{{./usage_schemagen.html}Schemagen usage page}} respectively.
 
   In case you still have questions regarding the plugin's usage, please feel
   free to contact the {{{./mail-lists.html}user mailing list}}. The posts to the mailing list are archived and could
@@ -35,4 +36,4 @@ ${project.name}
   entire debug logs, POMs or most preferably little demo projects attached to the issue are very much appreciated.
   Of course, patches are most welcome too. Contributors can check out the project from our
   {{{./source-repository.html}source repository}} and will find supplementary information in the
-  {{{http://maven.apache.org/guides/development/guide-helping.html}guide to helping with Maven}}. 
+  {{{http://maven.apache.org/guides/development/guide-helping.html}guide to helping with Maven}}.

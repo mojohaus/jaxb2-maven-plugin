@@ -1,0 +1,316 @@
+Usage - Schemagen (XML Schema Generator)
+
+    Please be aware that this plugin requires at least the Java 5.0 compiler.
+    This plugin can generate XML Schemas from JAXB-annotated Java classes.
+    Under the hood, the SchemaGenerator utility is used to generate all XML Schema files.
+
+* Schema generator configuration
+
+    For each namespace within your XML schema compilation, the following can be set using
+    a <<<schema>>> configuration element:
+
++------------------------------------------+
+    ...
+    <transformSchema>
+        <uri>http://some/namespace</uri>
+        <toPrefix>some</toPrefix>
+        <toFile>some_schema</toFile>
+    </transformSchema>
+    ...
++------------------------------------------+
+
+** Element <<<uri>>> (required): designates an XML namespace (uri).
+
+    Each namespace you define within your annotated java files will be generated and written
+    into an XML Schema file of its own. The value of the <<<uri>>> element is used to uniquely
+    identify a namespace - all uri values must be unique within each configuration.
+
+** Element <<<toPrefix>>> (optional): alters the namespace prefix.
+
+    The SchemaGenerator utility creates default namespace prefixes on the form
+    <<<ns1>>>, <<<ns2>>> etc. You can change the namespace prefix within the
+    generated XML schema files to the value of the toPrefix element by providing a
+    value within the <<<toPrefix>>> element. When configuring a prefix, note that:
+
+    [[1]] The prefix should be a single word without whitespace.
+
+    [[2]] The prefix must be unique within each XML schema compilation - the same prefix
+          cannot refer to two different XML namespaces.
+
+    While the toPrefix element is optional, either toPrefix or toFile element must be set on
+    each defined schema namespace uri.
+
+** Element <<<toFile>>> (optional): alters the generated XML schema file name.
+
+    The SchemaGenerator utility creates file names on the form <<<schema1.xsd>>>,
+    <<<schema2.xsd>>> etc. When configuring a filename for a generated XML schema, note that:
+
+    [[1]] The filename should not contain file system separators or whitespace.
+
+    [[2]] The filename must be unique within each XML schema compilation - the same filename
+          cannot be used to write two different XML namespaces.
+
+    [[3]] The normal filename suffix of each generated XML schema file is ".xsd".
+          This filename suffix is automatically appended to each generated schema file - which
+          means you don't need to supply a filename suffix within the <<<toFile>>> configuration property.
+
+    While the toFile element is optional, either toPrefix or toFile element must be set on
+    each defined schema namespace uri.
+
+* Example pom
+
++------------------------------------------+
+
+<project>
+    ...
+
+    <dependencies>
+
+        <!--
+            You need the JAXB API to be able to annotate your classes.
+            These annotations are used by the jaxb2-maven-plugin to
+            generate XML schema definition files.
+        -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <transformSchemas>
+                        <!--
+                            Each schema element defines:
+
+                            a) A <<namespace uri>> for one of your namespaces.
+                               This namespace uri must be unique within the schemas element.
+
+                            b) A <<toPrefix>> that you want to use for the namespace.
+                               Should not contain whitespace or exotic characters.
+                               This yields a namespace definition on the form
+                               <xs:schema ... xmlns:[toPrefix]="[uri]" ... />
+
+                               (I.e: <xs:schema ... xmlns:some="http://some/namespace"
+                                                    xmlns:xs="http://www.w3.org/2001/XMLSchema"> )
+
+                               ... and transforms relevant xml schema elements to use the provided namespace prefix:
+
+                               <some:elementName ... />
+
+                            c) The desired <<toFile>> name of the generated XML schema definition file,
+                               excluding the ".xsd" suffix (which will be added automatically).
+                        -->
+                        <transformSchema>
+                            <uri>http://some/namespace</uri>
+                            <toPrefix>some</toPrefix>
+                            <toFile>some_schema</toFile>
+                        </transformSchema>
+                        <transformSchema>
+                            <uri>http://another/namespace</uri>
+                            <toPrefix>another</toPrefix>
+                            <toFile>another_schema</toFile>
+                        </transformSchema>
+                        <transformSchema>
+                            <uri>http://yet/another/namespace</uri>
+                            <toPrefix>yetAnother</toPrefix>
+                            <toFile>yet_another_schema</toFile>
+                        </transformSchema>
+                    </transformSchemas>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!-- Don't forget Java 5!! -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2<version> <!-- check http://maven.apache.org/plugins/maven-compiler-plugin/ -->
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
++------------------------------------------+
+
+
+* Java class annotations and pom configuration
+
+   <<Disclaimer>>: Normative information about JAXB annotations can be found at {{http://jaxb.java.net/}}.
+   This documentation is merely a convenience in the light of using this plugin to generate XML schema
+   files from annotated java classes.
+
+   In the example below, two annotated java classes (plus 1 interface with constants) use 3 separate namespaces
+   (highlighed within the listing below). This implies that the schemagen goal produces 3 XML schema files - one
+   for each namespace. Each generated XML schema file will contain the definitions/elements assign to its namespace.
+
+** Namespace definitions
+
+    A simple namespace definition interface, holding 3 namespace uri constants.
+
++------------------------------------------+
+public interface Namespaces {
+
+    public static final String SOME_NAMESPACE = "http://some/namespace";
+    public static final String ANOTHER_NAMESPACE = "http://another/namespace";
+    public static final String YET_ANOTHER_NAMESPACE = "http://yet/another/namespace";
+}
++------------------------------------------+
+
+
+** FooBar - annotated java class #1
+
+     A class using two namespaces; the default <<<namespace = Namespaces.SOME_NAMESPACE>>> is set on the class level
+     and used for all properties defined within the class when generating its XML schema elements. The only exception
+     is the element <<<aRequiredElementInAnotherNamespace>>> which defines another namespace
+     <<<namespace = Namespaces.ANOTHER_NAMESPACE>>>.
+
++------------------------------------------+
+@XmlType(namespace = Namespaces.SOME_NAMESPACE,
+        propOrder = {"requiredElement", "aRequiredElementInAnotherNamespace",
+                "optionalElement", "requiredAttribute", "optionalAttribute"\})
+@XmlAccessorType(XmlAccessType.FIELD)
+public class FooBar {
+
+    @XmlElement(required = true, defaultValue = "requiredElementValue")
+    private String requiredElement;
+
+    @XmlElement(namespace = Namespaces.ANOTHER_NAMESPACE, required = true, defaultValue = "requiredElementValue")
+    private String aRequiredElementInAnotherNamespace;
+
+    @XmlElement(required = false)
+    private String optionalElement;
+
+    @XmlAttribute(required = true)
+    private String requiredAttribute;
+
+    @XmlAttribute(required = false)
+    private String optionalAttribute;
+}
++------------------------------------------+
+
+
+** FooBaz - annotated java class #2
+
+    A class using three namespaces; the default <<<namespace = Namespaces.ANOTHER_NAMESPACE>>> is set on the class level
+     and used for all properties defined within the class when generating its XML schema elements.
+     The two members within the FooBaz class explicitly configured to use other namespaces are
+     <<<aRequiredElementInYetAnotherNamespace>>> which uses <<<namespace = Namespaces.YET_ANOTHER_NAMESPACE>>> and
+     <<<anOptionalElementInSomeNamespace>>> which uses <<<namespace = Namespaces.SOME_NAMESPACE>>>.
+
++------------------------------------------+
+@XmlType(namespace = Namespaces.ANOTHER_NAMESPACE,
+        propOrder = {"requiredElement", "anOptionalElementInSomeNamespace",
+                "aRequiredElementInYetAnotherNamespace", "requiredAttribute", "optionalAttribute"\})
+@XmlAccessorType(XmlAccessType.FIELD)
+public class FooBaz {
+
+    @XmlElement(required = true, defaultValue = "requiredElementValue")
+    private String requiredElement;
+
+    @XmlElement(namespace = Namespaces.YET_ANOTHER_NAMESPACE, required = true, defaultValue = "requiredElementValue")
+    private String aRequiredElementInYetAnotherNamespace;
+
+    @XmlElement(namespace = Namespaces.SOME_NAMESPACE, required = false)
+    private String anOptionalElementInSomeNamespace;
+
+    @XmlAttribute(required = true)
+    private String requiredAttribute;
+
+    @XmlAttribute(required = false)
+    private String optionalAttribute;
+}
++------------------------------------------+
+
+* Corresponding generated XML schema definitions
+
+   Each generated XML schema file contains the definitions/elements located within each schema file.
+   Let's start with the simplest of the generated files -
+
+** yetAnotherSchema.xsd
+
+    This generated schema file corresponds to the annotated member aRequiredElementInYetAnotherNamespace
+    in class FooBaz:
+
++------------------------------------------+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://yet/another/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="aRequiredElementInYetAnotherNamespace" type="xs:string"/>
+</xs:schema>
++------------------------------------------+
+
+** anotherSchema.xsd
+
+    This generated schema file corresponds to the annotated member aRequiredElementInAnotherNamespace in
+    class FooBar, and all default-namespace members in class FooBaz:
+
++------------------------------------------+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://another/namespace"
+           xmlns:yetAnother="http://yet/another/namespace"
+           xmlns:some="http://some/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:import namespace="http://some/namespace" schemaLocation="someSchema.xsd"/>
+
+    <xs:import namespace="http://yet/another/namespace" schemaLocation="yetAnotherSchema.xsd"/>
+
+    <xs:element name="aRequiredElementInAnotherNamespace" type="xs:string"/>
+
+    <xs:complexType name="fooBaz">
+        <xs:sequence>
+            <xs:element name="requiredElement" type="xs:string" default="requiredElementValue"/>
+            <xs:element ref="some:anOptionalElementInSomeNamespace" minOccurs="0"/>
+            <xs:element ref="yetAnother:aRequiredElementInYetAnotherNamespace" default="requiredElementValue"/>
+        </xs:sequence>
+        <xs:attribute name="requiredAttribute" type="xs:string" use="required"/>
+        <xs:attribute name="optionalAttribute" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>
++------------------------------------------+
+
+** someSchema.xsd
+
+    This generated schema file corresponds to the annotated member anOptionalElementInSomeNamespace in class FooBaz,
+    and all default-namespace members in class FooBar:
+
++------------------------------------------+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://some/namespace"
+           xmlns:another="http://another/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace="http://another/namespace" schemaLocation="anotherSchema.xsd"/>
+
+  <xs:element name="anOptionalElementInSomeNamespace" type="xs:string"/>
+
+  <xs:complexType name="fooBar">
+    <xs:sequence>
+      <xs:element name="requiredElement" type="xs:string" default="requiredElementValue"/>
+      <xs:element ref="another:aRequiredElementInAnotherNamespace" default="requiredElementValue"/>
+      <xs:element name="optionalElement" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="requiredAttribute" type="xs:string" use="required"/>
+    <xs:attribute name="optionalAttribute" type="xs:string"/>
+  </xs:complexType>
+</xs:schema>
++------------------------------------------+

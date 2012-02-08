@@ -54,11 +54,26 @@ public class TestSchemagenMojo
      * @required
      */
     private File outputDirectory;
+    
+    /**
+     * The name of the directory where copies of the original/generated
+     * schema files are stored. Thus, original generated XSD files
+     * are preserved for reference.
+     *
+     * @parameter default-value="${project.build.directory}/jaxb2/test-work"
+     */
+    private File testWorkDirectory;
 
     @Override
     protected File getOutputDirectory()
     {
         return outputDirectory;
+    }
+    
+    @Override
+    protected File getWorkDirectory()
+    {
+        return testWorkDirectory;
     }
 
     @Override

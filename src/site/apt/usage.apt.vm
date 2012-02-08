@@ -1,4 +1,4 @@
-Usage
+Usage - XJC (XML to Java Compilation)
 
   This plugin implements and runs the XJC compiler driver natively, and integrates XJC into
   Maven. Please be aware that this plugin requires at least the Java 5.0 compiler.
@@ -43,10 +43,7 @@ Usage
            <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-compiler-plugin</artifactId>
-               <configuration>
-                   <source>1.5</source>
-                   <target>1.5</target>
-               </configuration>
+               <version>2.3.2<version> <!-- check http://maven.apache.org/plugins/maven-compiler-plugin/ -->
            </plugin>
            ...
        </plugins>

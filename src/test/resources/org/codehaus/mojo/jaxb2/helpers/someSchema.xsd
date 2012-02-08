@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://some/namespace"
+           xmlns:another="http://another/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace="http://another/namespace" schemaLocation="anotherSchema.xsd"/>
+
+  <xs:element name="anOptionalElementInSomeNamespace" type="xs:string"/>
+
+  <xs:complexType name="fooBar">
+    <xs:sequence>
+      <xs:element name="requiredElement" type="xs:string" default="requiredElementValue"/>
+      <xs:element ref="another:aRequiredElementInAnotherNamespace" default="requiredElementValue"/>
+      <xs:element name="optionalElement" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="requiredAttribute" type="xs:string" use="required"/>
+    <xs:attribute name="optionalAttribute" type="xs:string"/>
+  </xs:complexType>
+</xs:schema>
+

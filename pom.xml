@@ -54,8 +54,8 @@
   <ciManagement>
     <system>Bamboo</system>
     <url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXB</url>
-  </ciManagement>  
-  
+  </ciManagement>
+
   <developers>
     <developer>
       <id>jgenender</id>
@@ -76,6 +76,17 @@
         <role>Committer</role>
       </roles>
       <timezone>Europe/Amsterdam</timezone>
+    </developer>
+    <developer>
+      <id>lj</id>
+      <name>Lennart J&ouml;relid</name>
+      <email>lj@jguru.se</email>
+      <roles>
+        <role>Contributor</role>
+      </roles>
+      <organization>jGuru Europe AB</organization>
+      <organizationUrl>http://www.jguru.se</organizationUrl>
+      <timezone>Europe/Stockholm</timezone>
     </developer>
   </developers>
   <licenses>
