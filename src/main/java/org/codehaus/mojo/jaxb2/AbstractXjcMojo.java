@@ -42,6 +42,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.xml.sax.SAXParseException;
 
 import com.sun.tools.xjc.Driver;
@@ -104,7 +105,7 @@ public abstract class AbstractXjcMojo
 
     /**
      * List of files to use for schemas, comma delimited. If none, then all xsd
-     * files are used in the schemaDirectory.
+     * files are used in the schemaDirectory. This parameter also excepts Ant style file-patterns.
      * Note: you can only use either the 'schemaFiles' or the 'schemaListFileName'
      * option (you may not use both at once!).
      *
@@ -696,13 +697,16 @@ public abstract class AbstractXjcMojo
         List<URL> xsdFiles = new ArrayList<URL>();
         if ( schemaFiles != null )
         {
-            for ( StringTokenizer st = new StringTokenizer( schemaFiles, "," ); st.hasMoreTokens(); )
+            DirectoryScanner scanner = new DirectoryScanner();
+            scanner.setBasedir( getSchemaDirectory() );
+            scanner.setIncludes( schemaFiles.split( "," ) );
+            scanner.scan();
+            for ( String schemaName : scanner.getIncludedFiles() )
             {
-                String schemaName = st.nextToken().trim();
                 URL url = null;
                 try
                 {
-                    url = new URL( schemaName );
+                    url = new URL( schemaName.trim() );
                 }
                 catch ( MalformedURLException e )
                 {
