@@ -245,6 +245,14 @@ public abstract class AbstractXjcMojo
      */
     protected boolean failOnNoSchemas;
 
+    /**
+     * Enable correct generation of Boolean getters/setters to enable Bean Introspection apis. 
+     *
+     * @parameter default-value="false"
+     * @since 1.4
+     */
+    private boolean enableIntrospection;
+
     public AbstractXjcMojo()
     {
         super();
@@ -502,6 +510,11 @@ public abstract class AbstractXjcMojo
         {
             args.add( "-target" );
             args.add( target );
+        }
+        
+        if ( enableIntrospection )
+        {
+            args.add( "-enableIntrospection" );
         }
         if ( arguments != null && arguments.trim().length() > 0 )
         {
