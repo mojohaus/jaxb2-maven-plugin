@@ -77,9 +77,10 @@
       </roles>
       <timezone>Europe/Amsterdam</timezone>
     </developer>
-    <developer>
-      <id>lj</id>
-      <name>Lennart J&ouml;relid</name>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>Lennart J&#246;relid</name>
       <email>lj@jguru.se</email>
       <roles>
         <role>Contributor</role>
@@ -87,8 +88,8 @@
       <organization>jGuru Europe AB</organization>
       <organizationUrl>http://www.jguru.se</organizationUrl>
       <timezone>Europe/Stockholm</timezone>
-    </developer>
-  </developers>
+    </contributor>  
+  </contributors>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
