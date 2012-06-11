@@ -29,8 +29,8 @@
   <artifactId>jaxb2-maven-plugin</artifactId>
   <version>1.4-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
-  <name>Maven JAXB 2.1 Plugin</name>
-  <description>JAXB2 compiler plugin used to create object graph from XSDs based on the JAXB 2.1 implementation.</description>
+  <name>JAXB-2 Maven Plugin</name>
+  <description>Mojo's JAXB-2 Maven plugin is used to create an object graph from XSDs based on the JAXB 2.1 implementation.</description>
   <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
   <prerequisites>
     <maven>${mavenVersion}</maven>
