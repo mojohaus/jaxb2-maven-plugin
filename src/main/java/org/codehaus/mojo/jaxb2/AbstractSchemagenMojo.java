@@ -134,6 +134,11 @@ public abstract class AbstractSchemagenMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        if( "pom".equals( project.getPackaging() ) )
+        {
+            return;
+        }
+        
         if ( includes.isEmpty() )
         {
             throw new MojoExecutionException( "At least one file has to be included" );
