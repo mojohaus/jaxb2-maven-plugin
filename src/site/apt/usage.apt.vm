@@ -1,13 +1,19 @@
 Usage - XJC (XML to Java Compilation)
 
   This plugin implements and runs the XJC compiler driver natively, and integrates XJC into
-  Maven. Please be aware that this plugin requires at least the Java 5.0 compiler.
+  Maven.
   
+  Please be aware that this plugin requires at least the Java 5.0 compiler. This means that you
+  need a Java 5+ JDK and have the maven-compiler-plugin configured to use Java 5.
+  
+* Basic example
+
+  The following example demonstrates a basic plugin configuration for generating Java sources from XML schemas:
+
 +------------------------------------------+
 <project>
     ...
     <dependencies>
-        ...
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -55,3 +61,53 @@ Usage - XJC (XML to Java Compilation)
     ...
 </project>
 +------------------------------------------+
+
+  In this example, the plugin will generate Java sources from all XML schema files in the default
+  {{{./xjc-mojo.html#schemaDirectory}schema directory}}. The package of the generated sources will
+  be 'com.example.myschema' as defined by the <<<packageName>>> configuration element.
+  
+* Multiple schemas with different configuration
+
+  In the case of having multiple XML schema files which should be processed with different configuration,
+  you need to have multiple plugin execution bindings. One execution binding per unique configuration.
+  
++------------------------------------------+
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+            <execution>
+                <id>schema1-xjc</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+                <configuration>
+                    <schemaFiles>schema1.xsd</schemaFiles>
+                    <packageName>com.example.foo</packageName>
+                    <staleFile>\${project.build.directory}/jaxb2/.schema1XjcStaleFlag</staleFile>
+                </configuration>
+            </execution>
+            <execution>
+                <id>schema2-xjc</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+                <configuration>
+                    <schemaFiles>schema2.xsd</schemaFiles>
+                    <packageName>com.example.bar</packageName>
+                    <staleFile>\${project.build.directory}/jaxb2/.schema2XjcStaleFlag</staleFile>
+                    <clearOutputDir>false</clearOutputDir>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
++------------------------------------------+
+  
+  In the above example, there are two tricks to get this to work properly:
+  
+  [[1]] Each execution needs its own stale file, otherwise the plugin will think there is nothing
+  to generate in the executions after the fist one.
+
+  [[2]] Need to set <<<clearOutputDir>>> to false for all but the first execution, otherwise the
+  Java sources generated in prior steps will be cleared (deleted).

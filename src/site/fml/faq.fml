@@ -3,8 +3,12 @@
         <faq id="Multiple">
             <question>I have different schemas and want different packages for those schemas, how do I do this?</question>
             <answer>
-<p>You want to create multiple executions in your plugin declaration.  This will allow you to have multiple configuration declarations and you can specify the schema and package to be run for that execution.  In your configuation, you will need to have a different staleFile for each execution, so it will be able to determine if the xjc needs to be executed.
-</p>
+                <p>You want to create multiple executions in your plugin declaration. This will allow you
+                to have multiple configuration declarations and you can specify the schema and package to
+                be run for that execution. In your configuration, you will need to have a different staleFile
+                for each execution, so it will be able to determine if the xjc needs to be executed.</p>
+
+                <p>An example is given on the XJC usage page.</p>
             </answer>
         </faq>
     </part>
