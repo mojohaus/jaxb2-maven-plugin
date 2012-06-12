@@ -175,7 +175,7 @@ public abstract class AbstractXjcMojo
     /**
      * Be extra verbose.
      *
-     * @parameter default-value="false"
+     * @parameter expression="${xjc.verbose}" default-value="false"
      */
     protected boolean verbose;
 
