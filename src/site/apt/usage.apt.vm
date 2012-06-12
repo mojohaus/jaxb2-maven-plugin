@@ -22,6 +22,16 @@ Usage - XJC (XML to Java Compilation)
     </dependencies>
     ...
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Need Java 5, which is the default since v2.3 of the maven-compiler-plugin. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1<version>
+                </plugin>
+            <plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -34,20 +44,14 @@ Usage - XJC (XML to Java Compilation)
                             <goal>xjc</goal>
                         </goals>
                     </execution>
-               </executions>
-               <configuration>
+                </executions>
+                <configuration>
                     <packageName>com.example.myschema</packageName> <!-- The name of your generated source package -->
-               </configuration>
-           </plugin>
-           <!-- Don't forget Java 5!! -->
-           <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-compiler-plugin</artifactId>
-               <version>2.3.2<version> <!-- check http://maven.apache.org/plugins/maven-compiler-plugin/ -->
-           </plugin>
-           ...
-       </plugins>
-   <build>
-...
+                </configuration>
+            </plugin>
+            ...
+        </plugins>
+    <build>
+    ...
 </project>
 +------------------------------------------+

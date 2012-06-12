@@ -65,7 +65,6 @@ Usage - Schemagen (XML Schema Generator)
     ...
 
     <dependencies>
-
         <!--
             You need the JAXB API to be able to annotate your classes.
             These annotations are used by the jaxb2-maven-plugin to
@@ -79,6 +78,16 @@ Usage - Schemagen (XML Schema Generator)
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Need Java 5, which is the default since v2.3 of the maven-compiler-plugin. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1<version>
+                </plugin>
+            <plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -86,6 +95,7 @@ Usage - Schemagen (XML Schema Generator)
                 <version>${project.version}</version>
                 <executions>
                     <execution>
+                        <id>schemagen</id>
                         <goals>
                             <goal>schemagen</goal>
                         </goals>
@@ -134,12 +144,6 @@ Usage - Schemagen (XML Schema Generator)
                         <include>**/*.java</include>
                     </includes>
                 </configuration>
-            </plugin>
-            <!-- Don't forget Java 5!! -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2<version> <!-- check http://maven.apache.org/plugins/maven-compiler-plugin/ -->
             </plugin>
         </plugins>
     </build>
