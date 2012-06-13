@@ -105,7 +105,7 @@ public abstract class AbstractXjcMojo
 
     /**
      * List of files to use for schemas, comma delimited. If none, then all xsd
-     * files are used in the schemaDirectory. This parameter also excepts Ant style file-patterns.
+     * files are used in the schemaDirectory. This parameter also accepts Ant style file-patterns.
      * Note: you can only use either the 'schemaFiles' or the 'schemaListFileName'
      * option (you may not use both at once!).
      *
