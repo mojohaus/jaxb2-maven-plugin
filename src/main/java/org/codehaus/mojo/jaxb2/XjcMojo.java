@@ -60,7 +60,7 @@ public class XjcMojo
     /**
      * The directory for XML Schema files (XSDs).
      *
-     * @parameter default-value="${basedir}/src/main/xsd"
+     * @parameter default-value="${project.basedir}/src/main/xsd"
      * @required
      */
     private File schemaDirectory;
@@ -68,7 +68,7 @@ public class XjcMojo
     /**
      * The directory for JAXB binding files.
      *
-     * @parameter default-value="${basedir}/src/main/xjb"
+     * @parameter default-value="${project.basedir}/src/main/xjb"
      */
     private File bindingDirectory;
 
