@@ -22,3 +22,6 @@ assert addressType.exists()
 
 File mainSources = new File( basedir,'target/generated-sources/jaxb/' )
 assert !mainSources.exists()
+
+File addressTypeCompiled = new File( basedir,'target/test-classes/com/example/myschema/AddressType.class' )
+assert addressTypeCompiled.exists()
