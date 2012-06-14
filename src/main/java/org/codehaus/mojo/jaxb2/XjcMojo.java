@@ -36,7 +36,6 @@ import org.apache.maven.project.MavenProject;
  * @goal xjc
  * @phase generate-sources
  * @requiresDependencyResolution
- * @description JAXB 2.0 Plugin.
  */
 public class XjcMojo
     extends AbstractXjcMojo
