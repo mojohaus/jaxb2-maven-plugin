@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -254,6 +255,13 @@ public abstract class AbstractXjcMojo
      */
     private boolean enableIntrospection;
 
+    /**
+     * The char encoding for the generated Java source files.
+     *
+     * @parameter default-value="${project.build.sourceEncoding}"
+     */
+    private String encoding;
+
     public AbstractXjcMojo()
     {
         super();
@@ -300,9 +308,10 @@ public abstract class AbstractXjcMojo
                 {
 
                     ArrayList<String> args = getXJCArgs( classPath.toString() );
+                    MojoXjcListener xjcListener = new MojoXjcListener();
 
                     // Run XJC
-                    if ( 0 != Driver.run( args.toArray( new String[args.size()] ), new MojoXjcListener() ) )
+                    if ( 0 != Driver.run( args.toArray( new String[args.size()] ), xjcListener ) )
                     {
                         String msg = "Could not process schema";
                         if ( null != schemaFiles )
@@ -320,6 +329,10 @@ public abstract class AbstractXjcMojo
                         }
                         throw new MojoExecutionException( msg );
                     }
+
+                    // Workaround until upgrading to a JAXB impl that supports configuring
+                    // the output char encoding (see http://java.net/jira/browse/JAXB-499)
+                    changeEncoding( xjcListener.files );
 
                     touchStaleFile();
                 }
@@ -827,6 +840,35 @@ public abstract class AbstractXjcMojo
         }
     }
 
+    private void changeEncoding( List<String> files )
+        throws IOException
+    {
+        String to = encoding;
+        String from = System.getProperty( "file.encoding" );
+        boolean enableEncode = to != null && to.trim().length() > 0 && !to.equals( from );
+
+        if ( enableEncode )
+        {
+            getLog().debug( "Changing encoding of generated source files from " + from
+                            + " to " + to);
+            for ( Iterator < String > it = files.iterator(); it.hasNext(); )
+            {
+                File file = new File( getOutputDirectory(), it.next() );
+
+                if ( file.exists() )
+                {
+                    String data = FileUtils.fileRead( file );
+                    FileUtils.fileWrite( file.getAbsolutePath(), to, data );
+                }
+                else
+                {
+                    getLog().warn( "Expected file " + file.getAbsolutePath()
+                                    + " not found when changing encoding" );
+                }
+            }
+        }
+    }
+
     protected abstract File getStaleFile();
 
     protected abstract File getOutputDirectory();
@@ -897,6 +939,8 @@ public abstract class AbstractXjcMojo
         extends XJCListener
     {
 
+        List<String> files = new ArrayList<String>();
+
         private String location( SAXParseException e )
         {
             return StringUtils.defaultString( e.getPublicId(), e.getSystemId() ) + "[" + e.getLineNumber() + ","
@@ -931,6 +975,7 @@ public abstract class AbstractXjcMojo
         public void generatedFile( String arg0 )
         {
             getLog().info( arg0 );
+            files.add( arg0 );
         }
 
     }

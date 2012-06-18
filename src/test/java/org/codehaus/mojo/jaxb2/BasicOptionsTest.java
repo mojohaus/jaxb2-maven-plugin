@@ -1,8 +1,12 @@
 package org.codehaus.mojo.jaxb2;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.TestCase;
 import org.apache.maven.project.MavenProject;
@@ -10,6 +14,7 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
+import org.codehaus.plexus.util.FileUtils;
 
 
 /**
@@ -159,10 +164,72 @@ public class BasicOptionsTest extends AbstractMojoTestCase { //extends TestCase 
         
         //check output
         assertFileNames( new String[] { "AddressType.java", "AddressType2.java", 
-                                        "AddressType3.java", ".staleFlag2", 
-                                        "ObjectFactory.java" },
+                                        "AddressType3.java", "AddressType4.java",
+                                        ".staleFlag2", "ObjectFactory.java" },
                          outputLocationDirectory.list());
     }
 
+    public void testParameterEncoding()
+        throws Exception
+    {
+        String encode_a = "UTF-8";
+        String encode_b = "ISO-8859-1";
 
+        // setup test #4 UTF-8
+        AbstractXjcMojo xjcMojo_utf8 = configureMojo( "src/test/resources/test4-utf8-pom.xml" );
+
+        // execute it
+        xjcMojo_utf8.execute();
+
+        File outputLocationDirectory_utf8 =
+            new File( getBasedir() + "/target/test-generated-sources/utf8/jaxb2/plugin" );
+        // check output
+        assertFileNames( new String[] { "AddressType4.java", ".staleFlag4-utf8", "ObjectFactory.java" },
+                         outputLocationDirectory_utf8.list() );
+
+        // setup test #4 Cp1251 (Windows-1251)
+        AbstractXjcMojo xjcMojo_iso88591 = configureMojo( "src/test/resources/test4-iso88591-pom.xml" );
+
+        // execute it
+        xjcMojo_iso88591.execute();
+
+        File outputLocationDirectory_iso88591 =
+            new File( getBasedir() + "/target/test-generated-sources/iso88591/jaxb2/plugin" );
+        // check output
+        assertFileNames( new String[] { "AddressType4.java", ".staleFlag4-iso88591", "ObjectFactory.java" },
+                         outputLocationDirectory_iso88591.list() );
+
+        String fileName = "AddressType4.java";
+        compareFiles( fileName, encode_a, encode_b, outputLocationDirectory_utf8, outputLocationDirectory_iso88591 );
+    }
+
+    private void compareFiles( String fileName, String encode_a, String encode_b,
+                               File outputLocationDirectory_encode_a, File outputLocationDirectory_encode_b )
+        throws IOException
+    {
+
+        List<String> lines_encode_a = readFile( outputLocationDirectory_encode_a, fileName, encode_a );
+        List<String> lines_encode_b = readFile( outputLocationDirectory_encode_b, fileName, encode_b );
+
+        for ( int i = 0; i < lines_encode_a.size(); i++ )
+        {
+            assertEquals( "expected: AddressType4.java form " + encode_a + " and " + encode_b + " line:" + ( i + 1 ),
+                          lines_encode_a.get( i ), lines_encode_b.get( i ) );
+        }
+    }
+
+    private List<String> readFile( File outputLocationDirectory, String fileName, String encoding )
+        throws IOException
+    {
+        String text = FileUtils.fileRead( new File( outputLocationDirectory, fileName ), encoding );
+        BufferedReader reader = new BufferedReader( new StringReader( text ) );
+        ArrayList<String> lines = new ArrayList<String>();
+        String line;
+        while ( ( line = reader.readLine() ) != null )
+        {
+            lines.add( line );
+        }
+
+        return lines;
+    }
 }
