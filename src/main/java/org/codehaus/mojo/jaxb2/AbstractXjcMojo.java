@@ -842,17 +842,17 @@ public abstract class AbstractXjcMojo
         throws DependencyResolutionRequiredException;
 
     /**
-     * A class used to look up .xsd documents from a given directory.
+     * A class used to look up .xjb documents from a given directory.
      */
     final class XJBFile
         implements FileFilter
     {
 
         /**
-         * Returns true if the file ends with an xsd extension.
+         * Returns true if the file ends with an xjb extension.
          *
-         * @param file The filed being reviewed by the filter.
-         * @return true if an xsd file.
+         * @param file The file being reviewed by the filter.
+         * @return true if an xjb file.
          */
         public boolean accept( final File file )
         {
@@ -878,7 +878,7 @@ public abstract class AbstractXjcMojo
         /**
          * Returns true if the file ends with an xsd extension.
          *
-         * @param file The filed being reviewed by the filter.
+         * @param file The file being reviewed by the filter.
          * @return true if an xsd file.
          */
         public boolean accept( final java.io.File file )
