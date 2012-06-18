@@ -555,14 +555,11 @@ public abstract class AbstractXjcMojo
             URL xsds[] = getXSDFiles();
             for ( int i = 0; i < xsds.length; i++ )
             {
-                // args.add( xsds[i].toString() );
                 schemas.add( xsds[i].toString() );
             }
         }
         else
         {
-            // args.add( getSchemaDirectory().getAbsolutePath() );
-
             if ( getSchemaDirectory().exists() && getSchemaDirectory().isDirectory() )
             {
                 File[] schemaFiles = getSchemaDirectory().listFiles( new XSDFile( getLog() ) );
