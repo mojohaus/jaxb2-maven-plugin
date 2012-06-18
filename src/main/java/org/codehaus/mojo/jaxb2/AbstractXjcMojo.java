@@ -580,7 +580,7 @@ public abstract class AbstractXjcMojo
 
         args.addAll( schemas );
 
-        getLog().debug( "JAXB 2.0 args: " + args );
+        getLog().debug( "JAXB XJC args: " + args );
 
         return args;
     }
