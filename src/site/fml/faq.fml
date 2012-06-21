@@ -1,5 +1,6 @@
 <faqs id="FAQ" title="Frequently Asked Questions">
-    <part id="General">
+    <part id="XJC">
+        <title>XJC</title>
         <faq id="Multiple">
             <question>I have different schemas and want different packages for those schemas, how do I do this?</question>
             <answer>
@@ -14,6 +15,7 @@
     </part>
 
     <part id="Schemagen">
+        <title>Schemagen</title>
         <faq id="Tooling">
             <question>What tool is used by the jaxb2-maven-plugin to generate the XML schema definition files?</question>
             <answer>
