@@ -134,7 +134,7 @@ public abstract class AbstractSchemagenMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
-        if( "pom".equals( project.getPackaging() ) )
+        if ( "pom".equals( project.getPackaging() ) )
         {
             return;
         }

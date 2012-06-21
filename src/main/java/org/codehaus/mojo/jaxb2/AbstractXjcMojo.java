@@ -850,7 +850,7 @@ public abstract class AbstractXjcMojo
         if ( enableEncode )
         {
             getLog().debug( "Changing encoding of generated source files from " + from
-                            + " to " + to);
+                            + " to " + to );
             for ( Iterator < String > it = files.iterator(); it.hasNext(); )
             {
                 File file = new File( getOutputDirectory(), it.next() );
