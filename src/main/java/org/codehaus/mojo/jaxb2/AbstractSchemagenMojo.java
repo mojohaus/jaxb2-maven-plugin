@@ -107,6 +107,7 @@ public abstract class AbstractSchemagenMojo
      * </pre>
      *
      * @parameter
+     * @since 1.4
      */
     private List<TransformSchema> transformSchemas;
 
