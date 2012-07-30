@@ -75,14 +75,14 @@ public abstract class AbstractXjcMojo
     protected File generatedResourcesDirectory;
 
     /**
-     * The package in which the source files will be generated.
+     * The package under which the source files will be generated.
      *
      * @parameter
      */
     protected String packageName;
 
     /**
-     * Catalog file to resolve external entity references support TR9401,
+     * Catalog file to resolve external entity references. Supports TR9401,
      * XCatalog, and OASIS XML Catalog format.
      *
      * @parameter
@@ -106,7 +106,7 @@ public abstract class AbstractXjcMojo
 
     /**
      * List of files to use for schemas, comma delimited. If none, then all xsd
-     * files are used in the schemaDirectory. This parameter also accepts Ant style file-patterns.
+     * files are used in the schemaDirectory. This parameter also accepts Ant-style file patterns.<br>
      * Note: you can only use either the 'schemaFiles' or the 'schemaListFileName'
      * option (you may not use both at once!).
      *
@@ -116,7 +116,7 @@ public abstract class AbstractXjcMojo
 
     /**
      * A filename containing the list of files to use for schemas, comma delimited.
-     * If none, then all xsd files are used in the schemaDirectory.
+     * If none, then all xsd files are used in the schemaDirectory.<br>
      * Note: you can only use either the 'schemaFiles' or the 'schemaListFileName'
      * option (you may not use both at once!).
      *
@@ -153,7 +153,7 @@ public abstract class AbstractXjcMojo
     protected boolean relaxng;
 
     /**
-     * Treat input as RELAX NG compact syntax (experimental,unsupported).
+     * Treat input as RELAX NG compact syntax (experimental, unsupported).
      *
      * @parameter default-value="false"
      */
@@ -181,7 +181,7 @@ public abstract class AbstractXjcMojo
     protected boolean verbose;
 
     /**
-     * Treat input as WSDL and compile schemas inside it (experimental,unsupported).
+     * Treat input as WSDL and compile schemas inside it (experimental, unsupported).
      *
      * @parameter default-value="false"
      */
@@ -231,8 +231,9 @@ public abstract class AbstractXjcMojo
     protected boolean clearOutputDir;
 
     /**
-     * Avoid generating code that relies on any current JAXB 2.x features.
-     * This will allow the generated code to run with earlier JAXB 2.x runtime.
+     * Specifies the runtime environment in which the generated code is supposed to run, if older than the
+     * JAXB version used by the plugin (for example "2.0"). This will create generated code that doesn't use
+     * any newer JAXB features. Thus, allowing the generated code to run with an earlier JAXB 2.x runtime.
      *
      * @parameter
      * @since 1.3
@@ -256,7 +257,7 @@ public abstract class AbstractXjcMojo
     private boolean enableIntrospection;
 
     /**
-     * The char encoding for the generated Java source files.
+     * The character encoding for the generated Java source files.
      *
      * @parameter default-value="${project.build.sourceEncoding}"
      */
