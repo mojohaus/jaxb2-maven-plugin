@@ -374,11 +374,11 @@ public abstract class AbstractXjcMojo
         {
             if ( failOnNoSchemas )
             {
-                throw new MojoExecutionException( "no schemas has been found" );
+                throw new MojoExecutionException( "No schemas have been found" );
             }
             else
             {
-                getLog().warn( "skip xjc execution, no schemas has been found" );
+                getLog().warn( "Skipping xjc execution, no schemas have been found" );
             }
         }
         catch ( MojoExecutionException e )
