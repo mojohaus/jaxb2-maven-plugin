@@ -23,14 +23,22 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.codehaus.mojo.jaxb2.its</groupId>
-  <artifactId>default-test</artifactId>
+  <artifactId>xjc-main</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <description>Test of basic usage of the testXjc mojo.</description>
+  <description>Test of basic usage of the xjc mojo.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.1</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <pluginManagement>
@@ -50,9 +58,9 @@
         <version>@pom.version@</version>
         <executions>
           <execution>
-            <id>xjc-test</id>
+            <id>xjc</id>
             <goals>
-              <goal>testXjc</goal>
+              <goal>xjc</goal>
             </goals>
           </execution>
         </executions>
