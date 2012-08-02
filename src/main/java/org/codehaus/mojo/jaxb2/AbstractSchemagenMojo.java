@@ -112,9 +112,10 @@ public abstract class AbstractSchemagenMojo
     private List<TransformSchema> transformSchemas;
 
     /**
-     * A list of inclusion filters for the generator.
+     * A list of inclusion filters for the generator. At least one file has to be specified.
      *
      * @parameter
+     * @required
      */
     private Set<String> includes = new HashSet<String>();
 
