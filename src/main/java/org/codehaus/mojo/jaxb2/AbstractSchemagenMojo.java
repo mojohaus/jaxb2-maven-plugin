@@ -136,6 +136,13 @@ public abstract class AbstractSchemagenMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        if ( getLog().isDebugEnabled() )
+        {
+            Package jaxbImplPackage = SchemaGenerator.class.getPackage();
+            getLog().debug( "Using SchemaGen of " + jaxbImplPackage.getImplementationTitle() +
+                            " version " + jaxbImplPackage.getImplementationVersion() );
+        }
+
         if ( "pom".equals( project.getPackaging() ) )
         {
             return;

@@ -271,6 +271,12 @@ public abstract class AbstractXjcMojo
     public void execute()
         throws MojoExecutionException
     {
+        if ( getLog().isDebugEnabled() )
+        {
+            Package jaxbImplPackage = Driver.class.getPackage();
+            getLog().debug( "Using XJC of " + jaxbImplPackage.getImplementationTitle() +
+                            " version " + jaxbImplPackage.getImplementationVersion() );
+        }
 
         try
         {
