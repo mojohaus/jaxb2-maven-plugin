@@ -47,7 +47,7 @@ public class SchemagenMojo
     private List<String> compileSourceRoots;
 
     /**
-     * The working directory to place processor and javac generated class files.
+     * The directory where the generated XML Schema file(s) should be placed.
      *
      * @parameter default-value="${project.build.directory}/generated-resources/schemagen"
      * @required
