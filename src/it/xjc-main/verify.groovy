@@ -24,4 +24,4 @@ File testSources = new File( basedir,'target/generated-test-sources/jaxb/' )
 assert !testSources.exists()
 
 File addressTypeCompiled = new File( basedir,'target/classes/com/example/myschema/AddressType.class' )
-assert addressType.exists()
+assert addressTypeCompiled.exists()
