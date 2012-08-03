@@ -17,24 +17,13 @@
  * under the License.
  */
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
 File schema = new File( basedir,'target/generated-resources/schemagen/schema1.xsd' )
 assert schema.exists()
 
 // Validate content
-DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance()
-dbf.setNamespaceAware(false)
-Document doc = dbf.newDocumentBuilder().parse(schema)
-XPathFactory xpathFactory = XPathFactory.newInstance()
-XPath xpath = xpathFactory.newXPath()
-NodeList nodeList = ((NodeList) xpath.evaluate("/schema//complexType[@name='foo']", doc, XPathConstants.NODESET))
-assert nodeList.getLength() == 1 : "Incorrect content of generated XML Schema content"
+def xml = new XmlSlurper().parse(schema)
+assert 1 == xml.complexType.size()
+assert 'foo' == xml.complexType[0].@name.text()
 
 File testSchemagen = new File( basedir,'target/generated-test-resources/schemagen/' )
 assert !testSchemagen.exists()
