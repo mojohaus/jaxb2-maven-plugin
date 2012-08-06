@@ -40,15 +40,14 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.DirectoryScanner;
 import org.xml.sax.SAXParseException;
 
 import com.sun.tools.xjc.Driver;
 import com.sun.tools.xjc.XJCListener;
-
 
 /**
  * Abstract class for parsing XML schemas and binding resources to produce a corresponding object
