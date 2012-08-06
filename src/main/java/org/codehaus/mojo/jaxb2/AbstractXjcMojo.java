@@ -51,8 +51,8 @@ import com.sun.tools.xjc.XJCListener;
 
 
 /**
- * Abstract class for for parsing xsd and binding resources to produce a corresponding object model
- * based on the JAXB Xjc parsing engine
+ * Abstract class for parsing XML schemas and binding resources to produce a corresponding object
+ * model based on the JAXB XJC binding compiler.
  */
 public abstract class AbstractXjcMojo
     extends AbstractMojo
