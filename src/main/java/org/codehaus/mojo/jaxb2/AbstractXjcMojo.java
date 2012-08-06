@@ -368,11 +368,6 @@ public abstract class AbstractXjcMojo
 
                 FileUtils.forceMkdir( new File( project.getBuild().getOutputDirectory(), includeSchemasOutputPath ) );
 
-                /**
-                 * Resource resource = new Resource();
-                 * resource.setDirectory( outputDirectory.getAbsolutePath() );
-                 * project.getResources().add( resource );
-                 **/
                 copyXSDs();
             }
         }
@@ -449,11 +444,6 @@ public abstract class AbstractXjcMojo
         }
     }
 
-    /**
-     * @param classPath
-     * @return null if no schemas found
-     * @throws MojoExecutionException
-     */
     private ArrayList<String> getXJCArgs( String classPath )
         throws MojoExecutionException, NoSchemasException
     {
@@ -603,9 +593,8 @@ public abstract class AbstractXjcMojo
 
 
     /**
-     * <code>getSchemasFromFileListing</code> gets all the entries
-     * in the given schemaListFileName and adds them to the list
-     * of files to send to xjc
+     * Gets all the entries in the given schemaListFileName and adds them to the list
+     * of files to send to xjc.
      *
      * @throws MojoExecutionException if an error occurs
      */
@@ -660,7 +649,7 @@ public abstract class AbstractXjcMojo
     /**
      * Returns a file array of xjb files to translate to object models.
      *
-     * @return An array of schema files to be parsed by the schema compiler.
+     * @return An array of binding files to be parsed by the schema compiler.
      */
     public final File[] getBindingFiles()
     {
@@ -769,10 +758,10 @@ public abstract class AbstractXjcMojo
     }
 
     /**
-     * Returns true of any one of the files in the XSD/XJB array are more new than
+     * Returns true of any one of the files in the XSD/XJB array is newer than
      * the <code>staleFlag</code> file.
      *
-     * @return True if xsd files have been modified since the last build.
+     * @return True if any input file have been modified since the last build.
      */
     private boolean isOutputStale()
         throws MojoExecutionException
