@@ -44,6 +44,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.sonatype.plexus.build.incremental.BuildContext;
 import org.xml.sax.SAXParseException;
 
 import com.sun.tools.xjc.Driver;
@@ -56,6 +57,11 @@ import com.sun.tools.xjc.XJCListener;
 public abstract class AbstractXjcMojo
     extends AbstractMojo
 {
+
+    /**
+     * @component
+     */
+    private BuildContext buildContext;
 
     /**
      * The default maven project object.
@@ -340,6 +346,8 @@ public abstract class AbstractXjcMojo
                     // the output char encoding (see http://java.net/jira/browse/JAXB-499)
                     changeEncoding( xjcListener.files );
 
+                    buildContext.refresh( getOutputDirectory() );
+
                     touchStaleFile();
                 }
                 finally
@@ -351,7 +359,7 @@ public abstract class AbstractXjcMojo
             }
             else
             {
-                getLog().info( "No changes detected in schema or binding files, skipping source generation." );
+                getLog().info( "No changes detected in schema or binding files - skipping source generation." );
             }
 
             addCompileSourceRoot( project );
@@ -361,14 +369,19 @@ public abstract class AbstractXjcMojo
                 Resource resource = new Resource();
                 resource.setDirectory( generatedResourcesDirectory.getAbsolutePath() );
                 addResource( project, resource );
+
+                buildContext.refresh( generatedResourcesDirectory );
             }
 
             if ( includeSchemasOutputPath != null )
             {
+                File includeSchemasOutputDirectory =
+                                new File( project.getBuild().getOutputDirectory(), includeSchemasOutputPath );
+                FileUtils.forceMkdir( includeSchemasOutputDirectory );
 
-                FileUtils.forceMkdir( new File( project.getBuild().getOutputDirectory(), includeSchemasOutputPath ) );
-
-                copyXSDs();
+                copyXSDs( includeSchemasOutputDirectory );
+                
+                buildContext.refresh( includeSchemasOutputDirectory );
             }
         }
         catch ( NoSchemasException e )
@@ -397,17 +410,16 @@ public abstract class AbstractXjcMojo
 
     protected abstract void addResource( MavenProject project, Resource resource );
 
-    protected void copyXSDs()
+    protected void copyXSDs( File targetBaseDir )
         throws MojoExecutionException
     {
         URL srcFiles[] = getXSDFiles();
 
-        File baseDir = new File( project.getBuild().getOutputDirectory(), includeSchemasOutputPath );
         for ( int j = 0; j < srcFiles.length; j++ )
         {
             URL from = srcFiles[j];
             // the '/' is the URL-separator
-            File to = new File( baseDir, FileUtils.removePath( from.getPath(), '/' ) );
+            File to = new File( targetBaseDir, FileUtils.removePath( from.getPath(), '/' ) );
             try
             {
                 FileUtils.copyURLToFile( from, to );
@@ -758,14 +770,17 @@ public abstract class AbstractXjcMojo
     }
 
     /**
-     * Returns true of any one of the files in the XSD/XJB array is newer than
+     * Returns true if any one of the files in the XSD/XJB array is newer than
      * the <code>staleFlag</code> file.
      *
-     * @return True if any input file have been modified since the last build.
+     * @return True if any input file has been modified since the last build.
      */
     private boolean isOutputStale()
         throws MojoExecutionException
     {
+        // We don't use BuildContext for staleness detection, but use the stale flag
+        // approach regardless of the runtime environment.
+        
         URL[] sourceXsds = getXSDFiles();
         File[] sourceXjbs = getBindingFiles();
         boolean stale = !getStaleFile().exists();

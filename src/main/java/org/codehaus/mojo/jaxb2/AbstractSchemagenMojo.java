@@ -35,13 +35,15 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.jaxb2.helpers.SchemagenHelper;
 import org.codehaus.mojo.jaxb2.helpers.SimpleNamespaceResolver;
 import org.codehaus.plexus.compiler.util.scan.InclusionScanException;
-import org.codehaus.plexus.compiler.util.scan.SimpleSourceInclusionScanner;
 import org.codehaus.plexus.compiler.util.scan.SourceInclusionScanner;
 import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SingleTargetSourceMapping;
 import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.Scanner;
 import org.codehaus.plexus.util.StringUtils;
+import org.sonatype.plexus.build.incremental.BuildContext;
+import org.sonatype.plexus.build.incremental.DefaultBuildContext;
 
 import com.sun.tools.jxc.SchemaGenerator;
 
@@ -60,6 +62,11 @@ public abstract class AbstractSchemagenMojo
      */
     private static final String SCHEMAGEN_EMITTED_FILENAME = "schema1.xsd";
 
+    /**
+     * @component
+     */
+    private BuildContext buildContext;
+    
     /**
      * The default maven project object.
      *
@@ -153,42 +160,15 @@ public abstract class AbstractSchemagenMojo
             throw new MojoExecutionException( "At least one file has to be included" );
         }
 
-        // First check out if there are stale sources
-        SourceInclusionScanner staleSourceScanner = new StaleSourceScanner( staleMillis, includes, excludes );
-        SourceMapping mapping = new SingleTargetSourceMapping( ".java", SCHEMAGEN_EMITTED_FILENAME );
-        staleSourceScanner.addSourceMapping( mapping );
-        Set<File> staleSources = new HashSet<File>();
-
-        // Look inside every compileSourceRoot
-        for ( String path : getCompileSourceRoots() )
-        {
-            File sourceDir = new File( path );
-            try
-            {
-                staleSources.addAll( staleSourceScanner.getIncludedSources( sourceDir, getOutputDirectory() ) );
-            }
-            catch ( InclusionScanException e )
-            {
-                throw new MojoExecutionException(
-                    "Error scanning source root: \'" + sourceDir + "\' " + "for stale files to recompile.", e );
-            }
-        }
-        if ( !staleSources.isEmpty() )
+        if ( isOutputStale() )
         {
             String includePaths = StringUtils.join( includes.toArray(), "," );
             String excludePaths = StringUtils.join( excludes.toArray(), "," );
             Set<String> includedSources = new HashSet<String>();
 
-            SourceInclusionScanner sourceScanner = new SimpleSourceInclusionScanner( includes, excludes );
-            sourceScanner.addSourceMapping( mapping );
-
             for ( String path : getCompileSourceRoots() )
             {
                 File sourceDir = new File( path );
-                if ( getLog().isDebugEnabled() )
-                {
-                    getLog().debug( "sourceDir: " + sourceDir.getAbsolutePath() );
-                }
                 try
                 {
                     includedSources.addAll( FileUtils.getFileNames( sourceDir, includePaths, excludePaths, true ) );
@@ -207,11 +187,6 @@ public abstract class AbstractSchemagenMojo
                 classPath = new StringBuilder();
                 for ( String classpathFile : classpathFiles )
                 {
-                    if ( getLog().isDebugEnabled() )
-                    {
-                        getLog().debug( classpathFile );
-                    }
-
                     classPath.append( classpathFile );
                     classPath.append( File.pathSeparatorChar );
                 }
@@ -223,7 +198,7 @@ public abstract class AbstractSchemagenMojo
 
             if ( !getOutputDirectory().exists() && !getOutputDirectory().mkdirs() )
             {
-                    throw new MojoExecutionException(
+                throw new MojoExecutionException(
                         "Could not create directory " + getOutputDirectory().getAbsolutePath() );
             }
             try
@@ -235,7 +210,7 @@ public abstract class AbstractSchemagenMojo
                 args.addAll( includedSources );
                 if ( getLog().isDebugEnabled() )
                 {
-                    getLog().debug( "args for SchemaGenerator " + args );
+                    getLog().debug( "Args for SchemaGenerator: " + args );
                 }
                 SchemaGenerator.run( args.toArray( new String[0] ) );
             }
@@ -273,11 +248,103 @@ public abstract class AbstractSchemagenMojo
                 SchemagenHelper.renameGeneratedSchemaFiles( resolverMap, transformSchemas, getLog(),
                                                             getOutputDirectory() );
             }
+
+            buildContext.refresh( getOutputDirectory() );
         }
         else
         {
-            getLog().info( "No sources found. Skipping schema generation." );
+            getLog().info( "No updated sources found - skipping schema generation." );
         }
+    }
+
+    /**
+     * Checks if there have been any changes to the sources since the last build and therefore
+     * the generated files are not up-to-date and need to be re-generated.
+     */
+    private boolean isOutputStale()
+        throws MojoExecutionException
+    {
+        if ( buildContext instanceof DefaultBuildContext )
+        {
+            // Here we can't use the buildContext to determine if everything is up-to-date, as
+            // DefaultBuildContext behaves as if all files were just created.
+            return commandLineStalenessCheck();
+        }
+        else
+        {
+            return buildContextStalenessCheck();
+        }
+    }
+
+    private boolean commandLineStalenessCheck()
+        throws MojoExecutionException
+    {
+        SourceInclusionScanner staleSourceScanner = new StaleSourceScanner( staleMillis, includes, excludes );
+        SourceMapping mapping = new SingleTargetSourceMapping( ".java", SCHEMAGEN_EMITTED_FILENAME );
+        staleSourceScanner.addSourceMapping( mapping );
+
+        // Look inside every compileSourceRoot
+        for ( String path : getCompileSourceRoots() )
+        {
+            File sourceDir = new File( path );
+            try
+            {
+                Set includedSources = staleSourceScanner.getIncludedSources( sourceDir, getOutputDirectory() );
+                if ( !includedSources.isEmpty() )
+                {
+                    return true;
+                }
+            }
+            catch ( InclusionScanException e )
+            {
+                throw new MojoExecutionException( "Error scanning source root: \'" + sourceDir + "\' "
+                    + "for stale files to recompile.", e );
+            }
+        }
+        
+        return false;
+    }
+
+    private boolean buildContextStalenessCheck()
+    {
+        String[] includesArray = this.includes.toArray( new String[0] );
+        String[] excludesArray = this.excludes.toArray( new String[0] );
+
+        // Check for modified files
+        for ( String path : getCompileSourceRoots() )
+        {
+            File sourceDir = new File( path );
+
+            Scanner modifiedScanner = this.buildContext.newScanner( sourceDir );
+            modifiedScanner.setIncludes( includesArray );
+            modifiedScanner.setExcludes( excludesArray );
+            modifiedScanner.scan();
+
+            String[] includedFiles = modifiedScanner.getIncludedFiles();
+            if ( includedFiles.length != 0)
+            {
+                return true;
+            }
+        }
+
+        // Check for deleted files
+        for ( String path : getCompileSourceRoots() )
+        {
+            File sourceDir = new File( path );
+
+            Scanner deletedScanner = this.buildContext.newDeleteScanner( sourceDir );
+            deletedScanner.setIncludes( includesArray );
+            deletedScanner.setExcludes( excludesArray );
+            deletedScanner.scan();
+
+            String[] includedFiles = deletedScanner.getIncludedFiles();
+            if ( includedFiles.length != 0)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**

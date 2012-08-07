@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.codehaus.plexus.util.FileUtils;
+import org.sonatype.plexus.build.incremental.DefaultBuildContext;
 
 /**
  * Test that the basic configuration options work.
@@ -51,6 +52,8 @@ public class BasicOptionsTest
         AbstractXjcMojo xjcMojo = new XjcMojo();
         xjcMojo = (AbstractXjcMojo) configureMojo( xjcMojo, "jaxb2-maven-plugin", pom );
         assertNotNull( xjcMojo );
+        
+        super.setVariableValueToObject( xjcMojo, "buildContext", new DefaultBuildContext() );
 
         // return the configured mojo
         return xjcMojo;
