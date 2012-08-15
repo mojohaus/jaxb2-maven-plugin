@@ -175,6 +175,7 @@ public abstract class AbstractXjcMojo
      * Generated files will be in read-only mode.
      *
      * @parameter default-value="false"
+     * @deprecated Not suitable for a Maven build.
      */
     protected boolean readOnly;
 
@@ -482,6 +483,7 @@ public abstract class AbstractXjcMojo
         }
         if ( readOnly )
         {
+            getLog().warn( "The readOnly parameter is deprecated. Support will be removed in a future version." );
             args.add( "-readOnly" );
         }
         if ( relaxng )
