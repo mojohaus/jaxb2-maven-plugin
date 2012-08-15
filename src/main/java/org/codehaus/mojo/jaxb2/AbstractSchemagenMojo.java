@@ -55,8 +55,7 @@ public abstract class AbstractSchemagenMojo
     extends AbstractMojo
 {
     /**
-     * Name of the generated schema file, emitted by the SchemaGenerator.
-     * <br/>
+     * Name of the generated schema file, emitted by the SchemaGenerator. <br/>
      * According to the JAXB Schema Generator documentation:
      * "There is no way to control the name of the generated schema files at this time."
      */
@@ -66,10 +65,10 @@ public abstract class AbstractSchemagenMojo
      * @component
      */
     private BuildContext buildContext;
-    
+
     /**
      * The default maven project object.
-     *
+     * 
      * @parameter expression="${project}"
      * @required
      * @readonly
@@ -77,28 +76,28 @@ public abstract class AbstractSchemagenMojo
     private MavenProject project;
 
     /**
-     * A List holding desired schema mappings, each of which binds a schema namespace URI
-     * to its desired prefix [optional] and the name of the resulting schema file [optional].
-     * All given elements (uri, prefix, file) must be unique within the configuration; no two
-     * elements may have the same values.
+     * A List holding desired schema mappings, each of which binds a schema namespace URI to its desired prefix
+     * [optional] and the name of the resulting schema file [optional]. All given elements (uri, prefix, file) must be
+     * unique within the configuration; no two elements may have the same values.
      * <p/>
      * <p/>
-     * <p>The example schema configuration below maps two namespace uris to prefixes and
-     * generated file names. This implies that <tt>http://some/namespace</tt> will be represented
-     * by the prefix <tt>some</tt> within the generated XML Schema files; creating namespace
-     * definitions on the form <tt>xmlns:some="http://some/namespace"</tt>, and corresponding
-     * uses on the form <tt>&lt;xs:element minOccurs="0"
-     * ref="<strong>some:</strong>anOptionalElementInSomeNamespace"/></tt>. Moreover, the file
-     * element defines that the <tt>http://some/namespace</tt> definitions will be written to the
-     * file <tt>some_schema.xsd</tt>, and that
-     * all import references will be on the form <tt>&lt;xs:import namespace="http://some/namespace"
-     * schemaLocation="<strong>some_schema.xsd</strong>"/></tt></p>
+     * <p>
+     * The example schema configuration below maps two namespace uris to prefixes and generated file names. This implies
+     * that <tt>http://some/namespace</tt> will be represented by the prefix <tt>some</tt> within the generated XML
+     * Schema files; creating namespace definitions on the form <tt>xmlns:some="http://some/namespace"</tt>, and
+     * corresponding uses on the form <tt>&lt;xs:element minOccurs="0"
+     * ref="<strong>some:</strong>anOptionalElementInSomeNamespace"/></tt>. Moreover, the file element defines that the
+     * <tt>http://some/namespace</tt> definitions will be written to the file <tt>some_schema.xsd</tt>, and that all
+     * import references will be on the form <tt>&lt;xs:import namespace="http://some/namespace"
+     * schemaLocation="<strong>some_schema.xsd</strong>"/></tt>
+     * </p>
      * <p/>
      * <p>
      * The example configuration below also performs identical operations for the namespace uri
-     * <tt>http://another/namespace</tt> with the prefix <tt>another</tt> and the file
-     * <tt>another_schema.xsd</tt>.</p>
+     * <tt>http://another/namespace</tt> with the prefix <tt>another</tt> and the file <tt>another_schema.xsd</tt>.
+     * </p>
      * <p/>
+     * 
      * <pre>
      * &lt;schemas>
      *   &lt;schema>
@@ -112,7 +111,7 @@ public abstract class AbstractSchemagenMojo
      *   &lt;/schema>
      * &lt;/schemas>
      * </pre>
-     *
+     * 
      * @parameter
      * @since 1.4
      */
@@ -120,7 +119,7 @@ public abstract class AbstractSchemagenMojo
 
     /**
      * A list of inclusion filters for the generator. At least one file has to be specified.
-     *
+     * 
      * @parameter
      * @required
      */
@@ -128,14 +127,14 @@ public abstract class AbstractSchemagenMojo
 
     /**
      * A list of exclusion filters for the generator.
-     *
+     * 
      * @parameter
      */
     private Set<String> excludes = new HashSet<String>();
 
     /**
      * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation.
-     *
+     * 
      * @parameter expression="${lastModGranularityMs}" default-value="0"
      */
     private int staleMillis;
@@ -146,15 +145,15 @@ public abstract class AbstractSchemagenMojo
         if ( getLog().isDebugEnabled() )
         {
             Package jaxbImplPackage = SchemaGenerator.class.getPackage();
-            getLog().debug( "Using SchemaGen of " + jaxbImplPackage.getImplementationTitle() +
-                            " version " + jaxbImplPackage.getImplementationVersion() );
+            getLog().debug( "Using SchemaGen of " + jaxbImplPackage.getImplementationTitle() + " version "
+                                + jaxbImplPackage.getImplementationVersion() );
         }
 
         if ( "pom".equals( project.getPackaging() ) )
         {
             return;
         }
-        
+
         if ( includes.isEmpty() )
         {
             throw new MojoExecutionException( "At least one file has to be included" );
@@ -169,13 +168,21 @@ public abstract class AbstractSchemagenMojo
             for ( String path : getCompileSourceRoots() )
             {
                 File sourceDir = new File( path );
-                try
+                if ( sourceDir.exists() && sourceDir.isDirectory() )
                 {
-                    includedSources.addAll( FileUtils.getFileNames( sourceDir, includePaths, excludePaths, true ) );
+                    try
+                    {
+                        includedSources.addAll( FileUtils.getFileNames( sourceDir, includePaths, excludePaths, true ) );
+                    }
+                    catch ( IOException e )
+                    {
+                        throw new MojoExecutionException( "Error retrieving files in: \'" + sourceDir + "\' ", e );
+                    }
                 }
-                catch ( IOException e )
+                else
                 {
-                    throw new MojoExecutionException( "Error retrieving files in: \'" + sourceDir + "\' ", e );
+                    getLog().info( "Source directory \'" + sourceDir
+                                       + "\' doesn't exist. Ignoring directory in schema generation." );
                 }
             }
 
@@ -198,8 +205,8 @@ public abstract class AbstractSchemagenMojo
 
             if ( !getOutputDirectory().exists() && !getOutputDirectory().mkdirs() )
             {
-                throw new MojoExecutionException(
-                        "Could not create directory " + getOutputDirectory().getAbsolutePath() );
+                throw new MojoExecutionException( "Could not create directory "
+                    + getOutputDirectory().getAbsolutePath() );
             }
             try
             {
@@ -241,8 +248,7 @@ public abstract class AbstractSchemagenMojo
                     SchemagenHelper.getFileNameToResolverMap( getOutputDirectory() );
 
                 // Transform all namespace prefixes as requested.
-                SchemagenHelper.replaceNamespacePrefixes( resolverMap, transformSchemas, getLog(),
-                                                          getOutputDirectory() );
+                SchemagenHelper.replaceNamespacePrefixes( resolverMap, transformSchemas, getLog(), getOutputDirectory() );
 
                 // Rename all generated schema files as requested.
                 SchemagenHelper.renameGeneratedSchemaFiles( resolverMap, transformSchemas, getLog(),
@@ -258,8 +264,8 @@ public abstract class AbstractSchemagenMojo
     }
 
     /**
-     * Checks if there have been any changes to the sources since the last build and therefore
-     * the generated files are not up-to-date and need to be re-generated.
+     * Checks if there have been any changes to the sources since the last build and therefore the generated files are
+     * not up-to-date and need to be re-generated.
      */
     private boolean isOutputStale()
         throws MojoExecutionException
@@ -301,7 +307,7 @@ public abstract class AbstractSchemagenMojo
                     + "for stale files to recompile.", e );
             }
         }
-        
+
         return false;
     }
 
@@ -321,7 +327,7 @@ public abstract class AbstractSchemagenMojo
             modifiedScanner.scan();
 
             String[] includedFiles = modifiedScanner.getIncludedFiles();
-            if ( includedFiles.length != 0)
+            if ( includedFiles.length != 0 )
             {
                 return true;
             }
@@ -338,12 +344,12 @@ public abstract class AbstractSchemagenMojo
             deletedScanner.scan();
 
             String[] includedFiles = deletedScanner.getIncludedFiles();
-            if ( includedFiles.length != 0)
+            if ( includedFiles.length != 0 )
             {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -371,7 +377,7 @@ public abstract class AbstractSchemagenMojo
      * @return The directory where the schema files should be placed.
      */
     protected abstract File getOutputDirectory();
-    
+
     /**
      * If files will be renamed, keep the original files here.
      * 
