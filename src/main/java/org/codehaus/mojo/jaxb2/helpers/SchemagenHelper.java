@@ -298,8 +298,15 @@ public final class SchemagenHelper
         // Now, rename the actual files.
         for ( SimpleNamespaceResolver currentResolver : resolverMap.values() )
         {
-            final String newFilename =
-                namespaceUriToDesiredFilenameMap.get( currentResolver.getLocalNamespaceURI() );
+            final String localNamespaceURI = currentResolver.getLocalNamespaceURI();
+
+            if ( StringUtils.isEmpty(localNamespaceURI) )
+            {
+                mavenLog.warn( "SimpleNamespaceResolver contained no localNamespaceURI; aborting rename." );
+                continue;
+            }
+
+            final String newFilename = namespaceUriToDesiredFilenameMap.get( localNamespaceURI );
             final File originalFile = new File( schemaDirectory, currentResolver.getSourceFilename() );
 
             if ( StringUtils.isNotEmpty( newFilename ) )
