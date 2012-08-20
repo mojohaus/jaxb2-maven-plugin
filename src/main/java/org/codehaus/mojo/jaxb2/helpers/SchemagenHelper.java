@@ -56,7 +56,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Utility class holding algorithms used by the AbstractSchemagenMojo and decendents.
- *
+ * 
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
 public final class SchemagenHelper
@@ -74,7 +74,7 @@ public final class SchemagenHelper
 
     /**
      * Acquires a map relating generated schema filename to its SimpleNamespaceResolver.
-     *
+     * 
      * @param outputDirectory The output directory of the generated schema files.
      * @return a map relating generated schema filename to an initialized SimpleNamespaceResolver.
      * @throws MojoExecutionException if two generated schema files used the same namespace URI.
@@ -103,69 +103,66 @@ public final class SchemagenHelper
     }
 
     /**
-     * Validates that the list of Schemas provided within the configuration all contain unique values.
-     * Should a MojoExecutionException be thrown, it contains informative text about the exact nature of
-     * the configuration problem - we should simplify for all plugin users.
-     *
+     * Validates that the list of Schemas provided within the configuration all contain unique values. Should a
+     * MojoExecutionException be thrown, it contains informative text about the exact nature of the configuration
+     * problem - we should simplify for all plugin users.
+     * 
      * @param configuredTransformSchemas The List of configuration schemas provided to this mojo.
-     * @throws MojoExecutionException if any two configuredSchemas instances contain duplicate values for
-     *                                any of the properties uri, prefix or file. Also throws a MojoExecutionException
-     *                                if the uri of any Schema is null or empty, or if none of the 'file' and 'prefix'
-     *                                properties are given within any of the configuredSchema instances.
+     * @throws MojoExecutionException if any two configuredSchemas instances contain duplicate values for any of the
+     *             properties uri, prefix or file. Also throws a MojoExecutionException if the uri of any Schema is null
+     *             or empty, or if none of the 'file' and 'prefix' properties are given within any of the
+     *             configuredSchema instances.
      */
     public static void validateSchemasInPluginConfiguration( final List<TransformSchema> configuredTransformSchemas )
         throws MojoExecutionException
     {
-
         final List<String> uris = new ArrayList<String>();
         final List<String> prefixes = new ArrayList<String>();
         final List<String> fileNames = new ArrayList<String>();
 
         for ( int i = 0; i < configuredTransformSchemas.size(); i++ )
         {
-
             final TransformSchema current = configuredTransformSchemas.get( i );
             final String currentURI = current.getUri();
             final String currentPrefix = current.getToPrefix();
             final String currentFile = current.getToFile();
 
             // We cannot work with a null or empty uri
-            if ( StringUtils.isEmpty( currentURI  ) )
+            if ( StringUtils.isEmpty( currentURI ) )
             {
                 throw new MojoExecutionException( MISCONFIG + "Null or empty property 'uri' found in "
-                                                      + "plugin configuration for schema element at index [" + i + "]: "
-                                                      + current );
+                    + "plugin configuration for schema element at index [" + i + "]: " + current );
             }
 
             // No point in having *only* a namespace.
             if ( StringUtils.isEmpty( currentPrefix ) && StringUtils.isEmpty( currentFile ) )
             {
                 throw new MojoExecutionException( MISCONFIG + "Null or empty properties 'prefix' "
-                                                      + "and 'file' found within plugin configuration for schema "
-                                                      + "element at index [" + i + "]: " + current );
+                    + "and 'file' found within plugin configuration for schema " + "element at index [" + i + "]: "
+                    + current );
             }
 
             // Validate that all given uris are unique.
             if ( uris.contains( currentURI ) )
             {
-                throw new MojoExecutionException(
-                    getDuplicationErrorMessage( "uri", currentURI, uris.indexOf( currentURI ), i ) );
+                throw new MojoExecutionException( getDuplicationErrorMessage( "uri", currentURI,
+                                                                              uris.indexOf( currentURI ), i ) );
             }
             uris.add( currentURI );
 
             // Validate that all given prefixes are unique.
             if ( prefixes.contains( currentPrefix ) && !( currentPrefix == null ) )
             {
-                throw new MojoExecutionException(
-                    getDuplicationErrorMessage( "prefix", currentPrefix, prefixes.indexOf( currentPrefix ), i ) );
+                throw new MojoExecutionException( getDuplicationErrorMessage( "prefix", currentPrefix,
+                                                                              prefixes.indexOf( currentPrefix ), i ) );
             }
             prefixes.add( currentPrefix );
 
             // Validate that all given files are unique.
             if ( fileNames.contains( currentFile ) )
             {
-                throw new MojoExecutionException(
-                    getDuplicationErrorMessage( "file", currentFile, fileNames.indexOf( currentFile ), i ) );
+                throw new MojoExecutionException( getDuplicationErrorMessage( "file", currentFile,
+                                                                              fileNames.indexOf( currentFile ), i ) );
             }
             fileNames.add( currentFile );
         }
@@ -173,12 +170,11 @@ public final class SchemagenHelper
 
     /**
      * Replaces all namespaces within generated schema files, as instructed by the configured Schema instances.
-     *
-     * @param resolverMap                The map relating generated schema file name to
-     *                                   SimpleNamespaceResolver instances.
+     * 
+     * @param resolverMap The map relating generated schema file name to SimpleNamespaceResolver instances.
      * @param configuredTransformSchemas The Schema instances read from the configuration of this plugin.
-     * @param mavenLog                   The active Log.
-     * @param schemaDirectory            The directory where all generated schema files reside.
+     * @param mavenLog The active Log.
+     * @param schemaDirectory The directory where all generated schema files reside.
      * @throws MojoExecutionException If the namespace replacement could not be done.
      */
     public static void replaceNamespacePrefixes( final Map<String, SimpleNamespaceResolver> resolverMap,
@@ -199,28 +195,24 @@ public final class SchemagenHelper
 
             for ( TransformSchema currentTransformSchema : configuredTransformSchemas )
             {
-
                 // Should we alter the namespace prefix as instructed by the current schema?
                 final String newPrefix = currentTransformSchema.getToPrefix();
                 final String currentUri = currentTransformSchema.getUri();
 
-                if ( StringUtils.isNotEmpty( newPrefix  ) )
+                if ( StringUtils.isNotEmpty( newPrefix ) )
                 {
-
                     // Find the old/current prefix of the namespace for the current schema uri.
                     final String oldPrefix = currentResolver.getNamespaceURI2PrefixMap().get( currentUri );
 
-                    if ( StringUtils.isNotEmpty( oldPrefix  ) )
+                    if ( StringUtils.isNotEmpty( oldPrefix ) )
                     {
-
                         // Can we perform the prefix substitution?
                         validatePrefixSubstitutionIsPossible( oldPrefix, newPrefix, currentResolver );
 
                         if ( mavenLog.isDebugEnabled() )
                         {
-                            mavenLog.debug(
-                                "Subtituting namespace prefix [" + oldPrefix + "] with [" + newPrefix + "] in file ["
-                                    + currentResolver.getSourceFilename() + "]." );
+                            mavenLog.debug( "Subtituting namespace prefix [" + oldPrefix + "] with [" + newPrefix
+                                + "] in file [" + currentResolver.getSourceFilename() + "]." );
                         }
 
                         // Get the Document of the current schema file.
@@ -240,27 +232,25 @@ public final class SchemagenHelper
             {
                 // Overwrite the generatedSchemaFile with the content of the generatedSchemaFileDocument.
                 mavenLog.debug( "Overwriting file [" + currentResolver.getSourceFilename() + "] with content ["
-                                    + getHumanReadableXml( generatedSchemaFileDocument ) + "]" );
+                    + getHumanReadableXml( generatedSchemaFileDocument ) + "]" );
                 savePrettyPrintedDocument( generatedSchemaFileDocument, generatedSchemaFile );
             }
             else
             {
-                mavenLog.debug(
-                    "No namespace prefix changes to generated schema file [" + generatedSchemaFile.getName() + "]" );
+                mavenLog.debug( "No namespace prefix changes to generated schema file ["
+                    + generatedSchemaFile.getName() + "]" );
             }
         }
     }
 
     /**
-     * Updates all schemaLocation attributes within the generated schema files to match the 'file'
-     * properties within the Schemas read from the plugin configuration. After that, the files are
-     * physically renamed.
-     *
-     * @param resolverMap                The map relating generated schema file name to
-     *                                   SimpleNamespaceResolver instances.
+     * Updates all schemaLocation attributes within the generated schema files to match the 'file' properties within the
+     * Schemas read from the plugin configuration. After that, the files are physically renamed.
+     * 
+     * @param resolverMap The map relating generated schema file name to SimpleNamespaceResolver instances.
      * @param configuredTransformSchemas The Schema instances read from the configuration of this plugin.
-     * @param mavenLog                   The active Log.
-     * @param schemaDirectory            The directory where all generated schema files reside.
+     * @param mavenLog The active Log.
+     * @param schemaDirectory The directory where all generated schema files reside.
      */
     public static void renameGeneratedSchemaFiles( final Map<String, SimpleNamespaceResolver> resolverMap,
                                                    final List<TransformSchema> configuredTransformSchemas,
@@ -290,7 +280,7 @@ public final class SchemagenHelper
             if ( mavenLog.isDebugEnabled() )
             {
                 mavenLog.debug( "Changed schemaLocation entries within [" + currentResolver.getSourceFilename() + "]. "
-                                    + "Result: [" + getHumanReadableXml( generatedSchemaFileDocument ) + "]" );
+                    + "Result: [" + getHumanReadableXml( generatedSchemaFileDocument ) + "]" );
             }
             savePrettyPrintedDocument( generatedSchemaFileDocument, generatedSchemaFile );
         }
@@ -300,7 +290,7 @@ public final class SchemagenHelper
         {
             final String localNamespaceURI = currentResolver.getLocalNamespaceURI();
 
-            if ( StringUtils.isEmpty(localNamespaceURI) )
+            if ( StringUtils.isEmpty( localNamespaceURI ) )
             {
                 mavenLog.warn( "SimpleNamespaceResolver contained no localNamespaceURI; aborting rename." );
                 continue;
@@ -324,14 +314,13 @@ public final class SchemagenHelper
     }
 
     /**
-     * Drives the supplied visitor to process the provided Node and all its children, should
-     * the recurseToChildren flag be set to <code>true</code>.
-     * All attributes of the current node are processed before recursing
-     * to children (i.e. breadth first recursion).
-     *
-     * @param node              The Node to process.
+     * Drives the supplied visitor to process the provided Node and all its children, should the recurseToChildren flag
+     * be set to <code>true</code>. All attributes of the current node are processed before recursing to children (i.e.
+     * breadth first recursion).
+     * 
+     * @param node The Node to process.
      * @param recurseToChildren if <code>true</code>, processes all children of the supplied node recursively.
-     * @param visitor           The NodeProcessor instance which should process the nodes.
+     * @param visitor The NodeProcessor instance which should process the nodes.
      */
     public static void process( final Node node, final boolean recurseToChildren, final NodeProcessor visitor )
     {
@@ -371,7 +360,7 @@ public final class SchemagenHelper
 
     /**
      * Parses the provided InputStream to create a dom Document.
-     *
+     * 
      * @param xmlStream An InputStream connected to an XML document.
      * @return A DOM Document created from the contents of the provided stream.
      */
@@ -393,7 +382,7 @@ public final class SchemagenHelper
 
     /**
      * Converts the provided DOM Node to a pretty-printed XML-formatted string.
-     *
+     * 
      * @param node The Node whose children should be converted to a String.
      * @return a pretty-printed XML-formatted string.
      */
@@ -407,7 +396,6 @@ public final class SchemagenHelper
             transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
             transformer.setOutputProperty( OutputKeys.STANDALONE, "yes" );
             transformer.transform( new DOMSource( node ), new StreamResult( toReturn ) );
-
         }
         catch ( TransformerException e )
         {
@@ -425,17 +413,17 @@ public final class SchemagenHelper
                                                       final int firstIndex, final int currentIndex )
     {
         return MISCONFIG + "Duplicate '" + propertyName + "' property with value [" + propertyValue
-            + "] found in plugin configuration. Correct schema elements index (" + firstIndex + ") and (" + currentIndex
-            + "), to ensure that all '" + propertyName + "' values are unique.";
+            + "] found in plugin configuration. Correct schema elements index (" + firstIndex + ") and ("
+            + currentIndex + "), to ensure that all '" + propertyName + "' values are unique.";
     }
 
     /**
-     * Validates that the transformation from <code>oldPrefix</code> to <code>newPrefix</code> is possible,
-     * in that <code>newPrefix</code> is not already used by a schema file. This would corrupt the schema by
-     * assigning elements from one namespace to another.
-     *
-     * @param oldPrefix       The old/current namespace prefix.
-     * @param newPrefix       The new/future namespace prefix.
+     * Validates that the transformation from <code>oldPrefix</code> to <code>newPrefix</code> is possible, in that
+     * <code>newPrefix</code> is not already used by a schema file. This would corrupt the schema by assigning elements
+     * from one namespace to another.
+     * 
+     * @param oldPrefix The old/current namespace prefix.
+     * @param newPrefix The new/future namespace prefix.
      * @param currentResolver The currently active SimpleNamespaceResolver.
      * @throws MojoExecutionException if any schema file currently uses <code>newPrefix</code>.
      */
@@ -447,15 +435,14 @@ public final class SchemagenHelper
         if ( currentResolver.getNamespaceURI2PrefixMap().containsValue( newPrefix ) )
         {
             throw new MojoExecutionException( MISCONFIG + "Namespace prefix [" + newPrefix + "] is already in use."
-                                                  + " Cannot replace namespace prefix [" + oldPrefix + "] with ["
-                                                  + newPrefix + "] in file [" + currentResolver.getSourceFilename()
-                                                  + "]." );
+                + " Cannot replace namespace prefix [" + oldPrefix + "] with [" + newPrefix + "] in file ["
+                + currentResolver.getSourceFilename() + "]." );
         }
     }
 
     /**
      * Creates a Document from parsing the XML within the provided xmlFile.
-     *
+     * 
      * @param xmlFile The XML file to be parsed.
      * @return The Document corresponding to the xmlFile.
      */
@@ -492,7 +479,7 @@ public final class SchemagenHelper
         {
             throw new IllegalStateException( "Could not write to file [" + targetFile.getAbsolutePath() + "]", e );
         }
-        finally 
+        finally
         {
             IOUtil.close( out );
         }
