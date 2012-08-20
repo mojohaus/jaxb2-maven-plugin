@@ -295,7 +295,7 @@ public abstract class AbstractSchemagenMojo
             File sourceDir = new File( path );
             try
             {
-                Set includedSources = staleSourceScanner.getIncludedSources( sourceDir, getOutputDirectory() );
+                Set<File> includedSources = staleSourceScanner.getIncludedSources( sourceDir, getOutputDirectory() );
                 if ( !includedSources.isEmpty() )
                 {
                     return true;
