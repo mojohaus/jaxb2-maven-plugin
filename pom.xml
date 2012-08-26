@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
-  <version>1.5</version>
+  <version>1.6-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>JAXB-2 Maven Plugin</name>
   <description>Mojo's JAXB-2 Maven plugin is used to create an object graph from XSDs based on the JAXB 2.1 implementation and to generate XSDs from JAXB-annotated Java classes.</description>
@@ -36,9 +36,9 @@
     <maven>${mavenVersion}</maven>
   </prerequisites>
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.5</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.5</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/mojo/tags/jaxb2-maven-plugin-1.5</url>
+    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/jaxb2-maven-plugin</url>
   </scm>
   
   <properties>
