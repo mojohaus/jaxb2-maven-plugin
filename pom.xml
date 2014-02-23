@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>mojo-parent</artifactId>
     <groupId>org.codehaus.mojo</groupId>
-    <version>30</version>
+    <artifactId>mojo-parent</artifactId>
+    <version>33</version>
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
