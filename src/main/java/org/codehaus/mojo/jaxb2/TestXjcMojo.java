@@ -24,6 +24,10 @@ import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -32,43 +36,35 @@ import org.apache.maven.project.MavenProject;
  *
  * @author rfscholte <rfscholte@codehaus.org>
  * @version $Id$
- * @goal testXjc
- * @phase generate-test-sources
- * @requiresDependencyResolution
  */
+@Mojo( name = "testXjc", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES,
+       requiresDependencyResolution = ResolutionScope.TEST )
 public class TestXjcMojo
     extends AbstractXjcMojo
 {
 
     /**
      * The working directory where the generated Java test source files are created.
-     *
-     * @parameter default-value="${project.build.directory}/generated-test-sources/jaxb"
-     * @required
      */
+    @Parameter( defaultValue = "${project.build.directory}/generated-test-sources/jaxb", required = true )
     private File outputDirectory;
 
     /**
      * The location of the flag file used to determine if the output is stale.
-     *
-     * @parameter default-value="${project.build.directory}/jaxb2/.testXjcStaleFlag"
-     * @required
      */
+    @Parameter( defaultValue = "${project.build.directory}/jaxb2/.testXjcStaleFlag", required = true )
     private File staleFile;
 
     /**
      * The directory for XML Schema files (XSDs).
-     *
-     * @parameter default-value="${project.basedir}/src/test/xsd"
-     * @required
      */
+    @Parameter( defaultValue = "${project.basedir}/src/test/xsd", required = true )
     private File schemaDirectory;
 
     /**
      * The directory for JAXB binding files.
-     *
-     * @parameter default-value="${project.basedir}/src/test/xjb"
      */
+    @Parameter( defaultValue = "${project.basedir}/src/test/xjb" )
     private File bindingDirectory;
 
     @Override

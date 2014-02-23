@@ -24,6 +24,10 @@ import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -33,43 +37,35 @@ import org.apache.maven.project.MavenProject;
  * @author jgenender@apache.org
  * @author jgenender <jgenender@apache.org>
  * @version $Id$
- * @goal xjc
- * @phase generate-sources
- * @requiresDependencyResolution
  */
+@Mojo( name = "xjc", defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+       requiresDependencyResolution = ResolutionScope.COMPILE )
 public class XjcMojo
     extends AbstractXjcMojo
 {
 
     /**
      * The working directory where the generated Java source files are created.
-     *
-     * @parameter default-value="${project.build.directory}/generated-sources/jaxb"
-     * @required
      */
+    @Parameter( defaultValue = "${project.build.directory}/generated-sources/jaxb", required = true )
     private File outputDirectory;
 
     /**
      * The location of the flag file used to determine if the output is stale.
-     *
-     * @parameter default-value="${project.build.directory}/jaxb2/.xjcStaleFlag"
-     * @required
      */
+    @Parameter( defaultValue = "${project.build.directory}/jaxb2/.xjcStaleFlag", required = true )
     private File staleFile;
 
     /**
      * The directory for XML Schema files (XSDs).
-     *
-     * @parameter default-value="${project.basedir}/src/main/xsd"
-     * @required
      */
+    @Parameter( defaultValue = "${project.basedir}/src/main/xsd", required = true )
     private File schemaDirectory;
 
     /**
      * The directory for JAXB binding files.
-     *
-     * @parameter default-value="${project.basedir}/src/main/xjb"
      */
+    @Parameter( defaultValue = "${project.basedir}/src/main/xjb" )
     private File bindingDirectory;
 
     @Override

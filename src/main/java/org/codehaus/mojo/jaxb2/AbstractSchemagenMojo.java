@@ -31,6 +31,8 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.jaxb2.helpers.SchemagenHelper;
 import org.codehaus.mojo.jaxb2.helpers.SimpleNamespaceResolver;
@@ -61,18 +63,13 @@ public abstract class AbstractSchemagenMojo
      */
     private static final String SCHEMAGEN_EMITTED_FILENAME = "schema1.xsd";
 
-    /**
-     * @component
-     */
+    @Component
     private BuildContext buildContext;
 
     /**
      * The default maven project object.
-     * 
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
      */
+    @Component
     private MavenProject project;
 
     /**
@@ -112,31 +109,27 @@ public abstract class AbstractSchemagenMojo
      * &lt;/schemas>
      * </pre>
      * 
-     * @parameter
      * @since 1.4
      */
+    @Parameter
     private List<TransformSchema> transformSchemas;
 
     /**
      * A list of inclusion filters for the generator. At least one file has to be specified.
-     * 
-     * @parameter
-     * @required
      */
+    @Parameter( required = true )
     private Set<String> includes = new HashSet<String>();
 
     /**
      * A list of exclusion filters for the generator.
-     * 
-     * @parameter
      */
+    @Parameter
     private Set<String> excludes = new HashSet<String>();
 
     /**
      * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation.
-     * 
-     * @parameter expression="${lastModGranularityMs}" default-value="0"
      */
+    @Parameter( property = "lastModGranularityMs", defaultValue = "0" )
     private int staleMillis;
 
     public void execute()

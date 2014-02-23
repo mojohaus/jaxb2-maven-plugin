@@ -23,45 +23,42 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 /**
  * Creates XML Schema file(s) for test sources.
  *
  * @author rfscholte
- * @goal testSchemagen
- * @phase generate-test-resources
- * @requiresDependencyResolution test
  * @since 1.3
  */
+@Mojo( name = "testSchemagen", defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES,
+       requiresDependencyResolution = ResolutionScope.TEST )
 public class TestSchemagenMojo
     extends AbstractSchemagenMojo
 {
 
     /**
      * The source directories containing the test sources to be compiled.
-     *
-     * @parameter expression="${project.testCompileSourceRoots}"
-     * @required
-     * @readonly
      */
+    @Parameter( defaultValue = "${project.testCompileSourceRoots}", readonly = true, required = true )
     private List<String> compileSourceRoots;
 
     /**
      * The directory where the generated XML Schema file(s) will be placed.
-     *
-     * @parameter default-value="${project.build.directory}/generated-test-resources/schemagen"
-     * @required
      */
+    @Parameter( defaultValue = "${project.build.directory}/generated-test-resources/schemagen", required = true )
     private File outputDirectory;
     
     /**
      * The name of the directory where copies of the original/generated
      * schema files are stored. Thus, original generated XSD files
      * are preserved for reference.
-     *
-     * @parameter default-value="${project.build.directory}/jaxb2/test-work"
      */
+    @Parameter( defaultValue = "${project.build.directory}/jaxb2/test-work" )
     private File testWorkDirectory;
 
     @Override

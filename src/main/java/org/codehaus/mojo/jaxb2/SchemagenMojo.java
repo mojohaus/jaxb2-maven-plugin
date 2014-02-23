@@ -23,44 +23,41 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 /**
  * Creates XML Schema file(s) for sources.
  *
  * @author rfscholte
- * @goal schemagen
- * @phase generate-resources
- * @requiresDependencyResolution compile
  * @since 1.3
  */
+@Mojo( name = "schemagen", defaultPhase = LifecyclePhase.GENERATE_RESOURCES,
+       requiresDependencyResolution = ResolutionScope.COMPILE )
 public class SchemagenMojo
     extends AbstractSchemagenMojo
 {
     /**
      * The source directories containing the sources to be compiled.
-     *
-     * @parameter expression="${project.compileSourceRoots}"
-     * @required
-     * @readonly
      */
+    @Parameter( defaultValue = "${project.compileSourceRoots}", readonly = true, required = true )
     private List<String> compileSourceRoots;
 
     /**
      * The directory where the generated XML Schema file(s) will be placed.
-     *
-     * @parameter default-value="${project.build.directory}/generated-resources/schemagen"
-     * @required
      */
+    @Parameter( defaultValue = "${project.build.directory}/generated-resources/schemagen", required = true )
     private File outputDirectory;
     
     /**
      * The name of the directory where copies of the original/generated
      * schema files are stored. Thus, original generated XSD files
      * are preserved for reference.
-     *
-     * @parameter default-value="${project.build.directory}/jaxb2/work"
      */
+    @Parameter( defaultValue = "${project.build.directory}/jaxb2/work" )
     private File workDirectory;
 
 
