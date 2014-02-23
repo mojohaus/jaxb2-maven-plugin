@@ -98,7 +98,7 @@
 
   <properties>
     <mavenVersion>2.0.10</mavenVersion>
-    <mojo.java.target>1.5</mojo.java.target> <!-- overwriting parent -->
+    <mojo.java.target>1.6</mojo.java.target> <!-- overwriting parent -->
   </properties>
 
   <dependencies>
