@@ -73,7 +73,7 @@ Usage - XJC (XML to Java Compilation)
         <version>${project.version}</version>
         <executions>
             <execution>
-                <id>schema1-xjc</id>
+                <id>xjc-schema1</id>
                 <goals>
                     <goal>xjc</goal>
                 </goals>
@@ -84,7 +84,7 @@ Usage - XJC (XML to Java Compilation)
                 </configuration>
             </execution>
             <execution>
-                <id>schema2-xjc</id>
+                <id>xjc-schema2</id>
                 <goals>
                     <goal>xjc</goal>
                 </goals>
@@ -99,10 +99,13 @@ Usage - XJC (XML to Java Compilation)
     </plugin>
 +------------------------------------------+
   
-  In the above example, there are two tricks to get this to work properly:
+  In the above example, there is a trick to get this to work properly:
   
-  [[1]] Each execution needs its own stale file, otherwise the plugin will think there is nothing
-  to generate in the executions after the fist one.
-
   [[2]] Need to set <<<clearOutputDir>>> to false for all but the first execution, otherwise the
   Java sources generated in prior steps will be cleared (deleted).
+  
+  []
+  
+  Comment: In plugin versions prior to 1.6, you would also need to configure a unique stale file for
+  each execution. However, in versions 1.6+ this is not required as the plugin will automatically
+  calculate unique stale file names based on the execution id.

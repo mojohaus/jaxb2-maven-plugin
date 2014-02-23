@@ -50,12 +50,6 @@ public class TestXjcMojo
     private File outputDirectory;
 
     /**
-     * The location of the flag file used to determine if the output is stale.
-     */
-    @Parameter( defaultValue = "${project.build.directory}/jaxb2/.testXjcStaleFlag", required = true )
-    private File staleFile;
-
-    /**
      * The directory for XML Schema files (XSDs).
      */
     @Parameter( defaultValue = "${project.basedir}/src/test/xsd", required = true )
@@ -74,9 +68,9 @@ public class TestXjcMojo
     }
 
     @Override
-    protected File getStaleFile()
+    protected String getStaleFileExtensionSuffix()
     {
-        return staleFile;
+        return "testXjcStaleFlag";
     }
 
     @SuppressWarnings( "unchecked" )
