@@ -32,7 +32,7 @@
   <packaging>maven-plugin</packaging>
 
   <name>JAXB-2 Maven Plugin</name>
-  <description>Mojo's JAXB-2 Maven plugin is used to create an object graph from XSDs based on the JAXB 2.1 implementation and to generate XSDs from JAXB-annotated Java classes.</description>
+  <description>Mojo's JAXB-2 Maven plugin is used to create an object graph from XSDs based on the JAXB 2.1 implementation and to generate XSDs from JAXB annotated Java classes.</description>
   <url>http://mojo.codehaus.org/jaxb2-maven-plugin/</url>
   <inceptionYear>2005</inceptionYear>
   <licenses>
