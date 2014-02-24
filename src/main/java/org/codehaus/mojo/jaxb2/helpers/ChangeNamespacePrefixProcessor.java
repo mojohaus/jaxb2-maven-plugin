@@ -51,6 +51,8 @@ public class ChangeNamespacePrefixProcessor
     // Constants
     private static final String REFERENCE_ATTRIBUTE_NAME = "ref";
 
+    private static final String TYPE_ATTRIBUTE_NAME = "type";
+
     private static final String SCHEMA = "schema";
 
     private static final String XMLNS = "xmlns:";
@@ -96,6 +98,11 @@ public class ChangeNamespacePrefixProcessor
             {
                 return true;
             }
+
+            if ( isTypeAttributeWithPrefix( attribute ) )
+            {
+                return true;
+            }
         }
 
         return false;
@@ -115,7 +122,7 @@ public class ChangeNamespacePrefixProcessor
                 parentElement.setAttributeNS( attribute.getNamespaceURI(), XMLNS + newPrefix, aNode.getNodeValue() );
                 parentElement.removeAttribute( XMLNS + oldPrefix );
             }
-            else if ( isElementReference( attribute ) )
+            else if ( isElementReference( attribute ) || isTypeAttributeWithPrefix( attribute ) )
             {
                 // Simply alter the value of the reference
                 final String value = attribute.getValue();
@@ -162,6 +169,20 @@ public class ChangeNamespacePrefixProcessor
     private boolean isElementReference( final Attr attribute )
     {
         return REFERENCE_ATTRIBUTE_NAME.equals( attribute.getName() ) && attribute.getValue().startsWith(
+            oldPrefix + ":" );
+    }
+    
+    /**
+     * Discovers if the provided attribute is a type attribute using the oldPrefix namespace,
+     * on the form <code>&lt;xs:element type="oldPrefix:anElementInTheOldPrefixNamespace"/&gt;</code>
+     *
+     * @param attribute the attribute to test.
+     * @return <code>true</code> if the provided attribute is named "type" and starts with
+     *         <code>[oldPrefix]:</code>, in which case it is a type in the oldPrefix namespace.
+     */
+    private boolean isTypeAttributeWithPrefix( final Attr attribute )
+    {
+        return TYPE_ATTRIBUTE_NAME.equals( attribute.getName() ) && attribute.getValue().startsWith(
             oldPrefix + ":" );
     }
 }
