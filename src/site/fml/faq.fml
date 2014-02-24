@@ -6,8 +6,7 @@
             <answer>
                 <p>You want to create multiple executions in your plugin declaration. This will allow you
                 to have multiple configuration declarations and you can specify the schema and package to
-                be run for that execution. In your configuration, you will need to have a different staleFile
-                for each execution, so it will be able to determine if the xjc needs to be executed.</p>
+                be used for that execution.</p>
 
                 <p>An example is given on the XJC usage page.</p>
             </answer>
