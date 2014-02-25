@@ -26,8 +26,8 @@ import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
 
 /**
- * <code>NodeProcessor</code> which alters the namespace prefix for all relevant Nodes within
- * an XML document Node. It alters namespace prefixes in the following logical places:
+ * <code>NodeProcessor</code> which alters the namespace prefix for all relevant Nodes within an XML document Node. It
+ * alters namespace prefixes in the following logical places:
  * <p/>
  * <dl>
  * <dt>Schema Namespace Definition</dt>
@@ -48,7 +48,7 @@ import javax.xml.XMLConstants;
  * <dd><code>&lt;xs:extension base="oldPrefix:something"/&gt;</code> is altered to
  * <code>&lt;xs:extension base="newPrefix:something"/&gt;</code></dd>
  * </dl>
- *
+ * 
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
 public class ChangeNamespacePrefixProcessor
@@ -78,9 +78,8 @@ public class ChangeNamespacePrefixProcessor
     private String newPrefix;
 
     /**
-     * Creates a new ChangeNamespacePrefixProcessor providing the oldPrefix
-     * which should be replaced by the newPrefix.
-     *
+     * Creates a new ChangeNamespacePrefixProcessor providing the oldPrefix which should be replaced by the newPrefix.
+     * 
      * @param oldPrefix The old/current namespace prefix
      * @param newPrefix The new/substituted namespace prefix
      */
@@ -104,10 +103,8 @@ public class ChangeNamespacePrefixProcessor
             // These cases are defined by attribute properties.
             final Attr attribute = (Attr) aNode;
 
-            if ( isNamespaceDefinition( attribute )
-                    || isElementReference( attribute )
-                    || isTypeAttributeWithPrefix( attribute )
-                    || isExtension( attribute ) )
+            if ( isNamespaceDefinition( attribute ) || isElementReference( attribute )
+                || isTypeAttributeWithPrefix( attribute ) || isExtension( attribute ) )
             {
                 return true;
             }
@@ -124,15 +121,14 @@ public class ChangeNamespacePrefixProcessor
             final Attr attribute = (Attr) aNode;
             final Element parentElement = attribute.getOwnerElement();
 
-            if ( isNamespaceDefinition(attribute) )
+            if ( isNamespaceDefinition( attribute ) )
             {
                 // Use the incredibly smooth DOM way to rename an attribute...
                 parentElement.setAttributeNS( attribute.getNamespaceURI(), XMLNS + newPrefix, aNode.getNodeValue() );
                 parentElement.removeAttribute( XMLNS + oldPrefix );
             }
-            else if ( isElementReference( attribute )
-                    || isTypeAttributeWithPrefix( attribute )
-                    || isExtension( attribute ))
+            else if ( isElementReference( attribute ) || isTypeAttributeWithPrefix( attribute )
+                || isExtension( attribute ) )
             {
                 // Simply alter the value of the reference
                 final String value = attribute.getValue();
@@ -153,57 +149,55 @@ public class ChangeNamespacePrefixProcessor
     //
 
     /**
-     * Discovers if the provided attribute is the oldPrefix namespace definition,
-     * i.e. if the given attribute is the xmlns:[oldPrefix] within the schema Element.
-     *
+     * Discovers if the provided attribute is the oldPrefix namespace definition, i.e. if the given attribute is the
+     * xmlns:[oldPrefix] within the schema Element.
+     * 
      * @param attribute the attribute to test.
-     * @return <code>true</code> if the provided attribute is the oldPrefix namespace definition,
-     *         i.e. if the given attribute is the xmlns:[oldPrefix] within the schema Element.
+     * @return <code>true</code> if the provided attribute is the oldPrefix namespace definition, i.e. if the given
+     *         attribute is the xmlns:[oldPrefix] within the schema Element.
      */
     private boolean isNamespaceDefinition( final Attr attribute )
     {
         final Element parent = attribute.getOwnerElement();
 
         return ( XMLConstants.W3C_XML_SCHEMA_NS_URI.equals( parent.getNamespaceURI() )
-                && SCHEMA.equalsIgnoreCase( parent.getLocalName() )
-                && oldPrefix.equals( attribute.getLocalName() ) );
+            && SCHEMA.equalsIgnoreCase( parent.getLocalName() ) && oldPrefix.equals( attribute.getLocalName() ) );
     }
 
     /**
-     * Discovers if the provided attribute is a namespace reference to the oldPrefix namespace,
-     * on the form <code>&lt;xs:element ref="oldPrefix:anElementInTheOldPrefixNamespace"/&gt;</code>
-     *
+     * Discovers if the provided attribute is a namespace reference to the oldPrefix namespace, on the form
+     * <code>&lt;xs:element ref="oldPrefix:anElementInTheOldPrefixNamespace"/&gt;</code>
+     * 
      * @param attribute the attribute to test.
-     * @return <code>true</code> if the provided attribute is named "ref" and starts with
-     *         <code>[oldPrefix]:</code>, in which case it is a reference to the oldPrefix namespace.
+     * @return <code>true</code> if the provided attribute is named "ref" and starts with <code>[oldPrefix]:</code>, in
+     *         which case it is a reference to the oldPrefix namespace.
      */
     private boolean isElementReference( final Attr attribute )
     {
         return REFERENCE_ATTRIBUTE_NAME.equals( attribute.getName() )
-                && attribute.getValue().startsWith( oldPrefix + ":" );
-    }
-    
-    /**
-     * Discovers if the provided attribute is a type attribute using the oldPrefix namespace,
-     * on the form <code>&lt;xs:element type="oldPrefix:anElementInTheOldPrefixNamespace"/&gt;</code>
-     *
-     * @param attribute the attribute to test.
-     * @return <code>true</code> if the provided attribute is named "type" and starts with
-     *         <code>[oldPrefix]:</code>, in which case it is a type in the oldPrefix namespace.
-     */
-    private boolean isTypeAttributeWithPrefix( final Attr attribute )
-    {
-        return TYPE_ATTRIBUTE_NAME.equals( attribute.getName() )
-                && attribute.getValue().startsWith( oldPrefix + ":" );
+            && attribute.getValue().startsWith( oldPrefix + ":" );
     }
 
     /**
-     * Discovers if the provided attribute is a namespace reference to the oldPrefix namespace,
-     * on the form
+     * Discovers if the provided attribute is a type attribute using the oldPrefix namespace, on the form
+     * <code>&lt;xs:element type="oldPrefix:anElementInTheOldPrefixNamespace"/&gt;</code>
+     * 
+     * @param attribute the attribute to test.
+     * @return <code>true</code> if the provided attribute is named "type" and starts with <code>[oldPrefix]:</code>, in
+     *         which case it is a type in the oldPrefix namespace.
+     */
+    private boolean isTypeAttributeWithPrefix( final Attr attribute )
+    {
+        return TYPE_ATTRIBUTE_NAME.equals( attribute.getName() ) && attribute.getValue().startsWith( oldPrefix + ":" );
+    }
+
+    /**
+     * Discovers if the provided attribute is a namespace reference to the oldPrefix namespace, on the form
+     * 
      * <pre>
      *     <code>&lt;xs:extension base="[oldPrefix]:importItem"&gt;</code>
      * </pre>
-     *
+     * 
      * @param attribute the attribute to test.
      * @return <code>true</code> if the provided attribute is named "extension" and starts with
      *         <code>[oldPrefix]:</code>, in which case it is a reference to the oldPrefix namespace.
@@ -213,8 +207,8 @@ public class ChangeNamespacePrefixProcessor
         final Element parent = attribute.getOwnerElement();
 
         return ( XMLConstants.W3C_XML_SCHEMA_NS_URI.equals( parent.getNamespaceURI() ) )
-                && EXTENSION_ELEMENT_NAME.equalsIgnoreCase( parent.getLocalName() )
-                && EXTENSION_BASE_ATTRIBUTE_NAME.equalsIgnoreCase(attribute.getName())
-                && attribute.getValue().startsWith(oldPrefix + ":");
+            && EXTENSION_ELEMENT_NAME.equalsIgnoreCase( parent.getLocalName() )
+            && EXTENSION_BASE_ATTRIBUTE_NAME.equalsIgnoreCase( attribute.getName() )
+            && attribute.getValue().startsWith( oldPrefix + ":" );
     }
 }
