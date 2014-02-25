@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.codehaus.mojo.jaxb2.its</groupId>
-  <artifactId>mjaxb-80</artifactId>
-  <version>1.0-SNAPSHOT</version>
+    <groupId>org.codehaus.mojo.jaxb2.its</groupId>
+    <artifactId>mjaxb-80</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
-  <description>Test of issue MJAXB-80.</description>
+    <description>Test of issue MJAXB-80.</description>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <!-- Need Java 5, which is the default since v2.3 of the maven-compiler-plugin. -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.5.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jaxb2-maven-plugin</artifactId>
-        <version>@project.version@</version>
-        <executions>
-          <execution>
-            <id>schemagen</id>
-            <goals>
-              <goal>schemagen</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-            <includes>
-                <include>org/domain/*.java</include>
-            </includes>
-          <transformSchemas>
-            <transformSchema>
-              <uri>http://schema.domain.org/integration/1.0</uri>
-              <toPrefix>smoothIntegration</toPrefix>
-              <toFile>smooth.xsd</toFile>
-            </transformSchema>
-          </transformSchemas>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <dependencies>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Need Java 5, which is the default since v2.3 of the maven-compiler-plugin. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>schemagen</id>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>org/domain/*.java</include>
+                    </includes>
+                    <transformSchemas>
+                        <transformSchema>
+                            <uri>http://schema.domain.org/integration/1.0</uri>
+                            <toPrefix>smoothIntegration</toPrefix>
+                            <toFile>smooth.xsd</toFile>
+                        </transformSchema>
+                    </transformSchemas>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
