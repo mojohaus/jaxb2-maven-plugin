@@ -1,0 +1,69 @@
+import java.io.*;
+import java.net.*;
+
+String generatedPath = "target/generated-resources/schemagen/";
+String[] beforeMoveFilenames = {"schema1.xsd"};
+String[] afterMoveFilenames = {"smooth.xsd"};
+
+for(int i = 0; i < beforeMoveFilenames.length; i++) {
+
+   // Check that the files were actually renamed as per the configuration within the pom.
+   File beforeMove = new File(basedir, generatedPath + beforeMoveFilenames[i]);
+   File afterMove = new File(basedir, generatedPath + afterMoveFilenames[i]);
+
+   if(beforeMove.exists()) {
+      System.out.println("Rename failed. [" + beforeMove.getAbsolutePath() + "] exists.");
+      return false;
+   }
+
+   if(!afterMove.exists() || afterMove.length() == 0) {
+      System.out.println("Rename failed. [" + afterMove.getAbsolutePath() + "] does not exist.");
+      return false;
+   }
+
+   System.out.println("Successful rename of [" + beforeMove.getName() + "] to [" + afterMove.getName() + "]");
+}
+
+// Add the target/classes to the classpath.
+String classesDir = basedir + "/target/classes";
+addClassPath(classesDir);
+
+// Create an XmlNormalizer, intended to normalize any output XML
+// and to enable simple comparison between XML files in string form.
+import se.west.validation.*;
+XmlNormalizer normalizer = new XmlNormalizer();
+
+// Validate the content of the generated schema files
+String expectedPath = "target/classes/expected/";
+boolean allTransformationsAreCorrect = true;
+for(int i = 0; i < afterMoveFilenames.length; i++) {
+
+    // Read the file content.
+    File expected = new File(basedir, expectedPath + afterMoveFilenames[i]);
+    File actual = new File(basedir, generatedPath + afterMoveFilenames[i]);
+
+    // Normalize the XML
+    String normalizedExpected = normalizer.getNormalizedXml(expected.getAbsolutePath());
+    String normalizedActual = normalizer.getNormalizedXml(actual.getAbsolutePath());
+
+    // Check contents.
+    if(normalizedExpected.equals(normalizedActual)) {
+
+        System.out.println("[Correct Transform]: [" + (i+1) + "/" + afterMoveFilenames.length
+            + "] for XML Schema file " + expected.getName());
+
+    } else {
+
+        System.out.println("[Failed Transform]: [" + (i+1) + "/" + afterMoveFilenames.length
+            + "] for XML Schema file " + actual.getName());
+        System.out.println("[Failed Transform]: [" + (i+1) + "/" + afterMoveFilenames.length
+            + "] Actual: [" + actual.getPath() + "]");
+        System.out.println("[Failed Transform]: [" + (i+1) + "/" + afterMoveFilenames.length
+            + "] Expected: [" + expected.getPath() + "]");
+
+        // Mismatch.
+        allTransformationsAreCorrect = false;
+    }
+}
+
+return allTransformationsAreCorrect;
