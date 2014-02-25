@@ -3,7 +3,7 @@ package org.codehaus.mojo.jaxb2.helpers;
 import java.io.StringReader;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -33,7 +33,7 @@ public class ChangeNamespacePrefixProcessorTest
 
         // Assert
         final List<Node> acceptedNodes = debugNodeProcessor.getAcceptedNodes();
-        Assert.assertEquals( 2, acceptedNodes.size() );
+        Assert.assertEquals( 3, acceptedNodes.size() );
 
         // Note that the DebugNodeProcessor acquires the node *before* it is actually
         // processed - implying that the nodeName is not yet changed.
@@ -45,6 +45,10 @@ public class ChangeNamespacePrefixProcessorTest
         Assert.assertEquals( "ref", elementReferenceAttribute.getNodeName() );
         Assert.assertEquals( newNamespacePrefix + ":aRequiredElementInAnotherNamespace",
                              elementReferenceAttribute.getNodeValue() );
+
+        Node extensionAttribute = acceptedNodes.get( 2 );
+        Assert.assertEquals( "base", extensionAttribute.getNodeName() );
+        Assert.assertEquals( newNamespacePrefix + ":aBaseType", extensionAttribute.getNodeValue() );
     }
 
     //
@@ -53,18 +57,31 @@ public class ChangeNamespacePrefixProcessorTest
 
     private String getXmlDocumentSample( String namespacePrefix, String namespaceURI )
     {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + "<xs:schema version=\"1.0\"\n"
-            + "           targetNamespace=\"http://some/namespace\"\n" + "           xmlns:" + namespacePrefix + "=\""
-            + namespaceURI + "\"\n" + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n" + "\n"
-            + "  <xs:import namespace=\"" + namespaceURI + "\" schemaLocation=\"anotherSchema.xsd\"/>\n" + "\n"
-            + "  <xs:element name=\"anOptionalElementInSomeNamespace\" type=\"xs:string\"/>\n" + "\n"
-            + "  <xs:complexType name=\"fooBar\">\n" + "    <xs:sequence>\n"
-            + "      <xs:element name=\"requiredElement\" type=\"xs:string\" default=\"requiredElementValue\"/>\n"
-            + "      <xs:element ref=\"" + namespacePrefix + ":aRequiredElementInAnotherNamespace\" />\n"
-            + "      <xs:element name=\"optionalElement\" type=\"xs:string\" minOccurs=\"0\"/>\n"
-            + "    </xs:sequence>\n"
-            + "    <xs:attribute name=\"requiredAttribute\" type=\"xs:string\" use=\"required\"/>\n"
-            + "    <xs:attribute name=\"optionalAttribute\" type=\"xs:string\"/>\n" + "  </xs:complexType>\n"
-            + "</xs:schema>\n";
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema version=\"1.0\"\n"
+                + "           targetNamespace=\"http://some/namespace\"\n"
+                + "           xmlns:" + namespacePrefix + "=\"" + namespaceURI + "\"\n"
+                + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                + "\n"
+                + "  <xs:import namespace=\"" + namespaceURI + "\" schemaLocation=\"anotherSchema.xsd\"/>\n"
+                + "\n"
+                + "  <xs:element name=\"anOptionalElementInSomeNamespace\" type=\"xs:string\"/>\n"
+                + "\n"
+                + "  <xs:complexType name=\"fooBar\">\n"
+                + "    <xs:sequence>\n"
+                + "      <xs:element name=\"requiredElement\" type=\"xs:string\" default=\"requiredElementValue\"/>\n"
+                + "      <xs:element ref=\"" + namespacePrefix + ":aRequiredElementInAnotherNamespace\" />\n"
+                + "      <xs:element name=\"optionalElement\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "    </xs:sequence>\n"
+                + "    <xs:attribute name=\"requiredAttribute\" type=\"xs:string\" use=\"required\"/>\n"
+                + "    <xs:attribute name=\"optionalAttribute\" type=\"xs:string\"/>\n"
+                + "  </xs:complexType>\n"
+                + "\n"
+                + "       <xs:complexType name=\"anExtendedComplexType\">\n"
+                + "            <xs:complexContent>\n"
+                + "                <xs:extension base=\"" + namespacePrefix + ":aBaseType\"/>\n"
+                + "            </xs:complexContent>\n"
+                + "        </xs:complexType>\n"
+                + "</xs:schema>\n";
     }
 }

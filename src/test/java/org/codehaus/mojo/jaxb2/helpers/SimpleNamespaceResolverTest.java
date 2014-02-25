@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.xml.XMLConstants;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.codehaus.plexus.util.FileUtils;
 import org.junit.Test;

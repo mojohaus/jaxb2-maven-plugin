@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.xml.transform.TransformerFactory;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.mojo.jaxb2.TransformSchema;

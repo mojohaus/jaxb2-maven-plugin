@@ -40,6 +40,10 @@ import javax.xml.XMLConstants;
  * <dt>Element Reference</dt>
  * <dd><code>&lt;xs:element ref="oldPrefix:aRequiredElementInTheOldPrefixNamespace"/&gt;</code> is altered to
  * <code>&lt;xs:element ref="newPrefix:aRequiredElementInTheOldPrefixNamespace"/&gt;</code></dd>
+ * <p/>
+ * <dt>Type Extension</dt>
+ * <dd><code>&lt;xs:extension base="oldPrefix:something"/&gt;</code> is altered to
+ * <code>&lt;xs:extension base="newPrefix:something"/&gt;</code></dd>
  * </dl>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -52,6 +56,14 @@ public class ChangeNamespacePrefixProcessor
     private static final String REFERENCE_ATTRIBUTE_NAME = "ref";
 
     private static final String TYPE_ATTRIBUTE_NAME = "type";
+
+    // <xs:element name="someOtherImportItem" type="tns:someOtherImportItem"/>
+    // private static final String ELEMENT_NAME = "element";
+
+    // <xs:extension base="tns:importItem">
+    private static final String EXTENSION_ELEMENT_NAME = "extension";
+
+    private static final String EXTENSION_BASE_ATTRIBUTE_NAME = "base";
 
     private static final String SCHEMA = "schema";
 
@@ -89,17 +101,10 @@ public class ChangeNamespacePrefixProcessor
             // These cases are defined by attribute properties.
             final Attr attribute = (Attr) aNode;
 
-            if ( isNamespaceDefinition( attribute ) )
-            {
-                return true;
-            }
-
-            if ( isElementReference( attribute ) )
-            {
-                return true;
-            }
-
-            if ( isTypeAttributeWithPrefix( attribute ) )
+            if ( isNamespaceDefinition( attribute )
+                    || isElementReference( attribute )
+                    || isTypeAttributeWithPrefix( attribute )
+                    || isExtension( attribute ) )
             {
                 return true;
             }
@@ -116,13 +121,15 @@ public class ChangeNamespacePrefixProcessor
             final Attr attribute = (Attr) aNode;
             final Element parentElement = attribute.getOwnerElement();
 
-            if ( isNamespaceDefinition( attribute ) )
+            if ( isNamespaceDefinition(attribute) )
             {
                 // Use the incredibly smooth DOM way to rename an attribute...
                 parentElement.setAttributeNS( attribute.getNamespaceURI(), XMLNS + newPrefix, aNode.getNodeValue() );
                 parentElement.removeAttribute( XMLNS + oldPrefix );
             }
-            else if ( isElementReference( attribute ) || isTypeAttributeWithPrefix( attribute ) )
+            else if ( isElementReference( attribute )
+                    || isTypeAttributeWithPrefix( attribute )
+                    || isExtension( attribute ))
             {
                 // Simply alter the value of the reference
                 final String value = attribute.getValue();
@@ -154,8 +161,9 @@ public class ChangeNamespacePrefixProcessor
     {
         final Element parent = attribute.getOwnerElement();
 
-        return ( XMLConstants.W3C_XML_SCHEMA_NS_URI.equals( parent.getNamespaceURI() ) && SCHEMA.equalsIgnoreCase(
-            parent.getLocalName() ) && oldPrefix.equals( attribute.getLocalName() ) );
+        return ( XMLConstants.W3C_XML_SCHEMA_NS_URI.equals( parent.getNamespaceURI() )
+                && SCHEMA.equalsIgnoreCase( parent.getLocalName() )
+                && oldPrefix.equals( attribute.getLocalName() ) );
     }
 
     /**
@@ -168,8 +176,8 @@ public class ChangeNamespacePrefixProcessor
      */
     private boolean isElementReference( final Attr attribute )
     {
-        return REFERENCE_ATTRIBUTE_NAME.equals( attribute.getName() ) && attribute.getValue().startsWith(
-            oldPrefix + ":" );
+        return REFERENCE_ATTRIBUTE_NAME.equals( attribute.getName() )
+                && attribute.getValue().startsWith( oldPrefix + ":" );
     }
     
     /**
@@ -182,7 +190,28 @@ public class ChangeNamespacePrefixProcessor
      */
     private boolean isTypeAttributeWithPrefix( final Attr attribute )
     {
-        return TYPE_ATTRIBUTE_NAME.equals( attribute.getName() ) && attribute.getValue().startsWith(
-            oldPrefix + ":" );
+        return TYPE_ATTRIBUTE_NAME.equals( attribute.getName() )
+                && attribute.getValue().startsWith( oldPrefix + ":" );
+    }
+
+    /**
+     * Discovers if the provided attribute is a namespace reference to the oldPrefix namespace,
+     * on the form
+     * <pre>
+     *     <code>&lt;xs:extension base="[oldPrefix]:importItem"&gt;</code>
+     * </pre>
+     *
+     * @param attribute the attribute to test.
+     * @return <code>true</code> if the provided attribute is named "extension" and starts with
+     *         <code>[oldPrefix]:</code>, in which case it is a reference to the oldPrefix namespace.
+     */
+    private boolean isExtension( final Attr attribute )
+    {
+        final Element parent = attribute.getOwnerElement();
+
+        return ( XMLConstants.W3C_XML_SCHEMA_NS_URI.equals( parent.getNamespaceURI() ) )
+                && EXTENSION_ELEMENT_NAME.equalsIgnoreCase( parent.getLocalName() )
+                && EXTENSION_BASE_ATTRIBUTE_NAME.equalsIgnoreCase(attribute.getName())
+                && attribute.getValue().startsWith(oldPrefix + ":");
     }
 }
