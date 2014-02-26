@@ -9,12 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "importItem")
-@XmlSeeAlso({
-    SomeImportItemDTO.class,
-    SomeOtherImportItemDTO.class,
-})
+@XmlSeeAlso({ SomeImportItemDTO.class, SomeOtherImportItemDTO.class })
 public abstract class ImportItemDTO {
-    
+
     @XmlAttribute
     private String id;
 
