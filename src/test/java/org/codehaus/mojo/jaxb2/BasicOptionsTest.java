@@ -52,7 +52,7 @@ public class BasicOptionsTest
         AbstractXjcMojo xjcMojo = new XjcMojo();
         xjcMojo = (AbstractXjcMojo) configureMojo( xjcMojo, "jaxb2-maven-plugin", pom );
         assertNotNull( xjcMojo );
-        
+
         super.setVariableValueToObject( xjcMojo, "buildContext", new DefaultBuildContext() );
 
         // return the configured mojo
@@ -183,7 +183,7 @@ public class BasicOptionsTest
         assertFileNames( new String[] { "AddressType4.java", ".staleFlag4-utf8", "ObjectFactory.java" },
                          outputLocationDirectory_utf8.list() );
 
-        // setup test #4 Cp1251 (Windows-1251)
+        // setup test #4 ISO-8859-1
         AbstractXjcMojo xjcMojo_iso88591 = configureMojo( "src/test/resources/test4-iso88591-pom.xml" );
 
         // execute it
@@ -206,10 +206,16 @@ public class BasicOptionsTest
         List<String> lines_encode_a = readFile( outputLocationDirectory_encode_a, fileName, encode_a );
         List<String> lines_encode_b = readFile( outputLocationDirectory_encode_b, fileName, encode_b );
 
+        final String timestamp_string = "// Generated on";
         for ( int i = 0; i < lines_encode_a.size(); i++ )
         {
-            assertEquals( "expected: AddressType4.java form " + encode_a + " and " + encode_b + " line:" + ( i + 1 ),
-                          lines_encode_a.get( i ), lines_encode_b.get( i ) );
+            // As the timestamp in the generated files could differ we ignore that line
+            if ( !lines_encode_a.get( i ).startsWith( timestamp_string )
+                || !lines_encode_b.get( i ).startsWith( timestamp_string ) )
+            {
+                assertEquals( "Encoding comparison failed for " + fileName + " on line " + ( i + 1 ),
+                              lines_encode_a.get( i ), lines_encode_b.get( i ) );
+            }
         }
     }
 
