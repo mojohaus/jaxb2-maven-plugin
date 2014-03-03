@@ -26,7 +26,7 @@
   <artifactId>mjaxb-18</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <description>TODO: What does this verify?</description>
+  <description>Test of includeSchemasOutputPath parameter</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
