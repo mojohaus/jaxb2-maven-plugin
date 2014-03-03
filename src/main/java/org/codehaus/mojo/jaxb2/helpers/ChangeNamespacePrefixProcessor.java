@@ -54,7 +54,6 @@ import javax.xml.XMLConstants;
 public class ChangeNamespacePrefixProcessor
     implements NodeProcessor
 {
-
     // Constants
     private static final String REFERENCE_ATTRIBUTE_NAME = "ref";
 

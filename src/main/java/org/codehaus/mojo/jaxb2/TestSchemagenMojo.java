@@ -40,7 +40,6 @@ import org.apache.maven.project.MavenProject;
 public class TestSchemagenMojo
     extends AbstractSchemagenMojo
 {
-
     /**
      * The source directories containing the test sources to be compiled.
      */

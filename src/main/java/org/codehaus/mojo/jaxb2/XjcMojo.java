@@ -43,7 +43,6 @@ import org.apache.maven.project.MavenProject;
 public class XjcMojo
     extends AbstractXjcMojo
 {
-
     /**
      * The working directory where the generated Java source files are created.
      */

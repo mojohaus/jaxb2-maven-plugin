@@ -42,7 +42,6 @@ import org.apache.maven.project.MavenProject;
 public class TestXjcMojo
     extends AbstractXjcMojo
 {
-
     /**
      * The working directory where the generated Java test source files are created.
      */

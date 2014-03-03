@@ -189,7 +189,6 @@ public final class SchemagenHelper
 
         for ( SimpleNamespaceResolver currentResolver : resolverMap.values() )
         {
-
             File generatedSchemaFile = new File( schemaDirectory, currentResolver.getSourceFilename() );
             Document generatedSchemaFileDocument = null;
 

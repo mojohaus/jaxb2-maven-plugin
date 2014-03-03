@@ -42,7 +42,6 @@ import java.util.Map;
 public class ChangeFilenameProcessor
     implements NodeProcessor
 {
-
     // Constants
     private static final String SCHEMA_LOCATION = "schemaLocation";
 

@@ -60,7 +60,6 @@ import com.sun.tools.xjc.XJCListener;
 public abstract class AbstractXjcMojo
     extends AbstractMojo
 {
-
     @Component
     private BuildContext buildContext;
 
@@ -311,7 +310,6 @@ public abstract class AbstractXjcMojo
 
                 try
                 {
-
                     ArrayList<String> args = getXJCArgs( classPath.toString() );
                     MojoXjcListener xjcListener = new MojoXjcListener();
 
@@ -348,7 +346,6 @@ public abstract class AbstractXjcMojo
                     // Set back the old classloader
                     Thread.currentThread().setContextClassLoader( parent );
                 }
-
             }
             else
             {
@@ -396,7 +393,6 @@ public abstract class AbstractXjcMojo
         {
             throw new MojoExecutionException( e.getMessage(), e );
         }
-
     }
 
     protected abstract void addCompileSourceRoot( MavenProject project );
@@ -607,7 +603,6 @@ public abstract class AbstractXjcMojo
     protected void getSchemasFromFileListing( List<URL> files )
         throws MojoExecutionException
     {
-
         // check that the given file exists
         File schemaListFile = new File( schemaListFileName );
 
@@ -648,7 +643,6 @@ public abstract class AbstractXjcMojo
                 }
             }
             files.add( url );
-
         }
     }
 
@@ -659,7 +653,6 @@ public abstract class AbstractXjcMojo
      */
     public final File[] getBindingFiles()
     {
-
         List<File> bindings = new ArrayList<File>();
         if ( bindingFiles != null )
         {
@@ -693,16 +686,13 @@ public abstract class AbstractXjcMojo
     public final URL[] getXSDFiles()
         throws MojoExecutionException
     {
-
         // illegal option check
         if ( schemaFiles != null && schemaListFileName != null )
         {
-
             // make sure user didn't specify both schema input options
             throw new MojoExecutionException( "schemaFiles and schemaListFileName options were provided, "
                                                   + "these options may not be used together - schemaFiles: "
                                                   + schemaFiles + "; schemaListFileName: " + schemaListFileName );
-
         }
 
         List<URL> xsdFiles = new ArrayList<URL>();
@@ -735,10 +725,8 @@ public abstract class AbstractXjcMojo
         }
         else if ( schemaListFileName != null )
         {
-
             // add all the contents from the schemaListFileName file on disk
             getSchemasFromFileListing( xsdFiles );
-
         }
         else
         {
@@ -831,7 +819,6 @@ public abstract class AbstractXjcMojo
     private void touchStaleFile()
         throws IOException
     {
-
         if ( !getStaleFile().exists() )
         {
             getStaleFile().getParentFile().mkdirs();
@@ -903,7 +890,6 @@ public abstract class AbstractXjcMojo
     final class XJBFile
         implements FileFilter
     {
-
         /**
          * Returns true if the file ends with an xjb extension.
          *
@@ -914,7 +900,6 @@ public abstract class AbstractXjcMojo
         {
             return file.isFile() && file.getName().endsWith( ".xjb" );
         }
-
     }
 
     /**
@@ -923,7 +908,6 @@ public abstract class AbstractXjcMojo
     final class XSDFile
         implements FileFilter
     {
-
         private Log log;
 
         public XSDFile( Log log )
@@ -946,7 +930,6 @@ public abstract class AbstractXjcMojo
             }
             return accept;
         }
-
     }
 
     /**
@@ -955,7 +938,6 @@ public abstract class AbstractXjcMojo
     class MojoXjcListener
         extends XJCListener
     {
-
         List<String> files = new ArrayList<String>();
 
         private String location( SAXParseException e )
@@ -994,6 +976,5 @@ public abstract class AbstractXjcMojo
             getLog().info( arg0 );
             files.add( arg0 );
         }
-
     }
 }

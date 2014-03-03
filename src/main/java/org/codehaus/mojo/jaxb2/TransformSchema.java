@@ -97,7 +97,7 @@ public class TransformSchema
      */
     public String getToFile()
     {
-            return toFile;
+        return toFile;
     }
     
     /**

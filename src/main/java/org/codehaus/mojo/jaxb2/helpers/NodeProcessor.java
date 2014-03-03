@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
  */
 public interface NodeProcessor
 {
-
     /**
      * Defines if this visitor should process the provided node.
      *
