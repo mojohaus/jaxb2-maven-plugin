@@ -1,6 +1,5 @@
 Usage - Schemagen (XML Schema Generator)
 
-    Please be aware that this plugin requires at least the Java 5.0 compiler.
     This plugin can generate XML Schemas from JAXB-annotated Java classes.
     Under the hood, the SchemaGenerator utility is used to generate all XML Schema files.
 
@@ -67,27 +66,13 @@ Usage - Schemagen (XML Schema Generator)
     <dependencies>
         <!--
             You need the JAXB API to be able to annotate your classes.
-            These annotations are used by the jaxb2-maven-plugin to
-            generate XML schema definition files.
+            However, starting with Java 6 that API is included in the
+            Java SE platform so there is no need to declare a dependency.
         -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-        </dependency>
+        ...
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <!-- Need Java 5, which is the default since v2.3 of the maven-compiler-plugin. -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -145,6 +130,7 @@ Usage - Schemagen (XML Schema Generator)
                     </includes>
                 </configuration>
             </plugin>
+            ...
         </plugins>
     </build>
 

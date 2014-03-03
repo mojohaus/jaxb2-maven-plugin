@@ -18,8 +18,11 @@
         <faq id="Tooling">
             <question>What tool is used by the jaxb2-maven-plugin to generate the XML schema definition files?</question>
             <answer>
-                <p>The tool is called <i>SchemaGenerator</i>, and is part of the Java platform.
-                (c.f. <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/share/schemagen.html">this documentation</a>).</p>
+                <p>The tool is called <i>SchemaGenerator</i>, and is part of the JAXB implementation used by the plugin.
+                (c.f. <a href="https://jaxb.java.net/2.2.4/docs/schemagen.html">this documentation</a>).<br/>
+                NOTE: This tool is also included in the JDK as it includes JAXB (starting with Java 6). The
+                jaxb2-maven-plugin does <u>not</u> use that implementation however, but the one included in the
+                JAXB implementation dependency of the plugin.</p>
 
                 <p>The jaxb2-maven-plugin provides some augmentations to the generated schema files, such
                 as the ability to define a schema prefix and filename for each generated XML schema.</p>

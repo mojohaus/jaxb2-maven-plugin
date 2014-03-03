@@ -219,8 +219,8 @@ public abstract class AbstractXjcMojo
 
     /**
      * Specifies the runtime environment in which the generated code is supposed to run, if older than the
-     * JAXB version used by the plugin (for example "2.0"). This will create generated code that doesn't use
-     * any newer JAXB features. Thus, allowing the generated code to run with an earlier JAXB 2.x runtime.
+     * JAXB version used by the plugin (for example "2.0" or "2.1"). This will create generated code that doesn't
+     * use any newer JAXB features. Thus, allowing the generated code to run with an earlier JAXB 2.x runtime.
      *
      * @since 1.3
      */
