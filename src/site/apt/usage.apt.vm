@@ -142,7 +142,6 @@ Usage - XJC (XML to Java Compilation)
                 <configuration>
                     <schemaFiles>schema1.xsd</schemaFiles>
                     <packageName>com.example.foo</packageName>
-                    <staleFile>\${project.build.directory}/jaxb2/.schema1XjcStaleFlag</staleFile>
                 </configuration>
             </execution>
             <execution>
@@ -153,7 +152,6 @@ Usage - XJC (XML to Java Compilation)
                 <configuration>
                     <schemaFiles>schema2.xsd</schemaFiles>
                     <packageName>com.example.bar</packageName>
-                    <staleFile>\${project.build.directory}/jaxb2/.schema2XjcStaleFlag</staleFile>
                     <clearOutputDir>false</clearOutputDir>
                 </configuration>
             </execution>
@@ -163,7 +161,7 @@ Usage - XJC (XML to Java Compilation)
   
   In the above example, there is a trick to get this to work properly:
   
-  [[2]] Need to set <<<clearOutputDir>>> to false for all but the first execution, otherwise the
+  * Need to set <<<clearOutputDir>>> to false for all but the first execution, otherwise the
   Java sources generated in prior steps will be cleared (deleted).
   
   []
