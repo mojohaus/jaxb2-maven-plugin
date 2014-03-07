@@ -11,7 +11,7 @@
     <xs:sequence>
       <xs:element default="requiredElementValue" name="requiredElement" type="xs:string"/>
       <xs:element minOccurs="0" ref="some:anOptionalElementInSomeNamespace"/>
-      <xs:element default="requiredElementValue" ref="ns2:aRequiredElementInYetAnotherNamespace"/>
+      <xs:element default="requiredElementValue" form="qualified" name="aRequiredElementInYetAnotherNamespace" type="xs:string"/>
     </xs:sequence>
     <xs:attribute name="requiredAttribute" type="xs:string" use="required"/>
     <xs:attribute name="optionalAttribute" type="xs:string"/>

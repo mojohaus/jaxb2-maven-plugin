@@ -8,7 +8,7 @@
   <xs:complexType name="fooBar">
     <xs:sequence>
       <xs:element default="requiredElementValue" name="requiredElement" type="xs:string"/>
-      <xs:element default="requiredElementValue" ref="another:aRequiredElementInAnotherNamespace"/>
+      <xs:element default="requiredElementValue" form="qualified" name="aRequiredElementInAnotherNamespace" type="xs:string"/>
       <xs:element minOccurs="0" name="optionalElement" type="xs:string"/>
     </xs:sequence>
     <xs:attribute name="requiredAttribute" type="xs:string" use="required"/>

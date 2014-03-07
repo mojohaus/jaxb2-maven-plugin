@@ -29,7 +29,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -333,10 +332,6 @@ public abstract class AbstractXjcMojo
                         throw new MojoExecutionException( msg );
                     }
 
-                    // Workaround until upgrading to a JAXB impl that supports configuring
-                    // the output char encoding (see http://java.net/jira/browse/JAXB-499)
-                    changeEncoding( xjcListener.files );
-
                     buildContext.refresh( getOutputDirectory() );
 
                     touchStaleFile();
@@ -495,6 +490,16 @@ public abstract class AbstractXjcMojo
             args.add( "-XexplicitAnnotation" );
         }
 
+        if ( encoding != null && encoding.trim().length() > 0 )
+        {
+            args.add( "-encoding" );
+            args.add( encoding );
+        }
+        else
+        {
+            getLog().warn( "No encoding specified; default platform encoding will be used for generated sources." );
+        }
+        
         if ( httpproxy != null )
         {
             args.add( "-httpproxy" );
@@ -828,35 +833,6 @@ public abstract class AbstractXjcMojo
         else
         {
             getStaleFile().setLastModified( System.currentTimeMillis() );
-        }
-    }
-
-    private void changeEncoding( List<String> files )
-        throws IOException
-    {
-        String to = encoding;
-        String from = System.getProperty( "file.encoding" );
-        boolean enableEncode = to != null && to.trim().length() > 0 && !to.equals( from );
-
-        if ( enableEncode )
-        {
-            getLog().debug( "Changing encoding of generated source files from " + from
-                            + " to " + to );
-            for ( Iterator < String > it = files.iterator(); it.hasNext(); )
-            {
-                File file = new File( getOutputDirectory(), it.next() );
-
-                if ( file.exists() )
-                {
-                    String data = FileUtils.fileRead( file );
-                    FileUtils.fileWrite( file.getAbsolutePath(), to, data );
-                }
-                else
-                {
-                    getLog().warn( "Expected file " + file.getAbsolutePath()
-                                    + " not found when changing encoding" );
-                }
-            }
         }
     }
 
