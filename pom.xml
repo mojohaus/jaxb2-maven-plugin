@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <packaging>maven-plugin</packaging>
 
   <name>JAXB-2 Maven Plugin</name>
@@ -83,9 +83,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/jaxb2-maven-plugin</url>
+    <connection>scm:svn:http://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.6</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-1.6</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/mojo/tags/jaxb2-maven-plugin-1.6</url>
   </scm>
   <issueManagement>
     <system>JIRA</system>
