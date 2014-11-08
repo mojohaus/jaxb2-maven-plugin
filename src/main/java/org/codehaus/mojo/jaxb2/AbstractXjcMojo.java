@@ -65,10 +65,10 @@ public abstract class AbstractXjcMojo
     /**
      * The default maven project object.
      */
-    @Component
+    @Parameter( defaultValue = "${project}", readonly = true )
     private MavenProject project;
 
-    @Component
+    @Parameter( defaultValue = "${mojoExecution}", readonly = true )
     private MojoExecution execution;
 
     /**

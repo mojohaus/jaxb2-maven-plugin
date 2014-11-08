@@ -69,7 +69,7 @@ public abstract class AbstractSchemagenMojo
     /**
      * The default maven project object.
      */
-    @Component
+    @Parameter( defaultValue = "${project}", readonly = true )
     private MavenProject project;
 
     /**
