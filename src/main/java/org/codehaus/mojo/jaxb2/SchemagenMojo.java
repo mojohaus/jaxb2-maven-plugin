@@ -36,7 +36,8 @@ import org.apache.maven.project.MavenProject;
  * @since 1.3
  */
 @Mojo( name = "schemagen", defaultPhase = LifecyclePhase.GENERATE_RESOURCES,
-       requiresDependencyResolution = ResolutionScope.COMPILE )
+       requiresDependencyResolution = ResolutionScope.COMPILE,
+       threadSafe = true)
 public class SchemagenMojo
     extends AbstractSchemagenMojo
 {

@@ -36,7 +36,8 @@ import org.apache.maven.project.MavenProject;
  * @since 1.3
  */
 @Mojo( name = "testSchemagen", defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES,
-       requiresDependencyResolution = ResolutionScope.TEST )
+       requiresDependencyResolution = ResolutionScope.TEST,
+       threadSafe = true)
 public class TestSchemagenMojo
     extends AbstractSchemagenMojo
 {

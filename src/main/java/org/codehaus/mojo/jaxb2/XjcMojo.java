@@ -39,7 +39,8 @@ import org.apache.maven.project.MavenProject;
  * @version $Id$
  */
 @Mojo( name = "xjc", defaultPhase = LifecyclePhase.GENERATE_SOURCES,
-       requiresDependencyResolution = ResolutionScope.COMPILE )
+       requiresDependencyResolution = ResolutionScope.COMPILE,
+       threadSafe = true)
 public class XjcMojo
     extends AbstractXjcMojo
 {

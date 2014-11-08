@@ -38,7 +38,8 @@ import org.apache.maven.project.MavenProject;
  * @version $Id$
  */
 @Mojo( name = "testXjc", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES,
-       requiresDependencyResolution = ResolutionScope.TEST )
+       requiresDependencyResolution = ResolutionScope.TEST,
+       threadSafe = true)
 public class TestXjcMojo
     extends AbstractXjcMojo
 {
