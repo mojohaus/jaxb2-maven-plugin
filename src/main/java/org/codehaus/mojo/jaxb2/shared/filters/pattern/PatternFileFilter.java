@@ -1,6 +1,5 @@
 package org.codehaus.mojo.jaxb2.shared.filters.pattern;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
@@ -10,6 +9,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -152,7 +152,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
 
         // Convert and return.
         final List<Filter<File>> toReturn = new ArrayList<Filter<File>>();
-        final List<String> patternStrings = Arrays.<String>asList(patterns);
+        final List<String> patternStrings = Arrays.asList(patterns);
         toReturn.add(new PatternFileFilter(patternStrings, includeOperation));
 
         // Initialize the filters.
