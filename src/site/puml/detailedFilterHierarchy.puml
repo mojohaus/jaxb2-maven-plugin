@@ -1,0 +1,32 @@
+@startuml
+interface Filter<T> {
+    void initialize(Log log);
+    boolean accept(T candidate);
+}
+
+abstract class AbstractFilter<T> implements Filter {
+        Log log;
+        boolean processNullValues;
+
+        + boolean onNullCandidate();
+        + boolean accept(T candidate);
+        # boolean onCandidate(final T nonNullCandidate)
+}
+note left of AbstractFilter: Provides standard lifecycle\nimplementation and null awareness
+
+abstract class AbstractPatternFilter<T> extends AbstractFilter {
+    boolean acceptCandidateOnPatternMatch;
+    StringConverter<T> converter;
+    List<String> patterns;
+
+    # boolean onCandidate(final T nonNullCandidate)
+}
+note left of AbstractPatternFilter: Provides property setters for\nMaven plugin configuration
+
+class PatternFileFilter<File> extends AbstractPatternFilter implements java.io.FileFilter {
+}
+note left of PatternFileFilter: Provides defaults for\nMaven plugin configuration
+
+class PatternURLFilter<URL> extends AbstractPatternFilter {
+}
+@enduml

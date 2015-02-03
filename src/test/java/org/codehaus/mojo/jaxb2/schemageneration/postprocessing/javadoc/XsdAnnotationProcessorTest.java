@@ -1,0 +1,53 @@
+package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.SortedMap;
+
+/**
+ * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
+ */
+public class XsdAnnotationProcessorTest extends AbstractSourceCodeAwareNodeProcessingTest {
+
+    // Shared state
+    private JavaDocRenderer renderer = new DefaultJavaDocRenderer();
+
+    @Test
+    public void validateProcessingNodesInVanillaXSD() throws Exception {
+
+        // Assemble
+        final String path = "testdata/schemageneration/javadoc/expectedTransformedSomewhatNamedPerson.xml";
+        final String expected = XmlTestUtils.readFully(path);
+        final Document document = namespace2DocumentMap.get(SomewhatNamedPerson.NAMESPACE);
+        final Node rootNode = document.getFirstChild();
+
+        final XsdAnnotationProcessor unitUnderTest = new XsdAnnotationProcessor(docs, renderer);
+
+        // Act
+        process(rootNode, true, unitUnderTest);
+
+        // Assert
+        final String processed = printDocument(document);
+        // System.out.println("Got: " + processed);
+
+        Assert.assertTrue(XmlTestUtils.compareXmlIgnoringWhitespace(expected, processed).identical());
+
+        LoggerFactory.getLogger(XsdAnnotationProcessorTest.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
+        return Arrays.<Class<?>>asList(SomewhatNamedPerson.class);
+    }
+}

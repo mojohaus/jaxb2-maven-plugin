@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.codehaus.mojo.jaxb2.its</groupId>
+    <artifactId>xjc-include-file-regularExpressions</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <description>Purpose: Validation of the sources and excludeSourcesPatterns.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                        Include the sources from the supplied directory, and the supplied explicit file.
+                        The non-existent path should be silently ignored.
+                    -->
+                    <sources>
+                        <source>src/main/someOtherXsds</source>
+                        <source>src/main/foo/gnat.txt</source>
+                        <source>src/main/nonexistent/paths</source>
+                    </sources>
+                    <!--
+                        When providing xjcSourceExcludeFilters, the default exclude
+                        Filter definitions are overridden by the Patterns supplied.
+                    -->
+                    <xjcSourceExcludeFilters>
+                        <filter implementation="org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter">
+                            <patterns>
+                                <pattern>\.xsd</pattern>
+                                <pattern>\.foo</pattern>
+                            </patterns>
+                        </filter>
+                    </xjcSourceExcludeFilters>
+                    <!--
+                        Use the supplied package name for the generated sources.
+                    -->
+                    <packageName>se.west</packageName>
+                    <!--
+                        Include the generated XSDs in the resulting artifact,
+                        at the supplied path.
+                    -->
+                    <xsdPathWithinArtifact>source/xsds</xsdPathWithinArtifact>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

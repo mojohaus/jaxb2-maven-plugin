@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.codehaus.mojo.jaxb2.its</groupId>
+    <artifactId>mjaxb-80</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <description>Purpose: Test of issue MJAXB-80 (namespace prefix problem in NodeProcessor algorithm).</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>schemagen</id>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                     SchemaGenerator configuration properties, which excludes files found in the source directories.
+                     This consists of a (List of) Filters, all of which should implement the
+
+                     org.codehaus.mojo.jaxb2.shared.filters.Filter
+
+                     interface.
+                   -->
+                    <schemaSourceExcludeFilters>
+                        <noJaxbIndex implementation="org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter">
+                            <patterns>
+                                <pattern>jaxb\.index</pattern>
+                            </patterns>
+                        </noJaxbIndex>
+                    </schemaSourceExcludeFilters>
+                    <!--
+                      Post-processing 1: Don't create JavaDoc annotations.
+                    -->
+                    <createJavaDocAnnotations>false</createJavaDocAnnotations>
+                    <!--
+                      Post-processing 2: Transform the generated XML Schemas.
+                    -->
+                    <transformSchemas>
+                        <transformSchema>
+                            <uri>http://schema.domain.org/integration/1.0</uri>
+                            <toPrefix>smoothIntegration</toPrefix>
+                            <toFile>smooth.xsd</toFile>
+                        </transformSchema>
+                    </transformSchemas>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

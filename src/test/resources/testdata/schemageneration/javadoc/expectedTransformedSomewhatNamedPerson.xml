@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://some/namespace" version="1.0">
+
+    <xs:complexType name="somewhatNamedPerson">
+        <xs:annotation>
+            <xs:documentation><![CDATA[Definition of a person with lastName and age, and optionally a firstName as well...
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
+(custom): A custom JavaDoc annotation.]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[The first name of the SomewhatNamedPerson.]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="lastName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[The last name of the SomewhatNamedPerson.]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="age" type="xs:int" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[The age of the SomewhatNamedPerson. Must be positive.]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

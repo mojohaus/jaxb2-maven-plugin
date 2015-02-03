@@ -1,0 +1,13 @@
+@startuml
+|SchemaGenerator|
+start
+:Execute SchemaGenerator;
+|#AntiqueWhite|Post-Processing|
+:**XsdAnnotationProcessor**
+Add XSD annotations containing JavaDoc from source files;
+:**ChangeNamespacePrefixProcessor**
+Change schemagen-generated XML namespace prefixes ("ns1", "ns2", ...);
+:**ChangeFilenameProcessor**
+Change schemagen-generated file names ("schema1.xsd", "schema2.xsd", ...);
+stop
+@enduml

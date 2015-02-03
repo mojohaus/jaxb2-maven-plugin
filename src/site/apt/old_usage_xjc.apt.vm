@@ -1,0 +1,171 @@
+Usage - XJC (XML to Java Compilation)
+
+  This plugin implements and runs the XJC binding compiler driver natively, and integrates XJC into
+  Maven.
+  
+  The plugin will use its {{{./dependencies.html}JAXB implementation dependency}} for all actions.
+  However, due to the construction of the Java platform the JAXB API used is the one defined by the
+  platform. This means that the used JAXB API version will be the endorsed one of the JDK,
+  regardless of what is specified in the plugin (or its dependencies).
+  You may override the endorsed API outside of Maven and this plugin, but that is typically
+  viewed as advanced usage. A better option is to align the version of the compiled code with the
+  requirement on JAXB runtime environment of the generated code, see example below.
+  
+* Basic example
+
+  The following example demonstrates a basic plugin configuration for generating Java sources from XML schemas:
+
++------------------------------------------+
+<project>
+    ...
+    <dependencies>
+        <!--
+            You need the JAXB API to be able to annotate your classes.
+            However, starting with Java 6 that API is included in the
+            Java SE platform so there is no need to declare a dependency.
+        -->
+        ...
+    </dependencies>
+    ...
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!--
+                    If we e.g. execute on JDK 1.7, we should compile for Java 7 to get
+                    the same (or higher) JAXB API version as used during the xjc execution.
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageName>com.example.myschema</packageName> <!-- The name of your generated source package -->
+                </configuration>
+            </plugin>
+            ...
+        </plugins>
+    <build>
+    ...
+</project>
++------------------------------------------+
+
+  In this example, the plugin will generate Java sources from all XML schema files in the default
+  {{{./xjc-mojo.html#schemaDirectory}schema directory}}. The package of the generated sources will
+  be 'com.example.myschema' as defined by the <<<packageName>>> configuration parameter. Also, the
+  JAXB enviroment requirement of the generated code will be the default of the plugin's JAXB
+  implementation dependency (see {{{./xjc-mojo.html#target}target}} parameter).
+  
+* Aligning JDK, JAXB API, and target JAXB runtime environment
+
+  The example below outlines an example configuration for a project where the target Java platform
+  is Java 6+, as seen in the configuration of the mave-compiler-plugin. As JDK 1.6 includes JAXB
+  2.1 (starting with JDK 1.6u4), we set the target JAXB runtime platform accordingly through the
+  <<<target>>> configuration parameter.
+  JDK 1.6+ may be used to build the project.
+
++------------------------------------------+
+<project>
+    ...
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <target>2.1</target>
+                    ...
+                </configuration>
+            </plugin>
+            ...
+        </plugins>
+    <build>
+    ...
+</project>
++------------------------------------------+
+
+* Multiple schemas with different configuration
+
+  In the case of having multiple XML schema files which should be processed with different configuration,
+  you need to have multiple plugin execution bindings. One execution binding per unique configuration.
+  
++------------------------------------------+
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+            <execution>
+                <id>xjc-schema1</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+                <configuration>
+                    <schemaFiles>schema1.xsd</schemaFiles>
+                    <packageName>com.example.foo</packageName>
+                </configuration>
+            </execution>
+            <execution>
+                <id>xjc-schema2</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+                <configuration>
+                    <schemaFiles>schema2.xsd</schemaFiles>
+                    <packageName>com.example.bar</packageName>
+                    <clearOutputDir>false</clearOutputDir>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
++------------------------------------------+
+  
+  In the above example, there is a trick to get this to work properly:
+  
+  * Need to set <<<clearOutputDir>>> to false for all but the first execution, otherwise the
+  Java sources generated in prior steps will be cleared (deleted).
+  
+  []
+  
+  Comment: In plugin versions prior to 1.6, you would also need to configure a unique stale file for
+  each execution. However, in versions 1.6+ this is not required as the plugin will automatically
+  calculate unique stale file names based on the execution id.

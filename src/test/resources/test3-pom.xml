@@ -1,0 +1,20 @@
+<project>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <configuration>
+          <!-- <verbose>true</verbose> -->
+          <packageName>jaxb2.plugin</packageName>
+          <schemaDirectory>${basedir}/src/test/resources/testschemas</schemaDirectory>
+          <bindingDirectory>${basedir}/src/main/xjb</bindingDirectory>
+          <staleFile>${basedir}/target/test-generated-sources/jaxb2/plugin/.staleFlag2</staleFile>
+          <outputDirectory>${basedir}/target/test-generated-sources/</outputDirectory>
+          <project implementation="org.codehaus.mojo.jaxb2.BasicOptionsProjectStub"/>
+        </configuration>
+      </plugin>
+    </plugins>
+   </build>
+</project>
+

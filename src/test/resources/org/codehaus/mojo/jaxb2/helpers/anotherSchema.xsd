@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://another/namespace"
+           xmlns:yetAnother="http://yet/another/namespace"
+           xmlns:some="http://some/namespace"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:import namespace="http://some/namespace" schemaLocation="someSchema.xsd"/>
+
+    <xs:import namespace="http://yet/another/namespace" schemaLocation="yetAnotherSchema.xsd"/>
+
+    <xs:element name="aRequiredElementInAnotherNamespace" type="xs:string"/>
+
+    <xs:complexType name="fooBaz">
+        <xs:sequence>
+            <xs:element name="requiredElement" type="xs:string" default="requiredElementValue"/>
+            <xs:element ref="some:anOptionalElementInSomeNamespace" minOccurs="0"/>
+            <xs:element ref="yetAnother:aRequiredElementInYetAnotherNamespace" default="requiredElementValue"/>
+        </xs:sequence>
+        <xs:attribute name="requiredAttribute" type="xs:string" use="required"/>
+        <xs:attribute name="optionalAttribute" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>
+
