@@ -19,7 +19,6 @@ package org.codehaus.mojo.jaxb2.javageneration;
  * under the License.
  */
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -37,6 +36,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**

@@ -26,7 +26,6 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
@@ -39,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -308,7 +308,7 @@ public class JavaDocExtractor {
         @Override
         @SuppressWarnings("unchecked")
         public SortedMap<SortableLocation, JavaDocData> getAll() {
-            return Collections.unmodifiableSortedMap(valueMap);
+            return (SortedMap<SortableLocation, JavaDocData>) Collections.unmodifiableSortedMap(valueMap);
         }
 
         /**

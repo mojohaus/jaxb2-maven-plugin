@@ -19,7 +19,6 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  * under the License.
  */
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -36,6 +35,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
