@@ -1,6 +1,5 @@
 package org.codehaus.mojo.jaxb2.shared.classloader;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.junit.After;
@@ -10,6 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,7 +60,7 @@ public class ThreadContextClassLoaderBuilderTest {
 
         // Act
         final ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
-        final List<URL> resources = Collections.<URL>list(ctxClassLoader.getResources(""));
+        final List<URL> resources = Collections.list(ctxClassLoader.getResources(""));
 
         // Assert
         Assert.assertEquals(3, resources.size());
