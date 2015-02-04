@@ -6,7 +6,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.jguru.nazgul.tools.validation.aspect.ValidationAspect;
+import org.jvnet.staxex.StreamingDataHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -355,11 +355,11 @@ public class FileSystemUtilitiesTest {
     public void validateGettingFileForClassURL() {
 
         // Assemble
-        final URL valAspectURL = ValidationAspect.class.getProtectionDomain().getCodeSource().getLocation();
-        Assert.assertNotNull(valAspectURL);
+        final URL streamingDhURL = StreamingDataHandler.class.getProtectionDomain().getCodeSource().getLocation();
+        Assert.assertNotNull(streamingDhURL);
 
         // Act
-        final File jarFile = FileSystemUtilities.getFileFor(valAspectURL, "UTF-8");
+        final File jarFile = FileSystemUtilities.getFileFor(streamingDhURL, "UTF-8");
 
         // Assert
         Assert.assertTrue(jarFile.exists());
@@ -370,7 +370,7 @@ public class FileSystemUtilitiesTest {
     public void validateGettingFileForClassResourceURL() {
 
         // Assemble
-        final String classResource = ValidationAspect.class.getName().replace(".", "/") + ".class";
+        final String classResource = StreamingDataHandler.class.getName().replace(".", "/") + ".class";
         final URL resource = getClass().getClassLoader().getResource(classResource);
         Assert.assertNotNull(resource);
 

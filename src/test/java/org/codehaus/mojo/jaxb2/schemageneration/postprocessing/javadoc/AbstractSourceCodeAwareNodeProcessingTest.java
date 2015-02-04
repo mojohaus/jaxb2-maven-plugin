@@ -4,6 +4,8 @@ import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.w3c.dom.Document;
@@ -11,6 +13,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.SchemaOutputResolver;
@@ -21,8 +24,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -257,6 +263,61 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
     //
     // Private helpers
     //
+
+    /**
+     * Utility method to read all (string formatted) data from the given classpath-relative
+     * file and return the data as a string.
+     *
+     * @param path The classpath-relative file path.
+     * @return The content of the supplied file.
+     */
+    protected static String readFully(final String path) {
+
+        final StringBuilder toReturn = new StringBuilder(50);
+
+        try {
+
+            // Will produce a NPE if the path was not directed to a file.
+            final InputStream resource = AbstractSourceCodeAwareNodeProcessingTest
+                    .class
+                    .getClassLoader()
+                    .getResourceAsStream(path);
+            final BufferedReader tmp = new BufferedReader(new InputStreamReader(resource));
+
+            for (String line = tmp.readLine(); line != null; line = tmp.readLine()) {
+                toReturn.append(line).append('\n');
+            }
+        } catch (final Exception e) {
+            throw new IllegalArgumentException("Resource [" + path + "] not readable.");
+        }
+
+        // All done.
+        return toReturn.toString();
+    }
+
+    /**
+     * Compares XML documents provided by the two Readers.
+     *
+     * @param expected The expected document data.
+     * @param actual   The actual document data.
+     * @return A DetailedDiff object, describing all differences in documents supplied.
+     * @throws org.xml.sax.SAXException If a SAXException was raised during parsing of the two Documents.
+     * @throws IOException  If an I/O-related exception was raised while acquiring the data from the Readers.
+     */
+    protected static Diff compareXmlIgnoringWhitespace(final String expected, final String actual) throws SAXException,
+            IOException {
+
+        // Check sanity
+        org.apache.commons.lang3.Validate.notNull(expected, "Cannot handle null expected argument.");
+        org.apache.commons.lang3.Validate.notNull(actual, "Cannot handle null actual argument.");
+
+        // Ignore whitespace - and also normalize the Documents.
+        XMLUnit.setNormalize(true);
+        XMLUnit.setIgnoreWhitespace(true);
+
+        // Compare and return
+        return XMLUnit.compareXML(expected, actual);
+    }
 
     private List<File> resolveSourceFiles() {
 
