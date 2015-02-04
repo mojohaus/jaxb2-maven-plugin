@@ -1,0 +1,9 @@
+<component-set>
+    <components>
+        <component>
+            <role>java.util.List</role>
+            <role-hint>List</role-hint>
+            <implementation>java.util.ArrayList</implementation>
+        </component>
+    </components>
+</component-set>
