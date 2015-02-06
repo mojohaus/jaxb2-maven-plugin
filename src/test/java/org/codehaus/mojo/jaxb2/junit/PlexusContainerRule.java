@@ -2,13 +2,14 @@ package org.codehaus.mojo.jaxb2.junit;
 
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
+import org.codehaus.plexus.ContainerConfiguration;
+import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.context.Context;
 import org.junit.runner.Description;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.net.URL;
 
 /**
@@ -33,6 +34,7 @@ public class PlexusContainerRule extends AbstractBeforeAfterRule {
 
     // Internal state
     private PlexusContainer container;
+    private ContainerConfiguration config;
     private URL configurationURL;
 
     /**
@@ -94,9 +96,15 @@ public class PlexusContainerRule extends AbstractBeforeAfterRule {
         final Class<?> testClass = description.getTestClass();
         Validate.notNull(testClass, "Cannot handle null 'description.getTestClass()' value.");
 
-        // Create and configure the Container
-        container = new DefaultPlexusContainer();
-        container.addContextValue(BASEDIR, getBasedir());
+        // Configure and create the Container
+        final URL configURL = this.configurationURL == null
+                ? getDefaultConfigurationURL(testClass)
+                : this.configurationURL;
+        config = new DefaultContainerConfiguration();
+        config.setContainerConfigurationURL(configURL);
+
+        container = new DefaultPlexusContainer(config);
+        container.getContext().put(BASEDIR, getBasedir());
 
         // Configure the Plexus context
         final Context context = container.getContext();
@@ -109,16 +117,9 @@ public class PlexusContainerRule extends AbstractBeforeAfterRule {
             context.put(PLEXUS_HOME, plexusHomeDir.getAbsolutePath());
         }
 
-        final URL configURL = this.configurationURL == null
-                ? getDefaultConfigurationURL(testClass)
-                : this.configurationURL;
-        if (configURL != null) {
-            container.setConfigurationResource(new InputStreamReader(configURL.openStream()));
-        }
-
         // Initialize and start the Plexus Container.
-        container.initialize();
-        container.start();
+        // container.initialize();
+        // container.start();
     }
 
     /**

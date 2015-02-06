@@ -101,11 +101,11 @@
 
     <properties>
         <!-- Define Maven and JDK versions-->
-        <mavenVersion>2.2.1</mavenVersion>
+        <mavenVersion>3.0.4</mavenVersion>
         <mojo.java.target>1.6</mojo.java.target>
 
         <!-- Plexus component versions -->
-        <plexus-compiler-api.version>2.4</plexus-compiler-api.version>
+        <plexus-compiler-api.version>2.5</plexus-compiler-api.version>
         <plexus-utils.version>3.0.21</plexus-utils.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
@@ -195,11 +195,6 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
-            <version>${mavenVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-project</artifactId>
             <version>${mavenVersion}</version>
         </dependency>
         <dependency>
