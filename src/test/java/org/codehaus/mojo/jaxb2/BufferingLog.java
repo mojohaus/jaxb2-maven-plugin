@@ -80,10 +80,10 @@ public class BufferingLog implements Log {
     /**
      * Assigns the minimum number of Integer digits in the Log format.
      *
-     * @param setMinimumIntegerDigits the minimum number of Integer digits in the Log format.
+     * @param minimumIntegerDigits the minimum number of Integer digits in the Log format.
      */
-    public static void setMinimumIntegerDigits(final int setMinimumIntegerDigits) {
-        INTEGER_FORMAT.setMinimumIntegerDigits(setMinimumIntegerDigits);
+    public static void setMinimumIntegerDigits(final int minimumIntegerDigits) {
+        INTEGER_FORMAT.setMinimumIntegerDigits(minimumIntegerDigits);
     }
 
     /**

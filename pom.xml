@@ -101,7 +101,7 @@
 
     <properties>
         <!-- Define Maven and JDK versions-->
-        <mavenVersion>3.0.4</mavenVersion>
+        <mavenVersion>3.0</mavenVersion>
         <mojo.java.target>1.6</mojo.java.target>
 
         <!-- Plexus component versions -->
@@ -117,8 +117,7 @@
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>1.5</xmlunit.version>
         <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
-        <maven-plugin-testing-harness.version>3.2.0</maven-plugin-testing-harness.version>
-        <maven-plugin-annotations.version>3.3</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -238,12 +237,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugin-testing</groupId>
-            <artifactId>maven-plugin-testing-harness</artifactId>
-            <version>${maven-plugin-testing-harness.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
