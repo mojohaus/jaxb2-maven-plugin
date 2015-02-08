@@ -51,47 +51,46 @@ import java.util.SortedMap;
  * not contain a JavaDoc annotation) from the corresponding member is injected as an
  * annotation directly inside the element.</li>
  * </ol>
- * <p/>
  * <p>Thus, the following 'vanilla'-generated XSD:</p>
  * <pre>
  *     <code>
- *         &lt;xs:complexType name="somewhatNamedPerson">
- *             &lt;xs:sequence>
- *                 &lt;xs:element name="firstName" type="xs:string" nillable="true" minOccurs="0"/>
- *                 &lt;xs:element name="lastName" type="xs:string"/>
- *             &lt;/xs:sequence>
- *             &lt;xs:attribute name="age" type="xs:int" use="required"/>
- *         &lt;/xs:complexType>
+ *         &lt;xs:complexType name="somewhatNamedPerson"&gt;
+ *             &lt;xs:sequence&gt;
+ *                 &lt;xs:element name="firstName" type="xs:string" nillable="true" minOccurs="0"/&gt;
+ *                 &lt;xs:element name="lastName" type="xs:string"/&gt;
+ *             &lt;/xs:sequence&gt;
+ *             &lt;xs:attribute name="age" type="xs:int" use="required"/&gt;
+ *         &lt;/xs:complexType&gt;
  *     </code>
  * </pre>
  * <p>... would be converted to the following annotated XSD, given a DefaultJavaDocRenderer:</p>
  * <pre>
  *     <code>
- *         &lt;xs:complexType name="somewhatNamedPerson">
- *             &lt;xs:annotation>
- *                 &lt;xs:documentation>&lt;![CDATA[Definition of a person with lastName and age, and optionally a firstName as well...
+ *         &lt;xs:complexType name="somewhatNamedPerson"&gt;
+ *             &lt;xs:annotation&gt;
+ *                 &lt;xs:documentation&gt;&lt;![CDATA[Definition of a person with lastName and age, and optionally a firstName as well...
  *
- *                 (author): &lt;a href="mailto:lj@jguru.se">Lennart J&ouml;relid&lt;/a>, jGuru Europe AB
- *                 (custom): A custom JavaDoc annotation.]]>&lt;/xs:documentation>
- *             &lt;/xs:annotation>
- *             &lt;xs:sequence>
- *                 &lt;xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string">
- *                     &lt;xs:annotation>
- *                         &lt;xs:documentation>&lt;![CDATA[The first name of the SomewhatNamedPerson.]]>&lt;/xs:documentation>
- *                     &lt;/xs:annotation>
- *                 &lt;/xs:element>
- *                 &lt;xs:element name="lastName" type="xs:string">
- *                     &lt;xs:annotation>
- *                         &lt;xs:documentation>&lt;![CDATA[The last name of the SomewhatNamedPerson.]]>&lt;/xs:documentation>
- *                     &lt;/xs:annotation>
- *                 &lt;/xs:element>
- *            &lt;/xs:sequence>
- *            &lt;xs:attribute name="age" type="xs:int" use="required">
- *                &lt;xs:annotation>
- *                    &lt;xs:documentation>&lt;![CDATA[The age of the SomewhatNamedPerson. Must be positive.]]>&lt;/xs:documentation>
- *                &lt;/xs:annotation>
- *            &lt;/xs:attribute>
- *          &lt;/xs:complexType>
+ *                 (author): &lt;a href="mailto:lj@jguru.se"&gt;Lennart J&ouml;relid&lt;/a&gt;, jGuru Europe AB
+ *                 (custom): A custom JavaDoc annotation.]]&gt;&lt;/xs:documentation&gt;
+ *             &lt;/xs:annotation&gt;
+ *             &lt;xs:sequence&gt;
+ *                 &lt;xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string"&gt;
+ *                     &lt;xs:annotation&gt;
+ *                         &lt;xs:documentation&gt;&lt;![CDATA[The first name of the SomewhatNamedPerson.]]&gt;&lt;/xs:documentation&gt;
+ *                     &lt;/xs:annotation&gt;
+ *                 &lt;/xs:element&gt;
+ *                 &lt;xs:element name="lastName" type="xs:string"&gt;
+ *                     &lt;xs:annotation&gt;
+ *                         &lt;xs:documentation&gt;&lt;![CDATA[The last name of the SomewhatNamedPerson.]]&gt;&lt;/xs:documentation&gt;
+ *                     &lt;/xs:annotation&gt;
+ *                 &lt;/xs:element&gt;
+ *            &lt;/xs:sequence&gt;
+ *            &lt;xs:attribute name="age" type="xs:int" use="required"&gt;
+ *                &lt;xs:annotation&gt;
+ *                    &lt;xs:documentation&gt;&lt;![CDATA[The age of the SomewhatNamedPerson. Must be positive.]]&gt;&lt;/xs:documentation&gt;
+ *                &lt;/xs:annotation&gt;
+ *            &lt;/xs:attribute&gt;
+ *          &lt;/xs:complexType&gt;
  *     </code>
  * </pre>
  * <p>... given that the Java class <code>SomewhatNamedPerson</code> has JavaDoc on its class and fields
@@ -107,7 +106,7 @@ public class XsdAnnotationProcessor implements NodeProcessor {
      * The namespace schema prefix for the URI {@code http://www.w3.org/2001/XMLSchema}
      * (i.e. {@code XMLConstants.W3C_XML_SCHEMA_NS_URI}).
      *
-     * @see XMLConstants.W3C_XML_SCHEMA_NS_URI
+     * @see javax.xml.XMLConstants#W3C_XML_SCHEMA_NS_URI
      */
     public static final String XSD_SCHEMA_NAMESPACE_PREFIX = "xs";
 

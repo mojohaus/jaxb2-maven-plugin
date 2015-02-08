@@ -158,7 +158,8 @@ public final class FileSystemUtilities {
     /**
      * Acquires the file for a supplied URL, provided that its protocol is is either a file or a jar.
      *
-     * @param anURL a non-null URL.
+     * @param anURL    a non-null URL.
+     * @param encoding The encoding to be used by the URLDecoder to decode the path found.
      * @return The File pointing to the supplied URL, for file or jar protocol URLs and null otherwise.
      */
     public static File getFileFor(final URL anURL, final String encoding) {
@@ -384,6 +385,7 @@ public final class FileSystemUtilities {
      *                         exclusionFilters supplied.
      * @param exclusionFilters A List of Filters which identify files to remove from the result - implying that any
      *                         File matched by any of these exclusionFilters will not be included in the result.
+     * @param log              The active Maven Log.
      * @return All files in (or files in subdirectories of directories provided in) the files List, provided that each
      * file is accepted by an ExclusionRegExpFileFilter.
      */

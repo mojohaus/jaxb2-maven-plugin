@@ -6,7 +6,8 @@
             <answer>
                 <p>You want to create multiple executions in your plugin declaration. This will allow you
                 to have multiple configuration declarations and you can specify the schema and package to
-                be used for that execution.</p>
+                be used for that execution. Note that you will need to <em>not</em> clear the output
+                directory between executions in this case.</p>
 
                 <p>An example is given on the XJC usage page.</p>
             </answer>
@@ -18,11 +19,7 @@
         <faq id="Tooling">
             <question>What tool is used by the jaxb2-maven-plugin to generate the XML schema definition files?</question>
             <answer>
-                <p>The tool is called <i>SchemaGenerator</i>, and is part of the JAXB implementation used by the plugin.
-                (c.f. <a href="https://jaxb.java.net/2.2.4/docs/schemagen.html">this documentation</a>).<br/>
-                NOTE: This tool is also included in the JDK as it includes JAXB (starting with Java 6). The
-                jaxb2-maven-plugin does <u>not</u> use that implementation however, but the one included in the
-                JAXB implementation dependency of the plugin.</p>
+                <p>The <em>schemagen</em> tool used by the plugin is part of the JDK distribution since Java 6.</p>
 
                 <p>The jaxb2-maven-plugin provides some augmentations to the generated schema files, such
                 as the ability to define a schema prefix and filename for each generated XML schema.</p>
@@ -31,7 +28,7 @@
         <faq id="SeveralGeneratedSchemaFiles">
             <question>How do generated XML schema files correlate to annotated java files?</question>
             <answer>
-                <p>The SchemaGenerator tool generates one XML schema file <i>per XML namespace</i> it finds within
+                <p>The schemagen tool generates one XML schema file <em>per XML namespace</em> it finds within
                 the compilation unit (i.e. all annotated Java files selected for XML schema compilation).</p>
 
                 <p>The correlation between java files and generated XML schema files is therefore only indirect;

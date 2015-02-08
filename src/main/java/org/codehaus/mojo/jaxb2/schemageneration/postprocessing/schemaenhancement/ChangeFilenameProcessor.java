@@ -29,9 +29,8 @@ import javax.xml.XMLConstants;
 import java.util.Map;
 
 /**
- * NodeProcessor which alters the filename for generated XML schema files.
- * The ChangeNamespacePrefixProcessor alters the following:
- * <p/>
+ * <p>NodeProcessor which alters the filename for generated XML schema files.
+ * The ChangeNamespacePrefixProcessor alters the following:</p>
  * <dl>
  * <dt>Schema Import Definitions</dt>
  * <dd>&lt;xs:import namespace="http://some/namespace" schemaLocation="<strong>schema2.xsd</strong>"/&gt; is
@@ -52,8 +51,8 @@ public class ChangeFilenameProcessor implements NodeProcessor {
     private Map<String, String> namespaceUriToNewFilenameMap;
 
     /**
-     * Creates a new ChangeFilenameProcessor using the provided map relating namespace URIs to
-     * desired new filenames.
+     * <p>Creates a new ChangeFilenameProcessor using the provided map relating namespace URIs
+     * to desired new file names.</p>
      *
      * @param namespaceUriToNewFilenameMap A map relating namespace URIs [key] to
      *                                     new/desired schema filenames [value].

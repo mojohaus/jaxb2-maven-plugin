@@ -151,7 +151,7 @@ public class ThreadContextClassLoaderBuilder {
      * </ol>
      * References to the original ThreadContext
      * ClassLoader and the currentThread are stored within the returned ThreadContextClassLoaderHolder,
-     * and can be restored by a call to {@code ThreadContextClassLoaderHolder.restoreClassLoaderAndReleaseThread()}.</p>
+     * and can be restored by a call to {@code ThreadContextClassLoaderHolder.restoreClassLoaderAndReleaseThread()}.
      *
      * @return A fully set up ThreadContextClassLoaderHolder which
      */

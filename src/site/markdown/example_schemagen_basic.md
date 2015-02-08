@@ -403,34 +403,20 @@ Yes ... you get the timestamp for free ...
 The SchemaGen tool assumes that all relative paths to source files are calculated from the system property
 `user.dir`, as described above. For maven multi-module projects the `user.dir` property is defined as the
 directory where the `mvn` command was launched - and the jaxb2-maven-plugin calculates the relative path from
-this directory to the actual file. Therefore, argument/path form for schemagen java sources differs from
-argument/path form for schemagen bytecode sources.
+this directory to the actual file. This implies that schemagen will need a full path to its source file arguments,
+but only a fully qualified classname for bytecode arguments. Also, the schemagen tool requires *either* source
+or bytecode arguments - not both.
 
-A native schemagen command which compiles a file that depends on an already compiled file (typically
-within a dependency) will therefore look like something similar to:
+A native schemagen command will therefore take one of the following forms:
 
-    schemagen -d target/classes src/main/java/se/west/gnat/Foo.java se.west.gnat.Bar
+    schemagen -d target/classes src/main/java/se/west/gnat/Foo.java
 
-This assumes that `Foo.java` has a `private Bar aBar;` field, so the classpath for the
-jaxb2-maven-plugin needs to include the archive (JAR) or path to the directory (File path) where
-the compiled class (`se.west.gnat.Bar`) resides. When applications use ClassLoaders to query for
-resources, the correct value is received; but when plain reflection is used or when the underlying
-application relies on the value found within the `java.class.path` system property, incorrect results
-are frequently acquired. This is illustrated by one of the ITs in the jaxb2-maven-plugin where the
-ThreadContext ClassLoader returns the result:
+    ... or, if you generate schema from already compiled bytecode files:
 
-    +=================== [ThreadContext ClassLoader Root Resources]
-    |
-    | file:/github_jaxb2_plugin/target/it/schemagen-sources-and-bytecode/bar-model/target/classes/
-    | file:/github_jaxb2_plugin/target/it/schemagen-sources-and-bytecode/bar-api/src/main/java/
-    |
-    +=================== [End ThreadContext ClassLoader Root Resources]
+    schemagen -d target/classes se.west.gnat.Bar
 
-and the system property simply points to the plexus classworlds jar:
-
-    [java.class.path]: /usr/local/share/maven/boot/plexus-classworlds-2.5.1.jar
-
-When calculating the paths for all bytecode dependencies, the jaxb2-maven-plugin therefore searches the
-classpath of the project to find any dependency bytecode files, required by schemagen for proper operation.
-The path to these bytecode files is then added to the classpath surrounding the schemagen invocation
-within the plugin.
+While the jaxb2-maven-plugin could potentially include some snazzy and complex code to ensure that
+the arguments would be only either source or bytecode files, the underlying schemagen tool will
+complain visibly if the argument combinations are incorrect. Thus, the jaxb2-maven-plugin authors
+felt it would be better to simply delegate the error handling in this case to schemagen, to avoid
+creating a new layer of potentially complex logic within the plugin.

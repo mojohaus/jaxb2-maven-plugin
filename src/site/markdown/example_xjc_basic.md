@@ -228,7 +228,57 @@ but exclude `src/main/some/other/xsds/thisIsASource.xsd` due to the sourceExclud
                 </configuration>
             </plugin>
 
-## Example 5: Debugging jaxb2-maven-plugin executions
+## Example 5: Multiple schemas with different configuration
+
+In the case of having multiple XML schema files which should be processed
+with different configuration, you need to have multiple plugin execution bindings.
+One execution binding per unique configuration, as shown in the snippet below:
+
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+            <execution>
+                <id>xjc-schema1</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+                <configuration>
+                    <!-- Use all XSDs under the west directory for sources here. -->
+                    <sources>
+                        <source>src/main/xsds/west</source>
+                    </sources>
+
+                    <!-- Package name of the generated sources. -->
+                    <packageName>se.west</packageName>
+                </configuration>
+            </execution>
+            <execution>
+                <id>xjc-schema2</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+                <configuration>
+                    <!-- Use all XSDs under the east directory for sources here. -->
+                    <sources>
+                        <source>src/main/xsds/east</source>
+                    </sources>
+
+                    <!-- Package name of the generated sources. -->
+                    <packageName>se.east</packageName>
+
+                    <!--
+                        Don't clear the output directory before generating the sources.
+                        Clearing the output directory removes the se.west schema from above.
+                    -->
+                    <clearOutputDir>false</clearOutputDir>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+
+## Example 6: Debugging jaxb2-maven-plugin executions
 
 If you are curious about the exact java regexp patterns used for matching your files, or simply want to see what the
 jaxb2-maven-plugin does internally, run the plugin in debug mode by adding the `-debug` switch. The debug log contains

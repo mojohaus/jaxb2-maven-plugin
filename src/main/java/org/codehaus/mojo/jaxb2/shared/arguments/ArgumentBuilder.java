@@ -56,7 +56,7 @@ public final class ArgumentBuilder {
     /**
      * <p>Adds a flag on the form {@code -someflag} to the list of arguments contained within this ArgumentBuilder.
      * If the {@code flag} argument does not start with a dash ('-'), one will be prepended.</p>
-     * <p>Typical usage:
+     * <p>Typical usage:</p>
      * <pre><code>
      *     argumentBuilder
      *      .withFlag(someBooleanParameter, "foobar")
@@ -64,7 +64,6 @@ public final class ArgumentBuilder {
      *      .withFlag(someThirdBooleanParameter, "gnu")
      *      ....
      * </code></pre>
-     * </p>
      *
      * @param addFlag if {@code true}, the flag will be added to the underlying list of arguments
      *                within this ArgumentBuilder.
@@ -106,13 +105,13 @@ public final class ArgumentBuilder {
      * <p>Adds a name and an argument on the form {@code -name value} to the list of arguments contained
      * within this ArgumentBuilder. The two parts will yield 2 elements in the underlying argument list.
      * If the {@code name} argument does not start with a dash ('-'), one will be prepended.</p>
-     * <p>Typical usage:
+     * <p>Typical usage:</p>
      * <pre><code>
      *     // These values should be calculated as part of the business logic
      *     final boolean addFooBar = true;
      *     final boolean addGnat = true;
      *     final boolean addGnu = false;
-     * <p/>
+     *
      *     // Add all relevant arguments
      *     argumentBuilder
      *      .withNamedArgument(addFooBar, "foobar", "foobarValue")
@@ -120,7 +119,6 @@ public final class ArgumentBuilder {
      *      .withNamedArgument(addGnu, "gnu", "gnuValue")
      *      ....
      * </code></pre>
-     * </p>
      *
      * @param addNamedArgument if {@code true}, the named argument (name and value) will be added to
      *                         the underlying list of arguments within this ArgumentBuilder.

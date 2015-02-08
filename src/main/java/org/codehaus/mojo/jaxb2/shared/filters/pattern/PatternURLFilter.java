@@ -51,6 +51,8 @@ public class PatternURLFilter extends AbstractPatternFilter<URL> {
      *
      * @param processNullValues             if {@code true}, this ExclusionRegularExpressionURLFilter process null
      *                                      candidate values.
+     * @param patternPrefix                 a prefix to be prepended to any patterns submitted to
+     *                                      this PatternURLFilter.
      * @param patterns                      The non-null list of Patters which should be applied within this
      *                                      ExclusionRegularExpressionURLFilter. A candidate of type T should only
      *                                      be accepted by this ExclusionRegularExpressionURLFilter if all supplied

@@ -28,13 +28,13 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
  * the Jaxb2-Maven-plugin must supply a post-processing step to work around this situation.</p>
  * <p>Each <code>TransformSchema</code> object holds data pertaining to changes for one namespace
  * URI - either namespace prefix used within the generated XSD or resulting filename for
- * the schema definition.
+ * the schema definition.</p>
  * <ol>
  * <li><strong>Namespace prefix</strong>. Each XML element within a namespace uses the supplied
  * prefix. (As a reference, in the XML element <code>&lt;foo:bar/&gt;</code>, the namespace prefix
  * is "foo" and the element name is "bar"). The Schemagen tool by default only generates namespace
  * prefixes on the form "ns1", "ns2" etc., which means that the generated schema will contain elements
- * on the form <code>&lt;xs:extension base="ns1:nazgulEntity"></code>.
+ * on the form <code>&lt;xs:extension base="ns1:nazgulEntity"&gt;</code>.
  * Use a <code>toPrefix</code> element to change the namespace prefix of a particular XML URI to
  * simplify understanding the schema.</li>
  * <li><strong>Filename</strong>. By default, the Schemagen tool creates files called "schema1.xsd",
@@ -45,12 +45,10 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
  * particular XML URI. Changing the file names frequently improves overview and usability of the generated schema
  * files.</li>
  * </ol>
- * </p>
  * <h2>Example TransformSchemas</h2>
  * <p>The URI element is mandatory for each TransformSchema element. The first example illustrates how
  * to use the TransformSchema element to change the prefix and file name of 3 XML URIs. This is the recommended
  * use of a TransformSchema - change both prefix and filename to something meaningful for each URI:</p>
- * <p>
  * <pre>
  * &lt;transformSchemas&gt;
  *      &lt;transformSchema&gt;
@@ -70,13 +68,11 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
  *      &lt;/transformSchema&gt;
  * &lt;/transformSchemas&gt;
  * </pre>
- * </p>
  * <p>The URI element is mandatory for each TransformSchema element, along with at least one of the other two
  * elements in the TransformSchema. This implies that partial configuration for TransformSchema can be used,
  * although <em>this is not recommended</em> since the readability and usability of the automatically generated
  * namespace prefixes and file names are poor. The second example illustrates how to use the TransformSchema element
  * to change either prefix or file name for 2 XML URIs:</p>
- * <p>
  * <pre>
  * &lt;transformSchemas&gt;
  *      &lt;transformSchema&gt;
@@ -89,7 +85,6 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
  *      &lt;/transformSchema&gt;
  * &lt;/transformSchemas&gt;
  * </pre>
- * </p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @since 1.4

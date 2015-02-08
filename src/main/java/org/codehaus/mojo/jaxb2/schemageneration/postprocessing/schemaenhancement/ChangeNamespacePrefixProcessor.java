@@ -27,24 +27,19 @@ import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
 
 /**
- * <code>NodeProcessor</code> which alters the namespace prefix for all relevant Nodes within an XML document Node. It
- * alters namespace prefixes in the following logical places:
- * <p/>
+ * <p><code>NodeProcessor</code> which alters the namespace prefix for all relevant Nodes within an XML
+ * document Node. It alters namespace prefixes in the following logical places:</p>
  * <dl>
  * <dt>Schema Namespace Definition</dt>
  * <dd>xmlns:oldPrefix="http://some/namespace" is altered to xmlns:newPrefix="http://some/namespace"</dd>
- * <p/>
  * <dt>Elements Namespace Prefix</dt>
  * <dd>&lt;oldPrefix:someElement ... &gt; is altered to &lt;newPrefix:someElement ... &gt;</dd>
- * <p/>
  * <dt>Element Reference</dt>
  * <dd><code>&lt;xs:element ref="oldPrefix:aRequiredElementInTheOldPrefixNamespace"/&gt;</code> is altered to
  * <code>&lt;xs:element ref="newPrefix:aRequiredElementInTheOldPrefixNamespace"/&gt;</code></dd>
- * <p/>
  * <dt>Type Attribute</dt>
  * <dd><code>&lt;xs:element type="oldPrefix:something"/&gt;</code> is altered to
  * <code>&lt;xs:element type="newPrefix:something"/&gt;</code></dd>
- * <p/>
  * <dt>Type Extension</dt>
  * <dd><code>&lt;xs:extension base="oldPrefix:something"/&gt;</code> is altered to
  * <code>&lt;xs:extension base="newPrefix:something"/&gt;</code></dd>

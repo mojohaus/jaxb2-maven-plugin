@@ -44,9 +44,6 @@ import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -195,8 +192,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     protected boolean clearOutputDir;
 
     /**
-     * XSD schema files are not generated from POM projects or if no includes have been supplied.
-     * <p/>
+     * <p>XSD schema files are not generated from POM projects or if no includes have been supplied.</p>
      * {@inheritDoc}
      */
     @Override
@@ -341,7 +337,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 // Redirect the JUL Logging statements to the Maven Log.
                 final Logger rootLogger = Logger.getLogger("");
                 rootLogger.setLevel(Level.FINER);
-                for(Handler current : rootLogger.getHandlers()) {
+                for (Handler current : rootLogger.getHandlers()) {
                     rootLogger.removeHandler(current);
                 }
                 rootLogger.addHandler(new MavenLogHandler(getLog(), "SchemaGen", getEncoding(false)));
@@ -361,7 +357,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     errorMsgBuilder.append("|\n");
 
                     final StringBuilder builder = new StringBuilder("schemagen ");
-                    for(String current : schemaGenArguments) {
+                    for (String current : schemaGenArguments) {
                         builder.append(current).append(" ");
                     }
 

@@ -191,6 +191,7 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
      * <p>Each nonNullCandidate is matched against all Patterns supplied to this AbstractPatternFilter.
      * The match table of this AbstractPatternFilter on each candidate is as follows:</p>
      * <table>
+     * <caption>Truth table for the onCandidate method</caption>
      * <tr>
      * <th>at least 1 filter matches</th>
      * <th>acceptCandidateOnPatternMatch</th>

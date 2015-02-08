@@ -42,6 +42,8 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      * Compound constructor creating an PatternFileFilter from the supplied parameters.
      *
      * @param processNullValues             if {@code true}, this PatternFileFilter process null candidate values.
+     * @param patternPrefix                 a prefix to be prepended to any patterns submitted to
+     *                                      this PatternFileFilter
      * @param patterns                      The non-null list of Patters which should be applied within this
      *                                      PatternFileFilter.
      * @param converter                     The StringConverter which converts Files to Strings for Pattern matching.

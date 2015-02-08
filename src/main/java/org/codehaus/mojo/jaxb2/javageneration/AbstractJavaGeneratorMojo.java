@@ -196,13 +196,13 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * to be copied verbatim to the XJC argument list with spaces in between:</p>
      * <pre>
      * <code>
-     *   &lt;configuration>
+     *   &lt;configuration&gt;
      *   ...
-     *       &lt;arguments>
-     *          &lt;argument>-Xfluent-api&lt;/argument>
-     *          &lt;argument>somefile&lt;/argument>
-     *      &lt;/arguments>
-     *   &lt;/configuration>
+     *       &lt;arguments&gt;
+     *          &lt;argument&gt;-Xfluent-api&lt;/argument&gt;
+     *          &lt;argument&gt;somefile&lt;/argument&gt;
+     *      &lt;/arguments&gt;
+     *   &lt;/configuration&gt;
      * </code>
      * </pre>
      * <p>The arguments configured above yields the following extra arguments to the XJC command:
@@ -255,10 +255,10 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * will be created.</p>
      * <pre>
      *     <code>
-     *         &lt;configuration>
+     *         &lt;configuration&gt;
      *             ...
-     *             &lt;xsdPathWithinArtifact>META-INF/jaxb/xsd&lt;/xsdPathWithinArtifact>
-     *         &lt;/configuration>
+     *             &lt;xsdPathWithinArtifact&gt;META-INF/jaxb/xsd&lt;/xsdPathWithinArtifact&gt;
+     *         &lt;/configuration&gt;
      *     </code>
      * </pre>
      * <p><strong>Note</strong>: This parameter was previously called {@code includeSchemasOutputPath}

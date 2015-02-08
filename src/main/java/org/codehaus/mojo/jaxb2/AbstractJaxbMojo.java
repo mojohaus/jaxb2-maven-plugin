@@ -222,6 +222,10 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * This method will only be called if {@code !shouldExecutionBeSkipped() && isReGenerationRequired()}.</p>
      *
      * @return {@code true} if the timestamp of the stale file should be updated.
+     * @throws MojoExecutionException if an unexpected problem occurs.
+     *                                Throwing this exception causes a "BUILD ERROR" message to be displayed.
+     * @throws MojoFailureException   if an expected problem (such as a compilation failure) occurs.
+     *                                Throwing this exception causes a "BUILD FAILURE" message to be displayed.
      */
     protected abstract boolean performExecution() throws MojoExecutionException, MojoFailureException;
 
@@ -322,13 +326,12 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
     /**
      * <p>The algorithm for finding the encoding to use is as follows (where the first non-null value found
-     * is used for encoding):
+     * is used for encoding):</p>
      * <ol>
      * <li>If the configuration property is explicitly given within the plugin's configuration, use that value.</li>
      * <li>If the Maven property <code>project.build.sourceEncoding</code> is defined, use its value.</li>
      * <li>Otherwise use the value from the system property <code>file.encoding</code>.</li>
      * </ol>
-     * </p>
      *
      * @param warnIfConfiguredEncodingDiffersFromFileEncoding Defines if the configured encoding is not equal to the
      *                                                        system property {@code file.encoding}, emit a warning
@@ -368,6 +371,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * @param customEpisodeFileName {@code null} to indicate that the standard episode file name ("sun-jaxb.episode")
      *                              should be used, and otherwise a non-empty name which should be used
      *                              as the episode file name.
+     * @return A non-null File where the JAXB episode file should be written.
      * @throws MojoExecutionException if the parent directory of the episode file could not be created.
      */
     protected File getEpisodeFile(final String customEpisodeFileName) throws MojoExecutionException {

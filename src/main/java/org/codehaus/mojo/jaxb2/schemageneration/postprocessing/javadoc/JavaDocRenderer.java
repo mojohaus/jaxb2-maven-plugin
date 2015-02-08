@@ -41,11 +41,11 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * annotation into the resulting schema, yielding the following result:</p>
  * <pre>
  *     <code>
- *         &lt;xs:element name="lastName" type="xs:string">
- *             &lt;xs:annotation>
- *                 &lt;xs:documentation>&lt;![CDATA[The last name of the SomewhatNamedPerson.]]>&lt;/xs:documentation>
- *             &lt;/xs:annotation>
- *         &lt;/xs:element>
+ *         &lt;xs:element name="lastName" type="xs:string"&gt;
+ *             &lt;xs:annotation&gt;
+ *                 &lt;xs:documentation&gt;&lt;![CDATA[The last name of the SomewhatNamedPerson.]]&gt;&lt;/xs:documentation&gt;
+ *             &lt;/xs:annotation&gt;
+ *         &lt;/xs:element&gt;
  *     </code>
  * </pre>
  * <p>The JavaDocRenderer will create the content of the CDATA element within the XSD documentation annotation,
