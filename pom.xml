@@ -18,8 +18,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -29,7 +28,7 @@
     </parent>
 
     <artifactId>jaxb2-maven-plugin</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>JAXB-2 Maven Plugin</name>
@@ -86,9 +85,9 @@
     </prerequisites>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</developerConnection>
-        <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/jaxb2-maven-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-2.0</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/jaxb2-maven-plugin-2.0</developerConnection>
+        <url>http://fisheye.codehaus.org/browse/mojo/tags/jaxb2-maven-plugin-2.0</url>
     </scm>
     <issueManagement>
         <system>JIRA</system>
