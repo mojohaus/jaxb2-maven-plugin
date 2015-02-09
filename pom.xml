@@ -47,6 +47,16 @@
 
     <developers>
         <developer>
+            <name>Lennart Jörelid</name>
+            <email>lj@jguru.se</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <organization>jGuru Europe AB</organization>
+            <organizationUrl>http://www.jguru.se</organizationUrl>
+            <timezone>Europe/Stockholm</timezone>
+        </developer>
+        <developer>
             <id>jgenender</id>
             <name>Jeff Genender</name>
             <email>jgenender@codehaus.org</email>
@@ -67,18 +77,6 @@
             <timezone>Europe/Amsterdam</timezone>
         </developer>
     </developers>
-    <contributors>
-        <contributor>
-            <name>Lennart Jörelid</name>
-            <email>lj@jguru.se</email>
-            <roles>
-                <role>Contributor</role>
-            </roles>
-            <organization>jGuru Europe AB</organization>
-            <organizationUrl>http://www.jguru.se</organizationUrl>
-            <timezone>Europe/Stockholm</timezone>
-        </contributor>
-    </contributors>
 
     <prerequisites>
         <maven>${mavenVersion}</maven>
