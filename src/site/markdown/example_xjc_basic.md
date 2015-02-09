@@ -3,7 +3,7 @@
 These basic examples show how to generate Java code from JAXB using the jaxb2-maven-plugin,
 and highlight the use of some of the plugin's common configuration options.
 
-This plugin runs the JAXB distribution's XJC compiler from the JAXB distribution, and integrates
+This plugin runs the XJC binding compiler from the JAXB distribution, and integrates
 XJC's configuration properties into a Maven project. The plugin will delegate all JAXB-related work
 to its [JAXB implementation dependencies](./dependencies.html). The actual JAXB dependencies used
 when compiling the plugin will also be collected and listed when the plugin is run in debug mode.
@@ -12,7 +12,8 @@ Due to the construction of the Java platform the JAXB API used is the one define
 This means that the used JAXB API version will be the endorsed one of the JDK, regardless of what
 is specified in the plugin (or its dependencies). You may override the endorsed API outside of Maven
 and this plugin, but that is typically viewed as advanced usage. A better option is to align the
-version of the compiled code with the requirement on JAXB runtime environment of the generated code.
+version of the compiled code with the requirement on the JAXB runtime environment of the generated
+code.
 
 ## Example 1: Generate Java code within provided package
 
@@ -169,7 +170,7 @@ By default, the jaxb2-maven-plugin examines the directory `src/main/xsd` for XML
 which should be used by JAXB to create Java source code (and `src/test/xsd` for test XSD sources).
 If you would like to place your XSD somewhere else, you need to define source elements
 as shown in the configuration below. The paths given are interpreted relative to the `basedir` property,
-which is set to reference the maven project directory.
+which is set to reference the maven project's root directory.
 
 Files found (using a recursive search) within the sources elements are read and used by the XJC tool
 only if they do **not** match any sourceExcludeSuffix. This means that all source files with file names
