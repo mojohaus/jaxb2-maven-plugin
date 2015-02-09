@@ -25,6 +25,13 @@
                 as the ability to define a schema prefix and filename for each generated XML schema.</p>
             </answer>
         </faq>
+        <faq id="LogMessages">
+            <question>How can I see the log messages output by the schemagen tool?</question>
+            <answer>
+                <p>Run the jaxb2-maven-plugin in debug mode to see logging from the schemagen tool.
+                Please refer to the examples for further information.</p>
+            </answer>
+        </faq>
         <faq id="SeveralGeneratedSchemaFiles">
             <question>How do generated XML schema files correlate to annotated java files?</question>
             <answer>

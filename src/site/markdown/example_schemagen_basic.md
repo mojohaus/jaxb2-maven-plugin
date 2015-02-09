@@ -53,9 +53,10 @@ for each of its "java files" arguments:
     </tr>
 </table>
 
-Note, however, that schemagen does not accept a mix of source and bytecode arguments as "java files".
-The jaxb2-maven-plugin ensures that any sources added to the schemagen goals adheres to the criteria
-defined in the table above.
+**Note**: `schemagen` does not accept a mix of source and bytecode arguments as "java files".
+While the jaxb2-maven-plugin ensures that any sources added to the schemagen goals adheres to
+the criteria defined in the table above, it would lead too far to let the plugin validate that
+the user does not supply a mix of java source and bytecode files as arguments.
 
 ## Recommended JAXB Annotations for XSD generation
 
