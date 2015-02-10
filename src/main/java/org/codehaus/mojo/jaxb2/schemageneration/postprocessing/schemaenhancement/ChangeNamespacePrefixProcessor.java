@@ -46,6 +46,7 @@ import javax.xml.XMLConstants;
  * </dl>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
+ * @since 1.4
  */
 public class ChangeNamespacePrefixProcessor implements NodeProcessor {
 

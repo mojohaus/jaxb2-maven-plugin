@@ -36,6 +36,7 @@ import java.util.TreeMap;
  * Trivial parser to handle depends-plugin-style files.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
+ * @since 2.0
  */
 public final class DependsFileParser {
 

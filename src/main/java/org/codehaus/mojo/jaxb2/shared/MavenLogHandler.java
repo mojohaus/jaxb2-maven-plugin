@@ -3,6 +3,9 @@ package org.codehaus.mojo.jaxb2.shared;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -12,6 +15,7 @@ import java.util.logging.SimpleFormatter;
  * Handler implementation which delegates its actual logging to an internal Maven log.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
+ * @since 2.0
  */
 public class MavenLogHandler extends Handler {
 
@@ -22,13 +26,16 @@ public class MavenLogHandler extends Handler {
     /**
      * Creates a new MavenLogHandler which adapts a Handler to emit log messages onto a Maven Log.
      *
-     * @param log      The Maven Log to emit log messages to.
-     * @param prefix   An optional prefix used to prefix any log message.
-     * @param encoding The encoding which should be used.
+     * @param log                       The Maven Log to emit log messages to.
+     * @param prefix                    An optional prefix used to prefix any log message.
+     * @param encoding                  The encoding which should be used.
+     * @param acceptedLogRecordPrefixes A non-null list of prefixes holding LogRecord logger names for
+     *                                  permitted/accepted LogRecords.
      */
     public MavenLogHandler(final Log log,
                            final String prefix,
-                           final String encoding) {
+                           final String encoding,
+                           final String[] acceptedLogRecordPrefixes) {
 
         // Check sanity
         Validate.notNull(log, "log");
@@ -45,6 +52,10 @@ public class MavenLogHandler extends Handler {
             setEncoding(encoding);
         } catch (UnsupportedEncodingException e) {
             log.error("Could not use encoding '" + encoding + "'", e);
+        }
+
+        if (acceptedLogRecordPrefixes != null && acceptedLogRecordPrefixes.length > 0) {
+            setFilter(getLoggingFilter(acceptedLogRecordPrefixes));
         }
     }
 
@@ -110,5 +121,40 @@ public class MavenLogHandler extends Handler {
 
         // All Done.
         return toReturn;
+    }
+
+    /**
+     * Retrieves a java.util.Logging filter used to ensure that only LogRecords whose
+     * logger names start with any of the required prefixes are logged.
+     *
+     * @param requiredPrefixes A non-null list of prefixes to be matched with the LogRecord logger names.
+     * @return A java.util.logging Filter that only permits logging LogRecords whose
+     * logger names start with any of the required prefixes.
+     */
+    public static Filter getLoggingFilter(final String... requiredPrefixes) {
+
+        // Check sanity
+        Validate.notNull(requiredPrefixes, "requiredPrefixes");
+
+        // All done.
+        return new Filter() {
+
+            // Internal state
+            private List<String> requiredPrefs = Arrays.asList(requiredPrefixes);
+
+            @Override
+            public boolean isLoggable(final LogRecord record) {
+
+                final String loggerName = record.getLoggerName();
+                for (String current : requiredPrefs) {
+                    if (loggerName.startsWith(current)) {
+                        return true;
+                    }
+                }
+
+                // No matches found.
+                return false;
+            }
+        };
     }
 }

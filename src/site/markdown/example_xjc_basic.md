@@ -130,8 +130,8 @@ The project can now be built with JDK 1.6.
 Normally, you would use XML Schema Definitions as the standard type of JAXB source.
 However, other standards can be used as source type provided that the configuration parameter `sourceType`
 is assigned one of the existing values of the
-[org.codehaus.mojo.jaxb2.javageneration.SourceContentType](./apidocs/index.html) enum.
-In the example below, the source files contain
+[org.codehaus.mojo.jaxb2.javageneration.SourceContentType](http://mojo.codehaus.org/jaxb2-maven-plugin/apidocs/org/codehaus/mojo/jaxb2/javageneration/SourceContentType.html)
+enum. In the example below, the source files contain
 [Document Type Descriptions](http://en.wikipedia.org/wiki/Document_type_definition) instead of XML Schema, and
 they are placed within the `src/main/dtd` directory.
 
@@ -164,21 +164,21 @@ Refer to the plugin's [JavaDoc](./apidocs/index.html) to see all possible values
                 </configuration>
             </plugin>
 
-## Example 4: Defining sources and exclude regularExpressions
+## Example 4: Defining sources and XJC exclude filters
 
 By default, the jaxb2-maven-plugin examines the directory `src/main/xsd` for XML schema files
 which should be used by JAXB to create Java source code (and `src/test/xsd` for test XSD sources).
 If you would like to place your XSD somewhere else, you need to define source elements
-as shown in the configuration below. The paths given are interpreted relative to the `basedir` property,
-which is set to reference the maven project's root directory.
+as shown in the configuration below. The paths given are interpreted relative to
+the `basedir` property, which is set to reference the maven project directory.
 
 Files found (using a recursive search) within the sources elements are read and used by the XJC tool
-only if they do **not** match any sourceExcludeSuffix. This means that all source files with file names
-suffixes (endings) given in any sourceExcludeSuffix are excluded from being used as sources by XJC.
-File name comparisons are case-insensitive.
+only if they are **not** matched by any xjcSourceExcludeFilters. Therefore, the configuration below
+should include `src/main/some/other/xsds/aFile.txt` as an XSD source,
+but exclude `src/main/some/other/xsds/thisIsASource.xsd` due to the pattern definition
+`<pattern>\.xsd</pattern>`. (For a full explanation of filters, please refer to the
+[Filters](./filters.html) documentation).
 
-Therefore, the configuration below should include `src/main/some/other/xsds/aFile.txt` as an XSD source,
-but exclude `src/main/some/other/xsds/thisIsASource.xsd` due to the sourceExcludeSuffix "xsd".
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -207,6 +207,11 @@ but exclude `src/main/some/other/xsds/thisIsASource.xsd` due to the sourceExclud
                     <!--
                         When providing xjcSourceExcludeFilters, the default exclude
                         Filter definitions are overridden by the Patterns supplied.
+
+                        Any filter whose path ends with any of the Java Regular Expression Patterns
+                        supplied will be excluded from the XJC sources. In this example,
+                        files found under any of the source directories will be excluded from XJC
+                        processing if their full paths end with '.xsd' or '.foo'
                     -->
                     <xjcSourceExcludeFilters>
                         <filter implementation="org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter">
@@ -279,7 +284,65 @@ One execution binding per unique configuration, as shown in the snippet below:
         </executions>
     </plugin>
 
-## Example 6: Debugging jaxb2-maven-plugin executions
+## Example 6: Using an XML Java Binding file ("XJB")
+
+By default, the XjcMojo searches directory `src/main/xjb` (and the XjcTestMojo searches `src/test/xjb`) for external XML
+schema generation binding files. Such files are used to control many aspects of the Java generation from XSD files;
+please refer to the [JAXB Reference Implementation](https://jaxb.java.net/) for full details. However, a small XJB
+file is found below.
+
+        <jxb:bindings version="1.0"
+                       xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+                       xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+            <!--
+                Change since version 2.0 of the j-m-p:
+
+                Note that the schemaLocation path must point to the XSD file
+                relative to *this* file, rather than the basedir.
+            -->
+          <jxb:bindings schemaLocation="../xsd/address.xsd" node="//xsd:schema">
+              <jxb:schemaBindings>
+                 <jxb:package name="com.example.myschema"/>
+              </jxb:schemaBindings>
+          </jxb:bindings>
+
+        </jxb:bindings>
+
+The JXB file above defines the package of the generated Java source code found in the XSD file `../xsd/address.xsd`,
+relative to the JXB file above. This implies that each JXB file must contain a path to the XSD files they tailor.
+Each file found under within the JXB source directories is considered a JXB file, unless it is excluded by means of an
+xjbExcludeFilter. A sample xjbExcludeFilter is found below; any file matching an xjbExcludeFilter is not used as a
+binding file in the XJC compilation, implying that any file found within the standard XJB directory/directories are
+not used if it ends with `.txt` or `.xsd`:
+
+        <configuration>
+            ...
+            <xjbExcludeFilters>
+                <filter implementation="org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter">
+                    <patterns>
+                        <pattern>\.txt</pattern>
+                        <pattern>\.xsd</pattern>
+                    </patterns>
+                </filter>
+            </xjbExcludeFilters>
+            ...
+        </configuration>
+
+Just like the XJC source files, you can change the directories where the XjcMojo searches for binding files by
+using the xjbSources configuration parameter. Each `xjbSource` element can be a relative path to a directory (in
+which case all its files are searched and included recursively) or explicit files:
+
+        <configuration>
+        ...
+            <xjbSources>
+                <xjbSource>src/dataexchange/special/aBindingConfiguration.xjb</xjbSource>
+                <xjbSource>src/dataexchange/xjbs</xjbSource>
+            </xjbSources>
+        ...
+        </configuration>
+
+## Example 7: Debugging jaxb2-maven-plugin executions
 
 If you are curious about the exact java regexp patterns used for matching your files, or simply want to see what the
 jaxb2-maven-plugin does internally, run the plugin in debug mode by adding the `-debug` switch. The debug log contains

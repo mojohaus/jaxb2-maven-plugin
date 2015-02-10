@@ -340,7 +340,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 for (Handler current : rootLogger.getHandlers()) {
                     rootLogger.removeHandler(current);
                 }
-                rootLogger.addHandler(new MavenLogHandler(getLog(), "SchemaGen", getEncoding(false)));
+                rootLogger.addHandler(new MavenLogHandler(
+                        getLog(),
+                        "SchemaGen",
+                        getEncoding(false),
+                        new String[]{"com.sun", "javax.xml"}));
 
                 // Fire the SchemaGenerator
                 final int result = SchemaGenerator.run(schemaGenArguments, contextClassLoader);

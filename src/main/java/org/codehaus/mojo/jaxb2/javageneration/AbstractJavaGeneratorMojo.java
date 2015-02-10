@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -384,7 +385,11 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 for(Handler current : rootLogger.getHandlers()) {
                     rootLogger.removeHandler(current);
                 }
-                rootLogger.addHandler(new MavenLogHandler(getLog(), "XJC", getEncoding(false)));
+                rootLogger.addHandler(new MavenLogHandler(
+                        getLog(),
+                        "XJC",
+                        getEncoding(false),
+                        new String[]{"com.sun", "javax.xml"}));
 
                 // Fire XJC
                 if (XJC_COMPLETED_OK != Driver.run(xjcArguments, new XjcLogAdapter(getLog()))) {

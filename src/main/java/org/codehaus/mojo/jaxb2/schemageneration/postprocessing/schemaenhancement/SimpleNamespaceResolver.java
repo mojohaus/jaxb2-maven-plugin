@@ -44,6 +44,7 @@ import java.util.Map;
  * schema files.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
+ * @since 1.4
  */
 public class SimpleNamespaceResolver implements NamespaceContext {
 

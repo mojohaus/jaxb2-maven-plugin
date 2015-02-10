@@ -23,6 +23,7 @@ package org.codehaus.mojo.jaxb2.shared;
  * Simple argument validator, inspired by the commons-lang.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
+ * @since 2.0
  */
 public final class Validate {
 

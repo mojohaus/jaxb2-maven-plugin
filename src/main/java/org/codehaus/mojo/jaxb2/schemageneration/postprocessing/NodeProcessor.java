@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
  * Processor/visitor pattern specification for DOM Nodes.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
+ * @since 1.4
  */
 public interface NodeProcessor {
 

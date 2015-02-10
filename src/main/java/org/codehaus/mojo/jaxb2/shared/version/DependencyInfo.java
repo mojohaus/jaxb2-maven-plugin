@@ -25,6 +25,7 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
  * Trivial holder class for dependency information, as found within a dependencies.properties file.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
+ * @since 2.0
  */
 public class DependencyInfo implements Comparable<DependencyInfo> {
 
