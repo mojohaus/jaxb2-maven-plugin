@@ -408,6 +408,10 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         if (getLog().isDebugEnabled()) {
             final StringBuilder builder = new StringBuilder();
             builder.append("\n\n+=================== [Brief Plugin Build Dependency Information]\n");
+            builder.append("|\n");
+            builder.append("| Note: These dependencies pertain to what was used to build *the plugin*.\n");
+            builder.append("|       Check project dependencies to see the ones used in *your build*.\n");
+            builder.append("|\n");
 
             // Find the dependency and version information within the dependencies.properties file.
             final SortedMap<String, String> versionMap = DependsFileParser.getVersionMap(OWN_ARTIFACT_ID);
