@@ -34,10 +34,11 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.Searchabl
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.codehaus.mojo.jaxb2.shared.MavenLogHandler;
 import org.codehaus.mojo.jaxb2.shared.arguments.ArgumentBuilder;
-import org.codehaus.mojo.jaxb2.shared.classloader.ThreadContextClassLoaderBuilder;
-import org.codehaus.mojo.jaxb2.shared.classloader.ThreadContextClassLoaderHolder;
+import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
+import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertyChangeEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.plexus.util.FileUtils;
@@ -55,9 +56,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -289,26 +287,51 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     protected boolean performExecution() throws MojoExecutionException, MojoFailureException {
 
         boolean updateStaleFileTimestamp = false;
-        ThreadContextClassLoaderHolder holder = null;
+        ToolExecutionEnvironment environment = null;
 
-        // Do we need to redirect the user.dir in order to make the SchemaGenerator work properly?
+        /*
         final String baseDirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
         final String standardUserDirPath = FileSystemUtilities.getCanonicalPath(
                 new File(System.getProperty("user.dir")));
         final boolean redirectUserDir = !baseDirPath.equalsIgnoreCase(standardUserDirPath);
+        */
 
         try {
-            // Create and set a ThreadContext ClassLoader as required by the XJC tool.
-            holder = ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog())
-                    .addPaths(getClasspath())
-                    .addPaths(getProject().getCompileSourceRoots())
-                    .buildAndSet();
 
-            final List<URL> sources = getSources();
+            //
+            // We need to redirect the 'user.dir' System property in order
+            // to make the SchemaGenerator work properly.
+            //
+            final String projectBasedirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
+            final List<SystemPropertyChangeEnvironmentFacet> systemPropertyFacets =
+                    SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
+                            .addOrChange("user.dir", projectBasedirPath)
+                            .build();
+
+            // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.
+            final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder
+                    .createFor(this.getClass(), getLog())
+                    .addPaths(getClasspath())
+                    .addPaths(getProject().getCompileSourceRoots());
+
+            // Create the execution environment as required by the XJC tool.
+            environment = new ToolExecutionEnvironment(
+                    getLog(),
+                    classLoaderBuilder,
+                    LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)));
+
+            // Add all altered system properties.
+            for (SystemPropertyChangeEnvironmentFacet current : systemPropertyFacets) {
+                environment.add(current);
+            }
+
+            // Setup the environment.
+            environment.setup();
 
             // Compile the SchemaGen arguments
+            final List<URL> sources = getSources();
             final String[] schemaGenArguments = getSchemaGenArguments(
-                    holder.getClassPathAsArgument(),
+                    environment.getClassPathAsArgument(),
                     STANDARD_EPISODE_FILENAME,
                     sources);
 
@@ -328,26 +351,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 // Check the system properties.
                 logSystemPropertiesAndBasedir();
 
-                // Redirect the user.dir System.property, if required.
-                final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-                if (redirectUserDir) {
-                    System.setProperty("user.dir", baseDirPath);
-                }
-
-                // Redirect the JUL Logging statements to the Maven Log.
-                final Logger rootLogger = Logger.getLogger("");
-                rootLogger.setLevel(Level.FINER);
-                for (Handler current : rootLogger.getHandlers()) {
-                    rootLogger.removeHandler(current);
-                }
-                rootLogger.addHandler(new MavenLogHandler(
-                        getLog(),
-                        "SchemaGen",
-                        getEncoding(false),
-                        new String[]{"com.sun", "javax.xml"}));
-
                 // Fire the SchemaGenerator
-                final int result = SchemaGenerator.run(schemaGenArguments, contextClassLoader);
+                final int result = SchemaGenerator.run(
+                        schemaGenArguments,
+                        Thread.currentThread().getContextClassLoader());
+
                 if (SCHEMAGEN_COMPLETED_OK != result) {
 
                     final StringBuilder errorMsgBuilder = new StringBuilder();
@@ -356,7 +364,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     errorMsgBuilder.append("| SchemaGen did not complete its operation correctly.\n");
                     errorMsgBuilder.append("|\n");
                     errorMsgBuilder.append("| To re-create the error (and get a proper error message), cd to:\n");
-                    errorMsgBuilder.append("| ").append(standardUserDirPath).append("\n");
+                    errorMsgBuilder.append("| ").append(projectBasedirPath).append("\n");
                     errorMsgBuilder.append("| ... and fire the following on a command line/in a shell:\n");
                     errorMsgBuilder.append("|\n");
 
@@ -396,11 +404,6 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     // Copy the file to the same relative structure within the output directory.
                     FileSystemUtilities.createDirectory(target.getParentFile(), false);
                     FileUtils.copyFile(current, target);
-                }
-
-                // TODO: Move to separate implementation?
-                if (redirectUserDir) {
-                    System.setProperty("user.dir", standardUserDirPath);
                 }
 
                 //
@@ -497,13 +500,9 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
         } finally {
 
-            if (holder != null) {
-                holder.restoreClassLoaderAndReleaseThread();
-            }
-
-            // TODO: Move to separate implementation?
-            if (redirectUserDir) {
-                System.setProperty("user.dir", standardUserDirPath);
+            // Restore the environment
+            if(environment != null) {
+                environment.restore();
             }
         }
 

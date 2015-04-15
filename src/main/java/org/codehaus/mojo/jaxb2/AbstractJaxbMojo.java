@@ -29,7 +29,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.codehaus.mojo.jaxb2.shared.classloader.ThreadContextClassLoaderBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.mojo.jaxb2.shared.version.DependencyInfo;
@@ -61,6 +61,11 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * Standard name of the generated JAXB episode file.
      */
     public static final String STANDARD_EPISODE_FILENAME = "sun-jaxb.episode";
+
+    /**
+     * Platform-independent newline control string.
+     */
+    public static final String NEWLINE = System.getProperty("line.separator");
 
     /**
      * Pattern matching strings containing whitespace (or consisting only of whitespace).
@@ -266,13 +271,13 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     protected void warnAboutIncorrectPluginConfiguration(final String propertyName, final String description) {
 
         final StringBuilder builder = new StringBuilder();
-        builder.append("\n\n+=================== [Incorrect Plugin Configuration Detected]\n");
+        builder.append("\n+=================== [Incorrect Plugin Configuration Detected]\n");
         builder.append("|\n");
         builder.append("| Property : " + propertyName + "\n");
         builder.append("| Problem  : " + description + "\n");
         builder.append("|\n");
         builder.append("+=================== [End Incorrect Plugin Configuration Detected]\n\n");
-        getLog().warn(builder.toString());
+        getLog().warn(builder.toString().replace("\n", NEWLINE));
     }
 
     /**
@@ -288,14 +293,14 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         if (getLog().isDebugEnabled()) {
 
             final StringBuilder argBuilder = new StringBuilder();
-            argBuilder.append("\n\n+=================== [" + arguments.length + " " + toolName + " Arguments]\n");
+            argBuilder.append("\n+=================== [" + arguments.length + " " + toolName + " Arguments]\n");
             argBuilder.append("|\n");
             for (int i = 0; i < arguments.length; i++) {
                 argBuilder.append("| [").append(i).append("]: ").append(arguments[i]).append("\n");
             }
             argBuilder.append("|\n");
             argBuilder.append("+=================== [End " + arguments.length + " " + toolName + " Arguments]\n\n");
-            getLog().debug(argBuilder.toString());
+            getLog().debug(argBuilder.toString().replace("\n", NEWLINE));
         }
 
         // All done.
@@ -407,7 +412,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         if (getLog().isDebugEnabled()) {
             final StringBuilder builder = new StringBuilder();
-            builder.append("\n\n+=================== [Brief Plugin Build Dependency Information]\n");
+            builder.append("\n+=================== [Brief Plugin Build Dependency Information]\n");
             builder.append("|\n");
             builder.append("| Note: These dependencies pertain to what was used to build *the plugin*.\n");
             builder.append("|       Check project dependencies to see the ones used in *your build*.\n");
@@ -448,7 +453,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             }
 
             builder.append("+=================== [End Brief Plugin Build Dependency Information]\n\n");
-            getLog().debug(builder.toString());
+            getLog().debug(builder.toString().replace("\n", NEWLINE));
         }
     }
 
@@ -496,7 +501,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
             final StringBuilder builder = new StringBuilder();
 
-            builder.append("\n\n+=================== [System properties]\n");
+            builder.append("\n+=================== [System properties]\n");
             builder.append("|\n");
 
             // Sort the system properties
@@ -525,7 +530,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             builder.append("+=================== [End ThreadContext ClassLoader Root Resources]\n");
 
             // All done.
-            getLog().debug(builder.toString());
+            getLog().debug(builder.toString().replace("\n", NEWLINE));
         }
     }
 }

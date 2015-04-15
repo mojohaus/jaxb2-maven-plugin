@@ -255,16 +255,6 @@ public class XjcMojo extends AbstractJavaGeneratorMojo {
                 : xjcSourceExcludeFilters;
         Filters.initialize(getLog(), excludePatterns);
 
-        /*
-        final List<File> resolvedSources = FileSystemUtilities.filterFiles(
-                getProject().getBasedir(),
-                sources,
-                STANDARD_SOURCE_DIRECTORY,
-                getLog(),
-                "sources",
-                excludePatterns);
-                */
-
         return FileSystemUtilities.filterFiles(
                 getProject().getBasedir(),
                 sources,

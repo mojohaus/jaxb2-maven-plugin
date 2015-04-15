@@ -2,6 +2,8 @@ package org.codehaus.mojo.jaxb2.shared.classloader;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

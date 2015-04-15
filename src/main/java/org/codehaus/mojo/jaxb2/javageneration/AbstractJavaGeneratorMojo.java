@@ -27,10 +27,13 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.NoSchemasException;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.codehaus.mojo.jaxb2.shared.MavenLogHandler;
+import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ContextClassLoaderEnvironmentFacet;
+import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
+import org.codehaus.mojo.jaxb2.shared.environment.logging.MavenLogHandler;
 import org.codehaus.mojo.jaxb2.shared.arguments.ArgumentBuilder;
-import org.codehaus.mojo.jaxb2.shared.classloader.ThreadContextClassLoaderBuilder;
-import org.codehaus.mojo.jaxb2.shared.classloader.ThreadContextClassLoaderHolder;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -40,7 +43,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -356,18 +358,22 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     protected boolean performExecution() throws MojoExecutionException, MojoFailureException {
 
         boolean updateStaleFileTimestamp = false;
-        ThreadContextClassLoaderHolder holder = null;
 
         try {
+
+            // Setup the Tool's execution environment
+            ToolExecutionEnvironment environment = null;
             try {
-                // Create and set a ThreadContext ClassLoader as required by the XJC tool.
-                holder = ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog())
-                        .addPaths(getClasspath())
-                        .buildAndSet();
+
+                // Create the ToolExecutionEnvironment
+                environment = new ToolExecutionEnvironment(getLog(),
+                        ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog()).addPaths(getClasspath()),
+                        LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)));
+                environment.setup();
 
                 // Compile the XJC arguments
                 final String[] xjcArguments = getXjcArguments(
-                        holder.getClassPathAsArgument(),
+                        environment.getClassPathAsArgument(),
                         STANDARD_EPISODE_FILENAME);
 
                 // Ensure that the outputDirectory exists, but only clear it if does not already
@@ -378,18 +384,6 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 if (reCreateEpisodeFileParentDirectory) {
                     getEpisodeFile(STANDARD_EPISODE_FILENAME);
                 }
-
-                // Redirect the JUL Logging statements to the Maven Log.
-                final Logger rootLogger = Logger.getLogger("");
-                rootLogger.setLevel(Level.FINER);
-                for(Handler current : rootLogger.getHandlers()) {
-                    rootLogger.removeHandler(current);
-                }
-                rootLogger.addHandler(new MavenLogHandler(
-                        getLog(),
-                        "XJC",
-                        getEncoding(false),
-                        new String[]{"com.sun", "javax.xml"}));
 
                 // Fire XJC
                 if (XJC_COMPLETED_OK != Driver.run(xjcArguments, new XjcLogAdapter(getLog()))) {
@@ -416,26 +410,13 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
             } finally {
 
-                if (holder != null) {
-                    holder.restoreClassLoaderAndReleaseThread();
+                if (environment != null) {
+                    environment.restore();
                 }
             }
 
             // Add the generated source root to the project, enabling tooling and other plugins to see them.
             addGeneratedSourcesToProjectSourceRoot();
-
-            // This seems like an anti-pattern
-            // It will be axed from the J-M-P version 2.
-            // Lennart, 2015-1-14
-            /*
-            if (generatedResourcesDirectory != null) {
-                Resource resource = new Resource();
-                resource.setDirectory(generatedResourcesDirectory.getAbsolutePath());
-                addResource(project, resource);
-
-                buildContext.refresh(generatedResourcesDirectory);
-            }
-            */
 
             // Copy all source XSDs to the resulting artifact?
             if (xsdPathWithinArtifact != null) {
