@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  * Definition of a person with lastName and age, and optionally a firstName as well...
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
- * @custom A custom JavaDoc annotation.
+ * @since Some version.
  */
 @XmlRootElement
 @XmlType(namespace = SomewhatNamedPerson.NAMESPACE, propOrder = {"firstName", "lastName", "age"})

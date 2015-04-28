@@ -5,7 +5,7 @@
             <xs:documentation><![CDATA[Definition of a person with lastName and age, and optionally a firstName as well...
 
 (author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
-(custom): A custom JavaDoc annotation.]]></xs:documentation>
+(since): Some version.]]></xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string">
