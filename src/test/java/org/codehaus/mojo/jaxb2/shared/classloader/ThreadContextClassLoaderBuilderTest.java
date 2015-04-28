@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -69,6 +70,12 @@ public class ThreadContextClassLoaderBuilderTest {
         validateContains(resources, "target/classes");
         validateContains(resources, "target/test-classes");
         validateContains(resources, "target/test-classes/testdata/shared/classloader");
+
+        for (URL current : resources) {
+            final File aFile = new File(current.getPath());
+            Assert.assertTrue(aFile.exists() && aFile.isDirectory());
+            System.out.println("[" + current.getPath() + "]: " + aFile.getPath());
+        }
     }
 
     @Test
@@ -125,8 +132,8 @@ public class ThreadContextClassLoaderBuilderTest {
 
     private void validateContains(final List<URL> resources, final String snippet) {
 
-        for(URL current : resources) {
-            if(current.toString().contains(snippet)) {
+        for (URL current : resources) {
+            if (current.toString().contains(snippet)) {
                 return;
             }
         }

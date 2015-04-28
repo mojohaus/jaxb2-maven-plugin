@@ -18,6 +18,11 @@ public interface Filter<T> {
     void initialize(Log log);
 
     /**
+     * @return {@code true} if this Filter has been properly initialized (by a call to the {@code initialize} method).
+     */
+    boolean isInitialized();
+
+    /**
      * <p>Method that is invoked to determine if a candidate instance should be accepted or not.
      * Implementing classes should be prepared to handle {@code null} candidate objects.</p>
      *

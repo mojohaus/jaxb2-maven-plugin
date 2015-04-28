@@ -19,6 +19,8 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
+
 import java.util.Map;
 
 /**
@@ -50,6 +52,6 @@ public class DefaultJavaDocRenderer implements JavaDocRenderer {
         }
 
         // All done.
-        return builder.toString();
+        return builder.toString().replace("\n", AbstractJaxbMojo.NEWLINE);
     }
 }

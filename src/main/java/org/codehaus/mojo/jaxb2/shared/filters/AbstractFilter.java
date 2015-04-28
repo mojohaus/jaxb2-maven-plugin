@@ -1,6 +1,7 @@
 package org.codehaus.mojo.jaxb2.shared.filters;
 
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public abstract class AbstractFilter<T> implements Filter<T> {
      * @param setterPropertyName The name of the property to inject.
      */
     protected final void validateDiSetterCalledBeforeInitialization(final String setterPropertyName) {
-        Validate.isTrue(log == null, "DI Setters should only be called before initializing");
+        Validate.isTrue(log == null, "DI Setters should only be called before initializing. Stray call: ["
+                + setterPropertyName + "]");
     }
 
     /**
@@ -106,6 +108,14 @@ public abstract class AbstractFilter<T> implements Filter<T> {
 
         // Delegate
         onInitialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isInitialized() {
+        return log != null;
     }
 
     /**
@@ -179,7 +189,7 @@ public abstract class AbstractFilter<T> implements Filter<T> {
      */
     @Override
     public String toString() {
-        return "Filter [" + getClass().getSimpleName() + "]\n"
-                + TOSTRING_INDENT + "Processes nulls: [" + processNullValues + "]\n";
+        return "Filter [" + getClass().getSimpleName() + "]" + AbstractJaxbMojo.NEWLINE
+                + TOSTRING_INDENT + "Processes nulls: [" + processNullValues + "]" + AbstractJaxbMojo.NEWLINE;
     }
 }

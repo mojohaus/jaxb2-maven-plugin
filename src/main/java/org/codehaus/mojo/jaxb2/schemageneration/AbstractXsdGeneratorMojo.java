@@ -38,7 +38,6 @@ import org.codehaus.mojo.jaxb2.shared.arguments.ArgumentBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
-import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertyChangeEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.plexus.util.FileUtils;
@@ -289,24 +288,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         boolean updateStaleFileTimestamp = false;
         ToolExecutionEnvironment environment = null;
 
-        /*
-        final String baseDirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
-        final String standardUserDirPath = FileSystemUtilities.getCanonicalPath(
-                new File(System.getProperty("user.dir")));
-        final boolean redirectUserDir = !baseDirPath.equalsIgnoreCase(standardUserDirPath);
-        */
-
         try {
-
-            //
-            // We need to redirect the 'user.dir' System property in order
-            // to make the SchemaGenerator work properly.
-            //
-            final String projectBasedirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
-            final List<SystemPropertyChangeEnvironmentFacet> systemPropertyFacets =
-                    SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
-                            .addOrChange("user.dir", projectBasedirPath)
-                            .build();
 
             // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.
             final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder
@@ -319,11 +301,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     getLog(),
                     classLoaderBuilder,
                     LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)));
-
-            // Add all altered system properties.
-            for (SystemPropertyChangeEnvironmentFacet current : systemPropertyFacets) {
-                environment.add(current);
-            }
+            final String projectBasedirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
 
             // Setup the environment.
             environment.setup();
@@ -357,33 +335,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                         Thread.currentThread().getContextClassLoader());
 
                 if (SCHEMAGEN_COMPLETED_OK != result) {
-
-                    final StringBuilder errorMsgBuilder = new StringBuilder();
-                    errorMsgBuilder.append("\n\n+=================== [SchemaGenerator Error '" + result + "']\n");
-                    errorMsgBuilder.append("|\n");
-                    errorMsgBuilder.append("| SchemaGen did not complete its operation correctly.\n");
-                    errorMsgBuilder.append("|\n");
-                    errorMsgBuilder.append("| To re-create the error (and get a proper error message), cd to:\n");
-                    errorMsgBuilder.append("| ").append(projectBasedirPath).append("\n");
-                    errorMsgBuilder.append("| ... and fire the following on a command line/in a shell:\n");
-                    errorMsgBuilder.append("|\n");
-
-                    final StringBuilder builder = new StringBuilder("schemagen ");
-                    for (String current : schemaGenArguments) {
-                        builder.append(current).append(" ");
-                    }
-
-                    errorMsgBuilder.append("| " + builder.toString() + "\n");
-                    errorMsgBuilder.append("|\n");
-                    errorMsgBuilder.append("| The following source files should be processed by schemagen:\n");
-
-                    for (int i = 0; i < sources.size(); i++) {
-                        errorMsgBuilder.append("| " + i + ": ").append(sources.get(i).toString()).append("\n");
-                    }
-
-                    errorMsgBuilder.append("|\n");
-                    errorMsgBuilder.append("+=================== [End SchemaGenerator Error]\n");
-                    throw new MojoExecutionException(errorMsgBuilder.toString());
+                    printSchemaGenCommandAndThrowException(projectBasedirPath,
+                            sources,
+                            schemaGenArguments,
+                            result,
+                            null);
                 }
 
                 // Copy generated XSDs and episode files from the WorkDirectory to the OutputDirectory,
@@ -487,9 +443,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             } catch (MojoExecutionException e) {
                 throw e;
             } catch (InvocationTargetException e) {
+                printSchemaGenCommandAndThrowException(projectBasedirPath, sources, schemaGenArguments, -1, e.getCause());
                 throw new MojoExecutionException("Exception while running the SchemaGenerator.", e.getCause());
             } catch (Exception e) {
-                throw new MojoExecutionException("Could not generate XML Schema", e);
+                printSchemaGenCommandAndThrowException(projectBasedirPath, sources, schemaGenArguments, -1, e);
             }
 
             // Indicate that the output directory was updated.
@@ -786,19 +743,15 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
         if (getLog().isDebugEnabled()) {
 
-            final StringBuilder builder = new StringBuilder();
-            builder.append("\n\n+=================== [ClassName-2-SourcePath Map (size: "
-                    + className2SourcePath.size() + ")]\n");
-            builder.append("|\n");
+            final int size = className2SourcePath.size();
+            getLog().debug("[ClassName-2-SourcePath Map (size: " + size + ")] ...");
 
             int i = 0;
             for (Map.Entry<String, String> current : className2SourcePath.entrySet()) {
-                final String currentEntry = "| " + (i++) + ": [" + current.getKey() + "]: " + current.getValue() + "\n";
-                builder.append(currentEntry);
+                getLog().debug("  " + (++i) + "/" + size + ": [" + current.getKey() + "]: "
+                        + current.getValue());
             }
-            builder.append("\n+=================== [ClassName-2-SourcePath Map]\n\n");
-
-            getLog().debug(builder.toString());
+            getLog().debug("... End [ClassName-2-SourcePath Map]");
         }
 
         // Sort the source paths and place them first in the argument array
@@ -807,5 +760,45 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
         // All Done.
         return toReturn;
+    }
+
+    private void printSchemaGenCommandAndThrowException(final String projectBasedirPath,
+                                                        final List<URL> sources,
+                                                        final String[] schemaGenArguments,
+                                                        final int result,
+                                                        final Throwable cause) throws MojoExecutionException {
+
+        final StringBuilder errorMsgBuilder = new StringBuilder();
+        errorMsgBuilder.append("\n+=================== [SchemaGenerator Error '"
+                + (result == -1 ? "<unknown>" : result) + "']\n");
+        errorMsgBuilder.append("|\n");
+        errorMsgBuilder.append("| SchemaGen did not complete its operation correctly.\n");
+        errorMsgBuilder.append("|\n");
+        errorMsgBuilder.append("| To re-create the error (and get a proper error message), cd to:\n");
+        errorMsgBuilder.append("| ").append(projectBasedirPath).append("\n");
+        errorMsgBuilder.append("| ... and fire the following on a command line/in a shell:\n");
+        errorMsgBuilder.append("|\n");
+
+        final StringBuilder builder = new StringBuilder("schemagen ");
+        for (String current : schemaGenArguments) {
+            builder.append(current).append(" ");
+        }
+
+        errorMsgBuilder.append("| " + builder.toString() + "\n");
+        errorMsgBuilder.append("|\n");
+        errorMsgBuilder.append("| The following source files should be processed by schemagen:\n");
+
+        for (int i = 0; i < sources.size(); i++) {
+            errorMsgBuilder.append("| " + i + ": ").append(sources.get(i).toString()).append("\n");
+        }
+
+        errorMsgBuilder.append("|\n");
+        errorMsgBuilder.append("+=================== [End SchemaGenerator Error]\n");
+
+        if(cause != null) {
+            throw new MojoExecutionException(errorMsgBuilder.toString(), cause);
+        } else {
+            throw new MojoExecutionException(errorMsgBuilder.toString());
+        }
     }
 }

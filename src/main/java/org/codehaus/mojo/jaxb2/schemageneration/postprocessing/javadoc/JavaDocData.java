@@ -20,6 +20,7 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  */
 
 import com.thoughtworks.qdox.model.DocletTag;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class JavaDocData {
 
         StringBuilder toReturn = new StringBuilder();
 
-        toReturn.append("\n\n+=================\n");
+        toReturn.append("\n+=================\n");
         toReturn.append("| Comment: ").append(comment).append("\n");
 
         if (tag2ValueMap.size() == 0) {
@@ -119,6 +120,6 @@ public class JavaDocData {
             }
         }
         toReturn.append("+=================\n\n");
-        return toReturn.toString();
+        return toReturn.toString().replace("\n", AbstractJaxbMojo.NEWLINE);
     }
 }

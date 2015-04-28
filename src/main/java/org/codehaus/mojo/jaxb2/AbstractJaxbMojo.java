@@ -519,7 +519,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             builder.append("+=================== [End System properties]\n");
 
             // Dump the ClassLoader root resources.
-            builder.append("\n\n+=================== [ThreadContext ClassLoader Root Resources]\n");
+            builder.append("\n+=================== [ThreadContext ClassLoader Root Resources]\n");
             builder.append("|\n");
 
             for (URL current : ThreadContextClassLoaderBuilder.getRootResources(

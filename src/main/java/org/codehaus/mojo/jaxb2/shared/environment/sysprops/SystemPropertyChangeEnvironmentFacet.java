@@ -20,6 +20,7 @@ package org.codehaus.mojo.jaxb2.shared.environment.sysprops;
  */
 
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.AbstractLogAwareFacet;
 
@@ -115,6 +116,10 @@ public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet 
         } else {
             System.setProperty(key, newValue);
         }
+
+        if(log.isDebugEnabled()) {
+            log.debug("Setup " + toString());
+        }
     }
 
     /**
@@ -128,6 +133,21 @@ public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet 
         } else {
             System.setProperty(key, originalValue);
         }
+
+        if(log.isDebugEnabled()) {
+            log.debug("Restored " + toString());
+        }
+    }
+
+    /**
+     * @return A Debug string representation of this SystemPropertyChangeEnvironmentFacet.
+     */
+    @Override
+    public String toString() {
+        final String toReturn = "SysProp key [" + key + "]\n"
+                + "  ... Original value: [" + originalValue + "]\n"
+                + "  ... Changed value : [" + newValue + "]";
+        return toReturn.replace("\n", AbstractJaxbMojo.NEWLINE);
     }
 
     /**

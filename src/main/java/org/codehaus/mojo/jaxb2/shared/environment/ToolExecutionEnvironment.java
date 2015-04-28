@@ -103,6 +103,10 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
         // Setup mandatory environment facets
         try {
 
+            if(log.isDebugEnabled()) {
+                log.debug("ToolExecutionEnvironment setup -- Starting.");
+            }
+
             // Build the ClassLoader as required for the JAXB tools
             holder = builder.buildAndSet();
 
@@ -118,6 +122,11 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                             + current.getClass().getName() + "]", e);
                 }
             }
+
+            if(log.isDebugEnabled()) {
+                log.debug("ToolExecutionEnvironment setup -- Done.");
+            }
+
         } catch (IllegalStateException e) {
             throw e;
         } catch (Exception e) {
@@ -132,6 +141,11 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
     public final void restore() {
 
         try {
+
+            if(log.isDebugEnabled()) {
+                log.debug("ToolExecutionEnvironment restore -- Starting.");
+            }
+
             for (EnvironmentFacet current : extraFacets) {
                 try {
                     current.restore();
@@ -147,6 +161,10 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
 
             // Restore the original ClassLoader
             holder.restoreClassLoaderAndReleaseThread();
+
+            if(log.isDebugEnabled()) {
+                log.debug("ToolExecutionEnvironment restore -- Done.");
+            }
         }
     }
 }

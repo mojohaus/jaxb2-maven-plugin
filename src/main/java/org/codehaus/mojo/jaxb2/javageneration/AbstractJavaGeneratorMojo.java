@@ -27,13 +27,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.NoSchemasException;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
-import org.codehaus.mojo.jaxb2.shared.environment.classloading.ContextClassLoaderEnvironmentFacet;
-import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
-import org.codehaus.mojo.jaxb2.shared.environment.logging.MavenLogHandler;
 import org.codehaus.mojo.jaxb2.shared.arguments.ArgumentBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
-import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
+import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -44,9 +41,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Abstract superclass for Mojos generating Java source or binaries from XML schema(s) by invoking the JAXB XJC
@@ -389,7 +383,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 if (XJC_COMPLETED_OK != Driver.run(xjcArguments, new XjcLogAdapter(getLog()))) {
 
                     final StringBuilder errorMsgBuilder = new StringBuilder();
-                    errorMsgBuilder.append("\n\n+=================== [XJC Error]\n");
+                    errorMsgBuilder.append("\n+=================== [XJC Error]\n");
                     errorMsgBuilder.append("|\n");
 
                     final List<URL> sourceXSDs = getSources();

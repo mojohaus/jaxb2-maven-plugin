@@ -2,6 +2,7 @@ package org.codehaus.mojo.jaxb2.shared;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.plexus.util.FileUtils;
@@ -262,7 +263,7 @@ public final class FileSystemUtilities {
         if (log.isDebugEnabled()) {
 
             final StringBuilder builder = new StringBuilder();
-            builder.append("\n\n+=================== [Filtered " + fileTypeDescription + "]\n");
+            builder.append("\n+=================== [Filtered " + fileTypeDescription + "]\n");
 
             builder.append("|\n");
             builder.append("| " + excludePatterns.size() + " Exclude patterns:\n");
@@ -286,7 +287,7 @@ public final class FileSystemUtilities {
             builder.append("+=================== [End Filtered " + fileTypeDescription + "]\n\n");
 
             // Log all.
-            log.debug(builder.toString());
+            log.debug(builder.toString().replace("\n", AbstractJaxbMojo.NEWLINE));
         }
 
         // All done.
@@ -354,20 +355,15 @@ public final class FileSystemUtilities {
             }
         }
 
-        if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled() && existingSources.size() > 0) {
 
-            final StringBuilder builder = new StringBuilder("\n\n+=================== [Existing ");
-            builder.append(existingSources.size() + " " + fileTypeDescription + "]\n");
-            builder.append("|\n");
-            for (int i = 0; i < existingSources.size(); i++) {
-                builder.append("| [" + (i + 1) + "/" + existingSources.size() + "]: " + existingSources.get(i) + "\n");
+            final int size = existingSources.size();
+
+            log.debug(" [" + size + " existing " + fileTypeDescription + "] ...");
+            for (int i = 0; i < size; i++) {
+                log.debug("   " + (i + 1) + "/" + size + ": " + existingSources.get(i));
             }
-
-            builder.append("|\n");
-            builder.append("+=================== [End Existing " + fileTypeDescription + "]\n\n");
-
-            // Log all.
-            log.debug(builder.toString());
+            log.debug(" ... End [" + size + " existing " + fileTypeDescription + "]");
         }
 
         // All Done.
@@ -562,7 +558,8 @@ public final class FileSystemUtilities {
         final boolean addFile = excludeFilterOperation
                 ? noFilters || Filters.rejectAtLeastOnce(current, fileFilters)
                 : noFilters || Filters.matchAtLeastOnce(current, fileFilters);
-        final String logPrefix = (addFile ? "Accepted " : "Rejected ") + "file [";
+        final String logPrefix = (addFile ? "Accepted " : "Rejected ")
+                + (current.isDirectory() ? "directory" : "file") + " [";
 
         if (addFile) {
             toPopulate.add(current);

@@ -1,5 +1,6 @@
 package org.codehaus.mojo.jaxb2.shared.filters.pattern;
 
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.filters.AbstractFilter;
 
@@ -39,48 +40,6 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
         converter = new ToStringConverter<T>();
         acceptCandidateOnPatternMatch = true;
     }
-
-    /**
-     * Convenience constructor creating an AbstractPatternFilter that does not process null values
-     * and which uses the ToStringConverter.
-     *
-     * @param regularExpressions The non-null list of Patters which should be applied within this AbstractPatternFilter.
-
-    protected AbstractPatternFilter(final List<Pattern> regularExpressions, final boolean acceptCandidateOnPatternMatch) {
-    this(false, regularExpressions, new ToStringConverter<T>(), acceptCandidateOnPatternMatch);
-    }
-     */
-
-    /**
-     * Compound constructor creating an AbstractPatternFilter that use the supplied Patterns and StringConverter to
-     * matchAtLeastOnce or refuse T-type objects.
-     *
-     * @param processNullValues             if {@code true}, this AbstractPatternFilter process null candidate values.
-     * @param regularExpressions                      The Patters used within this AbstractPatternFilter to accept or reject
-     *                                      T-type candidates. A candidate is accepted by this AbstractPatternFilter
-     *                                      if all supplied regularExpressions matchAtLeastOnce the candidate.
-     * @param converter                     The StringConverter used to convert T-type objects to Strings which should
-     *                                      be matched by all supplied Patterns to T-object candidates.
-     * @param acceptCandidateOnPatternMatch if {@code true}, this AbstractPatternFilter will matchAtLeastOnce
-     *                                      candidate objects that match at least one of the supplied regularExpressions.
-     *                                      if {@code false}, this AbstractPatternFilter will noFilterMatches
-     *                                      candidates that match at least one of the supplied regularExpressions.
-
-    protected AbstractPatternFilter(final boolean processNullValues,
-    final List<Pattern> regularExpressions,
-    final StringConverter<T> converter,
-    final boolean acceptCandidateOnPatternMatch) {
-    super(processNullValues);
-
-    // Check sanity
-    Validate.notNull(converter, "converter");
-
-    // Assign internal state
-    this.converter = converter;
-    this.regularExpressions = regularExpressions;
-    this.acceptCandidateOnPatternMatch = acceptCandidateOnPatternMatch;
-    }
-     */
 
     /**
      * Assigns a prefix to be prepended to any patterns submitted to this AbstractPatternFilter.
@@ -296,18 +255,25 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
 
         final StringBuilder builder = new StringBuilder(super.toString());
         builder.append(TOSTRING_INDENT + "Accept on match: [").append(acceptCandidateOnPatternMatch).append("]\n");
+        builder.append(TOSTRING_INDENT + "Initialized    : [").append(isInitialized()).append("]\n");
 
-        final int numPatterns = regularExpressions != null && regularExpressions.size() > 0 ? regularExpressions.size() : 0;
-        builder.append(TOSTRING_INDENT).append(numPatterns).append(" regularExpressions ...\n");
+        final List<Pattern> effectivePatterns = isInitialized() ? regularExpressions : convert(patterns, patternPrefix);
+        final int numPatterns = effectivePatterns != null && effectivePatterns.size() > 0
+                ? effectivePatterns.size()
+                : 0;
+        builder.append(TOSTRING_INDENT).append(numPatterns).append(" regularExpressions ");
 
         if (numPatterns > 0) {
-            for (int i = 0; i < regularExpressions.size(); i++) {
-                final String prefix = TOSTRING_INDENT + " [" + i + "/" + regularExpressions.size() + "]: ";
-                builder.append(prefix).append(regularExpressions.get(i).pattern()).append("\n");
+            builder.append(":\n");
+            for (int i = 0; i < effectivePatterns.size(); i++) {
+                final String prefix = TOSTRING_INDENT + " [" + (i+1) + "/" + effectivePatterns.size() + "]: ";
+                builder.append(prefix).append(effectivePatterns.get(i).pattern()).append("\n");
             }
+        } else {
+            builder.append("\n");
         }
 
         // All done.
-        return builder.toString().substring(0, builder.length() - 1);
+        return builder.toString().substring(0, builder.length() - 1).replace("\n", AbstractJaxbMojo.NEWLINE);
     }
 }

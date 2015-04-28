@@ -38,6 +38,11 @@ import java.util.logging.Logger;
  */
 public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
 
+    /**
+     * Standard logger names/categories for the java.util.Logger.
+     */
+    public static final String[] DEFAULT_LOGGER_NAMES = new String[]{"com.sun", "javax.xml", "javax.tools"};
+
     // Internal state
     private boolean restored;
     private Logger rootLogger;
@@ -147,6 +152,6 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
                 : "SchemaGen";
 
         // All done.
-        return new LoggingHandlerEnvironmentFacet(logPrefix, mavenLog, encoding, new String[]{"com.sun", "javax.xml"});
+        return new LoggingHandlerEnvironmentFacet(logPrefix, mavenLog, encoding, DEFAULT_LOGGER_NAMES);
     }
 }
