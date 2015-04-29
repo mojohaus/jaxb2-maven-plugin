@@ -1,6 +1,7 @@
 @startuml
 interface Filter<T> {
     void initialize(Log log);
+    boolean isInitialized();
     boolean accept(T candidate);
 }
 

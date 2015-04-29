@@ -337,7 +337,7 @@ mechanism for plugins, as illustrated by the full configuration example below.
 ## Example 4: Debugging jaxb2-maven-plugin executions
 
 If you are curious about the exact java regexp patterns used for matching your files, or simply want to see what the
-jaxb2-maven-plugin does internally, run the plugin in debug mode by adding the `-debug` switch. The debug log contains
+jaxb2-maven-plugin does internally, run the plugin in debug mode by adding the `-X` switch. The debug log contains
 somewhat human-friendly log entries which contains the SchemaGen arguments synthesized by the jaxb2-maven-plugin and
 supplied in order:
 

@@ -71,16 +71,17 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * Pattern matching strings containing whitespace (or consisting only of whitespace).
      */
     public static final Pattern CONTAINS_WHITESPACE = Pattern.compile("(\\S*\\s+\\S*)+", Pattern.UNICODE_CASE);
-    private static final List<String> RELEVANT_GROUPIDS =
-            Arrays.asList("org.glassfish.jaxb", "javax.xml.bind");
-    private static final String OWN_ARTIFACT_ID = "jaxb2-maven-plugin";
-    private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
 
     /**
      * Standard excludes Filters for all Java generator Mojos.
      * The List is unmodifiable.
      */
     public static final List<Filter<File>> STANDARD_EXCLUDE_FILTERS;
+
+    private static final List<String> RELEVANT_GROUPIDS =
+            Arrays.asList("org.glassfish.jaxb", "javax.xml.bind");
+    private static final String OWN_ARTIFACT_ID = "jaxb2-maven-plugin";
+    private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
     private static final String[] STANDARD_EXCLUDE_SUFFIXES = {"README.*", "\\.xml", "\\.txt"};
 
     static {

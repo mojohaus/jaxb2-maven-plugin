@@ -24,6 +24,8 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Settings;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.NoSchemasException;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
@@ -79,12 +81,12 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     protected boolean generateEpisode;
 
     /**
-     * <p>Corresponding XJC parameter: {@code httpproxy}.</p>
-     * <p>Set HTTP/HTTPS proxy to be used by the XJC, on the format
-     * {@code [user[:password]@]proxyHost[:proxyPort]}.</p>
+     * <p>Sets the HTTP/HTTPS proxy to be used by the XJC, on the format
+     * {@code [user[:password]@]proxyHost[:proxyPort]}.
+     * All information is retrieved from the active proxy within the standard maven settings file.</p>
      */
-    @Parameter
-    protected String httpproxy;
+    @Parameter(defaultValue = "${settings}", readonly = true)
+    protected Settings settings;
 
     /**
      * <p>Defines the content type of sources for the XJC. To simplify usage of the JAXB2 maven plugin,
@@ -540,7 +542,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
         // Add all arguments on the form '-argumentName argumentValue'
         // (i.e. in 2 separate elements of the returned String[])
-        builder.withNamedArgument("httpproxy", httpproxy);
+        builder.withNamedArgument("httpproxy", getProxyString(settings.getActiveProxy()));
         builder.withNamedArgument("encoding", getEncoding(true));
         builder.withNamedArgument("p", packageName);
         builder.withNamedArgument("target", target);
@@ -607,5 +609,38 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
         // All done.
         return logAndReturnToolArguments(builder.build(), "XJC");
+    }
+
+    private String getProxyString(final Proxy activeProxy) {
+
+        // Check sanity
+        if (activeProxy == null) {
+            return null;
+        }
+
+        // The XJC proxy argument should be on the form
+        // [user[:password]@]proxyHost[:proxyPort]
+        //
+        // builder.withNamedArgument("httpproxy", httpproxy);
+        //
+        final StringBuilder proxyBuilder = new StringBuilder();
+        if (activeProxy.getUsername() != null) {
+
+            // Start with the username.
+            proxyBuilder.append(activeProxy.getUsername());
+
+            // Append the password if provided.
+            if (activeProxy.getPassword() != null) {
+                proxyBuilder.append(":").append(activeProxy.getPassword());
+            }
+
+            proxyBuilder.append("@");
+        }
+
+        // Append hostname and port.
+        proxyBuilder.append(activeProxy.getHost()).append(":").append(activeProxy.getPort());
+
+        // All done.
+        return proxyBuilder.toString();
     }
 }
