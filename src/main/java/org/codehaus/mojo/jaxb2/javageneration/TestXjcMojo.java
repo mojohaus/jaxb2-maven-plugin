@@ -69,7 +69,6 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
      * Default exclude Filters for test sources, used unless overridden by an
      * explicit configuration in the {@code testSourceExcludeFilters} parameter.
      */
-    @SuppressWarnings("unchecked")
     public static final List<Filter<File>> STANDARD_TEST_SOURCE_EXCLUDE_FILTERS;
 
     /**
@@ -84,7 +83,6 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
      * Default List of exclude Filters for XJB files, unless overridden by providing
      * an explicit configuration in the {@code testXjbExcludeFilters} parameter.
      */
-    @SuppressWarnings("unchecked")
     public static final List<Filter<File>> STANDARD_TEST_XJB_EXCLUDE_FILTERS;
 
     static {
