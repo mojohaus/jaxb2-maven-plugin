@@ -77,3 +77,15 @@ Contributors can check out the project from our
 [source repository](./source-repository.html) and will find supplementary 
 information in the
 [guide to helping with Maven](http://maven.apache.org/guides/development/guide-helping.html).
+
+### Behaviour and `@since`
+
+The 2.0 release branch of the jaxb2-maven-plugin marks a slight difference in using the
+`@since` parameter in the generated documentation. Our current semantics are to indicate 
+that "the current functionality has been present `@since` a certain version", permitting 
+plugin users to see which pieces of the plugin should be validated in their respective 
+build reactors after upgrading the plugin. 
+
+As the plugin is re-implemented from the ground up in version 2.0, liberal application of
+the `@since` annotation has been applied to the codebase. This shows up in the plugin 
+documentation, to highlight to users when something was changed. 
