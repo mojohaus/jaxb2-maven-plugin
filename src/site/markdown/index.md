@@ -84,7 +84,9 @@ The 2.0 release branch of the jaxb2-maven-plugin marks a slight difference in us
 `@since` parameter in the generated documentation. Our current semantics are to indicate 
 that "the current functionality has been present `@since` a certain version", permitting 
 plugin users to see which pieces of the plugin should be validated in their respective 
-build reactors after upgrading the plugin. 
+build reactors after upgrading the plugin. Therefore, *changing* a functionality will imply
+a new version number after its `@since` to clarify if users should be mindful of validating
+such changes.
 
 As the plugin is re-implemented from the ground up in version 2.0, liberal application of
 the `@since` annotation has been applied to the codebase. This shows up in the plugin 
