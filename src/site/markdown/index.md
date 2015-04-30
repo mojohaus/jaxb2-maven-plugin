@@ -6,18 +6,21 @@ annotated Java classes. The plugin delegates most of its work to either of the
 two JDK-supplied tools XJC and Schemagen, through its 	
 [JAXB implementation dependencies](./dependencies.html).
 
-> **Note**: Note that this plugin documentation is released with and 
-> valid for its corresponding binary version as indicated in the top right 
-> corner of this documentation. This documentation is valid for the 
-> 2.x version of the plugin, and not for the jaxb2-maven-plugin version 1.x. 
+> **Note**: This documentation is released with and valid for its corresponding 
+> plugin version as indicated in the top right corner of each documentation page. 
+> Specifically, this documentation is valid for the 2.x version of the plugin 
+> (not for the jaxb2-maven-plugin version 1.x). 
 
-## Upgrading from version 1.x
+### Upgrading from version 1.x
 
 The jaxb2-maven-plugin was completely reimplemented for version 2, which means that 
 some/most parameters work differently from the 1.x versions of the plugin. 
 The plugin's configuration is therefore not backwards compatible with the 1.x versions.
 
-The usage examples provide guides to configuring the 2.x version of the plugin.
+The usage examples below provide guides to configuring the 2.x version of the plugin.
+In most cases, only the source properties should need your attention unless you use a
+nonstandard project layout; most default settings from the 1.x versions of the plugin 
+have been preserved.
 
 ## Goals Overview
 
