@@ -1,5 +1,8 @@
 # Post-processing Examples - XML Schema Generation
 
+> **Note**: These examples are valid for the 2.x version of the plugin, and do not work for the 
+> jaxb2-maven-plugin version 1.x. Post-processing was introduced in version 2 of the jaxb2-maven-plugin.
+
 The SchemaGenerator ("schemagen") tool which is used by the Jaxb2-Maven-plugin to create XML Schema files
 from JAXB-annotated java source code does not necessarily produce professional-grade XSD files by default.
 Some properties of the generated XSD files can be augmented for improved usability; this is done by the

@@ -1,11 +1,14 @@
 # Basic Examples - XML Schema Generation
 
+> **Note**: These examples are valid for the 2.x version of the plugin, and do not work for the 
+> jaxb2-maven-plugin version 1.x
+
 These basic examples illustrate how to generate XSDs from JAXB-annotated Java classes using the jaxb2-maven-plugin,
 and highlight the use of some of the plugin's common configuration options. This plugin runs the JDK distribution's
 SchemaGenerator compiler (check JAVA_HOME/bin/schemagen), and integrates the SchemaGenerator's configuration properties
 into a Maven project. Also, the jaxb2-maven-plugin
 [performs post-processing on generated XSD files](./example_schemagen_postprocessing.html) to improve usability
-and quality of the XSD files generated.
+and quality of the XSD files generated. 
 
 ## SchemaGenerator in the JDK
 

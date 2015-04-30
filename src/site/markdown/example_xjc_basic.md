@@ -1,5 +1,8 @@
 # Basic Examples - Java Generation
 
+> **Note**: These examples are valid for the 2.x version of the plugin, and do not necessarily 
+> work for the jaxb2-maven-plugin version 1.x
+
 These basic examples show how to generate Java code from JAXB using the jaxb2-maven-plugin,
 and highlight the use of some of the plugin's common configuration options.
 

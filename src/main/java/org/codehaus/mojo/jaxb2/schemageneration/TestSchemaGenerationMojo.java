@@ -42,10 +42,13 @@ import java.util.List;
  * <p>Mojo that creates XML schema(s) from test-scope Java testSources or binaries
  * by invoking the JAXB SchemaGenerator. This implementation is tailored to use the
  * JAXB Reference Implementation from project Kenai.</p>
+ * <p>Note that the TestSchemaGenerationMojo was completely re-implemented for the 2.x versions.
+ * Its configuration semantics and parameter set is <strong>not backwards compatible</strong>
+ * with the 1.x plugin versions. If you are upgrading from version 1.x of the plugin, read
+ * the documentation carefully.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
- * @since 2.0
  */
 @Mojo(name = "testSchemagen",
         defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES,

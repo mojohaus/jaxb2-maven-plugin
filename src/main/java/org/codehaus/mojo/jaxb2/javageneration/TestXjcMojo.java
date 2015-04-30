@@ -40,13 +40,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Mojo that creates test-scope Java source or binaries from XML schema(s)
+ * <p>Mojo that creates test-scope Java source or binaries from XML schema(s)
  * by invoking the JAXB XJC binding compiler. This implementation is tailored
- * to use the JAXB Reference Implementation from project Kenai.
+ * to use the JAXB Reference Implementation from project Kenai.</p>
+ * <p>Note that the TestXjcMojo was completely re-implemented for the 2.x versions.
+ * Its configuration semantics and parameter set is <strong>not necessarily
+ * backwards compatible</strong> with the 1.x plugin versions. If you are
+ * upgrading from version 1.x of the plugin, read the documentation carefully.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
- * @since 2.0
  */
 @Mojo(name = "testXjc",
         defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES,

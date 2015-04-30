@@ -1,5 +1,7 @@
 # Filters and Filtering
 
+> **Note**: This documentation pertains to the 2.x version of the plugin.
+
 Frequently, we would like exclude some files from being used as sources for XJC or SchemaGen.
 For example, if all Java Sources placed under `src/main/java` *except one* should be used to
 distill the XSD files by SchemaGen we must configure the SchemaGen mojo to exclude that particular
@@ -30,6 +32,12 @@ As shown in the listing below, the Filters used by the Jaxb2 Maven Plugin sport 
             * @param log The non-null Log which should be used by this Filter to emit log messages.
             */
             void initialize(Log log);
+            
+             /**
+             * @return {@code true} if this Filter has been properly initialized (by a call to 
+             *         the {@code initialize} method).
+             */
+             boolean isInitialized();
 
             /**
             * <p>Method that is invoked to determine if a candidate instance should be accepted or not.

@@ -45,14 +45,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract superclass for Mojos generating Java source or binaries from XML schema(s) by invoking the JAXB XJC
+ * <p>Abstract superclass for Mojos generating Java source or binaries from XML schema(s) by invoking the JAXB XJC
  * binding compiler. Most of the Configuration options for the AbstractJavaGeneratorMojo are set or copied to the
  * XJC directly; refer to their documentation in the <a href="https://jaxb.java.net/">JAXB Reference Implementation</a>
- * site.
+ * site.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
- * @since 2.0
  */
 public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 

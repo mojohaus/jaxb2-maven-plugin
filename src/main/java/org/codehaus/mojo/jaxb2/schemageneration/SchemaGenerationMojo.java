@@ -42,10 +42,13 @@ import java.util.List;
  * <p>Mojo that creates XML schema(s) from compile-scope Java sources or binaries
  * by invoking the JAXB SchemaGenerator. This implementation is tailored to use the
  * JAXB Reference Implementation from project Kenai.</p>
+ * <p>Note that the SchemaGenerationMojo was completely re-implemented for the 2.x versions.
+ * Its configuration semantics and parameter set is <strong>not necessarily
+ * backwards compatible</strong> with the 1.x plugin versions. If you are
+ * upgrading from version 1.x of the plugin, read the documentation carefully.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
- * @since 2.0
  */
 @Mojo(name = "schemagen",
         defaultPhase = LifecyclePhase.GENERATE_RESOURCES,
@@ -136,6 +139,7 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      * @see org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter
      * @see org.codehaus.mojo.jaxb2.shared.filters.pattern.AbstractPatternFilter
      * @see org.codehaus.mojo.jaxb2.shared.filters.AbstractFilter
+     * @since 2.0
      */
     @Parameter(required = false)
     private List<Filter<File>> schemaSourceExcludeFilters;

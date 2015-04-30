@@ -4,7 +4,20 @@ This plugin uses the Java API for XML Binding (JAXB), version 2+, to generate Ja
 classes from XML Schemas (and optionally binding files) and to create XML Schemas from 
 annotated Java classes. The plugin delegates most of its work to either of the 
 two JDK-supplied tools XJC and Schemagen, through its 	
-[JAXB implementation dependencies](./dependencies.html). 
+[JAXB implementation dependencies](./dependencies.html).
+
+> **Note**: Note that this plugin documentation is released with and 
+> valid for its corresponding binary version as indicated in the top right 
+> corner of this documentation. This documentation is valid for the 
+> 2.x version of the plugin, and not for the jaxb2-maven-plugin version 1.x. 
+
+## Upgrading from version 1.x
+
+The jaxb2-maven-plugin was completely reimplemented for version 2, which means that 
+some/most parameters work differently from the 1.x versions of the plugin. 
+The plugin's configuration is therefore not backwards compatible with the 1.x versions.
+
+The usage examples provide guides to configuring the 2.x version of the plugin.
 
 ## Goals Overview
 
@@ -77,17 +90,3 @@ Contributors can check out the project from our
 [source repository](./source-repository.html) and will find supplementary 
 information in the
 [guide to helping with Maven](http://maven.apache.org/guides/development/guide-helping.html).
-
-### Behaviour and `@since`
-
-The 2.0 release branch of the jaxb2-maven-plugin marks a slight difference in using the
-`@since` parameter in the generated documentation. Our current semantics are to indicate 
-that "the current functionality has been present `@since` a certain version", permitting 
-plugin users to see which pieces of the plugin should be validated in their respective 
-build reactors after upgrading the plugin. Therefore, *changing* a functionality will imply
-a new version number after its `@since` to clarify if users should be mindful of validating
-such changes.
-
-As the plugin is re-implemented from the ground up in version 2.0, liberal application of
-the `@since` annotation has been applied to the codebase. This shows up in the plugin 
-documentation, to highlight to users when something was changed. 
