@@ -197,14 +197,15 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         // 3) Are generated files stale?
         if (isReGenerationRequired()) {
 
-            // Hack to support M2E
-            buildContext.refresh(getOutputDirectory());
-
             if (performExecution()) {
 
                 // As instructed by the performExecution() method, update
                 // the timestamp of the stale File.
                 updateStaleFileTimestamp();
+
+                // Hack to support M2E
+                buildContext.refresh(getOutputDirectory());
+
             } else if (isInfoEnabled) {
                 log.info("Not updating staleFile timestamp as instructed.");
             }
