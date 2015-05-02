@@ -7,9 +7,9 @@ two JDK-supplied tools XJC and Schemagen, through its
 [JAXB implementation dependencies](./dependencies.html).
 
 > **Note**: This documentation is released with and valid for its corresponding 
-> plugin version as indicated in the top right corner of each documentation page. 
-> Specifically, this documentation is valid for the 2.x version of the plugin 
-> (not for the jaxb2-maven-plugin version 1.x). 
+> plugin version as indicated in the top right corner of each documentation page.
+> Care is taken to make the plugin valid for all 2.x versions of the plugin, but
+> the plugin configuration is *not backwards compatible with versions 1.x*.
 
 ### Upgrading from version 1.x
 
@@ -18,9 +18,10 @@ some/most parameters work differently from the 1.x versions of the plugin.
 The plugin's configuration is therefore not backwards compatible with the 1.x versions.
 
 The usage examples below provide guides to configuring the 2.x version of the plugin.
-In most cases, only the source properties should need your attention unless you use a
-nonstandard project layout; most default settings from the 1.x versions of the plugin 
-have been preserved.
+In most cases, only the source properties (which can contain several paths in the 2.x version) 
+should need your attention unless you use a nonstandard project layout; most default settings 
+from the 1.x versions of the plugin have been preserved. Another source of information can be
+found in the integration tests of the plugin itself.
 
 ## Goals Overview
 

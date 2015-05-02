@@ -65,7 +65,6 @@ import java.util.regex.Pattern;
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
- * @since 2.0
  */
 public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 

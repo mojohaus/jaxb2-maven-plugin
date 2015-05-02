@@ -45,7 +45,10 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
     /**
      * Creates a new ToolExecutionEnvironment object wrapping the supplied Maven Log.
      *
-     * @param mavenLog The active Maven Log.
+     * @param mavenLog            The active Maven Log.
+     * @param builder             The ThreadContextClassLoaderBuilder used to set up a ThreadContext ClassLoader for
+     *                            this tool execution environment.
+     * @param loggingHandlerFacet The EnvironmentFacet for replacing Handlers from Java Util Logging with a Maven Log.
      */
     public ToolExecutionEnvironment(final Log mavenLog,
                                     final ThreadContextClassLoaderBuilder builder,
@@ -103,7 +106,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
         // Setup mandatory environment facets
         try {
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("ToolExecutionEnvironment setup -- Starting.");
             }
 
@@ -123,7 +126,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                 }
             }
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("ToolExecutionEnvironment setup -- Done.");
             }
 
@@ -142,7 +145,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
 
         try {
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("ToolExecutionEnvironment restore -- Starting.");
             }
 
@@ -162,7 +165,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
             // Restore the original ClassLoader
             holder.restoreClassLoaderAndReleaseThread();
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("ToolExecutionEnvironment restore -- Done.");
             }
         }

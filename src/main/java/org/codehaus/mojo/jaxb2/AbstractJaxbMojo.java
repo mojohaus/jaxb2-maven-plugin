@@ -53,7 +53,6 @@ import java.util.regex.Pattern;
  * by all subclass Mojos in the JAXB2 maven plugin codebase.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
- * @since 2.0
  */
 public abstract class AbstractJaxbMojo extends AbstractMojo {
 
@@ -197,6 +196,10 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         // 3) Are generated files stale?
         if (isReGenerationRequired()) {
+
+            // Hack to support M2E
+            buildContext.refresh(getOutputDirectory());
+
             if (performExecution()) {
 
                 // As instructed by the performExecution() method, update
