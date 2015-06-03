@@ -93,11 +93,11 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      * </code>
      * </pre>
      * <p><strong>Note</strong>: if configured, the testSources parameters replace the default
-     * value, which is the single directory {@code getProject().getBuild().getTestSourceDirectory()}.</p>
+     * value, which is the single directory {@code getProject().getTestCompileSourceRoots()}.</p>
      *
      * @since 2.0
      */
-    @Parameter(defaultValue = "${project.build.testSource}", readonly = true, required = true)
+    @Parameter(required = false)
     private List<String> testSources;
 
     /**
@@ -174,7 +174,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
         try {
             return FileSystemUtilities.filterFiles(
                     getProject().getBasedir(),
-                    testSources,
+                    (testSources == null) ? getProject().getTestCompileSourceRoots() : testSources,
                     getProject().getTestClasspathElements(),
                     getLog(),
                     "test-compiled bytecode",
@@ -212,10 +212,12 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
                 : testSchemaSourceExcludeFilters;
         Filters.initialize(getLog(), excludeFilters);
 
+        final List<String> defaultTestSources = getProject().getTestCompileSourceRoots();
+
         return FileSystemUtilities.filterFiles(
                 getProject().getBasedir(),
-                testSources,
-                getProject().getTestCompileSourceRoots(),
+                (testSources == null) ? defaultTestSources : testSources,
+                defaultTestSources,
                 getLog(),
                 "test schema sources",
                 excludeFilters);
