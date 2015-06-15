@@ -83,18 +83,18 @@
     </prerequisites>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/jaxb2-maven-plugin</developerConnection>
-        <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/jaxb2-maven-plugin</url>
+        <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
+        <developerConnection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
+        <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
     </scm>
     <issueManagement>
         <system>JIRA</system>
-        <url>http://jira.codehaus.org/browse/MJAXB</url>
+        <url>https://github.com/mojohaus/jaxb2-maven-plugin/issues</url>
     </issueManagement>
-    <ciManagement>
+    <!-- ciManagement>
         <system>Bamboo</system>
         <url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXB</url>
-    </ciManagement>
+    </ciManagement -->
 
     <properties>
         <!-- Define Maven and JDK versions-->
