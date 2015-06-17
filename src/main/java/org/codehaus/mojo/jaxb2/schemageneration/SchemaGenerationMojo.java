@@ -97,7 +97,7 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      *
      * @since 2.0
      */
-    @Parameter(defaultValue = "${project.compileSourceRoots}", readonly = true, required = true)
+    @Parameter(required = false)
     private List<String> sources;
 
     /**
@@ -203,11 +203,13 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
                 : schemaSourceExcludeFilters;
         Filters.initialize(getLog(), sourceExcludes);
 
+        final List<String> defaultSources = getProject().getCompileSourceRoots();
+
         // All Done.
         return FileSystemUtilities.filterFiles(
                 getProject().getBasedir(),
-                sources,
-                getProject().getCompileSourceRoots(),
+                (sources == null) ? defaultSources : sources,
+                defaultSources,
                 getLog(),
                 "sources",
                 sourceExcludes);
