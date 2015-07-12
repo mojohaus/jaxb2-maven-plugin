@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.codehaus.mojo.jaxb2.its</groupId>
-    <artifactId>mjaxb-33</artifactId>
+    <artifactId>xjc-handles-spaces-in-filenames</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <description>Purpose: Test of extra arguments configuration containing spaces.</description>

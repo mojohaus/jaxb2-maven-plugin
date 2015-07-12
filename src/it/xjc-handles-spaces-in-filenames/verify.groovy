@@ -35,19 +35,19 @@ File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFa
 | [1]: -encoding
 | [2]: UTF-8
 | [3]: -d
-| [4]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-33/target/generated-sources/jaxb
+| [4]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/target/generated-sources/jaxb
 | [5]: -extension
 | [6]: -episode
-| [7]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-33/target/generated-sources/jaxb/META-INF/sun-jaxb.episode
+| [7]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/target/generated-sources/jaxb/META-INF/sun-jaxb.episode
 | [8]: -b
-| [9]: src/main/xjb/spaced filename.xjb
+| [9]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/src/main/xjb/spaced filename.xjb
 | [10]: src/main/xsd/address.xsd
 |
 +=================== [End 11 XJC Arguments]
  */
 final String xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
 Pattern expectedBArgumentPattern  = Pattern.compile(xjcArgumentPatternPrefix + "\\-b");
-Pattern expectedXjbArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + "src/main/xjb/spaced filename.xjb");
+Pattern expectedXjbArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + ".*src/main/xjb/spaced filename.xjb");
 Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + "src/main/xsd/address.xsd");
 
 boolean foundBArgument = false;
