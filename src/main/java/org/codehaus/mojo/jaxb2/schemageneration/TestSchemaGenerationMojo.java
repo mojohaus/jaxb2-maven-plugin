@@ -92,12 +92,13 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      *   &lt;/configuration>
      * </code>
      * </pre>
-     * <p><strong>Note</strong>: if configured, the testSources parameters replace the default
-     * value, which is the single directory {@code getProject().getBuild().getTestSourceDirectory()}.</p>
+     * <p><strong>Note</strong>: if configured, the sources parameters replace the default
+     * value, which is a List containing the paths to the directories defined by
+     * {@code getProject().getBuild().getTestSourceDirectory()}.</p>
      *
      * @since 2.0
      */
-    @Parameter(defaultValue = "${project.build.testSource}", readonly = true, required = true)
+    @Parameter(required = false)
     private List<String> testSources;
 
     /**
@@ -171,15 +172,16 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
                 : testSchemaSourceExcludeFilters;
         Filters.initialize(getLog(), excludeFilters);
 
+        final List<String> defaultTestSources = getProject().getTestCompileSourceRoots();
         try {
             return FileSystemUtilities.filterFiles(
                     getProject().getBasedir(),
-                    testSources,
-                    getProject().getTestClasspathElements(),
+                    (testSources == null) ? defaultTestSources : testSources,
+                    defaultTestSources,
                     getLog(),
                     "test-compiled bytecode",
                     excludeFilters);
-        } catch (DependencyResolutionRequiredException e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Could not resolve test classpath elements.", e);
         }
     }
