@@ -416,3 +416,66 @@ is supported and successfully set:
 
 
 Yes ... you get the timestamp for free ...
+
+# Example 8: Setting the locale for the XJC execution
+
+If you require the XJC tool to be executed with a default Locale other than your standard default Locale, simply use 
+the `locale` configuration parameter and supply a string parseable to a Locale on the form
+`<language>[,<country>[,<variant>]]`. For example, to generate the XJC using french locale despite running Maven with
+another Locale, configure the jaxb2-maven-plugin as follows:
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageName>com.example.myschema</packageName>
+                    <addGeneratedAnnotation>true</addGeneratedAnnotation>
+                    <locale>fr</locale>
+                </configuration>
+            </plugin>
+            
+The generated source code will contain french comments:
+
+    /**
+     * <p>Classe Java pour AddressType complex type.
+     * 
+     * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+     * 
+     * <pre>
+     * &lt;complexType name="AddressType"&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;sequence&gt;
+     *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *         &lt;element name="Line1" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *         &lt;element name="Line2" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *         &lt;element name="City" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *         &lt;element name="State" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *         &lt;element name="ZipCode" type="{http://www.w3.org/2001/XMLSchema}decimal"/&gt;
+     *       &lt;/sequence&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "AddressType", propOrder = {
+        "name",
+        "line1",
+        "line2",
+        "city",
+        "state",
+        "zipCode"
+    })
+    @Generated(value = "com.sun.tools.xjc.Driver", date = "2015-07-12T08:33:24+02:00", comments = "JAXB RI v2.2.11")
+    public class AddressType { .... }

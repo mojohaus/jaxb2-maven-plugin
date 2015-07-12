@@ -35,8 +35,10 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.arguments.ArgumentBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.EnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
@@ -295,12 +297,22 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     .addPaths(getClasspath())
                     .addPaths(getProject().getCompileSourceRoots());
 
+            final LocaleFacet localeFacet = locale == null ? null : LocaleFacet.createFor(locale, getLog());
+
             // Create the execution environment as required by the XJC tool.
             environment = new ToolExecutionEnvironment(
                     getLog(),
                     classLoaderBuilder,
-                    LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)));
+                    LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)),
+                    localeFacet);
             final String projectBasedirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
+
+            // Add any extra configured EnvironmentFacets, as configured in the POM.
+            if(extraFacets != null) {
+                for(EnvironmentFacet current : extraFacets) {
+                    environment.add(current);
+                }
+            }
 
             // Setup the environment.
             environment.setup();

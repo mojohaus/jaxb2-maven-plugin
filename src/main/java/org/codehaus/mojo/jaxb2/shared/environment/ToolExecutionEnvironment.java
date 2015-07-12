@@ -23,6 +23,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
+import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
     private ThreadContextClassLoaderHolder holder;
     private LoggingHandlerEnvironmentFacet loggingHandlerEnvironmentFacet;
     private List<EnvironmentFacet> extraFacets;
+    private LocaleFacet localeFacet;
 
     /**
      * Creates a new ToolExecutionEnvironment object wrapping the supplied Maven Log.
@@ -48,11 +50,14 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
      * @param mavenLog            The active Maven Log.
      * @param builder             The ThreadContextClassLoaderBuilder used to set up a ThreadContext ClassLoader for
      *                            this tool execution environment.
+     * @param localeFacet         An optional LocaleFacet to alter the Locale for the tool execution environment. If
+     *                            the localeFacet is {@code null}, the locale will not be changed.
      * @param loggingHandlerFacet The EnvironmentFacet for replacing Handlers from Java Util Logging with a Maven Log.
      */
     public ToolExecutionEnvironment(final Log mavenLog,
                                     final ThreadContextClassLoaderBuilder builder,
-                                    final LoggingHandlerEnvironmentFacet loggingHandlerFacet) {
+                                    final LoggingHandlerEnvironmentFacet loggingHandlerFacet,
+                                    final LocaleFacet localeFacet) {
         super(mavenLog);
 
         // Check sanity
@@ -62,6 +67,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
         // Assign internal state
         this.builder = builder;
         this.loggingHandlerEnvironmentFacet = loggingHandlerFacet;
+        this.localeFacet = localeFacet;
         extraFacets = new ArrayList<EnvironmentFacet>();
     }
 
@@ -116,6 +122,11 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
             // Redirect the JUL logging handler used by the tools to the Maven log.
             loggingHandlerEnvironmentFacet.setup();
 
+            // If requested, switch the locale
+            if(localeFacet != null) {
+                localeFacet.setup();
+            }
+
             // Setup optional/extra environment facets
             for (EnvironmentFacet current : extraFacets) {
                 try {
@@ -161,6 +172,11 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
 
             // Restore the logging handler structure.
             loggingHandlerEnvironmentFacet.restore();
+
+            // Restore the original locale
+            if(localeFacet != null) {
+                localeFacet.restore();
+            }
 
             // Restore the original ClassLoader
             holder.restoreClassLoaderAndReleaseThread();

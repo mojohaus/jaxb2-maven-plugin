@@ -30,8 +30,10 @@ import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.NoSchemasException;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.arguments.ArgumentBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.EnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
+import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -361,9 +363,19 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
             try {
 
                 // Create the ToolExecutionEnvironment
+                final LocaleFacet localeFacet = locale == null ? null : LocaleFacet.createFor(locale, getLog());
                 environment = new ToolExecutionEnvironment(getLog(),
                         ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog()).addPaths(getClasspath()),
-                        LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)));
+                        LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)),
+                        localeFacet);
+
+                // Add any extra configured EnvironmentFacets, as configured in the POM.
+                if(extraFacets != null) {
+                    for(EnvironmentFacet current : extraFacets) {
+                        environment.add(current);
+                    }
+                }
+
                 environment.setup();
 
                 // Compile the XJC arguments

@@ -29,6 +29,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
+import org.codehaus.mojo.jaxb2.shared.environment.EnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -144,6 +146,49 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "${project.build.sourceEncoding}")
     private String encoding;
+
+    /**
+     * <p>An optional specification for a Locale to be used by the Tool execution environment when directly invoking
+     * the XJB or SchemaGen tools. The Locale will be reset to its default value after the execution of XJC or
+     * SchemaGen is complete.
+     *
+     * <p>The configuration parameter must be supplied on the form
+     * {@code &lt;language&gt;[,&lt;country&gt;[,&lt;variant&gt;]]},
+     * </p>
+     *
+     * @see org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet#parseLocale(String)
+     * @see Locale#getAvailableLocales()
+     * @since 2.2
+     */
+    @Parameter(required = false)
+    protected String locale;
+
+    /**
+     * <p>Defines a set of extra EnvironmentFacet instances which are used to further configure the
+     * ToolExecutionEnvironment used by this plugin to fire XJC or SchemaGen.</p>
+     * <p><em>Example:</em> If you implement the EnvironmentFacet interface in the class
+     * {@code org.acme.MyCoolEnvironmentFacetImplementation}, its {@code setup()} method is called before the
+     * XJC or SchemaGen tools are executed to setup some facet of their Execution environment. Correspondingly, the
+     * {@code restore()} method in your {@code org.acme.MyCoolEnvironmentFacetImplementation} class is invoked after
+     * the XJC or SchemaGen execution terminates.</p>
+     * <pre>
+     *     <code>
+     *         &lt;configuration&gt;
+     *         ...
+     *              &lt;extraFacets&gt;
+     *                  &lt;extraFacet implementation="org.acme.MyCoolEnvironmentFacetImplementation" /&gt;
+     *              &lt;/extraFacets&gt;
+     *         ...
+     *         &lt;/configuration&gt;
+     *     </code>
+     * </pre>
+     *
+     * @see EnvironmentFacet
+     * @see org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment#add(EnvironmentFacet)
+     * @since 2.2
+     */
+    @Parameter(required = false)
+    protected List<EnvironmentFacet> extraFacets;
 
     /**
      * The Plexus BuildContext is used to identify files or directories modified since last build,
