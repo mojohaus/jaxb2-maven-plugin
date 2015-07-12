@@ -1,0 +1,16 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:complexType name="AddressType">
+    <xsd:sequence>
+      <xsd:element name="Name"   type="xsd:string"/>
+      <xsd:element name="Line1" type="xsd:string"/>
+      <xsd:element name="Line2" type="xsd:string"/>
+      <xsd:element name="City"   type="xsd:string"/>
+      <xsd:element name="State"  type="xsd:string"/>
+      <xsd:element name="ZipCode"    type="xsd:decimal"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="address" type="AddressType"/>
+
+</xsd:schema>
