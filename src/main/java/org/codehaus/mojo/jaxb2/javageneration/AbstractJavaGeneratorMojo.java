@@ -574,8 +574,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         for (File current : getSourceXJBs()) {
 
             // Shorten the argument if possible.
-            final String strippedXjbPath = FileSystemUtilities.relativize(
-                    current.getAbsolutePath(), getProject().getBasedir());
+            final String strippedXjbPath = current.getAbsolutePath();
 
             // Each XJB must be given as a separate argument.
             builder.withNamedArgument("-b", strippedXjbPath);
