@@ -40,13 +40,14 @@ import java.util.regex.Pattern
  */
 File buildLog = new File(basedir, 'build.log')
 
-final String logPattern = "\\| \\[\\p{Digit}+\\]: ";
+def logPattern = "\\| \\[\\p{Digit}+\\]: ";
+def sep = Pattern.quote(System.getProperty("file.separator"));
 Pattern expectedTargetPattern  = Pattern.compile(logPattern + "\\-target");
 Pattern expectedTargetVersionPattern = Pattern.compile(logPattern + "2.0");
 Pattern expectedExtensionPattern = Pattern.compile(logPattern + "\\-extension");
 Pattern expectedEpisodePattern = Pattern.compile(logPattern + "\\-episode");
 Pattern expectedEpisodeFilePattern = Pattern.compile(logPattern +
-        ".*target/generated-sources/jaxb/META-INF/sun-jaxb.episode");
+        ".*target" + sep + "generated-sources" + sep + "jaxb" + sep + "META-INF" + sep + "sun-jaxb.episode");
 
 boolean foundTarget = false;
 boolean foundTargetVersion = false;

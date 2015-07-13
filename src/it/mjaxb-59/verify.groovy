@@ -24,13 +24,6 @@ File buildLog = new File(basedir, 'build.log');
 List<String> lines = buildLog.readLines();
 
 /*
-String moduleName = "module1";
-String pathToLeafPackage = moduleName + "/target/generated-sources/jaxb/com/example/myschema/";
-File expectedAddressTypeFile = new File(basedir, pathToLeafPackage + "AddressType.java");
-File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFactory.java");
-*/
-
-/*
 +=================== [Filtered sources]
 |
 | 6 Exclude patterns:
@@ -65,10 +58,12 @@ File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFa
 |
 +=================== [End 9 SchemaGen Arguments]
  */
-final String xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
+
+def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
+def sep = Pattern.quote(System.getProperty("file.separator"));
 
 final Pattern expectedSourcePattern  = Pattern.compile(xjcArgumentPatternPrefix
-        + "module1/src/main/java/se/west/gnat/Foo.java");
+        + ("module1/src/main/java/se/west/gnat/Foo.java").replace("/", sep));
 
 boolean foundSourceArgument = false;
 

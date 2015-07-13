@@ -45,10 +45,13 @@ File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFa
 |
 +=================== [End 11 XJC Arguments]
  */
-final String xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
+def sep = Pattern.quote(System.getProperty("file.separator"));
+def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
 Pattern expectedBArgumentPattern  = Pattern.compile(xjcArgumentPatternPrefix + "\\-b");
-Pattern expectedXjbArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + ".*src/main/xjb/spaced filename.xjb");
-Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + "src/main/xsd/address.xsd");
+Pattern expectedXjbArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix
+        + ".*src/main/xjb/spaced filename.xjb".replace("/", sep));
+Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix
+        + "src/main/xsd/address.xsd".replace("/", sep));
 
 boolean foundBArgument = false;
 boolean foundXjbArgument = false;

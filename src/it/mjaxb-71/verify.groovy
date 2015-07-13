@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -57,8 +59,13 @@ def expectedXmlForm = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   </xs:complexType>
 </xs:schema>'''
 
+def slashify(String path) {
+  return path.replace("/", System.getProperty("file.separator"));
+}
+
 def ignoredPrefix = "[INFO] Ignored given or default sources [";
-def ignoredSuffix = "target/it/mjaxb-71/src/main/nonexistent], since it is not an existent file or directory.";
+def ignoredSuffix = slashify("target/it/mjaxb-71/src/main/nonexistent], "
+        + "since it is not an existent file or directory.");
 
 final File generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen');
 final File vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd');
@@ -83,7 +90,7 @@ for (line in lines) {
     continue
   };
 
-  if(trimmedLine.contains(ignoredPrefix) && trimmedLine.contains(ignoredSuffix)) {
+  if (trimmedLine.contains(ignoredPrefix) && trimmedLine.contains(ignoredSuffix)) {
     foundIgnoreLine = true;
   }
 }

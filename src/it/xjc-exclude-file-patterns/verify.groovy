@@ -38,15 +38,18 @@ List<String> lines = buildLog.readLines();
 [DEBUG] Processing file [4/5]: se/west/package-info.java
  */
 
+def sep = System.getProperty("file.separator");
+
 def isProcessingFileLine(final String aLine, final String className) {
-  return aLine.contains("[DEBUG] Processing file [") && aLine.contains("se/west/" + className + ".java");
+  def marker = ("se/west/" + className + ".java").replace("/", System.getProperty("file.separator"));
+  return aLine.contains("[DEBUG] Processing file [") && aLine.contains(marker);
 }
 
 String expectedIgnoreLine = "Ignored given or default sources [src/main/nonexistent/paths], " +
-        "since it is not an existent file or directory.";
+        "since it is not an existent file or directory.".replace("/", sep);
 String acceptedLinePrefix = "Accepted configured sources";
-String acceptedSomeOtherPath = "src/main/someOtherXsds";
-String acceptedFooGnatTxt = "src/main/foo/gnat.txt";
+String acceptedSomeOtherPath = "src/main/someOtherXsds".replace("/", sep);
+String acceptedFooGnatTxt = "src/main/foo/gnat.txt".replace("/", sep);
 
 def foundIgnoreLine = false;
 def foundSomeOtherPathLine = false;
@@ -88,9 +91,9 @@ for (line in lines) {
       foundProcessingObjectFactoryType = true;
     } else if (isProcessingFileLine(trimmedLine, "package-info")) {
       foundProcessingPackageInfoType = true;
-    } else if(isProcessingFileLine(trimmedLine, "ShouldBeIgnoredAddressType")) {
+    } else if (isProcessingFileLine(trimmedLine, "ShouldBeIgnoredAddressType")) {
       foundProcessingShouldBeIgnoredAddressType = true;
-    } else if(isProcessingFileLine(trimmedLine, "AddressTypeFromGnatTxt")) {
+    } else if (isProcessingFileLine(trimmedLine, "AddressTypeFromGnatTxt")) {
       foundProcessingAddressTypeFromGnatTxtType = true;
     }
   }
@@ -98,10 +101,11 @@ for (line in lines) {
 
 // Assert
 def missingRequired(value) {
-  return "Missing required text: [" + value + "]" ;
+  return "Missing required text: [" + value.replace("/", sep) + "]";
 }
+
 def illegalButPresent(value) {
-  return "Found illegal statement: [" + value + "]" ;
+  return "Found illegal statement: [" + value.replace("/", sep) + "]";
 }
 
 assert foundIgnoreLine, missingRequired(expectedIgnoreLine);
@@ -109,8 +113,8 @@ assert foundSomeOtherPathLine, missingRequired(acceptedSomeOtherPath);
 assert foundFooGnatTextLine, missingRequired(acceptedFooGnatTxt);
 
 assert !foundProcessingShouldBeIgnoredAddressType, illegalButPresent("se/west/ShouldBeIgnoredAddressType.java");
-assert foundProcessingFooBazType, missingRequired("se/west/FooBaz.java") ;
-assert foundProcessingAddressTypeFromGnatTxtType, missingRequired("se/west/AddressTypeFromGnatTxt.java") ;
+assert foundProcessingFooBazType, missingRequired("se/west/FooBaz.java");
+assert foundProcessingAddressTypeFromGnatTxtType, missingRequired("se/west/AddressTypeFromGnatTxt.java");
 assert foundProcessingFooBarType, missingRequired("se/west/FooBar.java");
 assert foundProcessingObjectFactoryType, missingRequired("se/west/ObjectFactory.java");
 assert foundProcessingPackageInfoType, missingRequired("se/west/package-info.java")

@@ -44,14 +44,10 @@ public class DefaultJavaDocRenderer implements JavaDocRenderer {
 
         // Compile the XSD documentation string for this Node.
         final StringBuilder builder = new StringBuilder();
-        builder.append(squashNewlines(nonNullData.getComment()))
-                .append(AbstractJaxbMojo.NEWLINE)
-                .append(AbstractJaxbMojo.NEWLINE);
+        builder.append(squashNewlines(nonNullData.getComment())).append("\n");
         for (Map.Entry<String, String> current : nonNullData.getTag2ValueMap().entrySet()) {
 
-            final String tagDocumentation = "(" + squashNewlines(current.getKey()) + "): "
-                    + squashNewlines(current.getValue())
-                    + AbstractJaxbMojo.NEWLINE;
+            final String tagDocumentation = "(" + current.getKey().trim() + "): " + squashNewlines(current.getValue());
             builder.append(tagDocumentation);
         }
 
@@ -64,6 +60,7 @@ public class DefaultJavaDocRenderer implements JavaDocRenderer {
     //
 
     private String squashNewlines(final String original) {
-        return original.trim().replaceAll("[\r\n]+", "\n");
+        final String toReturn = original.trim().replaceAll("[\r\n]+", "\n");
+        return toReturn.endsWith("\n") ? toReturn : toReturn + "\n";
     }
 }
