@@ -169,6 +169,12 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-jxc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- QDox, used for JavaDoc processing -->

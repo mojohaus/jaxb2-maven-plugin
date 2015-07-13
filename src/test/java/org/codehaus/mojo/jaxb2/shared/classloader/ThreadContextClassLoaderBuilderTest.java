@@ -13,6 +13,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -123,6 +126,30 @@ public class ThreadContextClassLoaderBuilderTest {
         // Assert
         Assert.assertNotNull(containedTopLevelResource);
         Assert.assertNotNull(containedSubLevelResource);
+    }
+
+    @Test
+    public void validateFindingToolsJarURL() {
+
+        // Assemble
+        final SortedMap<String, String> sysProps = new TreeMap<String, String>();
+
+        /*
+        for(Map.Entry<Object, Object> current : System.getProperties().entrySet()) {
+            sysProps.put("" + current.getKey(), "" + current.getValue());
+        }
+        */
+
+
+        sysProps.putAll(System.getenv());
+
+        for(Map.Entry<String, String> current : sysProps.entrySet()) {
+            System.out.println("[" + current.getKey() + "]: " + current.getValue());
+        }
+
+        // Act
+
+        // Assert
     }
 
     //

@@ -20,6 +20,7 @@ package org.codehaus.mojo.jaxb2.shared.environment.classloading;
  */
 
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import java.io.File;
@@ -28,8 +29,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Utility class which assists in synthesizing a URLClassLoader for use as a ThreadLocal ClassLoader.
@@ -70,6 +73,7 @@ public class ThreadContextClassLoaderBuilder {
         log = aLog;
         originalClassLoader = classLoader;
         urlList = new ArrayList<URL>();
+        addToolsJarToClassPath();
     }
 
     /**
@@ -330,6 +334,61 @@ public class ThreadContextClassLoaderBuilder {
 
         // All done.
         return toReturn;
+    }
+
+    /**
+     * tools.jar *on the target system* is required in the runtime classloader of the jaxb2-maven-plugin.
+     *
+     * @throws IllegalStateException if JAVA_HOME could not be determined.
+     */
+    private void addToolsJarToClassPath() throws IllegalStateException {
+
+        // Find the JAVA_HOME directory.
+        // Start with the Environment variable JAVA_HOME.
+        final String[] candidates = new String[2];
+        final List<String> likelyCandidates = Arrays.asList("lib/tools.jar",
+                "../lib/tools.jar",
+                "Classes/classes.jar",
+                "..Classes/classes.jar");
+
+        for (Map.Entry<String, String> current : System.getenv().entrySet()) {
+            if (current.getKey().equalsIgnoreCase("JAVA_HOME")) {
+                candidates[0] = current.getValue();
+                break;
+            }
+        }
+        candidates[1] = System.getProperty("java.home");
+
+
+        // Check sanity
+        if ((candidates[0] == null || candidates[0].isEmpty())
+                && (candidates[1] == null || candidates[1].isEmpty())) {
+            throw new IllegalStateException("jaxb2-maven-plugin requires that tools.jar is found on the classpath. "
+                    + "This means that JAVA_HOME must be defined as an environment variable. "
+                    + "Tried both environment and java properties, but could not determine JAVA_HOME.");
+        }
+
+        // javaHome can now point either to the JDK installation directory
+        // or the JRE installation directory. Find out which it is.
+        final String javaHome = (candidates[0] == null || candidates[0].isEmpty())
+                ? candidates[1]
+                : candidates[0];
+
+        for(String current : likelyCandidates) {
+
+            final File currentCandidate = new File(javaHome, current);
+            boolean found = currentCandidate.exists() && currentCandidate.isFile();
+
+            if(log.isDebugEnabled()) {
+                log.debug("Found 'tools.jar' at ["
+                        + FileSystemUtilities.getCanonicalPath(currentCandidate) + "]: " + found);
+            }
+
+            if(found) {
+                urlList.add(FileSystemUtilities.getUrlFor(currentCandidate));
+                return;
+            }
+        }
     }
 
     /**
