@@ -19,7 +19,6 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  * under the License.
  */
 
-import com.sun.source.util.Trees;
 import com.sun.tools.jxc.SchemaGenerator;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
