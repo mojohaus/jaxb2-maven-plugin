@@ -348,7 +348,7 @@ public class FileSystemUtilitiesTest {
         // Assert
         Assert.assertTrue(jarFile.exists());
         Assert.assertTrue(jarFile.isFile());
-        Assert.assertEquals(jarPath, relativized);
+        Assert.assertEquals(jarPath.replace("/", File.separator), relativized);
     }
 
     @Test
@@ -405,12 +405,12 @@ public class FileSystemUtilitiesTest {
 
     private List<String> getRelativeCanonicalPaths(final List<File> fileList, final File cutoff) {
 
-        final String cutoffPath = FileSystemUtilities.getCanonicalPath(cutoff);
+        final String cutoffPath = FileSystemUtilities.getCanonicalPath(cutoff).replace(File.separator, "/");
         final List<String> toReturn = new ArrayList<String>();
 
         for (File current : fileList) {
 
-            final String canPath = FileSystemUtilities.getCanonicalPath(current);
+            final String canPath = FileSystemUtilities.getCanonicalPath(current).replace(File.separator, "/");
             if (!canPath.startsWith(cutoffPath)) {
                 throw new IllegalArgumentException("Illegal cutoff provided. Cutoff: [" + cutoffPath
                         + "] must be a parent to CanonicalPath [" + canPath + "]");

@@ -36,8 +36,6 @@ public class XsdAnnotationProcessorTest extends AbstractSourceCodeAwareNodeProce
         // System.out.println("Got: " + processed);
 
         Assert.assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
-
-        LoggerFactory.getLogger(XsdAnnotationProcessorTest.class);
     }
 
     /**

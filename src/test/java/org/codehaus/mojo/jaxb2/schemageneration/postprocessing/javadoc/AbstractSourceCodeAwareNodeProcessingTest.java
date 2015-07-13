@@ -1,5 +1,6 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
@@ -285,7 +286,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
             final BufferedReader tmp = new BufferedReader(new InputStreamReader(resource));
 
             for (String line = tmp.readLine(); line != null; line = tmp.readLine()) {
-                toReturn.append(line).append('\n');
+                toReturn.append(line).append(AbstractJaxbMojo.NEWLINE);
             }
         } catch (final Exception e) {
             throw new IllegalArgumentException("Resource [" + path + "] not readable.");
@@ -314,6 +315,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         // Ignore whitespace - and also normalize the Documents.
         XMLUnit.setNormalize(true);
         XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setNormalize(true);
 
         // Compare and return
         return XMLUnit.compareXML(expected, actual);
