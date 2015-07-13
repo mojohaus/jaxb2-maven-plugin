@@ -128,30 +128,6 @@ public class ThreadContextClassLoaderBuilderTest {
         Assert.assertNotNull(containedSubLevelResource);
     }
 
-    @Test
-    public void validateFindingToolsJarURL() {
-
-        // Assemble
-        final SortedMap<String, String> sysProps = new TreeMap<String, String>();
-
-        /*
-        for(Map.Entry<Object, Object> current : System.getProperties().entrySet()) {
-            sysProps.put("" + current.getKey(), "" + current.getValue());
-        }
-        */
-
-
-        sysProps.putAll(System.getenv());
-
-        for(Map.Entry<String, String> current : sysProps.entrySet()) {
-            System.out.println("[" + current.getKey() + "]: " + current.getValue());
-        }
-
-        // Act
-
-        // Assert
-    }
-
     //
     // Private helpers
     //

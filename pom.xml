@@ -88,13 +88,13 @@
         <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
     </scm>
     <issueManagement>
-        <system>JIRA</system>
+        <system>GitHub</system>
         <url>https://github.com/mojohaus/jaxb2-maven-plugin/issues</url>
     </issueManagement>
-    <!-- ciManagement>
-        <system>Bamboo</system>
-        <url>http://bamboo.ci.codehaus.org/browse/MOJO-MJAXB</url>
-    </ciManagement -->
+    <ciManagement>
+        <system>TravisCI</system>
+        <url>https://travis-ci.org/mojohaus/jaxb2-maven-plugin</url>
+    </ciManagement>
 
     <properties>
         <!-- Define Maven and JDK versions-->
@@ -103,7 +103,7 @@
 
         <!-- Plexus component versions -->
         <plexus-compiler-api.version>2.5</plexus-compiler-api.version>
-        <plexus-utils.version>3.0.21</plexus-utils.version>
+        <plexus-utils.version>3.0.22</plexus-utils.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
         <!-- JAXB tooling versions -->
@@ -112,8 +112,8 @@
         <qdox.version>2.0-M3</qdox.version>
 
         <!-- Test scope dependencies' versions -->
-        <xmlunit.version>1.5</xmlunit.version>
-        <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
+        <xmlunit.version>1.6</xmlunit.version>
+        <nazgul-core-xmlbinding-test.version>1.8.0</nazgul-core-xmlbinding-test.version>
         <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
     </properties>
 
@@ -165,6 +165,12 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-xjc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
