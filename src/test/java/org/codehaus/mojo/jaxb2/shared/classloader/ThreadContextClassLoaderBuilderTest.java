@@ -13,9 +13,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB

@@ -22,6 +22,7 @@ package org.codehaus.mojo.jaxb2.schemageneration;
 import com.sun.tools.jxc.SchemaGenerator;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -52,6 +53,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -591,11 +593,12 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         final SortedMap<String, String> className2SourcePath = new TreeMap<String, String>();
         final File baseDir = getProject().getBasedir();
         final File userDir = new File(System.getProperty("user.dir"));
+        final String encoding = getEncoding(true);
 
         // 1) Find/add all sources available in the compilation unit.
         for (URL current : sources) {
 
-            final File sourceCodeFile = FileSystemUtilities.getFileFor(current, getEncoding(false));
+            final File sourceCodeFile = FileSystemUtilities.getFileFor(current, encoding);
 
             // Calculate the relative path for the current source
             final String relativePath = FileSystemUtilities.relativize(
@@ -613,8 +616,29 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
             // Find the Java class(es) within the source.
             final JavaProjectBuilder builder = new JavaProjectBuilder();
+            builder.setEncoding(encoding);
+
+            //
+            // Ensure that we include package-info.java classes in the SchemaGen compilation.
+            //
+            if(sourceCodeFile.getName().trim().equalsIgnoreCase(PACKAGE_INFO_FILENAME)) {
+
+                // For some reason, QDox requires the package-info.java to be added as a URL instead of a File.
+                builder.addSource(current);
+                final Collection<JavaPackage> packages = builder.getPackages();
+                if(packages.size() != 1) {
+                    throw new MojoExecutionException("Exactly one package should be present in file ["
+                            + sourceCodeFile.getPath() + "]");
+                }
+
+                // Make the key indicate that this is the package-info.java file.
+                final JavaPackage javaPackage = packages.iterator().next();
+                className2SourcePath.put("package-info for (" + javaPackage.getName() + ")", relativePath);
+                continue;
+            }
+
+            // This is not a package-info.java file, so QDox lets us add this as a File.
             builder.addSource(sourceCodeFile);
-            builder.setEncoding(getEncoding(true));
 
             // Map any found FQCN to the relativized path of its source file.
             for (JavaSource currentJavaSource : builder.getSources()) {
@@ -806,10 +830,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         errorMsgBuilder.append("|\n");
         errorMsgBuilder.append("+=================== [End SchemaGenerator Error]\n");
 
+        final String msg = errorMsgBuilder.toString().replaceAll("[\r\n]+", NEWLINE);
         if(cause != null) {
-            throw new MojoExecutionException(errorMsgBuilder.toString(), cause);
+            throw new MojoExecutionException(msg, cause);
         } else {
-            throw new MojoExecutionException(errorMsgBuilder.toString());
+            throw new MojoExecutionException(msg);
         }
     }
 }

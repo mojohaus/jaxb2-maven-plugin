@@ -64,6 +64,12 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     public static final String STANDARD_EPISODE_FILENAME = "sun-jaxb.episode";
 
     /**
+     * Standard name of the package-info.java file which may contain
+     * JAXB annotations and Package JavaDoc.
+     */
+    public static final String PACKAGE_INFO_FILENAME = "package-info.java";
+
+    /**
      * Platform-independent newline control string.
      */
     public static final String NEWLINE = System.getProperty("line.separator");

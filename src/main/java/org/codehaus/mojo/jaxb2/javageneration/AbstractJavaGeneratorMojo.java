@@ -376,6 +376,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                     }
                 }
 
+                // Setup the environment.
                 environment.setup();
 
                 // Compile the XJC arguments
@@ -391,6 +392,9 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 if (reCreateEpisodeFileParentDirectory) {
                     getEpisodeFile(STANDARD_EPISODE_FILENAME);
                 }
+
+                // Check the system properties.
+                logSystemPropertiesAndBasedir();
 
                 // Fire XJC
                 if (XJC_COMPLETED_OK != Driver.run(xjcArguments, new XjcLogAdapter(getLog()))) {
