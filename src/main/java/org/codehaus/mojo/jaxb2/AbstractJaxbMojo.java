@@ -30,7 +30,6 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.EnvironmentFacet;
-import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.mojo.jaxb2.shared.version.DependencyInfo;
@@ -156,13 +155,11 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     /**
      * <p>An optional specification for a Locale to be used by the Tool execution environment when directly invoking
      * the XJB or SchemaGen tools. The Locale will be reset to its default value after the execution of XJC or
-     * SchemaGen is complete.
-     *
+     * SchemaGen is complete.</p>
      * <p>The configuration parameter must be supplied on the form
-     * {@code &lt;language&gt;[,&lt;country&gt;[,&lt;variant&gt;]]},
-     * </p>
+     * {@code &lt;language&gt;[,&lt;country&gt;[,&lt;variant&gt;]]},</p>
      *
-     * @see org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet#parseLocale(String)
+     * @see org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet#createFor(String, Log)
      * @see Locale#getAvailableLocales()
      * @since 2.2
      */
@@ -564,7 +561,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             final SortedMap<String, Object> props = new TreeMap<String, Object>();
             props.put("basedir", FileSystemUtilities.getCanonicalPath(getProject().getBasedir()));
 
-            for (Map.Entry current : System.getProperties().entrySet()) {
+            for (Map.Entry<Object, Object> current : System.getProperties().entrySet()) {
                 props.put("" + current.getKey(), current.getValue());
             }
             for (Map.Entry<String, Object> current : props.entrySet()) {
@@ -573,17 +570,6 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
             builder.append("|\n");
             builder.append("+=================== [End System properties]\n");
-
-            // Dump the ClassLoader root resources.
-            builder.append("\n+=================== [ThreadContext ClassLoader Root Resources]\n");
-            builder.append("|\n");
-
-            for (URL current : ThreadContextClassLoaderBuilder.getRootResources(
-                    Thread.currentThread().getContextClassLoader())) {
-                builder.append("| ").append(current.toString()).append("\n");
-            }
-            builder.append("|\n");
-            builder.append("+=================== [End ThreadContext ClassLoader Root Resources]\n");
 
             // All done.
             getLog().debug(builder.toString().replace("\n", NEWLINE));

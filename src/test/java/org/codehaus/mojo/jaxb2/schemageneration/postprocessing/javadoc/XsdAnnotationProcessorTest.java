@@ -2,7 +2,6 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

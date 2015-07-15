@@ -19,8 +19,6 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
-
 import java.util.Map;
 
 /**

@@ -18,7 +18,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -241,6 +242,15 @@
             <version>${plexus-build-api.version}</version>
         </dependency>
 
+        <!-- Tools.jar should come last in the dependency list -->
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>${java.version}</version>
+            <scope>system</scope>
+            <systemPath>${tools.systemPath}</systemPath>
+        </dependency>
+
         <!--
             Test-scope dependencies.
         -->
@@ -390,6 +400,29 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>jreTools</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../lib/tools.jar</exists>
+                </file>
+            </activation>
+            <properties>
+                <tools.systemPath>${java.home}/../lib/tools.jar</tools.systemPath>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdkTools</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/lib/tools.jar</exists>
+                </file>
+            </activation>
+            <properties>
+                <tools.systemPath>${java.home}/lib/tools.jar</tools.systemPath>
+            </properties>
         </profile>
     </profiles>
 </project>

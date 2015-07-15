@@ -27,12 +27,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * <p>Utility class which assists in synthesizing a URLClassLoader for use as a ThreadLocal ClassLoader.
@@ -73,7 +74,7 @@ public class ThreadContextClassLoaderBuilder {
         log = aLog;
         originalClassLoader = classLoader;
         urlList = new ArrayList<URL>();
-        addToolsJarToClassPath();
+        // addToolsJarToClassPath();
     }
 
     /**
@@ -183,7 +184,7 @@ public class ThreadContextClassLoaderBuilder {
         // Create the URLClassLoader from the supplied URLs
         final URL[] allURLs = new URL[urlList.size()];
         urlList.toArray(allURLs);
-        final URLClassLoader classLoader = new URLClassLoader(allURLs, originalClassLoader);
+        final NitpickingURLClassLoader classLoader = new NitpickingURLClassLoader(allURLs, originalClassLoader, log);
 
         // Assign the ThreadContext ClassLoader
         final Thread currentThread = Thread.currentThread();
@@ -235,24 +236,31 @@ public class ThreadContextClassLoaderBuilder {
     }
 
     /**
-     * Acquires all URLs corresponding to the resource path "" within the supplied ClassLoader.
+     * Acquires a SortedMap relating all URLs corresponding to the resource path "" within the supplied ClassLoader,
+     * and its corresponding parent ClassLoaders.
      *
-     * @param classLoader A non-null ClassLoader.
-     * @return all URLs corresponding to the resource path "" within the supplied ClassLoader. This corresponds to
-     * the classPath of the supplied ClassLoader.
+     * @param classLoader A non-null (leaf) ClassLoader.
+     * @return a Map relating a classloader index to a List of URLs corresponding to the resource path "" within the
+     * supplied ClassLoader. This effectively yields the classPath of the supplied ClassLoader.
      * @throws java.lang.IllegalStateException if the {@code classLoader.getResources("")} call fails.
      */
-    public static List<URL> getRootResources(final ClassLoader classLoader) throws IllegalStateException {
+    public static SortedMap<String, List<URL>> getRootResources(final ClassLoader classLoader)
+            throws IllegalStateException {
 
         // Check sanity
         Validate.notNull(classLoader, "classLoader");
 
-        final List<URL> toReturn = new ArrayList<URL>();
+        final SortedMap<String, List<URL>> toReturn = new TreeMap<String, List<URL>>();
 
         try {
-            toReturn.addAll(Collections.list(classLoader.getResources("")));
+            int index = 0;
+            for(ClassLoader current = classLoader; current != null; current = current.getParent()) {
+
+                final String key = "" + (index++) + "_" + current.getClass().getName();
+                toReturn.put(key, Collections.list(classLoader.getResources("")));
+            }
         } catch (IOException e) {
-            throw new IllegalStateException("Could not synthesize classPath from original ClassLoader.", e);
+            throw new IllegalStateException("Could not synthesize classPath from ClassLoader.", e);
         }
 
         // All done.

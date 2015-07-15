@@ -43,6 +43,7 @@ import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
@@ -310,8 +311,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             final String projectBasedirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
 
             // Add any extra configured EnvironmentFacets, as configured in the POM.
-            if(extraFacets != null) {
-                for(EnvironmentFacet current : extraFacets) {
+            if (extraFacets != null) {
+                for (EnvironmentFacet current : extraFacets) {
                     environment.add(current);
                 }
             }
@@ -343,6 +344,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 logSystemPropertiesAndBasedir();
 
                 // Fire the SchemaGenerator
+                loadClass("com.sun.tools.jxc.SchemaGenerator");
+                loadClass("com.sun.tools.jxc.ap.SchemaGenerator");
                 final int result = SchemaGenerator.run(
                         schemaGenArguments,
                         Thread.currentThread().getContextClassLoader());
@@ -455,11 +458,43 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
             } catch (MojoExecutionException e) {
                 throw e;
-            } catch (InvocationTargetException e) {
-                printSchemaGenCommandAndThrowException(projectBasedirPath, sources, schemaGenArguments, -1, e.getCause());
-                throw new MojoExecutionException("Exception while running the SchemaGenerator.", e.getCause());
             } catch (Exception e) {
-                printSchemaGenCommandAndThrowException(projectBasedirPath, sources, schemaGenArguments, -1, e);
+
+                // Find the root exception, and print its stack trace to the Maven Log.
+                // These invocation target exceptions tend to produce really deep stack traces,
+                // hiding the actual root cause of the exception.
+                Throwable current = e.getCause();
+                while (current.getCause() != null) {
+                    current = current.getCause();
+                }
+
+                getLog().error("Execution failed.");
+                getLog().error("Displaying root cause Exception's stack trace ....");
+                getLog().error(".");
+
+                //
+                // Print a stack trace
+                //
+                StringBuilder rootCauseBuilder = new StringBuilder();
+                rootCauseBuilder.append("[Message]: " + current.getMessage() + "\n");
+                for (StackTraceElement el : current.getStackTrace()) {
+                    rootCauseBuilder.append("         " + el.toString()).append("\n");
+                }
+                getLog().error(rootCauseBuilder.toString());
+
+                // TODO: Find the normal error message from JAXB instead.
+                if(current instanceof ClassCastException) {
+                    // SchemaGen threw a CCE, which is (normally) caused by incorrect JAXB annotations.
+                    getLog().info("ClassCastExceptions in the SchemaGenerator are normally caused by incorrect "
+                            + "JAXB annotations.");
+                }
+
+                printSchemaGenCommandAndThrowException(projectBasedirPath,
+                        sources,
+                        schemaGenArguments,
+                        -1,
+                        current);
+
             }
 
             // Indicate that the output directory was updated.
@@ -471,7 +506,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         } finally {
 
             // Restore the environment
-            if(environment != null) {
+            if (environment != null) {
                 environment.restore();
             }
         }
@@ -621,12 +656,12 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             //
             // Ensure that we include package-info.java classes in the SchemaGen compilation.
             //
-            if(sourceCodeFile.getName().trim().equalsIgnoreCase(PACKAGE_INFO_FILENAME)) {
+            if (sourceCodeFile.getName().trim().equalsIgnoreCase(PACKAGE_INFO_FILENAME)) {
 
                 // For some reason, QDox requires the package-info.java to be added as a URL instead of a File.
                 builder.addSource(current);
                 final Collection<JavaPackage> packages = builder.getPackages();
-                if(packages.size() != 1) {
+                if (packages.size() != 1) {
                     throw new MojoExecutionException("Exactly one package should be present in file ["
                             + sourceCodeFile.getPath() + "]");
                 }
@@ -831,10 +866,23 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         errorMsgBuilder.append("+=================== [End SchemaGenerator Error]\n");
 
         final String msg = errorMsgBuilder.toString().replaceAll("[\r\n]+", NEWLINE);
-        if(cause != null) {
+        if (cause != null) {
             throw new MojoExecutionException(msg, cause);
         } else {
             throw new MojoExecutionException(msg);
         }
+    }
+
+    private <T> Class<T> loadClass(final String className) {
+
+        final ClassRealm realm = (ClassRealm) getClass().getClassLoader();
+        try {
+            return realm.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            getLog().error("Could not find class [" + className + "] in realm [" + realm.getId() + "]");
+        }
+
+        // Not found
+        return null;
     }
 }

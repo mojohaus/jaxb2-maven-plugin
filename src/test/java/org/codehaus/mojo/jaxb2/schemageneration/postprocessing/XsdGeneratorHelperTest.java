@@ -1,27 +1,25 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.ElementNameAndAttributeQualifier;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import javax.xml.transform.TransformerFactory;
 import java.io.File;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.transform.TransformerFactory;
-
-import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
-import org.junit.Assert;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementNameAndAttributeQualifier;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Test;
-import org.w3c.dom.Document;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
