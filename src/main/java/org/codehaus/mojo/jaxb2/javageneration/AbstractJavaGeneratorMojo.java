@@ -362,8 +362,10 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
             ToolExecutionEnvironment environment = null;
             try {
 
-                // Create the ToolExecutionEnvironment
+                // Create a LocaleFacet if the user has configured an explicit Locale for the tool.
                 final LocaleFacet localeFacet = locale == null ? null : LocaleFacet.createFor(locale, getLog());
+
+                // Create the ToolExecutionEnvironment
                 environment = new ToolExecutionEnvironment(getLog(),
                         ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog()).addPaths(getClasspath()),
                         LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)),

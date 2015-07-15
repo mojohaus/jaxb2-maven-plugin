@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://some/namespace" version="1.0">
+
+    <xs:complexType name="semiDocumentedClass">
+        <xs:annotation>
+            <xs:documentation><![CDATA[This is a JAXB-annotated class where not all properties are JavaDoc'ed.
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="documented" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[This is a documented property.]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="unDocumented" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -227,7 +227,10 @@ public class XsdAnnotationProcessor implements NodeProcessor {
                     + "] with XPath [" + getXPathFor(aNode) + "]");
         }
 
-        // Append the JavaDoc data Nodes, on the form
+        //
+        // 1. Append the JavaDoc data Nodes, on the form below
+        // 2. Append the JavaDoc data Nodes only if the renderer yields a non-null/non-empty javadoc.
+        //
         /*
         <xs:annotation>
             <xs:documentation>(JavaDoc here, within a CDATA section)</xs:documentation>
@@ -235,24 +238,28 @@ public class XsdAnnotationProcessor implements NodeProcessor {
 
         where the "xs" namespace prefix maps to "http://www.w3.org/2001/XMLSchema"
          */
-        final String standardXsPrefix = "xs";
-        final Document doc = aNode.getOwnerDocument();
-        final Element annotation = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, ANNOTATION_ELEMENT_NAME);
-        final Element docElement = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, DOCUMENTATION_ELEMENT_NAME);
-        final CDATASection xsdDocumentation = doc.createCDATASection(renderer.render(javaDocData, location).trim());
+        final String processedJavaDoc = renderer.render(javaDocData, location).trim();
+        if(!processedJavaDoc.isEmpty()) {
 
-        annotation.setPrefix(standardXsPrefix);
-        docElement.setPrefix(standardXsPrefix);
+            final String standardXsPrefix = "xs";
+            final Document doc = aNode.getOwnerDocument();
+            final Element annotation = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, ANNOTATION_ELEMENT_NAME);
+            final Element docElement = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, DOCUMENTATION_ELEMENT_NAME);
+            final CDATASection xsdDocumentation = doc.createCDATASection(renderer.render(javaDocData, location).trim());
 
-        annotation.appendChild(docElement);
-        final Node firstChildOfCurrentNode = aNode.getFirstChild();
-        if (firstChildOfCurrentNode == null) {
-            aNode.appendChild(annotation);
-        } else {
-            aNode.insertBefore(annotation, firstChildOfCurrentNode);
+            annotation.setPrefix(standardXsPrefix);
+            docElement.setPrefix(standardXsPrefix);
+
+            annotation.appendChild(docElement);
+            final Node firstChildOfCurrentNode = aNode.getFirstChild();
+            if (firstChildOfCurrentNode == null) {
+                aNode.appendChild(annotation);
+            } else {
+                aNode.insertBefore(annotation, firstChildOfCurrentNode);
+            }
+
+            docElement.appendChild(xsdDocumentation);
         }
-
-        docElement.appendChild(xsdDocumentation);
     }
 
     //
