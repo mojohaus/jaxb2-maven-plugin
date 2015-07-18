@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>mojo-parent</artifactId>
-        <version>34</version>
+        <version>35</version>
     </parent>
 
     <artifactId>jaxb2-maven-plugin</artifactId>
@@ -167,6 +167,9 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-xjc</artifactId>
             <exclusions>
+                <!--
+                    Classes from tools.jar must be loaded by the
+                -->
                 <exclusion>
                     <groupId>com.sun</groupId>
                     <artifactId>tools</artifactId>
@@ -240,15 +243,6 @@
             <groupId>org.sonatype.plexus</groupId>
             <artifactId>plexus-build-api</artifactId>
             <version>${plexus-build-api.version}</version>
-        </dependency>
-
-        <!-- Tools.jar should come last in the dependency list -->
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>${java.version}</version>
-            <scope>system</scope>
-            <systemPath>${tools.systemPath}</systemPath>
         </dependency>
 
         <!--
@@ -400,29 +394,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-
-        <profile>
-            <id>jreTools</id>
-            <activation>
-                <file>
-                    <exists>${java.home}/../lib/tools.jar</exists>
-                </file>
-            </activation>
-            <properties>
-                <tools.systemPath>${java.home}/../lib/tools.jar</tools.systemPath>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdkTools</id>
-            <activation>
-                <file>
-                    <exists>${java.home}/lib/tools.jar</exists>
-                </file>
-            </activation>
-            <properties>
-                <tools.systemPath>${java.home}/lib/tools.jar</tools.systemPath>
-            </properties>
         </profile>
     </profiles>
 </project>

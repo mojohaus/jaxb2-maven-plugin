@@ -46,9 +46,9 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.FileUtils;
 
+import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -99,6 +99,17 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
      */
     public static final List<Filter<File>> CLASS_INCLUDE_FILTERS;
 
+    /**
+     * Specification for packages which must be loaded using the SystemToolClassLoader (and not in the plugin's
+     * ThreadContext ClassLoader). The SystemToolClassLoader is used by SchemaGen to process some stuff from the
+     * {@code tools.jar} archive, in particular its exception types used to signal JAXB annotation Exceptions.
+     *
+     * @see ToolProvider#getSystemToolClassLoader()
+     */
+    public static final List<String> SYSTEM_TOOLS_CLASSLOADER_PACKAGES = Arrays.asList(
+            "com.sun.source.util",
+            "com.sun.source.tree");
+
     static {
 
         final List<Filter<File>> schemagenTmp = new ArrayList<Filter<File>>();
@@ -111,7 +122,9 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     }
 
     // Internal state
+    private static final int SCHEMAGEN_INCORRECT_OPTIONS = -1;
     private static final int SCHEMAGEN_COMPLETED_OK = 0;
+    private static final int SCHEMAGEN_JAXB_ERRORS = 1;
 
     /**
      * <p>A List holding desired schema mappings, each of which binds a schema namespace URI to its desired prefix
@@ -294,6 +307,16 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
         try {
 
+            //
+            // Ensure that classes that SchemaGen expects to be loaded in the SystemToolClassLoader
+            // is delegated to that ClassLoader, to comply with SchemaGen's internal reflective loading
+            // of classes. Otherwise we will have ClassCastExceptions instead of proper execution.
+            //
+            final ClassRealm localRealm = (ClassRealm) getClass().getClassLoader();
+            for (String current : SYSTEM_TOOLS_CLASSLOADER_PACKAGES) {
+                localRealm.importFrom(ToolProvider.getSystemToolClassLoader(), current);
+            }
+
             // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.
             final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder
                     .createFor(this.getClass(), getLog())
@@ -341,21 +364,23 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             try {
 
                 // Check the system properties.
-                logSystemPropertiesAndBasedir();
+                // logSystemPropertiesAndBasedir();
 
                 // Fire the SchemaGenerator
-                loadClass("com.sun.tools.jxc.SchemaGenerator");
-                loadClass("com.sun.tools.jxc.ap.SchemaGenerator");
                 final int result = SchemaGenerator.run(
                         schemaGenArguments,
                         Thread.currentThread().getContextClassLoader());
 
-                if (SCHEMAGEN_COMPLETED_OK != result) {
+                if (SCHEMAGEN_INCORRECT_OPTIONS == result) {
                     printSchemaGenCommandAndThrowException(projectBasedirPath,
                             sources,
                             schemaGenArguments,
                             result,
                             null);
+                } else if (SCHEMAGEN_JAXB_ERRORS == result) {
+
+                    // TODO: Collect the error message(s) which was emitted by SchemaGen.
+                    throw new MojoExecutionException("JAXB errors arose while SchemaGen compiled sources to XML.");
                 }
 
                 // Copy generated XSDs and episode files from the WorkDirectory to the OutputDirectory,
@@ -469,25 +494,18 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 }
 
                 getLog().error("Execution failed.");
-                getLog().error("Displaying root cause Exception's stack trace ....");
-                getLog().error(".");
 
                 //
                 // Print a stack trace
                 //
                 StringBuilder rootCauseBuilder = new StringBuilder();
+                rootCauseBuilder.append("\n");
+                rootCauseBuilder.append("[Exception]: " + current.getClass().getName() + "\n");
                 rootCauseBuilder.append("[Message]: " + current.getMessage() + "\n");
                 for (StackTraceElement el : current.getStackTrace()) {
                     rootCauseBuilder.append("         " + el.toString()).append("\n");
                 }
-                getLog().error(rootCauseBuilder.toString());
-
-                // TODO: Find the normal error message from JAXB instead.
-                if(current instanceof ClassCastException) {
-                    // SchemaGen threw a CCE, which is (normally) caused by incorrect JAXB annotations.
-                    getLog().info("ClassCastExceptions in the SchemaGenerator are normally caused by incorrect "
-                            + "JAXB annotations.");
-                }
+                getLog().error(rootCauseBuilder.toString().replaceAll("[\r\n]+", "\n"));
 
                 printSchemaGenCommandAndThrowException(projectBasedirPath,
                         sources,
@@ -865,24 +883,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         errorMsgBuilder.append("|\n");
         errorMsgBuilder.append("+=================== [End SchemaGenerator Error]\n");
 
-        final String msg = errorMsgBuilder.toString().replaceAll("[\r\n]+", NEWLINE);
+        final String msg = errorMsgBuilder.toString().replaceAll("[\r\n]+", "\n");
         if (cause != null) {
             throw new MojoExecutionException(msg, cause);
         } else {
             throw new MojoExecutionException(msg);
         }
-    }
-
-    private <T> Class<T> loadClass(final String className) {
-
-        final ClassRealm realm = (ClassRealm) getClass().getClassLoader();
-        try {
-            return realm.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            getLog().error("Could not find class [" + className + "] in realm [" + realm.getId() + "]");
-        }
-
-        // Not found
-        return null;
     }
 }

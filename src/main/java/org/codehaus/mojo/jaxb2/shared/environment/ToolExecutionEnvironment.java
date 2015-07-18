@@ -123,7 +123,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
             loggingHandlerEnvironmentFacet.setup();
 
             // If requested, switch the locale
-            if(localeFacet != null) {
+            if (localeFacet != null) {
                 localeFacet.setup();
             }
 
@@ -174,7 +174,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
             loggingHandlerEnvironmentFacet.restore();
 
             // Restore the original locale
-            if(localeFacet != null) {
+            if (localeFacet != null) {
                 localeFacet.restore();
             }
 

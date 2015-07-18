@@ -117,7 +117,7 @@ public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet 
             System.setProperty(key, newValue);
         }
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Setup " + toString());
         }
     }
@@ -134,7 +134,7 @@ public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet 
             System.setProperty(key, originalValue);
         }
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Restored " + toString());
         }
     }

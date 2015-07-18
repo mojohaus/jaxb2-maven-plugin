@@ -36,28 +36,22 @@ def validateNonexistentDirectory(final File aDirectory, final int index) {
   println "" + index + ". Directory correctly non-existent. [" + path + "]";
 }
 
-final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
 final File workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 
-// Act: Validate that we get the correct error message from the SchemaGenerator.
-def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
-assert 1 == xml.complexType.size(), 'Found ' + xml.complexType.size() + ' generated complex types in the schema1.xsd file. (Expected 1).';
-assert 'incorrectJaxbAnnotationClass' == xml.complexType[0].@name.text();
+// Validate that no schemas was produced by this invocation.
+def normalResult = new File(workDir, 'schema1.xsd');
+validateNonexistentFile(normalResult, 1);
 
-/*
-// Assert: we got the correct error message from the SchemaGenerator?
-println "\nValidating work directory content"
-println "==================================="
+// Validate that the expected JAXB error message is stashed in the log
+def expectedErrorMessage = 'Class has two properties of the same name "bar"';
+List<String> lines = new File(basedir, 'build.log').readLines();
 
-validateExistingFile(new File(workDir, 'schema1.xsd'), 1);
-validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2);
-validateExistingFile(new File(workDir, 'se/west/gnat/Foo.class'), 3);
+boolean foundExpectedErrorMessage = false;
 
-println "\nValidating output directory content"
-println "====================================="
+for(line in lines) {
+  if(line.trim().startsWith(expectedErrorMessage)) {
+    foundExpectedErrorMessage = true;
+  }
+}
 
-validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(outputDir, 'META-INF/sun-jaxb.episode'), 2);
-validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3);
-validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4);
-*/
+assert foundExpectedErrorMessage, "Expected JAXB error message not found."

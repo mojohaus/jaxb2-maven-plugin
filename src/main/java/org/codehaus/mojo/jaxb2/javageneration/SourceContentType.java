@@ -41,7 +41,7 @@ public enum SourceContentType {
      *
      * @see #DTD
      */
-    dtd(DTD.getXjcArgument()),
+    dtd("dtd"),
 
     /**
      * <p>Treat input as W3C XML Schema (i.e. <a href="http://www.w3.org/TR/xmlschema11-1/">Xml Schema Definitions</a>).
@@ -55,7 +55,7 @@ public enum SourceContentType {
      *
      * @see #XmlSchema
      */
-    xmlschema(XmlSchema.getXjcArgument()),
+    xmlschema("xmlschema"),
 
     /**
      * <p>Treat input as <a href="http://relaxng.org/">Relax NG</a>.
@@ -72,7 +72,7 @@ public enum SourceContentType {
      * @see <a href="http://en.wikipedia.org/wiki/RELAX_NG">Relax NG on WikiPedia</a>
      * @see #RelaxNG
      */
-    relaxng(RelaxNG.getXjcArgument()),
+    relaxng("relaxng"),
 
     /**
      * <p>Treat input as <a href="https://www.oasis-open.org/committees/relax-ng/compact-20021121.html">Relax
@@ -89,7 +89,7 @@ public enum SourceContentType {
      * @see <a href="http://en.wikipedia.org/wiki/RELAX_NG">Relax NG on WikiPedia</a>
      * @see #RelaxNGCompact
      */
-    relaxng_compact(RelaxNGCompact.getXjcArgument()),
+    relaxng_compact("relaxng-compact"),
 
     /**
      * <p>Treat input as <a href="https://www.oasis-open.org/committees/relax-ng/compact-20021121.html">Relax
@@ -98,7 +98,7 @@ public enum SourceContentType {
      * @see <a href="http://en.wikipedia.org/wiki/RELAX_NG">Relax NG on WikiPedia</a>
      * @see #RelaxNGCompact
      */
-    relaxngcompact(RelaxNGCompact.getXjcArgument()),
+    relaxngcompact("relaxng-compact"),
 
     /**
      * <p>Treat input as <a href="http://relaxng.org/">WSDL</a>, and compile schemas inside it.
@@ -115,12 +115,12 @@ public enum SourceContentType {
      * @see <a href="http://www.w3.org/TR/wsdl">Web Services Description Language (WSDL) 1.1</a>
      * @see #WSDL
      */
-    wsdl(WSDL.getXjcArgument());
+    wsdl("wsdl");
 
     // Internal state
     private String xjcArgument;
 
-    private SourceContentType(final String xjcArgument) {
+    SourceContentType(final String xjcArgument) {
         this.xjcArgument = xjcArgument;
     }
 

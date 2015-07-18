@@ -266,7 +266,7 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
         if (numPatterns > 0) {
             builder.append(":\n");
             for (int i = 0; i < effectivePatterns.size(); i++) {
-                final String prefix = TOSTRING_INDENT + " [" + (i+1) + "/" + effectivePatterns.size() + "]: ";
+                final String prefix = TOSTRING_INDENT + " [" + (i + 1) + "/" + effectivePatterns.size() + "]: ";
                 builder.append(prefix).append(effectivePatterns.get(i).pattern()).append("\n");
             }
         } else {

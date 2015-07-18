@@ -372,8 +372,8 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                         localeFacet);
 
                 // Add any extra configured EnvironmentFacets, as configured in the POM.
-                if(extraFacets != null) {
-                    for(EnvironmentFacet current : extraFacets) {
+                if (extraFacets != null) {
+                    for (EnvironmentFacet current : extraFacets) {
                         environment.add(current);
                     }
                 }

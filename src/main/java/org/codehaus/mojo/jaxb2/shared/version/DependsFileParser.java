@@ -117,7 +117,7 @@ public final class DependsFileParser {
                 }
             }
 
-            if(matching != null) {
+            if (matching != null) {
                 return getVersionMap(matching);
             }
 

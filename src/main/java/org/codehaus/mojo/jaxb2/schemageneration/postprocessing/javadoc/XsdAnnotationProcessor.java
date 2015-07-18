@@ -239,7 +239,7 @@ public class XsdAnnotationProcessor implements NodeProcessor {
         where the "xs" namespace prefix maps to "http://www.w3.org/2001/XMLSchema"
          */
         final String processedJavaDoc = renderer.render(javaDocData, location).trim();
-        if(!processedJavaDoc.isEmpty()) {
+        if (!processedJavaDoc.isEmpty()) {
 
             final String standardXsPrefix = "xs";
             final Document doc = aNode.getOwnerDocument();

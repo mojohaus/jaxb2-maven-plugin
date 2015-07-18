@@ -56,10 +56,10 @@ public class MethodLocation extends FieldLocation {
         Validate.notNull(parameters, "parameters");
 
         // Stringify the parameter types
-        if(parameters.size() > 0) {
+        if (parameters.size() > 0) {
             final StringBuilder builder = new StringBuilder();
 
-            for(JavaParameter current : parameters) {
+            for (JavaParameter current : parameters) {
                 builder.append(current.getType().getFullyQualifiedName()).append(PARAMETER_SEPARATOR);
             }
             this.parameters = "(" + builder.substring(0, builder.lastIndexOf(PARAMETER_SEPARATOR)) + ")";
