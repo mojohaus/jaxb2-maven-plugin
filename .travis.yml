@@ -2,6 +2,10 @@ language: java
 jdk:
   - oraclejdk7
   - oraclejdk8
+addons:
+  apt:
+    packages:
+      - graphviz
 install: "mvn --show-version --errors --batch-mode validate dependency:go-offline"
 script: "mvn --show-version --errors --batch-mode clean install site"
 cache:
