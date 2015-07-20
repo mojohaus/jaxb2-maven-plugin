@@ -16,4 +16,4 @@ branches:
         - gh-pages
 notifications:
     email:
-        - lennartj@gmail.com
+        - lennart.jorelid@gmail.com
