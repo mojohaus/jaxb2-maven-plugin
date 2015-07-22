@@ -153,11 +153,20 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     private String encoding;
 
     /**
-     * <p>An optional specification for a Locale to be used by the Tool execution environment when directly invoking
-     * the XJB or SchemaGen tools. The Locale will be reset to its default value after the execution of XJC or
-     * SchemaGen is complete.</p>
-     * <p>The configuration parameter must be supplied on the form
-     * {@code &lt;language&gt;[,&lt;country&gt;[,&lt;variant&gt;]]},</p>
+     * <p>A Locale definition to create and set the system (default) Locale when the XJB or SchemaGen tools executes.
+     * The Locale will be reset to its default value after the execution of XJC or SchemaGen is complete.</p>
+     * <p>The configuration parameter must be supplied on the form {@code language[,country[,variant]]},
+     * such as {@code sv,SE} or {@code fr}. Refer to
+     * {@code org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet.createFor(String, Log)} for further
+     * information.</p>
+     * <p><strong>Example</strong> (assigns french locale):</p>
+     * <pre>
+     *     <code>
+     *         &lt;configuration&gt;
+     *              &lt;locale&gt;fr&lt;/locale&gt;
+     *         &lt;/configuration&gt;
+     *     </code>
+     * </pre>
      *
      * @see org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet#createFor(String, Log)
      * @see Locale#getAvailableLocales()
