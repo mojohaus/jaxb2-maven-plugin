@@ -225,10 +225,8 @@ public class JavaDocExtractor {
                         log.debug("Skipping processing empty Package javadoc from [" + key + "]");
                     }
                     return;
-                } else if (emptyExisting) {
-                    if (log.isWarnEnabled()) {
-                        log.warn("Overwriting empty Package javadoc from [" + key + "]");
-                    }
+                } else if (emptyExisting && log.isWarnEnabled()) {
+                    log.warn("Overwriting empty Package javadoc from [" + key + "]");
                 }
             } else {
                 final String given = "[" + value.getClass().getName() + "]: " + value.getComment();

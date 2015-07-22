@@ -524,22 +524,6 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     // Private helpers
     //
 
-    private void addResourceDirectory(final File directoryOrNull) {
-
-        if (directoryOrNull != null) {
-
-            // Wrap the given directory in a Resource
-            final Resource toAdd = new Resource();
-            toAdd.setDirectory(directoryOrNull.getAbsolutePath());
-
-            // Add the resource to the appropriate location.
-            addResource(toAdd);
-
-            // Refresh the build context
-            getBuildContext().refresh(directoryOrNull);
-        }
-    }
-
     private String[] getXjcArguments(final String classPath, final String episodeFileNameOrNull)
             throws MojoExecutionException, NoSchemasException {
 

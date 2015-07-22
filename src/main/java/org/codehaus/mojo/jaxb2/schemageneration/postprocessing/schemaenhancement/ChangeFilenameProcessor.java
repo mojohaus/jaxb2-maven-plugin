@@ -105,9 +105,10 @@ public class ChangeFilenameProcessor implements NodeProcessor {
         final Element parent = attribute.getOwnerElement();
 
         // <xs:import namespace="http://yet/another/namespace" schemaLocation="schema1.xsd"/>
-        return (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(parent.getNamespaceURI()) && IMPORT.equalsIgnoreCase(
-                parent.getLocalName()) && namespaceUriToNewFilenameMap.containsKey(getNamespace(attribute))
-                && SCHEMA_LOCATION.equals(attribute.getName()));
+        return XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(parent.getNamespaceURI())
+                && IMPORT.equalsIgnoreCase(parent.getLocalName())
+                && namespaceUriToNewFilenameMap.containsKey(getNamespace(attribute))
+                && SCHEMA_LOCATION.equals(attribute.getName());
     }
 
     /**

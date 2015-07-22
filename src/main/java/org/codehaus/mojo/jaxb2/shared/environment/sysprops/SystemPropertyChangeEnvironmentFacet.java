@@ -204,6 +204,7 @@ public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet 
          *
          * @param propertyName The name of the system property for which to create an
          *                     ADD- or CREATE-type SystemPropertyChange.
+         * @param value        The new value of the system property to set.
          * @return This builder, for chaining.
          * @see SystemPropertyChangeEnvironmentFacet.ChangeType#ADD
          * @see SystemPropertyChangeEnvironmentFacet.ChangeType#CHANGE

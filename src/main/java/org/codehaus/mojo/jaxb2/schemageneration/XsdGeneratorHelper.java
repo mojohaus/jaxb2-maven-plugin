@@ -72,14 +72,17 @@ public final class XsdGeneratorHelper {
 
     // Constants
     private static final String MISCONFIG = "Misconfiguration detected: ";
-    private static final TransformerFactory FACTORY;
+    private static TransformerFactory FACTORY;
     private static final FileFilter RECURSIVE_XSD_FILTER;
 
-    static {
+    /**
+     * Hide the constructor for utility classes.
+     */
+    private XsdGeneratorHelper() {
+        // Do nothing.
+    }
 
-        // Harmonize XML formatting
-        FACTORY = TransformerFactory.newInstance();
-        FACTORY.setAttribute("indent-number", 2);
+    static {
 
         // Create the static filter used for recursive generated XSD files detection.
         RECURSIVE_XSD_FILTER = new FileFilter() {
@@ -434,7 +437,7 @@ public final class XsdGeneratorHelper {
         StringWriter toReturn = new StringWriter();
 
         try {
-            Transformer transformer = FACTORY.newTransformer();
+            Transformer transformer = getFactory().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
             transformer.transform(new DOMSource(node), new StreamResult(toReturn));
@@ -528,5 +531,26 @@ public final class XsdGeneratorHelper {
                 addRecursively(toPopulate, fileFilter, current);
             }
         }
+    }
+
+    private static TransformerFactory getFactory() {
+
+        if(FACTORY == null) {
+
+            try {
+                FACTORY = TransformerFactory.newInstance();
+
+                // Harmonize XML formatting
+                FACTORY.setAttribute("indent-number", 2);
+
+            } catch (Throwable exception) {
+
+                // This should really not happen... but it seems to happen in some test cases.
+                throw new IllegalStateException("Could not acquire TransformerFactory implementation.", exception);
+            }
+        }
+
+        // All done.
+        return FACTORY;
     }
 }

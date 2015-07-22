@@ -13,22 +13,22 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /** @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a> */
-public class ChangeFilenameProcessorTest
-{
+public class ChangeFilenameProcessorTest {
+
     @Test
-    public void validateAcceptCriteria()
-    {
+    public void validateAcceptCriteria() {
+
         // Assemble
         final String oldFileName = "foo";
         final String newFileName = "bar";
-        final String xmlStream = getXmlDocumentSample( oldFileName );
+        final String xmlStream = getXmlDocumentSample(oldFileName);
         final String namespaceToBeRelocated = "http://another/namespace";
 
         final Map<String, String> namespaceUriToNewFilenameMap = new TreeMap<String, String>();
-        namespaceUriToNewFilenameMap.put( namespaceToBeRelocated, newFileName );
+        namespaceUriToNewFilenameMap.put(namespaceToBeRelocated, newFileName);
 
-        final ChangeFilenameProcessor unitUnderTest = new ChangeFilenameProcessor( namespaceUriToNewFilenameMap );
-        final DebugNodeProcessor debugNodeProcessor = new DebugNodeProcessor( unitUnderTest );
+        final ChangeFilenameProcessor unitUnderTest = new ChangeFilenameProcessor(namespaceUriToNewFilenameMap);
+        final DebugNodeProcessor debugNodeProcessor = new DebugNodeProcessor(unitUnderTest);
 
         // Act
         final Document document = XsdGeneratorHelper.parseXmlStream(new StringReader(xmlStream));
@@ -36,17 +36,16 @@ public class ChangeFilenameProcessorTest
 
         // Assert
         final List<Node> acceptedNodes = debugNodeProcessor.getAcceptedNodes();
-        Assert.assertEquals( 1, acceptedNodes.size() );
-        Assert.assertEquals( "schemaLocation", acceptedNodes.get( 0 ).getNodeName() );
-        Assert.assertEquals( newFileName, acceptedNodes.get( 0 ).getNodeValue() );
+        Assert.assertEquals(1, acceptedNodes.size());
+        Assert.assertEquals("schemaLocation", acceptedNodes.get(0).getNodeName());
+        Assert.assertEquals(newFileName, acceptedNodes.get(0).getNodeValue());
     }
 
     //
     // Private helpers
     //
 
-    private String getXmlDocumentSample( String fileName )
-    {
+    private String getXmlDocumentSample(String fileName) {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<xs:schema version=\"1.0\"\n"
                 + "           targetNamespace=\"http://some/namespace\"\n"

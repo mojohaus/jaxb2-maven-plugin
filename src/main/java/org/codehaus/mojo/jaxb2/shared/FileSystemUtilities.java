@@ -31,23 +31,30 @@ import java.util.TreeMap;
  */
 public final class FileSystemUtilities {
 
+    /*
+     * Hide the constructor for utility classes.
+     */
+    private FileSystemUtilities() {
+        // Do nothing
+    }
+
     /**
      * FileFilter which accepts Files that exist and for which {@code File.isFile() } is {@code true}.
      */
-    public static FileFilter EXISTING_FILE = new FileFilter() {
+    public static final FileFilter EXISTING_FILE = new FileFilter() {
         @Override
         public boolean accept(final File candidate) {
-            return candidate != null && (candidate.exists() && candidate.isFile());
+            return candidate != null && candidate.exists() && candidate.isFile();
         }
     };
 
     /**
      * FileFilter which accepts Files that exist and for which {@code File.isDirectory() } is {@code true}.
      */
-    public static FileFilter EXISTING_DIRECTORY = new FileFilter() {
+    public static final FileFilter EXISTING_DIRECTORY = new FileFilter() {
         @Override
         public boolean accept(final File candidate) {
-            return candidate != null && (candidate.exists() && candidate.isDirectory());
+            return candidate != null && candidate.exists() && candidate.isDirectory();
         }
     };
 
@@ -447,10 +454,8 @@ public final class FileSystemUtilities {
         if (existsAsFile) {
             throw new MojoExecutionException("[" + getCanonicalPath(aDirectory) + "] exists and is a file. "
                     + "Cannot make directory");
-        } else if (!aDirectory.exists()) {
-            if (!aDirectory.mkdirs()) {
-                throw new MojoExecutionException("Could not create directory [" + getCanonicalPath(aDirectory) + "]");
-            }
+        } else if (!aDirectory.exists() && !aDirectory.mkdirs()) {
+            throw new MojoExecutionException("Could not create directory [" + getCanonicalPath(aDirectory) + "]");
         }
     }
 

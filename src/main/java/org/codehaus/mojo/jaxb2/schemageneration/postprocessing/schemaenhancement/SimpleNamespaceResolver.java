@@ -189,10 +189,12 @@ public class SimpleNamespaceResolver implements NamespaceContext {
          *
          * @param aNode The DOM Node to process.
          */
-        public void process(Node aNode) {
+        public void process(final Node aNode) {
+
             // If we have no namespace, use the DEFAULT_NS as the prefix
-            final String cacheKey =
-                    (XMLConstants.XMLNS_ATTRIBUTE.equals(aNode.getNodeName())) ? DEFAULT_NS : aNode.getLocalName();
+            final String cacheKey = XMLConstants.XMLNS_ATTRIBUTE.equals(aNode.getNodeName())
+                    ? DEFAULT_NS
+                    : aNode.getLocalName();
             final String nodeValue = aNode.getNodeValue();
 
             // Cache the namespace in both caches.

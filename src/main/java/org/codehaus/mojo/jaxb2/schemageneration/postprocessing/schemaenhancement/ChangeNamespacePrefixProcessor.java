@@ -153,9 +153,9 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
 
         final Element parent = attribute.getOwnerElement();
 
-        return (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(parent.getNamespaceURI())
+        return XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(parent.getNamespaceURI())
                 && SCHEMA.equalsIgnoreCase(parent.getLocalName())
-                && oldPrefix.equals(attribute.getLocalName()));
+                && oldPrefix.equals(attribute.getLocalName());
     }
 
     /**
@@ -198,7 +198,7 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
 
         final Element parent = attribute.getOwnerElement();
 
-        return (XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(parent.getNamespaceURI()))
+        return XMLConstants.W3C_XML_SCHEMA_NS_URI.equals(parent.getNamespaceURI())
                 && EXTENSION_ELEMENT_NAME.equalsIgnoreCase(parent.getLocalName())
                 && EXTENSION_BASE_ATTRIBUTE_NAME.equalsIgnoreCase(attribute.getName())
                 && attribute.getValue().startsWith(oldPrefix + ":");
