@@ -599,7 +599,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 if ("file".equalsIgnoreCase(current.getProtocol())) {
                     unwrappedSourceXSDs.add(FileSystemUtilities.relativize(
                             current.getPath(),
-                            getProject().getBasedir()));
+                            new File(System.getProperty("user.dir"))));
                 } else {
                     unwrappedSourceXSDs.add(current.toString());
                 }
