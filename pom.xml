@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>mojo-parent</artifactId>
-        <version>36</version>
+        <version>37</version>
     </parent>
 
     <artifactId>jaxb2-maven-plugin</artifactId>
@@ -85,7 +85,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
-        <developerConnection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
         <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
     </scm>
     <issueManagement>
@@ -372,6 +372,30 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>reporting</id>
+            <activation>
+                <property>
+                    <name>skipReports</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <reporting>
+                <plugins>
+                    <!-- Apache plugins in alphabetical order -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${maven-checkstyle-plugin.version}</version>
+                        <configuration>
+                            <skip>true</skip>
+                            <configLocation>config/maven_checks.xml</configLocation>
+                            <headerLocation>config/maven-header.txt</headerLocation>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
     </profiles>
 </project>
