@@ -4,7 +4,7 @@ This plugin uses the Java API for XML Binding (JAXB), version 2+, to generate Ja
 Schemas (and optionally binding files) and to create XML Schemas from annotated Java classes.
  
 Maven site documentation for the plugin is found at
-[http://www.mojohaus.org/jaxb2-maven-plugin/](http://www.mojohaus.org/jaxb2-maven-plugin/)
+[http://www.mojohaus.org/jaxb2-maven-plugin/](http://www.mojohaus.org/jaxb2-maven-plugin/Documentation/v2.2/)
  
 The plugin delegates most of its work to one of the two JDK-supplied tools: 
 
