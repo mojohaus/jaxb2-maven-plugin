@@ -488,7 +488,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 // Find the root exception, and print its stack trace to the Maven Log.
                 // These invocation target exceptions tend to produce really deep stack traces,
                 // hiding the actual root cause of the exception.
-                Throwable current = e.getCause();
+                Throwable current = e;
                 while (current.getCause() != null) {
                     current = current.getCause();
                 }
