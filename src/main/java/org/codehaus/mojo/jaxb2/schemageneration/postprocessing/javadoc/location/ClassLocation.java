@@ -21,6 +21,10 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
 
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
 /**
  * Comparable path structure to locate a particular class within compilation unit.
  *
@@ -31,15 +35,17 @@ public class ClassLocation extends PackageLocation {
 
     // Internal state
     private String className;
+    private String classXmlName;
 
     /**
      * Creates a new ClassLocation with the supplied package and class names.
      *
-     * @param packageName The name of the package for a class potentially holding JavaDoc. Cannot be {@code null}.
-     * @param className   The (simple) name of a class. Cannot be null or empty.
+     * @param packageName  The name of the package for a class potentially holding JavaDoc. Cannot be {@code null}.
+     * @param classXmlName The name given as the {@link XmlType#name()} value of an annotation placed on the Class,
+     *                     or {@code  null} if none is provided.
+     * @param className    The (simple) name of a class. Cannot be null or empty.
      */
-    public ClassLocation(final String packageName,
-                         final String className) {
+    public ClassLocation(final String packageName, final String className, final String classXmlName) {
 
         super(packageName);
 
@@ -48,6 +54,7 @@ public class ClassLocation extends PackageLocation {
 
         // Assign internal state
         this.className = className;
+        this.classXmlName = classXmlName;
     }
 
     /**
@@ -56,7 +63,33 @@ public class ClassLocation extends PackageLocation {
      * @return The simple class name for the class potentially holding JavaDoc. Never {@code null} or empty.
      */
     public String getClassName() {
-        return className;
+        return classXmlName == null ? className : classXmlName;
+    }
+
+    /**
+     * Always appends the <strong>effective className</strong> to the path from the superclass {@link PackageLocation}.
+     * If the {@link #getAnnotationRenamedTo()} method returns a non-null value, that value is the effective className.
+     * Otherwise, the {@link #getClassName()} method is used as the effective className.
+     *
+     * This is to handle renames such as provided in a {@link javax.xml.bind.annotation.XmlType} annotation's
+     * {@link XmlType#name()} attribute value.
+     *
+     * @return the path of the PackageLocation superclass, appended with the effective className.
+     * @see XmlType
+     * @see XmlAttribute#name()
+     * @see XmlElement#name()
+     */
+    @Override
+    public String getPath() {
+        return super.toString() + "." + getClassName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getAnnotationRenamedTo() {
+        return classXmlName;
     }
 
     /**
@@ -72,6 +105,10 @@ public class ClassLocation extends PackageLocation {
      */
     @Override
     public String toString() {
-        return super.toString() + "." + className;
+
+        final String originalClassName = getAnnotationRenamedTo() == null
+                ? ""
+                : " (from: " + className + ")";
+        return super.toString() + "." + getClassName() + originalClassName;
     }
 }

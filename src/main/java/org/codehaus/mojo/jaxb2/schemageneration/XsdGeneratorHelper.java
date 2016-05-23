@@ -143,6 +143,7 @@ public final class XsdGeneratorHelper {
      */
     public static void validateSchemasInPluginConfiguration(final List<TransformSchema> configuredTransformSchemas)
             throws MojoExecutionException {
+
         final List<String> uris = new ArrayList<String>();
         final List<String> prefixes = new ArrayList<String>();
         final List<String> fileNames = new ArrayList<String>();
@@ -200,9 +201,9 @@ public final class XsdGeneratorHelper {
      * @return The number of processed XSDs.
      */
     public static int insertJavaDocAsAnnotations(final Log log,
-                                                 final File outputDir,
-                                                 final SearchableDocumentation docs,
-                                                 final JavaDocRenderer renderer) {
+            final File outputDir,
+            final SearchableDocumentation docs,
+            final JavaDocRenderer renderer) {
 
         // Check sanity
         Validate.notNull(docs, "docs");
@@ -254,10 +255,9 @@ public final class XsdGeneratorHelper {
      * @throws MojoExecutionException If the namespace replacement could not be done.
      */
     public static void replaceNamespacePrefixes(final Map<String, SimpleNamespaceResolver> resolverMap,
-                                                final List<TransformSchema> configuredTransformSchemas,
-                                                final Log mavenLog,
-                                                final File schemaDirectory)
-            throws MojoExecutionException {
+            final List<TransformSchema> configuredTransformSchemas,
+            final Log mavenLog,
+            final File schemaDirectory) throws MojoExecutionException {
 
         if (mavenLog.isDebugEnabled()) {
             mavenLog.debug("Got resolverMap.keySet() [generated filenames]: " + resolverMap.keySet());
@@ -319,8 +319,10 @@ public final class XsdGeneratorHelper {
      * @param schemaDirectory            The directory where all generated schema files reside.
      */
     public static void renameGeneratedSchemaFiles(final Map<String, SimpleNamespaceResolver> resolverMap,
-                                                  final List<TransformSchema> configuredTransformSchemas,
-                                                  final Log mavenLog, final File schemaDirectory) {
+            final List<TransformSchema> configuredTransformSchemas,
+            final Log mavenLog,
+            final File schemaDirectory) {
+
         // Create the map relating namespace URI to desired filenames.
         Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<String, String>();
         for (TransformSchema current : configuredTransformSchemas) {
@@ -380,6 +382,7 @@ public final class XsdGeneratorHelper {
      * @param visitor           The NodeProcessor instance which should process the nodes.
      */
     public static void process(final Node node, final boolean recurseToChildren, final NodeProcessor visitor) {
+
         // Process the current Node, if the NodeProcessor accepts it.
         if (visitor.accept(node)) {
             visitor.process(node);
@@ -453,7 +456,7 @@ public final class XsdGeneratorHelper {
     //
 
     private static String getDuplicationErrorMessage(final String propertyName, final String propertyValue,
-                                                     final int firstIndex, final int currentIndex) {
+            final int firstIndex, final int currentIndex) {
         return MISCONFIG + "Duplicate '" + propertyName + "' property with value [" + propertyValue
                 + "] found in plugin configuration. Correct schema elements index (" + firstIndex + ") and ("
                 + currentIndex + "), to ensure that all '" + propertyName + "' values are unique.";
@@ -470,7 +473,7 @@ public final class XsdGeneratorHelper {
      * @throws MojoExecutionException if any schema file currently uses <code>newPrefix</code>.
      */
     private static void validatePrefixSubstitutionIsPossible(final String oldPrefix, final String newPrefix,
-                                                             final SimpleNamespaceResolver currentResolver)
+            final SimpleNamespaceResolver currentResolver)
             throws MojoExecutionException {
         // Make certain the newPrefix does not exist already.
         if (currentResolver.getNamespaceURI2PrefixMap().containsValue(newPrefix)) {
@@ -514,8 +517,8 @@ public final class XsdGeneratorHelper {
     }
 
     private static void addRecursively(final List<File> toPopulate,
-                                       final FileFilter fileFilter,
-                                       final File aDir) {
+            final FileFilter fileFilter,
+            final File aDir) {
 
         // Check sanity
         Validate.notNull(toPopulate, "toPopulate");
@@ -535,7 +538,7 @@ public final class XsdGeneratorHelper {
 
     private static TransformerFactory getFactory() {
 
-        if(FACTORY == null) {
+        if (FACTORY == null) {
 
             try {
                 FACTORY = TransformerFactory.newInstance();

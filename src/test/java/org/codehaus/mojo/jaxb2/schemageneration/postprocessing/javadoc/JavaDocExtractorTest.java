@@ -2,6 +2,7 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.PackageLocation;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -23,6 +26,7 @@ public class JavaDocExtractorTest {
 
     // Shared state
     private File javaDocBasicDir;
+    private File javaDocAnnotatedDir;
     private BufferingLog log;
 
     @Before
@@ -31,9 +35,17 @@ public class JavaDocExtractorTest {
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         // Find the desired directory
-        final URL dirURL = getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/basic");
+        final URL dirURL = getClass()
+                .getClassLoader()
+                .getResource("testdata/schemageneration/javadoc/basic");
         this.javaDocBasicDir = new File(dirURL.getPath());
         Assert.assertTrue(javaDocBasicDir.exists() && javaDocBasicDir.isDirectory());
+
+        final URL annotatedDirURL = getClass()
+                .getClassLoader()
+                .getResource("testdata/schemageneration/javadoc/annotated");
+        this.javaDocAnnotatedDir = new File(annotatedDirURL.getPath());
+        Assert.assertTrue(javaDocAnnotatedDir.exists() && javaDocAnnotatedDir.isDirectory());
     }
 
     @Test
@@ -71,6 +83,79 @@ public class JavaDocExtractorTest {
     }
 
     @Test
+    public void validateExtractingXmlAnnotatedName() throws Exception {
+
+        // Assemble
+        final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
+        final List<File> sourceDirs = Arrays.<File>asList(javaDocAnnotatedDir);
+        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
+
+        // Act
+        unitUnderTest.addSourceFiles(sourceFiles);
+        final SearchableDocumentation result = unitUnderTest.process();
+
+        // Assert
+        final SortedMap<SortableLocation, JavaDocData> loc2JavaDocDataMap = result.getAll();
+        final SortedMap<String, SortableLocation> path2locMap = new TreeMap<String, SortableLocation>();
+
+        for(String currentPath : result.getPaths()) {
+            path2locMap.put(currentPath, result.getLocation(currentPath));
+        }
+
+        final String prefix = "testdata.schemageneration.javadoc.annotated.";
+        final String fieldAccessPrefix = prefix + "AnnotatedXmlNameAnnotatedClassWithFieldAccessTypeName#";
+        final String methodAccessPrefix = prefix + "AnnotatedXmlNameAnnotatedClassWithMethodAccessTypeName#";
+
+        // First, check the field-annotated class.
+        final SortableLocation stringFieldLocation = result.getLocation(fieldAccessPrefix + "annotatedStringField");
+        final SortableLocation integerFieldLocation = result.getLocation(fieldAccessPrefix + "annotatedIntegerField");
+        final SortableLocation stringMethodLocation = result.getLocation(fieldAccessPrefix + "getStringField()");
+        final SortableLocation integerMethodLocation = result.getLocation(fieldAccessPrefix + "getIntegerField()");
+
+        Assert.assertTrue(stringFieldLocation instanceof FieldLocation);
+        Assert.assertTrue(integerFieldLocation instanceof FieldLocation);
+        Assert.assertTrue(stringMethodLocation instanceof MethodLocation);
+        Assert.assertTrue(integerMethodLocation instanceof MethodLocation);
+
+        Assert.assertNull(stringMethodLocation.getAnnotationRenamedTo());
+        Assert.assertNull(integerMethodLocation.getAnnotationRenamedTo());
+        Assert.assertEquals("annotatedStringField", stringFieldLocation.getAnnotationRenamedTo());
+        Assert.assertEquals("annotatedIntegerField", integerFieldLocation.getAnnotationRenamedTo());
+
+        Assert.assertEquals(JavaDocData.NO_COMMENT, result.getJavaDoc(stringMethodLocation.getPath()).getComment());
+        Assert.assertEquals(JavaDocData.NO_COMMENT, result.getJavaDoc(integerMethodLocation.getPath()).getComment());
+        Assert.assertEquals("This is a string field.", result.getJavaDoc(stringFieldLocation.getPath()).getComment());
+        Assert.assertEquals("This is an integer field.",
+                result.getJavaDoc(integerFieldLocation.getPath()).getComment());
+
+        // Secondly, check the method-annotated class.
+        final SortableLocation stringFieldLocation2 = result.getLocation(methodAccessPrefix + "stringField");
+        final SortableLocation integerFieldLocation2 = result.getLocation(methodAccessPrefix + "integerField");
+        final SortableLocation stringMethodLocation2 = result.getLocation(methodAccessPrefix + "annotatedStringMethod()");
+        final SortableLocation integerMethodLocation2 = result.getLocation(methodAccessPrefix +
+                "annotatedIntegerMethod()");
+
+        Assert.assertTrue(stringFieldLocation2 instanceof FieldLocation);
+        Assert.assertTrue(integerFieldLocation2 instanceof FieldLocation);
+        Assert.assertTrue(stringMethodLocation2 instanceof MethodLocation);
+        Assert.assertTrue(integerMethodLocation2 instanceof MethodLocation);
+
+        Assert.assertNull(stringFieldLocation2.getAnnotationRenamedTo());
+        Assert.assertNull(integerFieldLocation2.getAnnotationRenamedTo());
+        Assert.assertEquals("annotatedStringMethod", stringMethodLocation2.getAnnotationRenamedTo());
+        Assert.assertEquals("annotatedIntegerMethod", integerMethodLocation2.getAnnotationRenamedTo());
+
+        Assert.assertEquals("Getter for the stringField.",
+                result.getJavaDoc(stringMethodLocation2.getPath()).getComment());
+        Assert.assertEquals("Getter for the integerField.",
+                result.getJavaDoc(integerMethodLocation2.getPath()).getComment());
+        Assert.assertEquals(JavaDocData.NO_COMMENT,
+                result.getJavaDoc(stringFieldLocation2.getPath()).getComment());
+        Assert.assertEquals(JavaDocData.NO_COMMENT,
+                result.getJavaDoc(integerFieldLocation2.getPath()).getComment());
+    }
+
+    @Test
     public void validatePathsFromProcessing() {
 
         // Assemble
@@ -83,6 +168,9 @@ public class JavaDocExtractorTest {
         final SearchableDocumentation result = unitUnderTest.process();
 
         // Assert
+        final ArrayList<SortableLocation> sortableLocations = new ArrayList<SortableLocation>(result.getAll().keySet());
+        Assert.assertEquals(4, sortableLocations.size());
+
         final List<String> paths = new ArrayList<String>(result.getPaths());
         Assert.assertEquals(4, paths.size());
         Assert.assertEquals("basic", paths.get(0));

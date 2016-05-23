@@ -73,7 +73,7 @@ plugin's JAXB implementation dependency (see the [target parameter](./xjc-mojo.h
             </plugin>
             ...
         </plugins>
-    <build>
+    </build>
     ...
     </project>
 
@@ -124,7 +124,7 @@ The project can now be built with JDK 1.6.
                 </plugin>
                 ...
             </plugins>
-        <build>
+        </build>
         ...
     </project>
 

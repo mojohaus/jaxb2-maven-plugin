@@ -21,6 +21,10 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
 
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
 /**
  * Comparable path structure to locate a particular field within compilation unit.
  *
@@ -31,26 +35,34 @@ public class FieldLocation extends ClassLocation {
 
     // Internal state
     private String memberName;
+    private String memberXmlName;
 
     /**
      * Creates a new FieldLocation with the supplied package, class and member names.
      *
-     * @param packageName The name of the package for a class potentially holding JavaDoc. Cannot be {@code null}.
-     * @param className   The (simple) name of a class. Cannot be null or empty.
-     * @param memberName  The name of a (method or) field. Cannot be null or empty.
+     * @param packageName   The name of the package for a class potentially holding JavaDoc. Cannot be {@code null}.
+     * @param className     The (simple) name of a class. Cannot be null or empty.
+     * @param memberName    The name of a (method or) field. Cannot be null or empty.
+     * @param classXmlName  The name given as the {@link XmlType#name()} value of an annotation placed on the Class,
+     *                      or {@code  null} if none is provided.
+     * @param memberXmlName The name given as the {@link XmlElement#name()} or {@link XmlAttribute#name()} value of
+     *                      an annotation placed on this Field, or {@code null} if none is provided.
      */
     public FieldLocation(final String packageName,
-                         final String className,
-                         final String memberName) {
+            final String className,
+            final String classXmlName,
+            final String memberName,
+            final String memberXmlName) {
 
         // Delegate
-        super(packageName, className);
+        super(packageName, className, classXmlName);
 
         // Check sanity
         Validate.notEmpty(memberName, "memberName");
 
         // Assign internal state
         this.memberName = memberName;
+        this.memberXmlName = memberXmlName;
     }
 
     /**
@@ -60,7 +72,23 @@ public class FieldLocation extends ClassLocation {
      * Never null or empty.
      */
     public String getMemberName() {
-        return memberName;
+        return memberXmlName == null ? memberName : memberXmlName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getAnnotationRenamedTo() {
+        return memberXmlName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPath() {
+        return super.getPath() + "#" + getMemberName();
     }
 
     /**
@@ -68,7 +96,12 @@ public class FieldLocation extends ClassLocation {
      */
     @Override
     public String toString() {
-        return super.toString() + "#" + memberName;
+
+        final String xmlOverriddenFrom = getAnnotationRenamedTo() == null
+                ? ""
+                : " (from: " + memberName + ")";
+
+        return super.toString() + "#" + getMemberName() + xmlOverriddenFrom;
     }
 
     /**

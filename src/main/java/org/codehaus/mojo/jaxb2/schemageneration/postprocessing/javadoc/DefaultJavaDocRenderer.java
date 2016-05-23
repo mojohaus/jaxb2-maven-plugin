@@ -42,22 +42,58 @@ public class DefaultJavaDocRenderer implements JavaDocRenderer {
 
         // Compile the XSD documentation string for this Node.
         final StringBuilder builder = new StringBuilder();
-        builder.append(squashNewlines(nonNullData.getComment())).append("\n");
+
+        // First, render the JavaDoc comment.
+        builder.append(renderJavaDocComment(nonNullData.getComment(), location)).append("\n");
+
+        // Then, render each JavaDoc tag.
         for (Map.Entry<String, String> current : nonNullData.getTag2ValueMap().entrySet()) {
 
-            final String tagDocumentation = "(" + current.getKey().trim() + "): " + squashNewlines(current.getValue());
-            builder.append(tagDocumentation);
+            final String tagXsdDoc = renderJavaDocTag(current.getKey(), current.getValue(), location);
+            if (tagXsdDoc != null && !tagXsdDoc.isEmpty()) {
+                builder.append(tagXsdDoc);
+            }
         }
 
         // All done.
         return builder.toString();
     }
 
-    //
-    // Private helpers
-    //
+    /**
+     * Override this method to yield another rendering of the javadoc comment.
+     *
+     * @param comment  The comment to render.
+     * @param location the SortableLocation where the JavaDocData was harvested. Never {@code null}.
+     * @return The XSD documentation for the supplied JavaDoc comment. A null or empty value will not be rendered.
+     */
+    protected String renderJavaDocComment(final String comment, final SortableLocation location) {
+        return harmonizeNewlines(comment);
+    }
 
-    private String squashNewlines(final String original) {
+    /**
+     * Override this method to yield another
+     *
+     * @param name     The name of a JavaDoc tag.
+     * @param value    The value of a JavaDoc tag.
+     * @param location the SortableLocation where the JavaDocData was harvested. Never {@code null}.
+     * @return The XSD documentation for the supplied JavaDoc tag.
+     */
+    protected String renderJavaDocTag(final String name, final String value, final SortableLocation location) {
+        final String nameKey = name != null ? name.trim() : "";
+        final String valueKey = value != null ? value.trim() : "";
+
+        // All Done.
+        return "(" + nameKey + "): " + harmonizeNewlines(valueKey);
+    }
+
+    /**
+     * Squashes newline characters into
+     *
+     * @param original the original string, potentially containing newline characters.
+     * @return A string where all newline characters are removed
+     */
+    protected String harmonizeNewlines(final String original) {
+
         final String toReturn = original.trim().replaceAll("[\r\n]+", "\n");
         return toReturn.endsWith("\n") ? toReturn : toReturn + "\n";
     }

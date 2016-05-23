@@ -19,6 +19,10 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
 /**
  * Common specification for a JavaDoc location which can be compared and sorted.
  * JavaDoc locations must be comparable and also convert-able to unique strings.
@@ -43,4 +47,15 @@ public interface SortableLocation extends Comparable<SortableLocation> {
      * @return the path of this SortableLocation. Never null.
      */
     String getPath();
+
+    /**
+     * Retrieves the value of the name attribute provided by a JAXB annotation, implying that
+     * the XSD type should use another name than the default.
+     *
+     * @return the value of the name attribute provided by a JAXB annotation relevant to this {@link SortableLocation}.
+     * @see XmlElement#name()
+     * @see XmlAttribute#name()
+     * @see XmlType#name()
+     */
+    String getAnnotationRenamedTo();
 }

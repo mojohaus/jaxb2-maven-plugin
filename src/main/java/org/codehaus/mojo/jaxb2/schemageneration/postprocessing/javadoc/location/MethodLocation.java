@@ -22,6 +22,9 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
 import com.thoughtworks.qdox.model.JavaParameter;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 /**
@@ -45,12 +48,25 @@ public class MethodLocation extends FieldLocation {
     // Internal state
     private String parameters = NO_PARAMETERS;
 
+    /**
+     * Creates a new MethodLocation with the supplied package, class and member names.
+     *
+     * @param packageName The name of the package for a class potentially holding JavaDoc. Cannot be {@code null}.
+     * @param className   The (simple) name of a class. Cannot be null or empty.
+     * @param memberName  The name of a (method or) field. Cannot be null or empty.
+     * @param classXmlName  The name given as the {@link XmlType#name()} value of an annotation placed on the Class,
+     *                      or {@code  null} if none is provided.
+     * @param memberXmlName The name given as the {@link XmlElement#name()} or {@link XmlAttribute#name()} value of
+     *                      an annotation placed on this Field, or {@code null} if none is provided.
+     */
     public MethodLocation(final String packageName,
-                          final String className,
-                          final String memberName,
-                          final List<JavaParameter> parameters) {
+            final String className,
+            final String classXmlName,
+            final String memberName,
+            final String memberXmlName,
+            final List<JavaParameter> parameters) {
 
-        super(packageName, className, memberName);
+        super(packageName, className, classXmlName, memberName, memberXmlName);
 
         // Check sanity
         Validate.notNull(parameters, "parameters");
@@ -64,6 +80,14 @@ public class MethodLocation extends FieldLocation {
             }
             this.parameters = "(" + builder.substring(0, builder.lastIndexOf(PARAMETER_SEPARATOR)) + ")";
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPath() {
+        return super.getPath() + parameters;
     }
 
     /**

@@ -311,7 +311,10 @@ public class XsdAnnotationProcessor implements NodeProcessor {
             // Do we have a FieldLocation corresponding to the supplied Node?
             for (FieldLocation current : locations) {
 
-                // Validate that the field and class names match the FieldLocation's corresponding values.
+                // Validate that the field and class names match the FieldLocation's corresponding values,
+                // minding that annotations such as XmlType, XmlElement and XmlAttribute may override the
+                // reflective Class, Field and Method names.
+                //
                 // Note that we cannot match package names here, as the generated XSD does not contain package
                 // information directly. Instead, we must get the Namespace for the generated Class, and compare
                 // it to the effective Namespace of the current Node.
@@ -319,7 +322,10 @@ public class XsdAnnotationProcessor implements NodeProcessor {
                 // However, this is a computational-expensive operation, implying we would rather
                 // do it at processing time when the number of nodes are (considerably?) reduced.
 
-                final String fieldName = current.getMemberName();
+                // Issue #25: Handle XML Type renaming.
+                final String fieldName = current.getAnnotationRenamedTo() == null
+                        ? current.getMemberName()
+                        : current.getAnnotationRenamedTo();
                 final String className = current.getClassName();
 
                 try {
@@ -346,7 +352,12 @@ public class XsdAnnotationProcessor implements NodeProcessor {
             for (ClassLocation current : classLocations) {
 
                 // TODO: Ensure that the namespace of the supplied aNode matches the expected namespace.
-                if (current.getClassName().equalsIgnoreCase(nodeClassName)) {
+
+                // Issue #25: Handle XML Type renaming.
+                final String effectiveClassName = current.getAnnotationRenamedTo() == null
+                        ? current.getClassName()
+                        : current.getAnnotationRenamedTo();
+                if (effectiveClassName.equalsIgnoreCase(nodeClassName)) {
                     return current;
                 }
             }

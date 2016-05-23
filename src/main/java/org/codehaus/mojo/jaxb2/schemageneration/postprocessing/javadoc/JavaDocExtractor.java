@@ -21,6 +21,7 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -34,6 +35,9 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -158,7 +162,9 @@ public class JavaDocExtractor {
 
                 // Add the class-level JavaDoc
                 final String simpleClassName = currentClass.getName();
-                final ClassLocation classLocation = new ClassLocation(packageName, simpleClassName);
+                final String classXmlName = getAnnotatedXmlNameFrom(XmlType.class, currentClass.getAnnotations());
+
+                final ClassLocation classLocation = new ClassLocation(packageName, simpleClassName, classXmlName);
                 addEntry(dataHolder, classLocation, currentClass);
 
                 if (log.isDebugEnabled()) {
@@ -167,11 +173,19 @@ public class JavaDocExtractor {
 
                 for (JavaField currentField : currentClass.getFields()) {
 
+                    // Find the XML name if provided within an annotation.
+                    String annotatedXmlName = getAnnotatedXmlNameFrom(XmlElement.class, currentField.getAnnotations());
+                    if (annotatedXmlName == null) {
+                        annotatedXmlName = getAnnotatedXmlNameFrom(XmlAttribute.class, currentField.getAnnotations());
+                    }
+
                     // Add the field-level JavaDoc
                     final FieldLocation fieldLocation = new FieldLocation(
                             packageName,
                             simpleClassName,
-                            currentField.getName());
+                            classXmlName,
+                            currentField.getName(),
+                            annotatedXmlName);
 
                     addEntry(dataHolder, fieldLocation, currentField);
 
@@ -182,10 +196,18 @@ public class JavaDocExtractor {
 
                 for (JavaMethod currentMethod : currentClass.getMethods()) {
 
+                    // Find the XML name if provided within an annotation.
+                    String annotatedXmlName = getAnnotatedXmlNameFrom(XmlElement.class, currentMethod.getAnnotations());
+                    if (annotatedXmlName == null) {
+                        annotatedXmlName = getAnnotatedXmlNameFrom(XmlAttribute.class, currentMethod.getAnnotations());
+                    }
+
                     // Add the method-level JavaDoc
                     final MethodLocation location = new MethodLocation(packageName,
                             simpleClassName,
+                            classXmlName,
                             currentMethod.getName(),
+                            annotatedXmlName,
                             currentMethod.getParameters());
                     addEntry(dataHolder, location, currentMethod);
 
@@ -200,13 +222,62 @@ public class JavaDocExtractor {
         return new ReadOnlySearchableDocumentation(dataHolder);
     }
 
+    /**
+     * Finds the value of the "name" attribute of first matching JavaAnnotation of the given type within the
+     * supplied annotations List. This is typically used for
+     *
+     * @param annotations The list of JavaAnnotations to filter from.
+     * @return The first matching JavaAnnotation of type annotationType  within the given annotations
+     * List, or {@code null} if none was found.
+     * @since 2.2
+     */
+    private static String getAnnotatedXmlNameFrom(
+            final Class<?> annotationType,
+            final List<JavaAnnotation> annotations) {
+
+        // QDox uses the fully qualified class name of the annotation for comparison.
+        // Extract it.
+        final String fullyQualifiedClassName = annotationType.getName();
+
+        JavaAnnotation annotation = null;
+        String toReturn = null;
+
+        if (annotations != null) {
+
+            for (JavaAnnotation current : annotations) {
+                if (current.getType().isA(fullyQualifiedClassName)) {
+                    annotation = current;
+                    break;
+                }
+            }
+
+            if (annotation != null) {
+
+                final Object nameValue = annotation.getNamedParameter("name");
+
+                if (nameValue != null && nameValue instanceof String) {
+
+                    toReturn = ((String) nameValue).trim();
+
+                    // Remove initial and trailing " chars, if present.
+                    if (toReturn.startsWith("\"") && toReturn.endsWith("\"")) {
+                        toReturn = (((String) nameValue).trim()).substring(1, toReturn.length() - 1);
+                    }
+                }
+            }
+        }
+
+        // All Done.
+        return toReturn;
+    }
+
     //
     // Private helpers
     //
 
     private void addEntry(final SortedMap<SortableLocation, JavaDocData> map,
-                          final SortableLocation key,
-                          final JavaAnnotatedElement value) {
+            final SortableLocation key,
+            final JavaAnnotatedElement value) {
 
         // Check sanity
         if (map.containsKey(key)) {
@@ -245,7 +316,7 @@ public class JavaDocExtractor {
     /**
      * Standard read-only SearchableDocumentation implementation.
      */
-    class ReadOnlySearchableDocumentation implements SearchableDocumentation {
+    private class ReadOnlySearchableDocumentation implements SearchableDocumentation {
 
         // Internal state
         private TreeMap<String, SortableLocation> keyMap;

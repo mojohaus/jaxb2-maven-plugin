@@ -106,7 +106,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     /**
      * {@inheritDoc}
      */
-    public Iterator<String> getPrefixes(String namespaceURI) {
+    public Iterator<String> getPrefixes(final String namespaceURI) {
         if (namespaceURI == null) {
             // Be compliant with the JAXB contract for NamespaceResolver.
             throw new IllegalArgumentException("Cannot acquire prefixes for null namespaceURI.");
@@ -146,6 +146,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
      * @param xmlFileStream A Reader connected to the XML file from which we should read namespace data.
      */
     private void initialize(final Reader xmlFileStream) {
+
         // Build a DOM model.
         final Document parsedDocument = XsdGeneratorHelper.parseXmlStream(xmlFileStream);
 
@@ -153,7 +154,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
         XsdGeneratorHelper.process(parsedDocument.getFirstChild(), true, new NamespaceAttributeNodeProcessor());
     }
 
-    class NamespaceAttributeNodeProcessor
+    private class NamespaceAttributeNodeProcessor
             implements NodeProcessor {
         /**
          * Defines if this visitor should process the provided node.
@@ -161,9 +162,11 @@ public class SimpleNamespaceResolver implements NamespaceContext {
          * @param aNode The DOM node to process.
          * @return <code>true</code> if the provided Node should be processed by this NodeProcessor.
          */
-        public boolean accept(Node aNode) {
-            if (aNode.getNamespaceURI() != null && XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(
-                    aNode.getNamespaceURI())) {
+        public boolean accept(final Node aNode) {
+
+            // Correct namespace?
+            if (aNode.getNamespaceURI() != null
+                    && XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(aNode.getNamespaceURI())) {
                 return true;
             }
 

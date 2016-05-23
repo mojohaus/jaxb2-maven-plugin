@@ -81,6 +81,15 @@ public class PackageLocation implements SortableLocation {
     }
 
     /**
+     * <strong>Note:</strong> Packages cannot be renamed from a JAXB annotation.
+     * {@inheritDoc}
+     */
+    @Override
+    public String getAnnotationRenamedTo() {
+        return null;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
