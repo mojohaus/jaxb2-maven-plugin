@@ -39,11 +39,31 @@ def validateNonexistentDirectory(final File aDirectory, final int index) {
 final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
 final File workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 
+/*
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+
+  <xs:complexType name="RenamedFoo">
+    <xs:sequence/>
+    <xs:attribute name="renamedBar" type="xs:string">
+      <xs:annotation>
+        <xs:documentation><![CDATA[This is a Bar.]]></xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
+ */
+
 // Act: Validate content
-def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
+def xml = new XmlSlurper().parse(new File(outputDir, 'schema1.xsd'));
+def renamedFooType = xml.complexType[0];
+def renamedBarAttribute = renamedFooType.attribute[0];
+
 assert 1 == xml.complexType.size();
-assert 'RenamedFoo' == xml.complexType[0].@name.text();
-assert 'renamedBar' == xml.complexType[0].@name.text();
+assert 'RenamedFoo' == renamedFooType.@name.text();
+assert 'renamedBar' == renamedBarAttribute.@name.text();
+assert 'xs:string' == renamedBarAttribute.@type.text();
+assert 'This is a Bar.' == renamedBarAttribute.annotation[0].documentation[0].text();
 
 // Assert
 println "\nValidating work directory content"

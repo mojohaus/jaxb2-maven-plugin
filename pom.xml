@@ -168,7 +168,8 @@
             <artifactId>jaxb-xjc</artifactId>
             <exclusions>
                 <!--
-                    Classes from tools.jar must be loaded by the
+                    Classes from tools.jar must be loaded by the plugin to enable schemagen.
+                    However, this hampers JDK 9 adoption.
                 -->
                 <exclusion>
                     <groupId>com.sun</groupId>
@@ -180,6 +181,10 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-jxc</artifactId>
             <exclusions>
+                <!--
+                    Classes from tools.jar must be loaded by the plugin to enable schemagen.
+                    However, this hampers JDK 9 adoption.
+                -->
                 <exclusion>
                     <groupId>com.sun</groupId>
                     <artifactId>tools</artifactId>

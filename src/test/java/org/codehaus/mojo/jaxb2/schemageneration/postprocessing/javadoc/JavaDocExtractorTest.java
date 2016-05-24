@@ -95,7 +95,6 @@ public class JavaDocExtractorTest {
         final SearchableDocumentation result = unitUnderTest.process();
 
         // Assert
-        final SortedMap<SortableLocation, JavaDocData> loc2JavaDocDataMap = result.getAll();
         final SortedMap<String, SortableLocation> path2locMap = new TreeMap<String, SortableLocation>();
 
         for(String currentPath : result.getPaths()) {
