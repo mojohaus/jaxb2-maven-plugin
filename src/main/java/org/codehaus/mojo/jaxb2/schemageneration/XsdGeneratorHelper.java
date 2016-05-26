@@ -58,6 +58,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -544,8 +545,13 @@ public final class XsdGeneratorHelper {
                 FACTORY = TransformerFactory.newInstance();
 
                 // Harmonize XML formatting
-                FACTORY.setAttribute("indent-number", 2);
-
+                for(String currentAttributeName : Arrays.asList("indent-number", OutputKeys.INDENT)) {
+                    try {
+                        FACTORY.setAttribute(currentAttributeName, 2);
+                    } catch(IllegalArgumentException ex) {
+                        // Ignore this.
+                    }
+                }
             } catch (Throwable exception) {
 
                 // This should really not happen... but it seems to happen in some test cases.
