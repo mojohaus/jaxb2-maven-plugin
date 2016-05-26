@@ -97,7 +97,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         tmp.add(new PatternFileFilter(Arrays.asList(STANDARD_EXCLUDE_SUFFIXES), true));
 
         // Make STANDARD_EXCLUDE_FILTERS be unmodifiable.
-        STANDARD_EXCLUDE_FILTERS = (List<Filter<File>>) Collections.unmodifiableList(tmp);
+        STANDARD_EXCLUDE_FILTERS = Collections.unmodifiableList(tmp);
     }
 
     /**
@@ -268,6 +268,20 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             }
         } else if (isInfoEnabled) {
             log.info("No changes detected in schema or binding files - skipping JAXB generation.");
+        }
+
+        // 4) If the output directories exist, add them to the MavenProject's source directories
+        if(getOutputDirectory().exists() && getOutputDirectory().isDirectory()) {
+
+            final String canonicalPathToOutputDirectory = FileSystemUtilities.getCanonicalPath(getOutputDirectory());
+
+            if(log.isDebugEnabled()) {
+                log.debug("Adding existing JAXB outputDirectory [" + canonicalPathToOutputDirectory
+                        + "] to Maven's sources.");
+            }
+
+            // Add the output Directory.
+            getProject().addCompileSourceRoot(canonicalPathToOutputDirectory);
         }
     }
 
@@ -457,8 +471,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             FileSystemUtilities.createDirectory(generatedMetaInfDirectory, false);
             if (getLog().isDebugEnabled()) {
                 getLog().debug("Created episode directory ["
-                        + FileSystemUtilities.getCanonicalPath(generatedMetaInfDirectory) + "]: " +
-                        generatedMetaInfDirectory.exists());
+                        + FileSystemUtilities.getCanonicalPath(generatedMetaInfDirectory) + "]: "
+                        + generatedMetaInfDirectory.exists());
             }
         }
 
