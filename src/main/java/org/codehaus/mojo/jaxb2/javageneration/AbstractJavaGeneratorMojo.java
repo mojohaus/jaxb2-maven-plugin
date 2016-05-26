@@ -44,6 +44,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -580,7 +581,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
             //         current.getAbsolutePath(), getProject().getBasedir());
 
             // Each XJB must be given as a separate argument.
-            builder.withNamedArgument("-b", current.getAbsolutePath());
+            builder.withPreCompiledArguments(Arrays.asList("-b", current.getAbsolutePath()));
         }
 
         final List<URL> sourceXSDs = getSources();
