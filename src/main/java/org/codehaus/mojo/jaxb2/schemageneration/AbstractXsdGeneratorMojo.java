@@ -379,7 +379,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                             null);
                 } else if (SCHEMAGEN_JAXB_ERRORS == result) {
 
-                    // TODO: Collect the error message(s) which was emitted by SchemaGen.
+                    // TODO: Collect the error message(s) which was emitted by SchemaGen. How can this be done?
                     throw new MojoExecutionException("JAXB errors arose while SchemaGen compiled sources to XML.");
                 }
 
@@ -564,8 +564,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     //
 
     private String[] getSchemaGenArguments(final String classPath,
-                                           final String episodeFileNameOrNull,
-                                           final List<URL> sources)
+            final String episodeFileNameOrNull,
+            final List<URL> sources)
             throws MojoExecutionException {
 
         final ArgumentBuilder builder = new ArgumentBuilder();
@@ -851,10 +851,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     }
 
     private void printSchemaGenCommandAndThrowException(final String projectBasedirPath,
-                                                        final List<URL> sources,
-                                                        final String[] schemaGenArguments,
-                                                        final int result,
-                                                        final Throwable cause) throws MojoExecutionException {
+            final List<URL> sources,
+            final String[] schemaGenArguments,
+            final int result,
+            final Throwable cause) throws MojoExecutionException {
 
         final StringBuilder errorMsgBuilder = new StringBuilder();
         errorMsgBuilder.append("\n+=================== [SchemaGenerator Error '"
@@ -890,4 +890,19 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             throw new MojoExecutionException(msg);
         }
     }
+
+    /*
+    private static ClassLoader getPrivilegedClassLoader(final Class aClass) {
+        if (System.getSecurityManager() == null) {
+            return aClass.getClassLoader();
+        } else {
+            return java.security.AccessController.doPrivileged(
+                    new java.security.PrivilegedAction<ClassLoader>() {
+                        public ClassLoader run() {
+                            return aClass.getClassLoader();
+                        }
+                    });
+        }
+    }
+    */
 }

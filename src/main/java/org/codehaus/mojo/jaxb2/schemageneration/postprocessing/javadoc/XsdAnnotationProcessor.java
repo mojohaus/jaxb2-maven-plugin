@@ -27,7 +27,6 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.xml.XMLConstants;
@@ -102,26 +101,7 @@ import java.util.SortedMap;
  */
 public class XsdAnnotationProcessor implements NodeProcessor {
 
-    /**
-     * The namespace schema prefix for the URI {@code http://www.w3.org/2001/XMLSchema}
-     * (i.e. {@code XMLConstants.W3C_XML_SCHEMA_NS_URI}).
-     *
-     * @see javax.xml.XMLConstants#W3C_XML_SCHEMA_NS_URI
-     */
-    public static final String XSD_SCHEMA_NAMESPACE_PREFIX = "xs";
-
-    /**
-     * The name of the annotation element.
-     */
-    public static final String ANNOTATION_ELEMENT_NAME = "annotation";
-
-    /**
-     * The name of the documentation element.
-     */
-    public static final String DOCUMENTATION_ELEMENT_NAME = "documentation";
-
     // Internal state
-    private static final List<String> FIELD_METHOD_ELEMENT_NAMES = Arrays.<String>asList("element", "attribute");
     private SortedMap<ClassLocation, JavaDocData> classJavaDocs;
     private SortedMap<FieldLocation, JavaDocData> fieldJavaDocs;
     private SortedMap<MethodLocation, JavaDocData> methodJavaDocs;
@@ -153,8 +133,8 @@ public class XsdAnnotationProcessor implements NodeProcessor {
     @Override
     public boolean accept(final Node aNode) {
 
-        // Only deal with Element nodes.
-        if (aNode.getNodeType() != Node.ELEMENT_NODE || getName(aNode) == null) {
+        // Only deal with Element nodes with "name" attributes.
+        if(!DomHelper.isNamedElement(aNode)) {
             return false;
         }
 
@@ -179,11 +159,11 @@ public class XsdAnnotationProcessor implements NodeProcessor {
         // Only process nodes corresponding to Types we have any JavaDoc for.
         // TODO: How should we handle PackageLocations and package documentation.
         boolean toReturn = false;
-        if (getMethodLocation(aNode, methodJavaDocs.keySet()) != null) {
+        if (DomHelper.getMethodLocation(aNode, methodJavaDocs.keySet()) != null) {
             toReturn = true;
-        } else if (getFieldLocation(aNode, fieldJavaDocs.keySet()) != null) {
+        } else if (DomHelper.getFieldLocation(aNode, fieldJavaDocs.keySet()) != null) {
             toReturn = true;
-        } else if (getClassLocation(aNode, classJavaDocs.keySet()) != null) {
+        } else if (DomHelper.getClassLocation(aNode, classJavaDocs.keySet()) != null) {
             toReturn = true;
         }
 
@@ -196,222 +176,6 @@ public class XsdAnnotationProcessor implements NodeProcessor {
      */
     @Override
     public void process(final Node aNode) {
-
-        JavaDocData javaDocData = null;
-        SortableLocation location = null;
-
-        // Insert the documentation annotation into the current Node.
-        final ClassLocation classLocation = getClassLocation(aNode, classJavaDocs.keySet());
-        if (classLocation != null) {
-            javaDocData = classJavaDocs.get(classLocation);
-            location = classLocation;
-        } else {
-
-            final FieldLocation fieldLocation = getFieldLocation(aNode, fieldJavaDocs.keySet());
-            if (fieldLocation != null) {
-                javaDocData = fieldJavaDocs.get(fieldLocation);
-                location = fieldLocation;
-            } else {
-
-                final MethodLocation methodLocation = getMethodLocation(aNode, methodJavaDocs.keySet());
-                if (methodLocation != null) {
-                    javaDocData = methodJavaDocs.get(methodLocation);
-                    location = methodLocation;
-                }
-            }
-        }
-
-        // We should have a JavaDocData here.
-        if (javaDocData == null) {
-            throw new IllegalStateException("Could not find JavaDocData for XSD node [" + getName(aNode)
-                    + "] with XPath [" + getXPathFor(aNode) + "]");
-        }
-
-        //
-        // 1. Append the JavaDoc data Nodes, on the form below
-        // 2. Append the JavaDoc data Nodes only if the renderer yields a non-null/non-empty javadoc.
-        //
-        /*
-        <xs:annotation>
-            <xs:documentation>(JavaDoc here, within a CDATA section)</xs:documentation>
-        </xs:annotation>
-
-        where the "xs" namespace prefix maps to "http://www.w3.org/2001/XMLSchema"
-         */
-        final String processedJavaDoc = renderer.render(javaDocData, location).trim();
-        if (!processedJavaDoc.isEmpty()) {
-
-            final String standardXsPrefix = "xs";
-            final Document doc = aNode.getOwnerDocument();
-            final Element annotation = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, ANNOTATION_ELEMENT_NAME);
-            final Element docElement = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, DOCUMENTATION_ELEMENT_NAME);
-            final CDATASection xsdDocumentation = doc.createCDATASection(renderer.render(javaDocData, location).trim());
-
-            annotation.setPrefix(standardXsPrefix);
-            docElement.setPrefix(standardXsPrefix);
-
-            annotation.appendChild(docElement);
-            final Node firstChildOfCurrentNode = aNode.getFirstChild();
-            if (firstChildOfCurrentNode == null) {
-                aNode.appendChild(annotation);
-            } else {
-                aNode.insertBefore(annotation, firstChildOfCurrentNode);
-            }
-
-            docElement.appendChild(xsdDocumentation);
-        }
-    }
-
-    //
-    // Private helpers
-    //
-
-    private static MethodLocation getMethodLocation(final Node aNode, final Set<MethodLocation> methodLocations) {
-
-        MethodLocation toReturn = null;
-
-        if (aNode != null && FIELD_METHOD_ELEMENT_NAMES.contains(aNode.getLocalName().toLowerCase())) {
-
-            final MethodLocation validLocation = getFieldOrMethodLocationIfValid(aNode,
-                    getContainingClassOrNull(aNode),
-                    methodLocations);
-
-            // The MethodLocation should represent a normal getter; no arguments should be present.
-            if (validLocation != null
-                    && MethodLocation.NO_PARAMETERS.equalsIgnoreCase(validLocation.getParametersAsString())) {
-                toReturn = validLocation;
-            }
-        }
-
-        // All done.
-        return toReturn;
-    }
-
-    private static FieldLocation getFieldLocation(final Node aNode, final Set<FieldLocation> fieldLocations) {
-
-        FieldLocation toReturn = null;
-
-        if (aNode != null && FIELD_METHOD_ELEMENT_NAMES.contains(aNode.getLocalName().toLowerCase())) {
-            toReturn = getFieldOrMethodLocationIfValid(aNode, getContainingClassOrNull(aNode), fieldLocations);
-        }
-
-        // All done.
-        return toReturn;
-    }
-
-    private static <T extends FieldLocation> T getFieldOrMethodLocationIfValid(
-            final Node aNode,
-            final Node containingClassNode,
-            final Set<? extends FieldLocation> locations) {
-
-        T toReturn = null;
-
-        if (containingClassNode != null) {
-
-            // Do we have a FieldLocation corresponding to the supplied Node?
-            for (FieldLocation current : locations) {
-
-                // Validate that the field and class names match the FieldLocation's corresponding values,
-                // minding that annotations such as XmlType, XmlElement and XmlAttribute may override the
-                // reflective Class, Field and Method names.
-                //
-                // Note that we cannot match package names here, as the generated XSD does not contain package
-                // information directly. Instead, we must get the Namespace for the generated Class, and compare
-                // it to the effective Namespace of the current Node.
-                //
-                // However, this is a computational-expensive operation, implying we would rather
-                // do it at processing time when the number of nodes are (considerably?) reduced.
-
-                // Issue #25: Handle XML Type renaming.
-                final String fieldName = current.getAnnotationRenamedTo() == null
-                        ? current.getMemberName()
-                        : current.getAnnotationRenamedTo();
-                final String className = current.getClassName();
-
-                try {
-                    if (fieldName.equalsIgnoreCase(getName(aNode))
-                            && className.equalsIgnoreCase(getName(containingClassNode))) {
-                        toReturn = (T) current;
-                    }
-                } catch (Exception e) {
-                    throw new IllegalStateException("Could not acquire FieldLocation for fieldName ["
-                            + fieldName + "] and className [" + className + "]", e);
-                }
-            }
-        }
-
-        // All done.
-        return toReturn;
-    }
-
-    private static ClassLocation getClassLocation(final Node aNode, final Set<ClassLocation> classLocations) {
-
-        if (aNode != null && "complexType".equalsIgnoreCase(aNode.getLocalName())) {
-
-            final String nodeClassName = getName(aNode);
-            for (ClassLocation current : classLocations) {
-
-                // TODO: Ensure that the namespace of the supplied aNode matches the expected namespace.
-
-                // Issue #25: Handle XML Type renaming.
-                final String effectiveClassName = current.getAnnotationRenamedTo() == null
-                        ? current.getClassName()
-                        : current.getAnnotationRenamedTo();
-                if (effectiveClassName.equalsIgnoreCase(nodeClassName)) {
-                    return current;
-                }
-            }
-        }
-
-        // Nothing found
-        return null;
-    }
-
-    private static String getName(final Node aNode) {
-
-        final NamedNodeMap attributes = aNode.getAttributes();
-        if (attributes != null) {
-
-            final Node nameNode = attributes.getNamedItem("name");
-            if (nameNode != null) {
-                return nameNode.getNodeValue().trim();
-            }
-        }
-
-        // No name found
-        return null;
-    }
-
-    private static Node getContainingClassOrNull(final Node aNode) {
-
-        for (Node current = aNode.getParentNode(); current != null; current = current.getParentNode()) {
-
-            final String localName = current.getLocalName();
-            if ("complexType".equalsIgnoreCase(localName)) {
-                return current;
-            }
-        }
-
-        // No parent Node found.
-        return null;
-    }
-
-    private static String getXPathFor(final Node aNode) {
-
-        List<String> nodeNameList = new ArrayList<String>();
-
-        for (Node current = aNode; current != null; current = current.getParentNode()) {
-            nodeNameList.add(current.getNodeName() + "[@name='" + getName(current) + "]");
-        }
-
-        StringBuilder builder = new StringBuilder();
-        for (ListIterator<String> it = nodeNameList.listIterator(nodeNameList.size()); it.hasPrevious(); ) {
-            builder.append(it.previous());
-            if (it.hasPrevious()) {
-                builder.append("/");
-            }
-        }
-
-        return builder.toString();
+        DomHelper.insertXmlDocumentationAnnotationsFor(aNode, classJavaDocs, fieldJavaDocs, methodJavaDocs, renderer);
     }
 }

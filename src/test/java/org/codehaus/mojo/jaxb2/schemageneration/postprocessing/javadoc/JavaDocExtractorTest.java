@@ -14,9 +14,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
 
 /**
@@ -27,6 +28,7 @@ public class JavaDocExtractorTest {
     // Shared state
     private File javaDocBasicDir;
     private File javaDocAnnotatedDir;
+    private File javaDocEnumsDir;
     private BufferingLog log;
 
     @Before
@@ -46,6 +48,12 @@ public class JavaDocExtractorTest {
                 .getResource("testdata/schemageneration/javadoc/annotated");
         this.javaDocAnnotatedDir = new File(annotatedDirURL.getPath());
         Assert.assertTrue(javaDocAnnotatedDir.exists() && javaDocAnnotatedDir.isDirectory());
+
+        final URL enumsDirURL = getClass()
+                .getClassLoader()
+                .getResource("testdata/schemageneration/javadoc/enums");
+        this.javaDocEnumsDir = new File(enumsDirURL.getPath());
+        Assert.assertTrue(javaDocEnumsDir.exists() && javaDocEnumsDir.isDirectory());
     }
 
     @Test
@@ -97,7 +105,7 @@ public class JavaDocExtractorTest {
         // Assert
         final SortedMap<String, SortableLocation> path2locMap = new TreeMap<String, SortableLocation>();
 
-        for(String currentPath : result.getPaths()) {
+        for (String currentPath : result.getPaths()) {
             path2locMap.put(currentPath, result.getLocation(currentPath));
         }
 
@@ -152,6 +160,50 @@ public class JavaDocExtractorTest {
                 result.getJavaDoc(stringFieldLocation2.getPath()).getComment());
         Assert.assertEquals(JavaDocData.NO_COMMENT,
                 result.getJavaDoc(integerFieldLocation2.getPath()).getComment());
+    }
+
+    @Test
+    public void validateExtractEnumJavaDocs() {
+
+        // Assemble
+        final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
+        final List<File> sourceDir = Collections.singletonList(javaDocEnumsDir);
+        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDir, null, log);
+
+        // Act
+        unitUnderTest.addSourceFiles(sourceFiles);
+        final SearchableDocumentation result = unitUnderTest.process();
+
+        final SortedMap<SortableLocation, JavaDocData> sortableLocations2JavaDocDataMap = result.getAll();
+        final SortedMap<String, SortableLocation> path2LocationMap = new TreeMap<String, SortableLocation>();
+
+        for (Map.Entry<SortableLocation, JavaDocData> current : sortableLocations2JavaDocDataMap.entrySet()) {
+            path2LocationMap.put(current.getKey().getPath(), current.getKey());
+        }
+
+        // Assert
+        Assert.assertEquals(9, sortableLocations2JavaDocDataMap.size());
+
+        final List<String> paths = Arrays.asList("enums",
+                "enums.FoodPreference",
+                "enums.FoodPreference#LACTO_VEGETARIAN",
+                "enums.FoodPreference#NONE",
+                "enums.FoodPreference#VEGAN",
+                "enums.FoodPreference#isMeatEater()",
+                "enums.FoodPreference#isMilkDrinker()",
+                "enums.FoodPreference#meatEater",
+                "enums.FoodPreference#milkDrinker");
+        for (String current : paths) {
+            Assert.assertTrue(path2LocationMap.keySet().contains(current));
+        }
+
+        final SortableLocation enumClassLocation = path2LocationMap.get("enums.FoodPreference");
+        final JavaDocData enumClassJavaDocData = sortableLocations2JavaDocDataMap.get(enumClassLocation);
+        Assert.assertEquals("Simple enumeration example defining some Food preferences.",
+                enumClassJavaDocData.getComment());
+
+        Assert.assertEquals("Vegan who will neither eat meats nor drink milk.",
+                sortableLocations2JavaDocDataMap.get(path2LocationMap.get("enums.FoodPreference#VEGAN")).getComment());
     }
 
     @Test
