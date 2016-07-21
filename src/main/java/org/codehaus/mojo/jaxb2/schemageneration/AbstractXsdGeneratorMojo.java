@@ -406,9 +406,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 //
                 // The XSD post-processing should be applied in the following order:
                 //
-                // 1. [XsdAnnotationProcessor]:         Inject JavaDoc annotations.
-                // 2. [ChangeNamespacePrefixProcessor]: Change namespace prefixes within XSDs.
-                // 3. [ChangeFilenameProcessor]:        Change the fileNames of XSDs.
+                // 1. [XsdAnnotationProcessor]:            Inject JavaDoc annotations for Classes.
+                // 2. [XsdEnumerationAnnotationProcessor]: Inject JavaDoc annotations for Enums.
+                // 3. [ChangeNamespacePrefixProcessor]:    Change namespace prefixes within XSDs.
+                // 4. [ChangeFilenameProcessor]:           Change the fileNames of XSDs.
                 //
 
                 final boolean performPostProcessing = createJavaDocAnnotations || transformSchemas != null;
@@ -890,19 +891,4 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             throw new MojoExecutionException(msg);
         }
     }
-
-    /*
-    private static ClassLoader getPrivilegedClassLoader(final Class aClass) {
-        if (System.getSecurityManager() == null) {
-            return aClass.getClassLoader();
-        } else {
-            return java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedAction<ClassLoader>() {
-                        public ClassLoader run() {
-                            return aClass.getClassLoader();
-                        }
-                    });
-        }
-    }
-    */
 }

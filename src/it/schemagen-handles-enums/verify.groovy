@@ -79,5 +79,4 @@ println "====================================="
 
 validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
 validateExistingFile(new File(outputDir, 'META-INF/sun-jaxb.episode'), 2);
-validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3);
 validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4);

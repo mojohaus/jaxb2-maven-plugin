@@ -25,6 +25,7 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRenderer;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SearchableDocumentation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdAnnotationProcessor;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdEnumerationAnnotationProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeFilenameProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
@@ -192,8 +193,8 @@ public final class XsdGeneratorHelper {
     }
 
     /**
-     * Inserts XML documentation annotations into all generated XSD files found within the
-     * supplied outputDir.
+     * Inserts XML documentation annotations into all generated XSD files found
+     * within the supplied outputDir.
      *
      * @param log       A Maven Log.
      * @param outputDir The outputDir, where generated XSD files are found.
@@ -219,8 +220,10 @@ public final class XsdGeneratorHelper {
 
         if (foundFiles.size() > 0) {
 
-            // Create the processor.
-            final XsdAnnotationProcessor processor = new XsdAnnotationProcessor(docs, renderer);
+            // Create the processors.
+            final XsdAnnotationProcessor classProcessor = new XsdAnnotationProcessor(docs, renderer);
+            final XsdEnumerationAnnotationProcessor enumProcessor
+                    = new XsdEnumerationAnnotationProcessor(docs, renderer);
 
             for (File current : foundFiles) {
 
@@ -228,7 +231,7 @@ public final class XsdGeneratorHelper {
                 final Document generatedSchemaFileDocument = parseXmlToDocument(current);
 
                 // Replace all namespace prefixes within the provided document.
-                process(generatedSchemaFileDocument.getFirstChild(), true, processor);
+                process(generatedSchemaFileDocument.getFirstChild(), true, classProcessor);
                 processedXSDs++;
 
                 // Overwrite the vanilla file.
@@ -545,10 +548,10 @@ public final class XsdGeneratorHelper {
                 FACTORY = TransformerFactory.newInstance();
 
                 // Harmonize XML formatting
-                for(String currentAttributeName : Arrays.asList("indent-number", OutputKeys.INDENT)) {
+                for (String currentAttributeName : Arrays.asList("indent-number", OutputKeys.INDENT)) {
                     try {
                         FACTORY.setAttribute(currentAttributeName, 2);
-                    } catch(IllegalArgumentException ex) {
+                    } catch (IllegalArgumentException ex) {
                         // Ignore this.
                     }
                 }

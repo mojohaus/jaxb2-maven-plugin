@@ -2,6 +2,9 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.NoAuthorJavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdEnumerationAnnotationProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
@@ -12,6 +15,7 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
 
 import javax.xml.transform.TransformerFactory;
 import java.io.File;
@@ -162,6 +166,27 @@ public class XsdGeneratorHelperTest {
         final String originalXml = getXmlDocumentSample(oldPrefix);
         final String changedXml = getXmlDocumentSample(newPrefix);
         final NodeProcessor changeNamespacePrefixProcessor = new ChangeNamespacePrefixProcessor(oldPrefix, newPrefix);
+
+        // Act
+        final Document processedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(originalXml));
+        XsdGeneratorHelper.process(processedDocument.getFirstChild(), true, changeNamespacePrefixProcessor);
+
+        // Assert
+        final Document expectedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(changedXml));
+        final Diff diff = new Diff(expectedDocument, processedDocument, null, new ElementNameAndAttributeQualifier());
+        diff.overrideElementQualifier(new ElementNameAndAttributeQualifier());
+
+        XMLAssert.assertXMLEqual(processedDocument, expectedDocument);
+    }
+
+    @Test
+    public void validateProcessingXSDsWithEnumerations() {
+
+        // Assemble
+        final String parentPath = "testdata/schemageneration/javadoc/enums/";
+        final String rawEnumSchema = XmlTestUtils.readFully(parentPath + "rawEnumSchema.xsd");
+        final String processedEnumSchema = XmlTestUtils.readFully(parentPath + "processedEnumSchema.xsd");
+        final NodeProcessor enumProcessor = new XsdEnumerationAnnotationProcessor(docs, new NoAuthorJavaDocRenderer());
 
         // Act
         final Document processedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(originalXml));
