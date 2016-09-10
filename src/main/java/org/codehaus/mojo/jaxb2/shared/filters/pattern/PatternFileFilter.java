@@ -53,10 +53,10 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      *                                      candidates that match at least one of the supplied patterns.
      */
     public PatternFileFilter(final boolean processNullValues,
-                             final String patternPrefix,
-                             final List<String> patterns,
-                             final StringConverter<File> converter,
-                             final boolean acceptCandidateOnPatternMatch) {
+            final String patternPrefix,
+            final List<String> patterns,
+            final StringConverter<File> converter,
+            final boolean acceptCandidateOnPatternMatch) {
         super();
 
         // Assign internal state
@@ -121,7 +121,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      * @see PatternFileFilter
      */
     public static List<Filter<File>> createExcludeFilterList(final Log log,
-                                                             final String... patterns) {
+            final String... patterns) {
         return createFilterList(log, false, patterns);
     }
 
@@ -136,7 +136,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      * @see PatternFileFilter
      */
     public static List<Filter<File>> createIncludeFilterList(final Log log,
-                                                             final String... patterns) {
+            final String... patterns) {
         return createFilterList(log, true, patterns);
     }
 
@@ -145,8 +145,8 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
     //
 
     private static List<Filter<File>> createFilterList(final Log log,
-                                                       final boolean includeOperation,
-                                                       final String... patterns) {
+            final boolean includeOperation,
+            final String... patterns) {
 
         // Check sanity
         Validate.notNull(patterns, "patterns");

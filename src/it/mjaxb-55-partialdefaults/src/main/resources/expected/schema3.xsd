@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://yet/another/namespace" xmlns:some="http://some/namespace" targetNamespace="http://another/namespace" version="1.0">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:some="http://some/namespace"
+           targetNamespace="http://another/namespace" version="1.0">
 
   <xs:import namespace="http://some/namespace" schemaLocation="some_schema.xsd"/>
 

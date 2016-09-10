@@ -106,9 +106,10 @@ public class ClassLocation extends PackageLocation {
     @Override
     public String toString() {
 
-        final String originalClassName = getAnnotationRenamedTo() == null
-                ? ""
-                : " (from: " + className + ")";
-        return super.toString() + "." + getClassName() + originalClassName;
+        final String xmlOverriddenFrom = classXmlName != null && !className.equals(classXmlName)
+                ? " (from: " + className + ")"
+                : "";
+
+        return super.toString() + "." + getClassName() + xmlOverriddenFrom;
     }
 }

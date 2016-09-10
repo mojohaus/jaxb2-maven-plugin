@@ -4,5 +4,3 @@
         elementFormDefault = XmlNsForm.QUALIFIED)
 package org.domain;
 
-import javax.xml.bind.annotation.XmlNsForm;
-import javax.xml.bind.annotation.XmlSchema;

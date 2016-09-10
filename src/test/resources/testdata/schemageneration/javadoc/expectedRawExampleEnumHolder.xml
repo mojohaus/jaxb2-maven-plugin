@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:exampleEnumHolder xmlns:ns2="http://some/namespace">
+    <coins>
+        <coin>1</coin>
+        <coin>5</coin>
+        <coin>10</coin>
+        <coin>25</coin>
+    </coins>
+    <foodPreferences>
+        <preference>NONE</preference>
+        <preference>LACTO_VEGETARIAN</preference>
+        <preference>VEGAN</preference>
+    </foodPreferences>
+</ns2:exampleEnumHolder>

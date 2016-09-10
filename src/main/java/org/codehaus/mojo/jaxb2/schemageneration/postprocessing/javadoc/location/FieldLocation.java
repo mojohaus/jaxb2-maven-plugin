@@ -97,9 +97,9 @@ public class FieldLocation extends ClassLocation {
     @Override
     public String toString() {
 
-        final String xmlOverriddenFrom = getAnnotationRenamedTo() == null
-                ? ""
-                : " (from: " + memberName + ")";
+        final String xmlOverriddenFrom = memberXmlName != null && !memberName.equals(memberXmlName)
+                ? " (from: " + memberName + ")"
+                : "";
 
         return super.toString() + "#" + getMemberName() + xmlOverriddenFrom;
     }

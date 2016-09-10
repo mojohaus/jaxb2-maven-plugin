@@ -1,16 +1,14 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.AbstractSourceCodeAwareNodeProcessingTest;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.DefaultJavaDocRenderer;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRenderer;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdAnnotationProcessor;
 import org.junit.Test;
+import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,19 +16,20 @@ import java.util.List;
  */
 public class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareNodeProcessingTest {
 
-    // Shared state
-    private JavaDocRenderer renderer = new DefaultJavaDocRenderer();
 
     @Test
-    public void createXsdForEnums() throws Exception {
+    public void validateGeneratedXmlForEnums() throws Exception {
 
         // Assemble
+        final String expected = XmlTestUtils
+                .readFully("testdata/schemageneration/javadoc/expectedRawExampleEnumHolder.xml");
         final ExampleEnumHolder exampleEnumHolder = new ExampleEnumHolder();
         exampleEnumHolder.getCoins().addAll(Arrays.asList(AmericanCoin.values()));
         exampleEnumHolder.getFoodPreferences().addAll(Arrays.asList(FoodPreference.values()));
 
         final StringWriter out = new StringWriter();
 
+        // Act
         final JAXBContext context = JAXBContext.newInstance(FoodPreference.class, ExampleEnumHolder.class);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -38,41 +37,22 @@ public class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareN
         marshaller.marshal(exampleEnumHolder, out);
         out.close();
 
-        System.out.println("Got: " + out.toString());
-
-        // Act
-
         // Assert
-    }
-
-    @Test
-    public void validateProcessingNodesInVanillaXSD() throws Exception {
-
-        // Assemble
-        /*
-        final String path = "testdata/schemageneration/javadoc/expectedSemiDocumentedClass.xml";
-        final String expected = readFully(path);
-        final Document document = namespace2DocumentMap.get(SomewhatNamedPerson.NAMESPACE);
-        final Node rootNode = document.getFirstChild();
-        */
-
-        final XsdAnnotationProcessor unitUnderTest = new XsdAnnotationProcessor(docs, renderer);
-
-        // Act
-        // process(rootNode, true, unitUnderTest);
-
-        // Assert
-        // final String processed = printDocument(document);
-        // System.out.println("Got: " + processed);
-
-        // Assert.assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
+        XmlTestUtils.compareXmlIgnoringWhitespace(expected, out.toString());
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
-        return Collections.<Class<?>>singletonList(FoodPreference.class);
+
+        final List<Class<?>> toReturn = new ArrayList<Class<?>>();
+        for (Class<?> current : Arrays.asList(FoodPreference.class, ExampleEnumHolder.class, AmericanCoin.class)) {
+            toReturn.add(current);
+        }
+
+        return toReturn;
     }
 }

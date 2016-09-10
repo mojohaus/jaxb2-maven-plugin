@@ -1,6 +1,4 @@
-package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
-
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
+package enums;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -13,25 +11,29 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-@XmlType(namespace = SomewhatNamedPerson.NAMESPACE)
+@XmlType(namespace = "http://gnat.west.se/foods")
 @XmlEnum(Integer.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 public enum AmericanCoin {
 
     /**
-     * A Penny, worth 1 cent.
+     * The penny is worth of 1 cent.
      */
     @XmlEnumValue("1") PENNY(1),
 
     /**
-     * A Nickel, worth 5 cents.
+     * The nickel is worth of 5 cents.
      */
     @XmlEnumValue("5") NICKEL(5),
 
     /**
-     * A Nickel, worth 5 cents.
+     * The dime is worth of 10 cents.
      */
     @XmlEnumValue("10") DIME(10),
+
+    /**
+     * The quarter is worth of 25 cents.
+     */
     @XmlEnumValue("25") QUARTER(25);
 
     // Internal state

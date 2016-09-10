@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://gnat.west.se/foods" targetNamespace="http://gnat.west.se/foods" version="1.0">
+<xs:schema xmlns:tns="http://gnat.west.se/foods" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://gnat.west.se/foods" version="1.0">
 
     <xs:element name="foodPreferences" type="tns:foodPreferences"/>
 
     <xs:complexType name="foodPreferences">
-        <xs:annotation>
-            <xs:documentation><![CDATA[Trivial transport object type for enumerations.
-
-(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
-        </xs:annotation>
         <xs:sequence>
             <xs:element minOccurs="0" name="preferences">
                 <xs:complexType>
@@ -29,28 +24,52 @@
 
     <xs:simpleType name="foodPreference">
         <xs:annotation>
-            <xs:documentation><![CDATA[Simple enumeration example defining some Food preferences.
-
-(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+            <xs:documentation><![CDATA[Simple enumeration example defining some Food preferences.]]></xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <xs:enumeration value="LACTO_VEGETARIAN"/>
-            <xs:enumeration value="NONE"/>
-            <xs:enumeration value="VEGAN"/>
+            <xs:enumeration value="LACTO_VEGETARIAN">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[Vegetarian who will not eat meats, but drinks milk.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NONE">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[No special food preferences; eats everything.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="VEGAN">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[Vegan who will neither eat meats nor drink milk.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="americanCoin">
         <xs:annotation>
-            <xs:documentation><![CDATA[Simple enumeration example defining standard US coins.
-
-(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+            <xs:documentation><![CDATA[Simple enumeration example defining standard US coins.]]></xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:int">
-            <xs:enumeration value="10"/>
-            <xs:enumeration value="1"/>
-            <xs:enumeration value="5"/>
-            <xs:enumeration value="25"/>
+            <xs:enumeration value="10">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[The dime is worth of 10 cents.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[The penny is worth of 1 cent.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="5">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[The nickel is worth of 5 cents.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="25">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[The quarter is worth of 25 cents.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

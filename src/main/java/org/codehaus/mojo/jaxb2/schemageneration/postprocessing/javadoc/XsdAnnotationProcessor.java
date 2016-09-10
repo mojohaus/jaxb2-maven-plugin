@@ -24,17 +24,8 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
 import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.xml.XMLConstants;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
 import java.util.SortedMap;
 
 /**

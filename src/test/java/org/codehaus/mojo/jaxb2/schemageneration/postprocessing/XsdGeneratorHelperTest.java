@@ -1,13 +1,19 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocExtractor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.NoAuthorJavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SearchableDocumentation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdEnumerationAnnotationProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
+import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.filters.Filter;
+import org.codehaus.mojo.jaxb2.shared.filters.Filters;
+import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.ElementNameAndAttributeQualifier;
 import org.custommonkey.xmlunit.XMLAssert;
@@ -20,8 +26,10 @@ import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
 import javax.xml.transform.TransformerFactory;
 import java.io.File;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +50,8 @@ public class XsdGeneratorHelperTest {
     }
 
     @Test(expected = MojoExecutionException.class)
-    public void validateExceptionThrownOnDuplicateURIs()
-            throws MojoExecutionException {
+    public void validateExceptionThrownOnDuplicateURIs() throws MojoExecutionException {
+
         // Assemble
         final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
         final TransformSchema transformSchema2 = new TransformSchema("foo", "bar", "bar");
@@ -94,6 +102,7 @@ public class XsdGeneratorHelperTest {
 
     @Test
     public void validateExceptionThrownOnDuplicateFiles() {
+
         // Assemble
         final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo.xsd");
         final TransformSchema transformSchema2 = new TransformSchema("bar", "bar", "foo.xsd");
@@ -130,8 +139,8 @@ public class XsdGeneratorHelperTest {
     }
 
     @Test(expected = MojoExecutionException.class)
-    public void validateExceptionThrownOnNullUri()
-            throws MojoExecutionException {
+    public void validateExceptionThrownOnNullUri() throws MojoExecutionException {
+
         // Assemble
         final TransformSchema transformSchema1 = new TransformSchema(null, "foo", "bar");
 
@@ -144,8 +153,8 @@ public class XsdGeneratorHelperTest {
     }
 
     @Test(expected = MojoExecutionException.class)
-    public void validateExceptionThrownOnEmptyUri()
-            throws MojoExecutionException {
+    public void validateExceptionThrownOnEmptyUri() throws MojoExecutionException {
+
         // Assemble
         final TransformSchema transformSchema1 = new TransformSchema("", "foo", "bar");
 
@@ -180,20 +189,58 @@ public class XsdGeneratorHelperTest {
     }
 
     @Test
-    public void validateProcessingXSDsWithEnumerations() {
+    public void validateProcessingXSDsWithEnumerations() throws Exception {
 
         // Assemble
+        final BufferingLog log = new BufferingLog();
+        final JavaDocExtractor extractor = new JavaDocExtractor(log);
+        extractor.setEncoding("UTF-8");
+
         final String parentPath = "testdata/schemageneration/javadoc/enums/";
+        final URL parentPathURL = getClass().getClassLoader().getResource(parentPath);
+        Assert.assertNotNull(parentPathURL);
+
+        final File parentDir = new File(parentPathURL.getPath());
+        Assert.assertTrue(parentDir.exists() && parentDir.isDirectory());
+
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
+        Filters.initialize(log, excludeFilesMatching);
+
+        final List<File> allSourceFiles = FileSystemUtilities.filterFiles(parentDir,
+                null,
+                parentDir.getAbsolutePath(),
+                log,
+                "allJavaFiles",
+                excludeFilesMatching);
+        Assert.assertEquals(2, allSourceFiles.size());
+
+        final List<URL> urls = new ArrayList<URL>();
+        for (File current : allSourceFiles) {
+            try {
+                urls.add(current.toURI().toURL());
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException("Could not convert file [" + current.getAbsolutePath()
+                        + "] to a URL", e);
+            }
+        }
+        Assert.assertEquals(2, urls.size());
+
+        extractor.addSourceURLs(urls);
+        final SearchableDocumentation docs = extractor.process();
+
+        // #1) The raw / un-processed XSD (containing the 'before' state)
+        // #2) The processed XSD (containing the 'expected' state)
         final String rawEnumSchema = XmlTestUtils.readFully(parentPath + "rawEnumSchema.xsd");
         final String processedEnumSchema = XmlTestUtils.readFully(parentPath + "processedEnumSchema.xsd");
         final NodeProcessor enumProcessor = new XsdEnumerationAnnotationProcessor(docs, new NoAuthorJavaDocRenderer());
 
         // Act
-        final Document processedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(originalXml));
-        XsdGeneratorHelper.process(processedDocument.getFirstChild(), true, changeNamespacePrefixProcessor);
+        final Document processedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(rawEnumSchema));
+        XsdGeneratorHelper.process(processedDocument.getFirstChild(), true, enumProcessor);
 
         // Assert
-        final Document expectedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(changedXml));
+        final Document expectedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(processedEnumSchema));
         final Diff diff = new Diff(expectedDocument, processedDocument, null, new ElementNameAndAttributeQualifier());
         diff.overrideElementQualifier(new ElementNameAndAttributeQualifier());
 

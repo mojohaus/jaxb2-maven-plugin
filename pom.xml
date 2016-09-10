@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>mojo-parent</artifactId>
-        <version>39</version>
+        <version>40</version>
     </parent>
 
     <artifactId>jaxb2-maven-plugin</artifactId>
@@ -99,7 +99,7 @@
 
     <properties>
         <!-- Define Maven and JDK versions-->
-        <mavenVersion>3.0</mavenVersion>
+        <mavenVersion>3.1.1</mavenVersion>
         <mojo.java.target>1.6</mojo.java.target>
 
         <!-- Plexus component versions -->
@@ -114,7 +114,7 @@
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>1.6</xmlunit.version>
-        <nazgul-core-xmlbinding-test.version>1.8.0</nazgul-core-xmlbinding-test.version>
+        <nazgul-core-xmlbinding-test.version>2.1.0</nazgul-core-xmlbinding-test.version>
         <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
     </properties>
 
@@ -201,6 +201,11 @@
 
         <!-- Maven dependencies -->
         <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-filtering</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>${mavenVersion}</version>
@@ -268,6 +273,12 @@
             <groupId>se.jguru.nazgul.test.xmlbinding</groupId>
             <artifactId>nazgul-core-xmlbinding-test</artifactId>
             <version>${nazgul-core-xmlbinding-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

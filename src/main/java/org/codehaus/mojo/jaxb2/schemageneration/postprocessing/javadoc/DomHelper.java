@@ -27,6 +27,7 @@ import java.util.SortedMap;
 public final class DomHelper {
 
     private static final String NAME_ATTRIBUTE = "name";
+    private static final String VALUE_ATTRIBUTE = "value";
 
     /**
      * The name of the annotation element.
@@ -70,6 +71,16 @@ public final class DomHelper {
      */
     public static String getNameAttribute(final Node aNode) {
         return getNamedAttribute(aNode, NAME_ATTRIBUTE);
+    }
+
+    /**
+     * Retrieves the value of the {@code value} attribute of the supplied Node.
+     *
+     * @param aNode A DOM Node.
+     * @return the value of the {@code value} attribute of the supplied Node/Element.
+     */
+    public static String getValueAttribute(final Node aNode) {
+        return getNamedAttribute(aNode, VALUE_ATTRIBUTE);
     }
 
     /**
@@ -161,7 +172,25 @@ public final class DomHelper {
         List<String> nodeNameList = new ArrayList<String>();
 
         for (Node current = aNode; current != null; current = current.getParentNode()) {
-            nodeNameList.add(current.getNodeName() + "[@name='" + DomHelper.getNameAttribute(current) + "]");
+
+            final String currentNodeName = current.getNodeName();
+            final String nameAttribute = DomHelper.getNameAttribute(current);
+
+            if(currentNodeName.toLowerCase().endsWith("enumeration")) {
+
+                // We should print the "value" attribute here.
+                nodeNameList.add(currentNodeName + "[@value='" + getValueAttribute(current) + "']");
+
+            } else if(nameAttribute == null) {
+
+                // Just emit the node's name.
+                nodeNameList.add(current.getNodeName());
+
+            } else {
+
+                // We should print the "name" attribute here.
+                nodeNameList.add(current.getNodeName() + "[@name='" + nameAttribute + "']");
+            }
         }
 
         StringBuilder builder = new StringBuilder();
@@ -310,7 +339,20 @@ public final class DomHelper {
                 final String className = current.getClassName();
 
                 try {
-                    if (fieldName.equalsIgnoreCase(DomHelper.getNameAttribute(aNode))
+
+                    //
+                    // Fields in XML enums are rendered on the form
+                    // <xs:enumeration value="LACTO_VEGETARIAN"/>, implying that
+                    // we must retrieve the 'value' attribute's value.
+                    //
+                    // Fields in XML classes are rendered on the form
+                    // <xsd:element name="Line1" type="xsd:string"/>, implying that
+                    // we must retrieve the 'name' attribute's value.
+                    //
+                    final String attributeValue = DomHelper.getNameAttribute(aNode) == null
+                            ? DomHelper.getValueAttribute(aNode)
+                            : DomHelper.getNameAttribute(aNode);
+                    if (fieldName.equalsIgnoreCase(attributeValue)
                             && className.equalsIgnoreCase(DomHelper.getNameAttribute(containingClassNode))) {
                         toReturn = (T) current;
                     }
@@ -367,8 +409,16 @@ public final class DomHelper {
 
         // We should have a JavaDocData here.
         if (javaDocData == null) {
+
+            final String nodeName = aNode.getNodeName();
+            String humanReadableName = DomHelper.getNameAttribute(aNode);
+
+            if(humanReadableName == null && nodeName.toLowerCase().endsWith("enumeration")) {
+                humanReadableName = "enumeration#" + getValueAttribute(aNode);
+            }
+
             throw new IllegalStateException("Could not find JavaDocData for XSD node ["
-                    + DomHelper.getNameAttribute(aNode) + "] with XPath [" + DomHelper.getXPathFor(aNode) + "]");
+                    + humanReadableName + "] with XPath [" + DomHelper.getXPathFor(aNode) + "]");
         }
 
         // Add the XML documentation annotation.

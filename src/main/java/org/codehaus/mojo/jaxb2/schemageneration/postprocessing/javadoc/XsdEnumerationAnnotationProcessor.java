@@ -40,9 +40,32 @@ import java.util.SortedMap;
  * <p>... will be converted in a manner similar to the one below:</p>
  * <pre>
  *     <code>
- *
+ *         &lt;xs:simpleType name="foodPreference"&gt;
+ *             &lt;xs:annotation&gt;
+ *                 &lt;xs:documentation&gt;&lt;![CDATA[Simple enumeration example defining some Food preferences.]]&gt;&lt;/xs:documentation&gt;
+ *             &lt;/xs:annotation&gt;
+ *             &lt;xs:restriction base="xs:string"&gt;
+ *                 &lt;xs:enumeration value="LACTO_VEGETARIAN"&gt;
+ *                     &lt;xs:annotation&gt;
+ *                         &lt;xs:documentation&gt;&lt;![CDATA[Vegetarian who will not eat meats, but drinks milk.]]&gt;&lt;/xs:documentation&gt;
+ *                     &lt;/xs:annotation&gt;
+ *                 &lt;/xs:enumeration&gt;
+ *                 &lt;xs:enumeration value="NONE"&gt;
+ *                     &lt;xs:annotation&gt;
+ *                         &lt;xs:documentation&gt;&lt;![CDATA[No special food preferences; eats everything.]]&gt;&lt;/xs:documentation&gt;
+ *                     &lt;/xs:annotation&gt;
+ *                 &lt;/xs:enumeration&gt;
+ *                 &lt;xs:enumeration value="VEGAN"&gt;
+ *                     &lt;xs:annotation&gt;
+ *                         &lt;xs:documentation&gt;&lt;![CDATA[Vegan who will neither eat meats nor drink milk.]]&gt;&lt;/xs:documentation&gt;
+ *                     &lt;/xs:annotation&gt;
+ *                 &lt;/xs:enumeration&gt;
+ *             &lt;/xs:restriction&gt;
+ *         &lt;/xs:simpleType&gt;
  *     </code>
  * </pre>
+ * <p>... given that the Java class <code>FoodPreference</code> has JavaDoc on its class and fields
+ * corresponding to the injected XSD annotation/documentation elements.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */

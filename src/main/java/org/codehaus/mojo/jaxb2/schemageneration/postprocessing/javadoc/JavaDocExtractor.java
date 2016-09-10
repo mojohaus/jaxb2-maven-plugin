@@ -37,6 +37,7 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,15 @@ public class JavaDocExtractor {
         // Create internal state
         this.log = log;
         this.builder = new JavaProjectBuilder();
+    }
+
+    /**
+     * Assigns the encoding of the underlying {@link JavaProjectBuilder}.
+     *
+     * @param encoding The non-empty encoding to be set into the underlying {@link JavaProjectBuilder}.
+     */
+    public void setEncoding(final String encoding) {
+        this.builder.setEncoding(encoding);
     }
 
     /**
@@ -162,7 +172,9 @@ public class JavaDocExtractor {
 
                 // Add the class-level JavaDoc
                 final String simpleClassName = currentClass.getName();
-                final String classXmlName = getAnnotatedXmlNameFrom(XmlType.class, currentClass.getAnnotations());
+                final String classXmlName = getAnnotationAttributeValuleFrom(XmlType.class,
+                        "name",
+                        currentClass.getAnnotations());
 
                 final ClassLocation classLocation = new ClassLocation(packageName, simpleClassName, classXmlName);
                 addEntry(dataHolder, classLocation, currentClass);
@@ -174,9 +186,22 @@ public class JavaDocExtractor {
                 for (JavaField currentField : currentClass.getFields()) {
 
                     // Find the XML name if provided within an annotation.
-                    String annotatedXmlName = getAnnotatedXmlNameFrom(XmlElement.class, currentField.getAnnotations());
+                    String annotatedXmlName = getAnnotationAttributeValuleFrom(
+                            XmlElement.class,
+                            "name",
+                            currentField.getAnnotations());
+
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotatedXmlNameFrom(XmlAttribute.class, currentField.getAnnotations());
+                        annotatedXmlName = getAnnotationAttributeValuleFrom(
+                                XmlAttribute.class,
+                                "name",
+                                currentField.getAnnotations());
+                    }
+                    if (annotatedXmlName == null) {
+                        annotatedXmlName = getAnnotationAttributeValuleFrom(
+                                XmlEnumValue.class,
+                                "value",
+                                currentField.getAnnotations());
                     }
 
                     // Add the field-level JavaDoc
@@ -197,9 +222,16 @@ public class JavaDocExtractor {
                 for (JavaMethod currentMethod : currentClass.getMethods()) {
 
                     // Find the XML name if provided within an annotation.
-                    String annotatedXmlName = getAnnotatedXmlNameFrom(XmlElement.class, currentMethod.getAnnotations());
+                    String annotatedXmlName = getAnnotationAttributeValuleFrom(
+                            XmlElement.class,
+                            "name",
+                            currentMethod.getAnnotations());
+
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotatedXmlNameFrom(XmlAttribute.class, currentMethod.getAnnotations());
+                        annotatedXmlName = getAnnotationAttributeValuleFrom(
+                                XmlAttribute.class,
+                                "name",
+                                currentMethod.getAnnotations());
                     }
 
                     // Add the method-level JavaDoc
@@ -223,16 +255,20 @@ public class JavaDocExtractor {
     }
 
     /**
-     * Finds the value of the "name" attribute of first matching JavaAnnotation of the given type within the
-     * supplied annotations List. This is typically used for
+     * Finds the value of the attribute with the supplied name within the first matching JavaAnnotation of
+     * the given type encountered in the given annotations List. This is typically used for reading values of
+     * annotations such as {@link XmlElement}, {@link XmlAttribute} or {@link XmlEnumValue}.
      *
-     * @param annotations The list of JavaAnnotations to filter from.
-     * @return The first matching JavaAnnotation of type annotationType  within the given annotations
+     * @param annotations    The list of JavaAnnotations to filter from.
+     * @param annotationType The type of annotation to read attribute values from.
+     * @param attributeName  The name of the attribute the value of which should be returned.
+     * @return The first matching JavaAnnotation of type annotationType within the given annotations
      * List, or {@code null} if none was found.
      * @since 2.2
      */
-    private static String getAnnotatedXmlNameFrom(
+    private static String getAnnotationAttributeValuleFrom(
             final Class<?> annotationType,
+            final String attributeName,
             final List<JavaAnnotation> annotations) {
 
         // QDox uses the fully qualified class name of the annotation for comparison.
@@ -253,7 +289,7 @@ public class JavaDocExtractor {
 
             if (annotation != null) {
 
-                final Object nameValue = annotation.getNamedParameter("name");
+                final Object nameValue = annotation.getNamedParameter(attributeName);
 
                 if (nameValue != null && nameValue instanceof String) {
 

@@ -6,6 +6,9 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.PackageLocation;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.filters.Filter;
+import org.codehaus.mojo.jaxb2.shared.filters.Filters;
+import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -167,8 +170,15 @@ public class JavaDocExtractorTest {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        final List<File> sourceDir = Collections.singletonList(javaDocEnumsDir);
-        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDir, null, log);
+        unitUnderTest.setEncoding("UTF-8");
+
+        final List<File> sourceDirs = Collections.singletonList(javaDocEnumsDir);
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
+        Filters.initialize(log, excludeFilesMatching);
+
+        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, excludeFilesMatching, log);
+        Assert.assertEquals(2, sourceFiles.size());
 
         // Act
         unitUnderTest.addSourceFiles(sourceFiles);
@@ -182,9 +192,17 @@ public class JavaDocExtractorTest {
         }
 
         // Assert
-        Assert.assertEquals(9, sortableLocations2JavaDocDataMap.size());
+        Assert.assertEquals(16, sortableLocations2JavaDocDataMap.size());
 
-        final List<String> paths = Arrays.asList("enums",
+        final List<String> paths = Arrays.asList(
+                "enums",
+                "enums.AmericanCoin",
+                "enums.AmericanCoin#1",
+                "enums.AmericanCoin#5",
+                "enums.AmericanCoin#10",
+                "enums.AmericanCoin#25",
+                "enums.AmericanCoin#getValue()",
+                "enums.AmericanCoin#value",
                 "enums.FoodPreference",
                 "enums.FoodPreference#LACTO_VEGETARIAN",
                 "enums.FoodPreference#NONE",
@@ -194,14 +212,15 @@ public class JavaDocExtractorTest {
                 "enums.FoodPreference#meatEater",
                 "enums.FoodPreference#milkDrinker");
         for (String current : paths) {
-            Assert.assertTrue(path2LocationMap.keySet().contains(current));
+            Assert.assertTrue("Required path [" + current + "] not found.",
+                    path2LocationMap.keySet().contains(current.trim()));
         }
 
         final SortableLocation enumClassLocation = path2LocationMap.get("enums.FoodPreference");
         final JavaDocData enumClassJavaDocData = sortableLocations2JavaDocDataMap.get(enumClassLocation);
+
         Assert.assertEquals("Simple enumeration example defining some Food preferences.",
                 enumClassJavaDocData.getComment());
-
         Assert.assertEquals("Vegan who will neither eat meats nor drink milk.",
                 sortableLocations2JavaDocDataMap.get(path2LocationMap.get("enums.FoodPreference#VEGAN")).getComment());
     }
