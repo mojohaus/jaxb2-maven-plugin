@@ -169,7 +169,8 @@ public abstract class AbstractFilter<T> implements Filter<T> {
     protected boolean onNullCandidate() {
         if (log.isDebugEnabled()) {
             log.debug("Filter [" + getClass().getSimpleName()
-                    + "] is configured to matchAtLeastOnce processing null candidate values, but no implementation is supplied.");
+                    + "] is configured to matchAtLeastOnce processing null candidate "
+                    + "values, but no implementation is supplied.");
         }
 
         // Don't matchAtLeastOnce null values by default.

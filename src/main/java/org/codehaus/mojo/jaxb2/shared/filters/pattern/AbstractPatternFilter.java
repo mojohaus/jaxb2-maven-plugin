@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 /**
  * <p>AbstractFilter implementation containing a Java Pattern which should be used to determine if candidate T objects
- * match any of the supplied regularExpressions. Since Java regexp Patterns only match strings, a pluggable StringConverter is
- * used to convert T-type objects to strings for the actual matching.</p>
+ * match any of the supplied regularExpressions. Since Java regexp Patterns only match strings, a pluggable
+ * StringConverter is used to convert T-type objects to strings for the actual matching.</p>
  * <p>The structure of setter methods is provided to enable simpler configuration using the default Maven/Plexus
  * dependency injection mechanism. The internal state of each AbstractPatternFilter is not intended to be changed
  * after its creation.</p>
@@ -65,11 +65,14 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
     }
 
     /**
-     * Collects a List containing {@code java.text.Pattern} objects by concatenating
-     * {@code prepend + current_pattern_string} and Pattern-compiling the result.
+     * Injects a List of patterns complying with the Java Regexp {@link Pattern} specification.
+     * Each injected pattern will be compiled to a {@link Pattern} by concatenating the {@link #patternPrefix} string,
+     * given at construction time, to obtain the full regexp pattern. The resulting Patterns are matched for
+     * candidates normally in the {@link #onCandidate(Object)} method.
      *
      * @param patterns The List of PatternStrings to compile.
      * @see #convert(java.util.List, String)
+     * @see #setPatternPrefix(String)
      */
     public void setPatterns(final List<String> patterns) {
 
@@ -152,29 +155,29 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
      * <table>
      * <caption>Truth table for the onCandidate method</caption>
      * <tr>
-     * <th>at least 1 filter matches</th>
-     * <th>acceptCandidateOnPatternMatch</th>
-     * <th>result</th>
+     * <th style="background: #eeeeee">at least 1 filter matches</th>
+     * <th style="background: #eeeeee">acceptCandidateOnPatternMatch</th>
+     * <th style="background: #eeeeee">result</th>
      * </tr>
      * <tr>
-     * <td>true</td>
-     * <td>true</td>
-     * <td>true</td>
+     * <td style="border: 1px solid #dddddd">true</td>
+     * <td style="border: 1px solid #dddddd">true</td>
+     * <td style="border: 1px solid #dddddd">true</td>
      * </tr>
      * <tr>
-     * <td>false</td>
-     * <td>true</td>
-     * <td>false</td>
+     * <td style="border: 1px solid #dddddd">false</td>
+     * <td style="border: 1px solid #dddddd">true</td>
+     * <td style="border: 1px solid #dddddd">false</td>
      * </tr>
      * <tr>
-     * <td>true</td>
-     * <td>false</td>
-     * <td>false</td>
+     * <td style="border: 1px solid #dddddd">true</td>
+     * <td style="border: 1px solid #dddddd">false</td>
+     * <td style="border: 1px solid #dddddd">false</td>
      * </tr>
      * <tr>
-     * <td>false</td>
-     * <td>false</td>
-     * <td>true</td>
+     * <td style="border: 1px solid #dddddd">false</td>
+     * <td style="border: 1px solid #dddddd">false</td>
+     * <td style="border: 1px solid #dddddd">true</td>
      * </tr>
      * </table>
      * {@inheritDoc}

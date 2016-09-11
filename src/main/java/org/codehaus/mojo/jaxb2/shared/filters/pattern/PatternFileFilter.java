@@ -11,6 +11,7 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * <p>AbstractPatternFilter and FileFilter combination, using a set of Regular expressions
@@ -22,11 +23,20 @@ import java.util.List;
 public class PatternFileFilter extends AbstractPatternFilter<File> implements FileFilter {
 
     /**
-     * Java RegExp pattern which should be prepended to any file suffix pattern.
-     * For example, a pattern identifying files ending in "txt", the pattern is
-     * <code>FILE_SUFFIX_PATTERN_PREFIX + "txt"</code>.
+     * Java RegExp pattern matching one or more letters/digits/punctuation characters.
+     * It can be flexibly used to separate normative text in a pattern:
+     * <ol>
+     *     <li>Pattern matching <strong>ends of strings</strong>. <code>PATTERN_LETTER_DIGIT_PUNCT + "txt"</code>
+     *     matches all file paths ending in "txt", such as "some/foobar.txt"</li>
+     *     <li>Pattern matching <strong>strings containing patterns</strong>. <code>PATTERN_LETTER_DIGIT_PUNCT +
+     *     "foobar" + PATTERN_LETTER_DIGIT_PUNCT</code> matches all file paths containing "foobar" such as
+     *     "the/file/in/directory/foobar/blah.java"</li>
+     *     <li>Pattern matching <strong>start of strings</strong>. <code>"/some/prefix"
+     *     + PATTERN_LETTER_DIGIT_PUNCT</code> matches all file paths starting in "/some/prefix", such as
+     *     "some/prefix/another/specification.xsd"</li>
+     * </ol>
      */
-    public static final String FILE_SUFFIX_PATTERN_PREFIX = "(\\p{javaLetterOrDigit}|\\p{Punct})+";
+    public static final String PATTERN_LETTER_DIGIT_PUNCT = "(\\p{javaLetterOrDigit}|\\p{Punct})+";
 
     /**
      * Converter returning the canonical and absolute path for a File.
@@ -69,7 +79,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
 
     /**
      * Creates a new PatternFileFilter using the supplied patternStrings which are interpreted as file suffixes.
-     * (I.e. prepended with {@code FILE_SUFFIX_PATTERN_PREFIX} and compiled to Patterns).
+     * (I.e. prepended with {@code PATTERN_LETTER_DIGIT_PUNCT} and compiled to Patterns).
      * The {@code FILE_PATH_CONVERTER} is used to convert Files to strings.
      * The supplied {@code acceptCandidateOnPatternMatch} parameter indicates if this
      * PatternFileFilter accepts or rejects candidates that match any of the supplied patternStrings.
@@ -80,39 +90,39 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      *                                      if {@code false}, this PatternFileFilter will noFilterMatches
      *                                      candidates that match at least one of the supplied patterns.
      * @see #FILE_PATH_CONVERTER
-     * @see #FILE_SUFFIX_PATTERN_PREFIX
+     * @see #PATTERN_LETTER_DIGIT_PUNCT
      * @see #convert(java.util.List, String)
      */
     public PatternFileFilter(final List<String> patternStrings, final boolean acceptCandidateOnPatternMatch) {
-        this(false, FILE_SUFFIX_PATTERN_PREFIX, patternStrings, FILE_PATH_CONVERTER, acceptCandidateOnPatternMatch);
+        this(false, PATTERN_LETTER_DIGIT_PUNCT, patternStrings, FILE_PATH_CONVERTER, acceptCandidateOnPatternMatch);
     }
 
     /**
      * Creates a new PatternFileFilter using the supplied patternStrings which are interpreted as file suffixes.
-     * (I.e. prepended with {@code FILE_SUFFIX_PATTERN_PREFIX} and compiled to Patterns).
+     * (I.e. prepended with {@code PATTERN_LETTER_DIGIT_PUNCT} and compiled to Patterns).
      * The {@code FILE_PATH_CONVERTER} is used to convert Files to strings.
      * The retrieved PatternFileFilter accepts candidates that match any of the supplied patternStrings.
      *
      * @param patterns The list of patternStrings to be used as file path suffixes.
      */
     public PatternFileFilter(final List<String> patterns) {
-        this(false, FILE_SUFFIX_PATTERN_PREFIX, patterns, FILE_PATH_CONVERTER, true);
+        this(false, PATTERN_LETTER_DIGIT_PUNCT, patterns, FILE_PATH_CONVERTER, true);
     }
 
     /**
      * <p>Creates a new PatternFileFilter with no patternStrings List, implying that calling this constructor must be
      * followed by a call to the {@code #setPatterns} method.</p>
-     * <p>The default prefix is {@code FILE_SUFFIX_PATTERN_PREFIX}, the default StringConverter is
+     * <p>The default prefix is {@code PATTERN_LETTER_DIGIT_PUNCT}, the default StringConverter is
      * {@code FILE_PATH_CONVERTER} and this PatternFileFilter does by default accept candidates that match any of
      * the supplied PatternStrings (i.e. an include-mode filter)</p>
      */
     public PatternFileFilter() {
-        this(false, FILE_SUFFIX_PATTERN_PREFIX, new ArrayList<String>(), FILE_PATH_CONVERTER, true);
+        this(false, PATTERN_LETTER_DIGIT_PUNCT, new ArrayList<String>(), FILE_PATH_CONVERTER, true);
     }
 
     /**
      * Creates a new List containing an exclude-mode PatternFileFilter using the supplied patternStrings which
-     * are interpreted as file suffixes. (I.e. prepended with {@code FILE_SUFFIX_PATTERN_PREFIX} and compiled to
+     * are interpreted as file suffixes. (I.e. prepended with {@code PATTERN_LETTER_DIGIT_PUNCT} and compiled to
      * Patterns). The {@code FILE_PATH_CONVERTER} is used to convert Files to strings.
      *
      * @param patterns A List of suffix patterns to be used in creating a new ExclusionRegularExpressionFileFilter.
@@ -127,7 +137,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
 
     /**
      * Creates a new List containing an include-mode PatternFileFilter using the supplied patternStrings which
-     * are interpreted as file suffixes. (I.e. prepended with {@code FILE_SUFFIX_PATTERN_PREFIX} and compiled to
+     * are interpreted as file suffixes. (I.e. prepended with {@code PATTERN_LETTER_DIGIT_PUNCT} and compiled to
      * Patterns). The {@code FILE_PATH_CONVERTER} is used to convert Files to strings.
      *
      * @param patterns A List of suffix patterns to be used in creating a new ExclusionRegularExpressionFileFilter.

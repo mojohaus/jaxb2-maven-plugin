@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -319,6 +320,7 @@ public final class FileSystemUtilities {
      * @return All files under the supplied sources (or standardDirectory, if no explicit sources are given) which
      * do not match the supplied Java Regular excludePatterns.
      */
+    @SuppressWarnings("CheckStyle")
     public static List<File> filterFiles(final File baseDir,
                                          final List<String> sources,
                                          final String standardDirectory,
@@ -375,6 +377,43 @@ public final class FileSystemUtilities {
 
         // All Done.
         return FileSystemUtilities.resolveRecursively(existingSources, excludeFilters, log);
+    }
+
+    /**
+     * Filters all supplied files using the
+     *
+     * @param files        The list of files to resolve, filter and return. If the {@code files} List
+     *                     contains directories, they are searched for Files recursively. Any found Files in such
+     *                     a search are included in the resulting File List if they match the acceptFilter supplied.
+     * @param acceptFilter A filter matched to all files in the given List. If the acceptFilter matches a file, it is
+     *                     included in the result.
+     * @param log          The active Maven Log.
+     * @return All files in (or files in subdirectories of directories provided in) the files List, provided that each
+     * file is accepted by an ExclusionRegExpFileFilter.
+     */
+    public static List<File> filterFiles(final List<File> files, final Filter<File> acceptFilter, final Log log) {
+
+        // Check sanity
+        Validate.notNull(files, "files");
+
+        final List<File> toReturn = new ArrayList<File>();
+
+        if (files.size() > 0) {
+            for (File current : files) {
+
+                final boolean isAcceptedFile = EXISTING_FILE.accept(current) && acceptFilter.accept(current);
+                final boolean isAcceptedDirectory = EXISTING_DIRECTORY.accept(current) && acceptFilter.accept(current);
+
+                if (isAcceptedFile) {
+                    toReturn.add(current);
+                } else if (isAcceptedDirectory) {
+                    recurseAndPopulate(toReturn, Collections.singletonList(acceptFilter), current, false, log);
+                }
+            }
+        }
+
+        // All done
+        return toReturn;
     }
 
     /**

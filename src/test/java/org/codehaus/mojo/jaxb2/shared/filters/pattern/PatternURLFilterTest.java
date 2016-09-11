@@ -70,7 +70,7 @@ public class PatternURLFilterTest extends AbstractPatternFilterTest {
         // Assemble
         final String urlProtocol = "file";
         final List<String> txtFileSuffixExclusion = Arrays.asList(urlProtocol + ":/"
-                + PatternFileFilter.FILE_SUFFIX_PATTERN_PREFIX + "\\.txt");
+                + PatternFileFilter.PATTERN_LETTER_DIGIT_PUNCT + "\\.txt");
         final PatternURLFilter unitUnderTest = new PatternURLFilter(txtFileSuffixExclusion);
         unitUnderTest.setAcceptCandidateOnPatternMatch(false);
         unitUnderTest.initialize(log);
