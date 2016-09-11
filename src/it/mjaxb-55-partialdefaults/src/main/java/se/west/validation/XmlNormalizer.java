@@ -34,7 +34,7 @@ public class XmlNormalizer {
      * @param filePath The path to the XML file to read.
      * @return A normalized, human-readable, version of the given XML document.
      */
-    public String getNormalizedXml(String filePath) {
+    public String getNormalizedXml(final String filePath) {
 
         // Read the provided filename
         final StringWriter toReturn = new StringWriter();
