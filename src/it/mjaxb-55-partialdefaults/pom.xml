@@ -32,6 +32,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>se.jguru.nazgul.test.xmlbinding</groupId>
+            <artifactId>nazgul-core-xmlbinding-test</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
