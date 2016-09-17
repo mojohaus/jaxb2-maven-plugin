@@ -46,7 +46,14 @@
                  <p>An example is given on the usage page for the schemagen goal.</p>
             </answer>
         </faq>
-
+        <faq id="SchemaGenWhitespace">
+                    <question>When I try to generate Schema and any path contain whitespace, I get an
+                    Exception</question>
+                    <answer>
+                        <p>This seems to be caused by internal implementation issues within the SchemaGen tool.
+                        The current workaround is to use a path without whitespace.</p>
+                    </answer>
+                </faq>
         <faq id="Example">
             <question>How can I annotate my java classes to generate XML schema?</question>
             <answer>

@@ -61,6 +61,10 @@ While the jaxb2-maven-plugin ensures that any sources added to the schemagen goa
 the criteria defined in the table above, it would lead too far to let the plugin validate that
 the user does not supply a mix of java source and bytecode files as arguments.
 
+**Note**: The `SchemaGen` tool internally converts File paths to URIs and back, which means that exceptions
+occur when paths to your maven project contains whitespace. The current workaround is to avoid
+whitespace in paths whenever you need the plugin's `schemagen` goal to work properly.
+
 ## Recommended JAXB Annotations for XSD generation
 
 XSD generation from JAXB-annotated Java classes uses schemagen from the JAXB specification to generate XSDs from
