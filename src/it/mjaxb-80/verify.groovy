@@ -17,7 +17,9 @@
  * under the License.
  */
 
-File schema = new File( basedir,'target/generated-resources/schemagen/smooth.xsd' )
+def expectedSchemaPath = 'target/generated-resources/schemagen/smooth.xsd'
+File schema = new File( basedir, expectedSchemaPath)
+println "\nValidating that schema exists at expected path \"" + expectedSchemaPath + "\""
 assert schema.exists()
 
 // Validate content as reported in issue MJAXB-80

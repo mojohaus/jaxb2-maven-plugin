@@ -6,9 +6,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "importItem")
+@XmlType(namespace = "http://schema.domain.org/integration/1.0",
+        name = "importItem")
 @XmlSeeAlso({ SomeImportItemDTO.class, SomeOtherImportItemDTO.class })
 public abstract class ImportItemDTO {
 

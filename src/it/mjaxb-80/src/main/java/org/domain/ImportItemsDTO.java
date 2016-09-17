@@ -6,9 +6,11 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(name = "importItems",
+@XmlType(namespace = "http://schema.domain.org/integration/1.0",
+        name = "importItems",
         propOrder = {"someImportItems", "someOtherImportItems"})
-@XmlRootElement(name = "importItems")
+@XmlRootElement(namespace = "http://schema.domain.org/integration/1.0",
+        name = "importItems")
 public class ImportItemsDTO {
 
     @XmlElementRef

@@ -7,9 +7,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "someImportItem",
+@XmlType(namespace = "http://schema.domain.org/integration/1.0",
+        name = "someImportItem",
         propOrder = {"someIdentifier"})
-@XmlRootElement(name = "someImportItem")
+@XmlRootElement(namespace = "http://schema.domain.org/integration/1.0",
+        name = "someImportItem")
 public class SomeImportItemDTO extends ImportItemDTO {
 
     @XmlElement(name = "someIdentifier", required = true)
