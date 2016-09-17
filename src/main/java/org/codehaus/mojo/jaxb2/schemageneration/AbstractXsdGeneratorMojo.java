@@ -49,9 +49,11 @@ import org.codehaus.plexus.util.FileUtils;
 import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -319,7 +321,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
             // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.
             final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder
-                    .createFor(this.getClass(), getLog())
+                    .createFor(this.getClass(), getLog(), getEncoding(false))
                     .addPaths(getClasspath())
                     .addPaths(getProject().getCompileSourceRoots());
 
@@ -582,7 +584,14 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
         if (episodeFileNameOrNull != null) {
             final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
-            builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+            final String canonicalPath = FileSystemUtilities.getCanonicalPath(episodeFile);
+            final String episodeFileArgument;
+            try {
+                episodeFileArgument = URLDecoder.decode(canonicalPath, getEncoding(false));
+            } catch (UnsupportedEncodingException e) {
+                throw new MojoExecutionException("Could not URLDecoder.decode File path [" + canonicalPath + "]", e);
+            }
+            builder.withNamedArgument("episode", episodeFileArgument);
         }
 
         try {

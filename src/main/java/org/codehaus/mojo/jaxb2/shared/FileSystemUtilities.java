@@ -12,6 +12,7 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -205,7 +206,7 @@ public final class FileSystemUtilities {
                     final String filePath = innerUrlPath.contains("!")
                             ? innerUrlPath.substring(0, innerUrlPath.indexOf("!"))
                             : innerUrlPath;
-                    toReturn = new File(filePath);
+                    toReturn = new File(URLDecoder.decode(filePath, encoding));
                 }
             } catch (Exception e) {
                 throw new IllegalArgumentException("Could not get the File for [" + anURL + "]", e);
@@ -237,11 +238,11 @@ public final class FileSystemUtilities {
      * are given) which do not match the supplied Java Regular excludePatterns.
      */
     public static List<URL> filterFiles(final File baseDir,
-                                        final List<String> sources,
-                                        final List<String> standardDirectories,
-                                        final Log log,
-                                        final String fileTypeDescription,
-                                        final List<Filter<File>> excludePatterns) {
+            final List<String> sources,
+            final List<String> standardDirectories,
+            final Log log,
+            final String fileTypeDescription,
+            final List<Filter<File>> excludePatterns) {
 
         final SortedMap<String, File> pathToResolvedSourceMap = new TreeMap<String, File>();
 
@@ -322,11 +323,11 @@ public final class FileSystemUtilities {
      */
     @SuppressWarnings("CheckStyle")
     public static List<File> filterFiles(final File baseDir,
-                                         final List<String> sources,
-                                         final String standardDirectory,
-                                         final Log log,
-                                         final String fileTypeDescription,
-                                         final List<Filter<File>> excludeFilters) {
+            final List<String> sources,
+            final String standardDirectory,
+            final Log log,
+            final String fileTypeDescription,
+            final List<Filter<File>> excludeFilters) {
 
         // Check sanity
         Validate.notNull(baseDir, "baseDir");
@@ -432,8 +433,8 @@ public final class FileSystemUtilities {
      * file is accepted by an ExclusionRegExpFileFilter.
      */
     public static List<File> resolveRecursively(final List<File> files,
-                                                final List<Filter<File>> exclusionFilters,
-                                                final Log log) {
+            final List<Filter<File>> exclusionFilters,
+            final Log log) {
 
         // Check sanity
         Validate.notNull(files, "files");
@@ -537,8 +538,8 @@ public final class FileSystemUtilities {
      * least one Filter accepts them.
      */
     public static List<File> listFiles(final File fileOrDir,
-                                       final List<Filter<File>> fileFilters,
-                                       final Log log) {
+            final List<Filter<File>> fileFilters,
+            final Log log) {
         return listFiles(fileOrDir, fileFilters, false, log);
     }
 
@@ -558,9 +559,9 @@ public final class FileSystemUtilities {
      * least one Filter accepts them.
      */
     public static List<File> listFiles(final File fileOrDir,
-                                       final List<Filter<File>> fileFilters,
-                                       final boolean excludeFilterOperation,
-                                       final Log log) {
+            final List<Filter<File>> fileFilters,
+            final boolean excludeFilterOperation,
+            final Log log) {
 
         // Check sanity
         Validate.notNull(log, "log");
@@ -588,10 +589,10 @@ public final class FileSystemUtilities {
     //
 
     private static void checkAndAdd(final List<File> toPopulate,
-                                    final File current,
-                                    final List<Filter<File>> fileFilters,
-                                    final boolean excludeFilterOperation,
-                                    final Log log) {
+            final File current,
+            final List<Filter<File>> fileFilters,
+            final boolean excludeFilterOperation,
+            final Log log) {
 
         //
         // When no filters are supplied...
@@ -624,10 +625,10 @@ public final class FileSystemUtilities {
     }
 
     private static void recurseAndPopulate(final List<File> toPopulate,
-                                           final List<Filter<File>> fileFilters,
-                                           final File aDirectory,
-                                           final boolean excludeOperation,
-                                           final Log log) {
+            final List<Filter<File>> fileFilters,
+            final File aDirectory,
+            final boolean excludeOperation,
+            final Log log) {
 
         final List<File> files = listFiles(aDirectory, fileFilters, excludeOperation, log);
         for (File current : files) {

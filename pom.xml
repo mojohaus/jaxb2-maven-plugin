@@ -114,7 +114,7 @@
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>1.6</xmlunit.version>
-        <nazgul-core-xmlbinding-test.version>2.1.0</nazgul-core-xmlbinding-test.version>
+        <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
         <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
     </properties>
 

@@ -368,7 +368,8 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
                 // Create the ToolExecutionEnvironment
                 environment = new ToolExecutionEnvironment(getLog(),
-                        ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog()).addPaths(getClasspath()),
+                        ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog(), getEncoding(false))
+                                .addPaths(getClasspath()),
                         LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)),
                         localeFacet);
 

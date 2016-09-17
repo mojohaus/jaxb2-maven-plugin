@@ -25,6 +25,7 @@ public class ThreadContextClassLoaderBuilderTest {
     private File extraClassLoaderDirFile;
     private BufferingLog log;
     private ClassLoader originalClassLoader;
+    private String encoding = "UTF-8";
 
     @Before
     public void setupSharedState() {
@@ -56,7 +57,7 @@ public class ThreadContextClassLoaderBuilderTest {
 
         // Assemble
         holder = ThreadContextClassLoaderBuilder
-                .createFor(originalClassLoader, log)
+                .createFor(originalClassLoader, log, encoding)
                 .addURL(extraClassLoaderDirURL)
                 .buildAndSet();
 
@@ -82,7 +83,7 @@ public class ThreadContextClassLoaderBuilderTest {
 
         // Assemble
         holder = ThreadContextClassLoaderBuilder
-                .createFor(originalClassLoader, log)
+                .createFor(originalClassLoader, log, encoding)
                 .addURL(extraClassLoaderDirURL)
                 .buildAndSet();
 
@@ -110,7 +111,7 @@ public class ThreadContextClassLoaderBuilderTest {
         final File theJar = new File(extraClassLoaderDirFile, "jarSubDirectory/aJarWithResources.jar");
 
         holder = ThreadContextClassLoaderBuilder
-                .createFor(originalClassLoader, log)
+                .createFor(originalClassLoader, log, encoding)
                 .addPath(FileSystemUtilities.getCanonicalPath(theJar))
                 .buildAndSet();
 
