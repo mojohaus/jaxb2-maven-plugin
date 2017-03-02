@@ -10,14 +10,13 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter.PATTERN_LETTER_DIGIT_PUNCT;
+import static java.io.File.separator;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -57,7 +56,8 @@ public class PackageFilterInclusionTest {
     public void validateExcludingPackageInfoFiles() {
 
         // Assemble
-        final String rootPackagePath = contextRoot + "/org/codehaus/mojo/jaxb2";
+        final String rootPackagePath = contextRoot + separator + "org" + separator + "codehaus" + separator + "mojo"
+                + separator + "jaxb2";
         final String excludeFilenamePattern = "package-info\\.java";
         final List<Filter<File>> excludedFilesIdentifierFilter = PatternFileFilter
                 .createIncludeFilterList(log, excludeFilenamePattern);
@@ -86,7 +86,7 @@ public class PackageFilterInclusionTest {
     public void validateIncludingSubTrees() {
 
         // Assemble
-        final String locationPackageDirName = "/location/";
+        final String locationPackageDirName = separator + "location" + separator;
         final FileFilterAdapter includeFilter = new FileFilterAdapter(new FileFilter() {
             @Override
             public boolean accept(final File pathname) {
