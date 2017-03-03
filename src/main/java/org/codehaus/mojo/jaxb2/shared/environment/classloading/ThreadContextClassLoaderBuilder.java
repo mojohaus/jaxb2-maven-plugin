@@ -286,6 +286,8 @@ public class ThreadContextClassLoaderBuilder {
             toReturn = anURL.getPath();
         } else if ("http".equalsIgnoreCase(protocol) || "https".equalsIgnoreCase(protocol)) {
             toReturn = anURL.toString();
+        } else if ("bundleresource".equalsIgnoreCase(protocol)) { // e.g. when used in Eclipse/m2e
+            toReturn = anURL.toString();
         } else {
             throw new IllegalArgumentException("Unknown protocol [" + protocol + "]; could not handle URL ["
                     + anURL + "]");
