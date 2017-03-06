@@ -199,11 +199,10 @@ public class ThreadContextClassLoaderBuilder {
                     builder.append(toAppend).append(File.pathSeparator);
                 }
             }
-        } catch (IOException e) {
-
-            // Restore the original ClassLoader to the active thread before failing.
+        } catch (Exception e) {
+            // Restore the original classloader to the active thread before failing.
             currentThread.setContextClassLoader(originalClassLoader);
-            throw new IllegalStateException("Could not synthesize classPath from original ClassLoader.", e);
+            throw new IllegalStateException("Could not synthesize classpath from original classloader.", e);
         }
 
         final String classPathString = builder.length() > 0
