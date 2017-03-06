@@ -144,7 +144,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
         } catch (IllegalStateException e) {
             throw e;
         } catch (Exception e) {
-            throw new IllegalStateException("Could not setup() mandatory EnvironmentFacets.", e);
+            throw new IllegalStateException("Could not setup mandatory ToolExecutionEnvironment.", e);
         }
     }
 
@@ -178,8 +178,10 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                 localeFacet.restore();
             }
 
-            // Restore the original ClassLoader
-            holder.restoreClassLoaderAndReleaseThread();
+            if (holder != null) {
+                // Restore the original ClassLoader
+                holder.restoreClassLoaderAndReleaseThread();
+            }
 
             if (log.isDebugEnabled()) {
                 log.debug("ToolExecutionEnvironment restore -- Done.");
