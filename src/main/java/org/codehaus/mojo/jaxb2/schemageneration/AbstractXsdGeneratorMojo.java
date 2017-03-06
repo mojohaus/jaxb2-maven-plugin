@@ -796,7 +796,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             } else if (getLog().isWarnEnabled()) {
 
                 final String suffix = !currentFile.exists() ? " nonexistent" : " was neither a File nor a Directory";
-                getLog().warn("Classpath part [" + current + "] " + suffix + ". Ignoring it.");
+                getLog().warn("Classpath part [" + current + "] " + suffix + ". Ignoring it.");
             }
         }
 

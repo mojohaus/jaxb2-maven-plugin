@@ -93,7 +93,7 @@ public class ThreadContextClassLoaderBuilder {
             if (current.toString().equalsIgnoreCase(anURL.toString())) {
 
                 if (log.isWarnEnabled()) {
-                    log.warn("Not adding URL [" + anURL.toString() + "] twice. Check your plugin configuration.");
+                    log.warn("Not adding URL [" + anURL.toString() + "] twice. Check your plugin configuration.");
                 }
 
                 // Don't re-add the supplied URL.
@@ -138,7 +138,7 @@ public class ThreadContextClassLoaderBuilder {
         try {
             anUrl = new File(path).toURI().toURL();
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Could not convert path [" + path + "] to an URL.", e);
+            throw new IllegalArgumentException("Could not convert path [" + path + "] to an URL.", e);
         }
 
         // Delegate

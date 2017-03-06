@@ -154,7 +154,7 @@ public class JavaDocExtractor {
         final Collection<JavaSource> sources = builder.getSources();
 
         if (log.isInfoEnabled()) {
-            log.info("Processing [" + sources.size() + "] java sources.");
+            log.info("Processing [" + sources.size() + "] java sources.");
         }
 
         for (JavaSource current : sources) {
