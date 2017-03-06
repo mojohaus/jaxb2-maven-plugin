@@ -132,7 +132,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                 try {
                     current.setup();
                 } catch (Exception e) {
-                    throw new IllegalStateException("Could not setup() EnvironmentFacet of type ["
+                    throw new IllegalStateException("Could not setup() EnvironmentFacet of type ["
                             + current.getClass().getName() + "]", e);
                 }
             }
@@ -164,7 +164,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                 try {
                     current.restore();
                 } catch (Exception e) {
-                    throw new IllegalStateException("Could not restore() EnvironmentFacet of type ["
+                    throw new IllegalStateException("Could not restore() EnvironmentFacet of type ["
                             + current.getClass().getName() + "]", e);
                 }
             }

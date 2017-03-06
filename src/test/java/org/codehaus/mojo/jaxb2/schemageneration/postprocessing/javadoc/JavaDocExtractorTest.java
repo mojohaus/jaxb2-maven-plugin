@@ -77,14 +77,14 @@ public class JavaDocExtractorTest {
 
         /*
          * 000: (DEBUG) Accepted file [/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/test-classes/testdata/schemageneration/javadoc/basic/NodeProcessor.java],
-         * 001: (INFO) Processing [1] java sources.,
+         * 001: (INFO) Processing [1] java sources.,
          * 002: (DEBUG) Added package-level JavaDoc for [basic],
          * 003: (DEBUG) Added class-level JavaDoc for [basic.NodeProcessor],
          * 004: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#accept(org.w3c.dom.Node)],
          * 005: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#process(org.w3c.dom.Node)]]
          */
         Assert.assertEquals(6, keys.size());
-        Assert.assertEquals("001: (INFO) Processing [1] java sources.", keys.get(1));
+        Assert.assertEquals("001: (INFO) Processing [1] java sources.", keys.get(1));
         Assert.assertEquals("002: (DEBUG) Added package-level JavaDoc for [basic]", keys.get(2));
         Assert.assertEquals("003: (DEBUG) Added class-level JavaDoc for [basic.NodeProcessor]", keys.get(3));
         Assert.assertEquals("004: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#accept(org.w3c.dom.Node)]",
