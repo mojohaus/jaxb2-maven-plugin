@@ -414,30 +414,22 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * <li>Otherwise use the value from the system property <code>file.encoding</code>.</li>
      * </ol>
      *
-     * @param warnIfConfiguredEncodingDiffersFromFileEncoding Defines if the configured encoding is not equal to the
-     *                                                        system property {@code file.encoding}, emit a warning
-     *                                                        on the Maven Log (implies that the Maven log has to be
-     *                                                        warnEnabled).
+     * @param warnIfPlatformEncoding Defines if a warning should be logged if encoding is not configured but
+     *                               the platform encoding (system property {@code file.encoding}) is used
      * @return The encoding to be used by this AbstractJaxbMojo and its tools.
      * @see #encoding
      */
-    protected final String getEncoding(final boolean warnIfConfiguredEncodingDiffersFromFileEncoding) {
+    protected final String getEncoding(final boolean warnIfPlatformEncoding) {
 
         // Harvest information
         final boolean configuredEncoding = encoding != null;
         final String fileEncoding = System.getProperty(SYSTEM_FILE_ENCODING_PROPERTY);
         final String effectiveEncoding = configuredEncoding ? encoding : fileEncoding;
 
-        // Should we warn?
-        if (warnIfConfiguredEncodingDiffersFromFileEncoding
-                && !fileEncoding.equalsIgnoreCase(effectiveEncoding)
-                && getLog().isWarnEnabled()) {
-            getLog().warn("Configured encoding [" + effectiveEncoding
-                    + "] differs from encoding given in system property '" + SYSTEM_FILE_ENCODING_PROPERTY
-                    + "' [" + fileEncoding + "]");
-        }
-
-        if (getLog().isDebugEnabled()) {
+        // Should we warn if using platform encoding (i.e. platform dependent)?
+        if (!configuredEncoding && warnIfPlatformEncoding) {
+            getLog().warn("Using platform encoding ["+ effectiveEncoding + "], i.e. build is platform dependent!");
+        } else if (getLog().isDebugEnabled()) {
             getLog().debug("Using " + (configuredEncoding ? "explicitly configured" : "system property")
                     + " encoding [" + effectiveEncoding + "]");
         }
