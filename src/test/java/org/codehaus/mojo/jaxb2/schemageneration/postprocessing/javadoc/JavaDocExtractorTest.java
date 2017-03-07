@@ -6,6 +6,7 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.PackageLocation;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
@@ -32,6 +33,7 @@ public class JavaDocExtractorTest {
     private File javaDocBasicDir;
     private File javaDocAnnotatedDir;
     private File javaDocEnumsDir;
+    private File javaDocXmlWrappersDir;
     private BufferingLog log;
 
     @Before
@@ -57,6 +59,12 @@ public class JavaDocExtractorTest {
                 .getResource("testdata/schemageneration/javadoc/enums");
         this.javaDocEnumsDir = new File(enumsDirURL.getPath());
         Assert.assertTrue(javaDocEnumsDir.exists() && javaDocEnumsDir.isDirectory());
+
+        final URL wrappersDirURL = getClass()
+                .getClassLoader()
+                .getResource("testdata/schemageneration/javadoc/xmlwrappers");
+        this.javaDocXmlWrappersDir = new File(wrappersDirURL.getPath());
+        Assert.assertTrue(javaDocXmlWrappersDir.exists() && javaDocXmlWrappersDir.isDirectory());
     }
 
     @Test
@@ -98,20 +106,11 @@ public class JavaDocExtractorTest {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        final List<File> sourceDirs = Arrays.<File>asList(javaDocAnnotatedDir);
-        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
 
         // Act
-        unitUnderTest.addSourceFiles(sourceFiles);
-        final SearchableDocumentation result = unitUnderTest.process();
+        final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest, 2, javaDocAnnotatedDir);
 
         // Assert
-        final SortedMap<String, SortableLocation> path2locMap = new TreeMap<String, SortableLocation>();
-
-        for (String currentPath : result.getPaths()) {
-            path2locMap.put(currentPath, result.getLocation(currentPath));
-        }
-
         final String prefix = "testdata.schemageneration.javadoc.annotated.";
         final String fieldAccessPrefix = prefix + "AnnotatedXmlNameAnnotatedClassWithFieldAccessTypeName#";
         final String methodAccessPrefix = prefix + "AnnotatedXmlNameAnnotatedClassWithMethodAccessTypeName#";
@@ -166,33 +165,19 @@ public class JavaDocExtractorTest {
     }
 
     @Test
-    public void validateExtractEnumJavaDocs() {
+    public void validateJavaDocsForXmlEnumsAreCorrectlyApplied() {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        unitUnderTest.setEncoding("UTF-8");
-
-        final List<File> sourceDirs = Collections.singletonList(javaDocEnumsDir);
-        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
-        excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
-        Filters.initialize(log, excludeFilesMatching);
-
-        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, excludeFilesMatching, log);
-        Assert.assertEquals(2, sourceFiles.size());
 
         // Act
-        unitUnderTest.addSourceFiles(sourceFiles);
-        final SearchableDocumentation result = unitUnderTest.process();
-
-        final SortedMap<SortableLocation, JavaDocData> sortableLocations2JavaDocDataMap = result.getAll();
-        final SortedMap<String, SortableLocation> path2LocationMap = new TreeMap<String, SortableLocation>();
-
-        for (Map.Entry<SortableLocation, JavaDocData> current : sortableLocations2JavaDocDataMap.entrySet()) {
-            path2LocationMap.put(current.getKey().getPath(), current.getKey());
-        }
+        final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest,
+                3,
+                javaDocEnumsDir);
+        final MapWrapper mapWrapper = new MapWrapper(result);
 
         // Assert
-        Assert.assertEquals(16, sortableLocations2JavaDocDataMap.size());
+        Assert.assertEquals(21, mapWrapper.sortableLocations2JavaDocDataMap.size());
 
         final List<String> paths = Arrays.asList(
                 "enums",
@@ -203,6 +188,11 @@ public class JavaDocExtractorTest {
                 "enums.AmericanCoin#25",
                 "enums.AmericanCoin#getValue()",
                 "enums.AmericanCoin#value",
+                "enums.ExampleEnumHolder",
+                "enums.ExampleEnumHolder#coins",
+                "enums.ExampleEnumHolder#foodPreferences",
+                "enums.ExampleEnumHolder#getCoins()",
+                "enums.ExampleEnumHolder#getFoodPreferences()",
                 "enums.FoodPreference",
                 "enums.FoodPreference#LACTO_VEGETARIAN",
                 "enums.FoodPreference#NONE",
@@ -213,16 +203,89 @@ public class JavaDocExtractorTest {
                 "enums.FoodPreference#milkDrinker");
         for (String current : paths) {
             Assert.assertTrue("Required path [" + current + "] not found.",
-                    path2LocationMap.keySet().contains(current.trim()));
+                    mapWrapper.path2LocationMap.keySet().contains(current.trim()));
         }
 
-        final SortableLocation enumClassLocation = path2LocationMap.get("enums.FoodPreference");
-        final JavaDocData enumClassJavaDocData = sortableLocations2JavaDocDataMap.get(enumClassLocation);
+        // Finally, validate that the injected XML document comments
+        // match the expected/corresponding JavaDoc comments.
+        mapWrapper.validateJavaDocCommentText(
+                "Simple enumeration example defining some Food preferences.",
+                "enums.FoodPreference");
 
-        Assert.assertEquals("Simple enumeration example defining some Food preferences.",
-                enumClassJavaDocData.getComment());
-        Assert.assertEquals("Vegan who will neither eat meats nor drink milk.",
-                sortableLocations2JavaDocDataMap.get(path2LocationMap.get("enums.FoodPreference#VEGAN")).getComment());
+        mapWrapper.validateJavaDocCommentText(
+                "No special food preferences; eats everything.",
+                "enums.FoodPreference#NONE");
+
+        mapWrapper.validateJavaDocCommentText(
+                "Vegan who will neither eat meats nor drink milk.",
+                "enums.FoodPreference#VEGAN");
+
+        mapWrapper.validateJavaDocCommentText(
+                "Vegetarian who will not eat meats, but drinks milk.",
+                "enums.FoodPreference#LACTO_VEGETARIAN");
+
+        mapWrapper.validateJavaDocCommentText(
+                "A Penny, worth 1 cent.",
+                "enums.AmericanCoin#1");
+
+        mapWrapper.validateJavaDocCommentText(
+                "A Nickel, worth 5 cents.",
+                "enums.AmericanCoin#5");
+
+        mapWrapper.validateJavaDocCommentText(
+                "A Dime, worth 10 cents.",
+                "enums.AmericanCoin#10");
+
+        mapWrapper.validateJavaDocCommentText(
+                "A Quarter, worth 25 cents.",
+                "enums.AmericanCoin#25");
+    }
+
+    @Test
+    public void validateJavaDocsForXmlWrapperAnnotatedFieldsAndMethodsAreCorrectlyApplied() throws Exception {
+
+        // Assemble
+        final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
+
+        // Act
+        final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest, 2, javaDocXmlWrappersDir);
+        final MapWrapper mapWrapper = new MapWrapper(result);
+
+        // Assert
+        Assert.assertEquals(11, mapWrapper.sortableLocations2JavaDocDataMap.size());
+
+        final String packagePrefix = "org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.wrappers";
+        final List<String> paths = new ArrayList<String>();
+        for (String current : Arrays.asList("",
+                ".ExampleXmlWrapperUsingFieldAccess",
+                ".ExampleXmlWrapperUsingFieldAccess#foobar",
+                ".ExampleXmlWrapperUsingFieldAccess#getIntegerSet()",
+                ".ExampleXmlWrapperUsingFieldAccess#getStrings()",
+                ".ExampleXmlWrapperUsingFieldAccess#integerSet",
+                ".ExampleXmlWrapperUsingMethodAccess",
+                ".ExampleXmlWrapperUsingMethodAccess#foobar()",
+                ".ExampleXmlWrapperUsingMethodAccess#getMethodIntegerSet()",
+                ".ExampleXmlWrapperUsingMethodAccess#methodIntegerSet",
+                ".ExampleXmlWrapperUsingMethodAccess#methodStrings")) {
+            paths.add(packagePrefix + current);
+        }
+
+        for (String current : paths) {
+            Assert.assertTrue("Required path [" + current + "] not found.",
+                    mapWrapper.path2LocationMap.keySet().contains(current.trim()));
+        }
+
+        mapWrapper.validateJavaDocCommentText("List containing some strings.",
+                packagePrefix + ".ExampleXmlWrapperUsingFieldAccess#foobar");
+
+        mapWrapper.validateJavaDocCommentText("SortedSet containing Integers.",
+                packagePrefix + ".ExampleXmlWrapperUsingFieldAccess#integerSet");
+
+        mapWrapper.validateJavaDocCommentText("List containing some methodStrings.",
+                packagePrefix + ".ExampleXmlWrapperUsingMethodAccess#foobar()");
+
+        mapWrapper.validateJavaDocCommentText("SortedSet containing Integers.",
+                packagePrefix + ".ExampleXmlWrapperUsingMethodAccess#getMethodIntegerSet()");
     }
 
     @Test
@@ -230,12 +293,9 @@ public class JavaDocExtractorTest {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        final List<File> sourceDirs = Arrays.asList(javaDocBasicDir);
-        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
 
         // Act
-        unitUnderTest.addSourceFiles(sourceFiles);
-        final SearchableDocumentation result = unitUnderTest.process();
+        final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest, 1, javaDocBasicDir);
 
         // Assert
         final ArrayList<SortableLocation> sortableLocations = new ArrayList<SortableLocation>(result.getAll().keySet());
@@ -259,7 +319,7 @@ public class JavaDocExtractorTest {
         final String processMethodPath = "basic.NodeProcessor#process(org.w3c.dom.Node)";
 
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        final List<File> sourceDirs = Arrays.<File>asList(javaDocBasicDir);
+        final List<File> sourceDirs = Collections.<File>singletonList(javaDocBasicDir);
         final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
 
         // Act
@@ -331,5 +391,93 @@ public class JavaDocExtractorTest {
         Assert.assertEquals("aNode The DOM node to process.", methodTag2ValueMap.get("param"));
         Assert.assertEquals("<code>true</code> if the provided Node should be processed by this NodeProcessor.",
                 methodTag2ValueMap.get("return"));
+    }
+
+    //
+    // Private helpers
+    //
+
+    /**
+     * Simple helper class wrapping the path2LocationMap and the sortableLocations2JavaDocDataMap.
+     */
+    class MapWrapper {
+
+        SortedMap<String, SortableLocation> path2LocationMap;
+        SortedMap<SortableLocation, JavaDocData> sortableLocations2JavaDocDataMap;
+
+        /**
+         * Creates a MapWrapper using the data retrieved from a SearchableDocumentation
+         *
+         * @param searchableDocumentation A non-null SearchableDocumentation instance.
+         */
+        public MapWrapper(final SearchableDocumentation searchableDocumentation) {
+
+            // Check sanity
+            Validate.notNull(searchableDocumentation, "searchableDocumentation");
+
+            // Assign state
+            this.sortableLocations2JavaDocDataMap = searchableDocumentation.getAll();
+            this.path2LocationMap = new TreeMap<String, SortableLocation>();
+
+            for (Map.Entry<SortableLocation, JavaDocData> current : sortableLocations2JavaDocDataMap.entrySet()) {
+                path2LocationMap.put(current.getKey().getPath(), current.getKey());
+            }
+        }
+
+        /**
+         * Validates that the JavaDoc found at the supplied SortableLocation path equals the expected value.
+         *
+         * @param expected The expected JavaDoc comment text.
+         * @param path     The SortableLocation path where the text was expected.
+         * @see SortableLocation#getPath()
+         */
+        public void validateJavaDocCommentText(final String expected, final String path) {
+
+            final SortableLocation sortableLocation = path2LocationMap.get(path);
+            final JavaDocData xmlWrapperJavaDocData = sortableLocations2JavaDocDataMap.get(sortableLocation);
+
+            // All Done.
+            Assert.assertEquals(expected, xmlWrapperJavaDocData.getComment());
+        }
+    }
+
+    private void validateJavaDocCommentText(
+            final MapWrapper wrapper,
+            final String expected,
+            final String path) {
+
+        final SortableLocation sortableLocation = wrapper.path2LocationMap.get(path);
+        final JavaDocData xmlWrapperJavaDocData = wrapper.sortableLocations2JavaDocDataMap.get(sortableLocation);
+
+        // All Done.
+        Assert.assertEquals(expected, xmlWrapperJavaDocData.getComment());
+    }
+
+    private SearchableDocumentation getSearchableDocumentationFor(final JavaDocExtractor unitUnderTest,
+                                                                  final int expectedNumberOfFiles,
+                                                                  final File... sourceFileDirectories) {
+
+        // Ensure that the encoding is correctly set
+        unitUnderTest.setEncoding("UTF-8");
+
+        // Convert the supplied directory Files to a List
+        final List<File> sourceDirs = new ArrayList<File>();
+        Collections.addAll(sourceDirs, sourceFileDirectories);
+
+        // Exclude any ".xsd" files found within the source directory files given
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
+        Filters.initialize(log, excludeFilesMatching);
+
+        // Find all normal Files not being ".xsd" files below the supplied sourceDirs
+        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, excludeFilesMatching, log);
+        Assert.assertEquals(expectedNumberOfFiles, sourceFiles.size());
+
+        // Add the found files as source files
+        unitUnderTest.addSourceFiles(sourceFiles);
+
+        // Launch the JavaDocExtractor and find
+        // the resulting SearchableDocumentation.
+        return unitUnderTest.process();
     }
 }

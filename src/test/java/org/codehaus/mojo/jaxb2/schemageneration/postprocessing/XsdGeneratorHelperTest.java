@@ -3,9 +3,11 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.AbstractSourceCodeAwareNodeProcessingTest;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocExtractor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.NoAuthorJavaDocRenderer;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SearchableDocumentation;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdAnnotationProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdEnumerationAnnotationProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
@@ -23,6 +25,9 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import java.io.File;
 import java.io.StringReader;
@@ -213,7 +218,7 @@ public class XsdGeneratorHelperTest {
                 log,
                 "allJavaFiles",
                 excludeFilesMatching);
-        Assert.assertEquals(2, allSourceFiles.size());
+        Assert.assertEquals(3, allSourceFiles.size());
 
         final List<URL> urls = new ArrayList<URL>();
         for (File current : allSourceFiles) {
@@ -224,7 +229,7 @@ public class XsdGeneratorHelperTest {
                         + "] to a URL", e);
             }
         }
-        Assert.assertEquals(2, urls.size());
+        Assert.assertEquals(3, urls.size());
 
         extractor.addSourceURLs(urls);
         final SearchableDocumentation docs = extractor.process();
@@ -238,6 +243,7 @@ public class XsdGeneratorHelperTest {
         // Act
         final Document processedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(rawEnumSchema));
         XsdGeneratorHelper.process(processedDocument.getFirstChild(), true, enumProcessor);
+        // System.out.println("Got: " + AbstractSourceCodeAwareNodeProcessingTest.printDocument(processedDocument));
 
         // Assert
         final Document expectedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(processedEnumSchema));
@@ -245,6 +251,59 @@ public class XsdGeneratorHelperTest {
         diff.overrideElementQualifier(new ElementNameAndAttributeQualifier());
 
         XMLAssert.assertXMLEqual(processedDocument, expectedDocument);
+    }
+
+    @Test
+    public void validateXmlDocumentationForWrappers() throws Exception {
+
+        // Assemble
+        final BufferingLog log = new BufferingLog();
+        final JavaDocExtractor extractor = new JavaDocExtractor(log);
+        extractor.setEncoding("UTF-8");
+
+        final String parentPath = "testdata/schemageneration/javadoc/xmlwrappers/";
+        final URL parentPathURL = getClass().getClassLoader().getResource(parentPath);
+        Assert.assertNotNull(parentPathURL);
+
+        final String schemaGenCreatedSchema = XmlTestUtils.readFully(parentPath + "expectedRawXmlWrappers.xsd");
+
+        final File parentDir = new File(parentPathURL.getPath());
+        Assert.assertTrue(parentDir.exists() && parentDir.isDirectory());
+
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
+        Filters.initialize(log, excludeFilesMatching);
+
+        final List<File> allSourceFiles = FileSystemUtilities.filterFiles(parentDir,
+                null,
+                parentDir.getAbsolutePath(),
+                log,
+                "allJavaFiles",
+                excludeFilesMatching);
+        Assert.assertEquals(2, allSourceFiles.size());
+
+        final List<URL> urls = new ArrayList<URL>();
+        for (File current : allSourceFiles) {
+            try {
+                urls.add(current.toURI().toURL());
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException("Could not convert file [" + current.getAbsolutePath()
+                        + "] to a URL", e);
+            }
+        }
+        Assert.assertEquals(2, urls.size());
+
+        // Act
+        extractor.addSourceURLs(urls);
+        final SearchableDocumentation docs = extractor.process();
+
+        final XsdAnnotationProcessor processor = new XsdAnnotationProcessor(docs, new NoAuthorJavaDocRenderer());
+        final Document schemaGenCreatedDocument = XsdGeneratorHelper.parseXmlStream(
+                new StringReader(schemaGenCreatedSchema));
+        XsdGeneratorHelper.process(schemaGenCreatedDocument.getFirstChild(), true, processor);
+        System.out.println("Got: " + AbstractSourceCodeAwareNodeProcessingTest.printDocument(schemaGenCreatedDocument));
+
+        // Assert
     }
 
     @Test
@@ -293,6 +352,25 @@ public class XsdGeneratorHelperTest {
     //
     // Private helpers
     //
+
+    private static DocumentBuilderFactory getDocumentBuilderFactory() {
+
+        final DocumentBuilderFactory toReturn = DocumentBuilderFactory.newInstance();
+        toReturn.setNamespaceAware(true);
+        return toReturn;
+    }
+
+    private static DocumentBuilder getDocumentBuilder() {
+        try {
+            return getDocumentBuilderFactory().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("Could not create DocumentBuilder", e);
+        }
+    }
+
+    private static Document createEmptyDocument(final DocumentBuilder builder) {
+        return builder.newDocument();
+    }
 
     private String getXmlDocumentSample(final String namespace) {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"

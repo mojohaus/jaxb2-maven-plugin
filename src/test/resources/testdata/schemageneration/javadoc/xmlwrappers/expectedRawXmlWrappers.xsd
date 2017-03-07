@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://jaxb.mojohaus.org/wrappers" xmlns:tns="http://jaxb.mojohaus.org/wrappers" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="exampleXmlWrapperUsingFieldAccess" type="tns:exampleXmlWrapperUsingFieldAccess"/>
+
+  <xs:element name="exampleXmlWrapperUsingMethodAccess" type="tns:exampleXmlWrapperUsingMethodAccess"/>
+
+  <xs:complexType name="exampleXmlWrapperUsingFieldAccess">
+    <xs:sequence>
+      <xs:element name="foobar" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="aString" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="integerSet" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="anInteger" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="exampleXmlWrapperUsingMethodAccess">
+    <xs:sequence>
+      <xs:element name="foobar" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="aString" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="integerSet" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="anInteger" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

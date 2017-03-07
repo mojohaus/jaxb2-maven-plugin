@@ -37,6 +37,7 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 import java.io.File;
@@ -61,6 +62,12 @@ import java.util.TreeMap;
  * @since 2.0
  */
 public class JavaDocExtractor {
+
+    /**
+     * The default value given as the return value from some annotation classes whenever the attribute
+     * has not been supplied within the codebase.
+     */
+    private static final String DEFAULT_VALUE = "##default";
 
     // Internal state
     private JavaProjectBuilder builder;
@@ -172,7 +179,7 @@ public class JavaDocExtractor {
 
                 // Add the class-level JavaDoc
                 final String simpleClassName = currentClass.getName();
-                final String classXmlName = getAnnotationAttributeValuleFrom(XmlType.class,
+                final String classXmlName = getAnnotationAttributeValueFrom(XmlType.class,
                         "name",
                         currentClass.getAnnotations());
 
@@ -185,23 +192,63 @@ public class JavaDocExtractor {
 
                 for (JavaField currentField : currentClass.getFields()) {
 
+                    final List<JavaAnnotation> currentFieldAnnotations = currentField.getAnnotations();
+                    String annotatedXmlName = null;
+
+                    //
+                    // Is this field a collection, annotated with @XmlElementWrapper?
+                    // If so, the documentation should pertain to the corresponding XML Sequence,
+                    // rather than the individual XML elements.
+                    //
+                    if (hasAnnotation(XmlElementWrapper.class, currentFieldAnnotations)) {
+
+                        // There are 2 cases here:
+                        //
+                        // 1: The XmlElementWrapper is named.
+                        // ==================================
+                        // @XmlElementWrapper(name = "foobar")
+                        // @XmlElement(name = "aString")
+                        // private List<String> strings;
+                        //
+                        // ==> annotatedXmlName == "foobar"
+                        //
+                        // 2: The XmlElementWrapper is not named.
+                        // ======================================
+                        // @XmlElementWrapper
+                        // @XmlElement(name = "anInteger")
+                        // private SortedSet<Integer> integerSet;
+                        //
+                        // ==> annotatedXmlName == "integerSet"
+                        //
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlElementWrapper.class,
+                                "name",
+                                currentFieldAnnotations);
+
+                        if (annotatedXmlName == null || annotatedXmlName.equals(DEFAULT_VALUE)) {
+                            annotatedXmlName = currentField.getName();
+                        }
+                    }
+
                     // Find the XML name if provided within an annotation.
-                    String annotatedXmlName = getAnnotationAttributeValuleFrom(
-                            XmlElement.class,
-                            "name",
-                            currentField.getAnnotations());
+                    if (annotatedXmlName == null) {
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlElement.class,
+                                "name",
+                                currentFieldAnnotations);
+                    }
 
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotationAttributeValuleFrom(
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
                                 XmlAttribute.class,
                                 "name",
-                                currentField.getAnnotations());
+                                currentFieldAnnotations);
                     }
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotationAttributeValuleFrom(
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
                                 XmlEnumValue.class,
                                 "value",
-                                currentField.getAnnotations());
+                                currentFieldAnnotations);
                     }
 
                     // Add the field-level JavaDoc
@@ -221,14 +268,55 @@ public class JavaDocExtractor {
 
                 for (JavaMethod currentMethod : currentClass.getMethods()) {
 
+                    final List<JavaAnnotation> currentMethodAnnotations = currentMethod.getAnnotations();
+                    String annotatedXmlName = null;
+
+                    //
+                    // Is this field a collection, annotated with @XmlElementWrapper?
+                    // If so, the documentation should pertain to the corresponding XML Sequence,
+                    // rather than the individual XML elements.
+                    //
+                    if (hasAnnotation(XmlElementWrapper.class, currentMethodAnnotations)) {
+
+                        // There are 2 cases here:
+                        //
+                        // 1: The XmlElementWrapper is named.
+                        // ==================================
+                        // @XmlElementWrapper(name = "foobar")
+                        // @XmlElement(name = "aString")
+                        // public List<String> getStrings() { ... };
+                        //
+                        // ==> annotatedXmlName == "foobar"
+                        //
+                        // 2: The XmlElementWrapper is not named.
+                        // ======================================
+                        // @XmlElementWrapper
+                        // @XmlElement(name = "anInteger")
+                        // public SortedSet<Integer> getIntegerSet() { ... };
+                        //
+                        // ==> annotatedXmlName == "getIntegerSet"
+                        //
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlElementWrapper.class,
+                                "name",
+                                currentMethodAnnotations);
+
+                        if (annotatedXmlName == null || annotatedXmlName.equals(DEFAULT_VALUE)) {
+                            annotatedXmlName = currentMethod.getName();
+                        }
+                    }
+
+
                     // Find the XML name if provided within an annotation.
-                    String annotatedXmlName = getAnnotationAttributeValuleFrom(
-                            XmlElement.class,
-                            "name",
-                            currentMethod.getAnnotations());
+                    if (annotatedXmlName == null) {
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlElement.class,
+                                "name",
+                                currentMethod.getAnnotations());
+                    }
 
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotationAttributeValuleFrom(
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
                                 XmlAttribute.class,
                                 "name",
                                 currentMethod.getAnnotations());
@@ -266,7 +354,7 @@ public class JavaDocExtractor {
      * List, or {@code null} if none was found.
      * @since 2.2
      */
-    private static String getAnnotationAttributeValuleFrom(
+    private static String getAnnotationAttributeValueFrom(
             final Class<?> annotationType,
             final String attributeName,
             final List<JavaAnnotation> annotations) {
@@ -307,13 +395,30 @@ public class JavaDocExtractor {
         return toReturn;
     }
 
+    private static boolean hasAnnotation(final Class<?> annotationType,
+                                         final List<JavaAnnotation> annotations) {
+
+        if (annotations != null && !annotations.isEmpty() && annotationType != null) {
+
+            final String fullAnnotationClassName = annotationType.getName();
+
+            for (JavaAnnotation current : annotations) {
+                if (current.getType().isA(fullAnnotationClassName)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     //
     // Private helpers
     //
 
     private void addEntry(final SortedMap<SortableLocation, JavaDocData> map,
-            final SortableLocation key,
-            final JavaAnnotatedElement value) {
+                          final SortableLocation key,
+                          final JavaAnnotatedElement value) {
 
         // Check sanity
         if (map.containsKey(key)) {

@@ -122,7 +122,8 @@ public class XsdEnumerationAnnotationProcessor implements NodeProcessor {
         if (localName != null) {
 
             final String trimmed = localName.trim();
-            return trimmed.equalsIgnoreCase("enumeration") || trimmed.equalsIgnoreCase("simpleType");
+            return trimmed.equalsIgnoreCase("enumeration")
+                    || trimmed.equalsIgnoreCase("simpleType");
         }
 
         /*

@@ -125,7 +125,7 @@ public class XsdAnnotationProcessor implements NodeProcessor {
     public boolean accept(final Node aNode) {
 
         // Only deal with Element nodes with "name" attributes.
-        if(!DomHelper.isNamedElement(aNode)) {
+        if (!DomHelper.isNamedElement(aNode)) {
             return false;
         }
 
@@ -148,7 +148,8 @@ public class XsdAnnotationProcessor implements NodeProcessor {
         */
 
         // Only process nodes corresponding to Types we have any JavaDoc for.
-        // TODO: How should we handle PackageLocations and package documentation.
+        // TODO: How should we handle PackageLocations and package documentation?
+
         boolean toReturn = false;
         if (DomHelper.getMethodLocation(aNode, methodJavaDocs.keySet()) != null) {
             toReturn = true;

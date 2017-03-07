@@ -176,12 +176,12 @@ public final class DomHelper {
             final String currentNodeName = current.getNodeName();
             final String nameAttribute = DomHelper.getNameAttribute(current);
 
-            if(currentNodeName.toLowerCase().endsWith("enumeration")) {
+            if (currentNodeName.toLowerCase().endsWith("enumeration")) {
 
                 // We should print the "value" attribute here.
                 nodeNameList.add(currentNodeName + "[@value='" + getValueAttribute(current) + "']");
 
-            } else if(nameAttribute == null) {
+            } else if (nameAttribute == null) {
 
                 // Just emit the node's name.
                 nodeNameList.add(current.getNodeName());
@@ -413,7 +413,7 @@ public final class DomHelper {
             final String nodeName = aNode.getNodeName();
             String humanReadableName = DomHelper.getNameAttribute(aNode);
 
-            if(humanReadableName == null && nodeName.toLowerCase().endsWith("enumeration")) {
+            if (humanReadableName == null && nodeName.toLowerCase().endsWith("enumeration")) {
                 humanReadableName = "enumeration#" + getValueAttribute(aNode);
             }
 

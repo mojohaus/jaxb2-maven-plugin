@@ -1,6 +1,4 @@
-package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
-
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
+package enums;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,8 +17,8 @@ import java.util.TreeSet;
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-@XmlRootElement(namespace = SomewhatNamedPerson.NAMESPACE)
-@XmlType(namespace = SomewhatNamedPerson.NAMESPACE, propOrder = {"coins", "foodPreferences"})
+@XmlRootElement(namespace = "http://gnat.west.se/foods")
+@XmlType(namespace = "http://gnat.west.se/foods", propOrder = {"coins", "foodPreferences"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExampleEnumHolder implements Serializable {
 

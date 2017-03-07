@@ -85,6 +85,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
 
         // Pre-populate the namespace2SystemIdMap
         namespace2SystemIdMap.put(SomewhatNamedPerson.NAMESPACE, "somewhatNamedPerson.xsd");
+        namespace2SystemIdMap.put("http://jaxb.mojohaus.org/wrappers", "wrapperExample.xsd");
         namespace2SystemIdMap.put("", DEFAULT_EMPTY_NAMESPACE_SYSTEM_ID);
 
         // Create the JAXBContext
@@ -116,8 +117,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
                     final StringWriter out = new StringWriter();
                     final StreamResult toReturn = new StreamResult(out);
 
-                    // The systemId *must* be non-null, even in this case where we do not
-                    // write the XSD to a file.
+                    // The systemId *must* be non-null, even in this case where we
+                    // do not write the XSD to a file.
                     final String effectiveSystemId = namespace2SystemIdMap.get(namespaceUri) == null
                             ? suggestedFileName
                             : namespace2SystemIdMap.get(namespaceUri);
@@ -303,7 +304,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
      * @param actual   The actual document data.
      * @return A DetailedDiff object, describing all differences in documents supplied.
      * @throws org.xml.sax.SAXException If a SAXException was raised during parsing of the two Documents.
-     * @throws IOException  If an I/O-related exception was raised while acquiring the data from the Readers.
+     * @throws IOException              If an I/O-related exception was raised while acquiring the data from the Readers.
      */
     protected static Diff compareXmlIgnoringWhitespace(final String expected, final String actual) throws SAXException,
             IOException {

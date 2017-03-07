@@ -1,5 +1,6 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.wrappers.ExampleXmlWrapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -42,6 +43,6 @@ public class XsdAnnotationProcessorTest extends AbstractSourceCodeAwareNodeProce
      */
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
-        return Arrays.<Class<?>>asList(SomewhatNamedPerson.class);
+        return Arrays.<Class<?>>asList(SomewhatNamedPerson.class, ExampleXmlWrapper.class);
     }
 }

@@ -17,22 +17,22 @@ import javax.xml.bind.annotation.XmlType;
 public enum AmericanCoin {
 
     /**
-     * The penny is worth of 1 cent.
+     * A Penny, worth 1 cent.
      */
     @XmlEnumValue("1") PENNY(1),
 
     /**
-     * The nickel is worth of 5 cents.
+     * A Nickel, worth 5 cents.
      */
     @XmlEnumValue("5") NICKEL(5),
 
     /**
-     * The dime is worth of 10 cents.
+     * A Dime, worth 10 cents.
      */
     @XmlEnumValue("10") DIME(10),
 
     /**
-     * The quarter is worth of 25 cents.
+     * A Quarter, worth 25 cents.
      */
     @XmlEnumValue("25") QUARTER(25);
 

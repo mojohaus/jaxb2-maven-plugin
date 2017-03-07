@@ -1,7 +1,14 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.AbstractSourceCodeAwareNodeProcessingTest;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.DefaultJavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.NoAuthorJavaDocRenderer;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdAnnotationProcessor;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
 
 import javax.xml.bind.JAXBContext;
@@ -16,6 +23,8 @@ import java.util.List;
  */
 public class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareNodeProcessingTest {
 
+    // Shared state
+    private JavaDocRenderer renderer = new NoAuthorJavaDocRenderer();
 
     @Test
     public void validateGeneratedXmlForEnums() throws Exception {
@@ -39,6 +48,28 @@ public class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareN
 
         // Assert
         XmlTestUtils.compareXmlIgnoringWhitespace(expected, out.toString());
+    }
+
+    @Test
+    public void validateHandlingXmlElementWrapperDocumentation() throws Exception {
+
+        // Assmeble
+        final Document document = namespace2DocumentMap.get(SomewhatNamedPerson.NAMESPACE);
+        final Node rootNode = document.getFirstChild();
+
+        final XsdAnnotationProcessor unitUnderTest = new XsdAnnotationProcessor(docs, renderer);
+
+        // Act
+        process(rootNode, true, unitUnderTest);
+
+        // Assert
+        final String processed = printDocument(document);
+        System.out.println("Got: " + processed);
+
+
+        // Act
+
+        // Assert
     }
 
     /**
