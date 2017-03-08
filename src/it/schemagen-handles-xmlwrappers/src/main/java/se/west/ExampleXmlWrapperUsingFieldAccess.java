@@ -13,9 +13,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Trivial transport object type for collections.
- *
- * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
+ * Another trivial transport object type for collections.
  */
 @XmlRootElement(namespace = "http://jaxb.mojohaus.org/wrappers")
 @XmlType(namespace = "http://jaxb.mojohaus.org/wrappers", propOrder = {"strings", "integerSet"})

@@ -19,37 +19,76 @@
 import groovy.util.slurpersupport.*;
 
 // Assemble
-def validateExistingFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]";
-  println "" + index + ". Expected file exists correctly. [" + path + "]";
-}
-
-def validateNonexistentFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert !aFile.exists(), "File should not exist: [" + path + "]";
-  println "" + index + ". File correctly non-existent. [" + path + "]";
-}
-
-def validateNonexistentDirectory(final File aDirectory, final int index) {
-  final String path = aDirectory.getCanonicalPath();
-  assert !aDirectory.exists(), "Directory should not exist: [" + path + "]";
-  println "" + index + ". Directory correctly non-existent. [" + path + "]";
-}
-
-def validateXmlTextAt(final GPathResult selection, final String attributeName, final String expectedText) {
-  selection.
-}
-
 final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
 final File workDir = new File(basedir, 'target/schemagen-work/compile_scope')
+
+/*
+First Complex Type:
+
+  <xs:complexType name="exampleXmlWrapperUsingFieldAccess">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Trivial transport object type for collections.]]></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="foobar">
+        <xs:annotation>
+          <xs:documentation><![CDATA[List containing some strings.]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="aString" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="integerSet">
+        <xs:annotation>
+          <xs:documentation><![CDATA[SortedSet containing Integers.]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="anInteger" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+Second Complex Type:
+  <xs:complexType name="exampleXmlWrapperUsingMethodAccess">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Another trivial transport object type for collections.]]></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="foobar">
+        <xs:annotation>
+          <xs:documentation><![CDATA[List containing some methodStrings.]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="aString" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="methodIntegerSet">
+        <xs:annotation>
+          <xs:documentation><![CDATA[SortedSet containing Integers.]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="anInteger" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+ */
 
 // Act: Validate transformed content
 def xml = new XmlSlurper().parse(new File(outputDir, 'schema1.xsd'));
 assert 2 == xml.complexType.size(), 'Found ' + xml.complexType.size() + ' generated complex types in the schema1.xsd file. (Expected 2).';
 
-def fieldAccessType = xml.'xs:complexType'.find { it.@name == 'exampleXmlWrapperUsingFieldAccess'}
-def methodAccessType = xml.'xs:complexType'.find { it.@name == 'exampleXmlWrapperUsingMethodAccess'}
+def fieldAccessType = xml.'xs:complexType'.find { it.@name == 'exampleXmlWrapperUsingFieldAccess' }
+def methodAccessType = xml.'xs:complexType'.find { it.@name == 'exampleXmlWrapperUsingMethodAccess' }
 
 assert fieldAccessType != null, "Found no FieldAccessType"
 assert methodAccessType != null, "Found no MethodAccessType"
@@ -57,25 +96,39 @@ assert methodAccessType != null, "Found no MethodAccessType"
 println "Got fieldAccessType of type [" + fieldAccessType.getClass().getName() + "]"
 println "Got methodAccessType of type [" + methodAccessType.getClass().getName() + "]"
 
-assert 'List containing some strings.' == fieldAccessType.'xs:sequence'.'xs:element'.'xs:annotation'.'xs:documentation'[0].text()
+// Assert
+println "\nValidating Documentation Annotations for String List"
+println "===================================================="
 
 // /xs:schema/xs:complexType/xs:sequence/xs:element/xs:annotation/xs:documentation
+def expectedStringListDocComment = "List containing some strings."
+def expectedIntegerSetDocComment = "SortedSet containing Integers."
+def stringListDocComment = xml.complexType
+        .find { it.@name == 'exampleXmlWrapperUsingFieldAccess' }
+        .sequence
+        .element
+        .find { it.@name == 'foobar' }
+        .annotation
+        .documentation
+        .toString()
+def intSetDocComment = xml.complexType
+        .find { it.@name == 'exampleXmlWrapperUsingFieldAccess' }
+        .sequence
+        .element
+        .find { it.@name == 'integerSet' }
+        .annotation
+        .documentation
+        .toString()
+
+assert expectedStringListDocComment == stringListDocComment, "Expected [" + expectedStringListDocComment +
+        "], but got [" + stringListDocComment + "]"
+println "Correctly found stringListDocComment [" + stringListDocComment + "] for Field Access type."
+assert expectedIntegerSetDocComment == intSetDocComment, "Expected [" + expectedIntegerSetDocComment +
+        "], but got [" + intSetDocComment + "]"
+println "Correctly found intSetDocComment [" + intSetDocComment + "] for Field Access type."
+
 // <xs:documentation><![CDATA[List containing some strings.]]></xs:documentation>
 
-// Assert
-println "\nValidating work directory content"
-println "==================================="
+println "\nValidating Documentation Annotations for int Set"
+println "=================================================="
 
-validateExistingFile(new File(workDir, 'schema1.xsd'), 1);
-validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2);
-validateExistingFile(new File(workDir, 'org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/wrappers/ExampleXmlWrapperUsingFieldAccess.class'), 3);
-validateExistingFile(new File(workDir, 'org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/wrappers/ExampleXmlWrapperUsingMethodAccess.class'), 4);
-
-println "\nValidating output directory content"
-println "====================================="
-
-validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(outputDir, 'META-INF/sun-jaxb.episode'), 2);
-validateExistingFile(new File(workDir, 'org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/wrappers/ExampleXmlWrapperUsingFieldAccess.class'), 3);
-validateExistingFile(new File(workDir, 'org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/wrappers/ExampleXmlWrapperUsingMethodAccess.class'), 4);
-validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 5);

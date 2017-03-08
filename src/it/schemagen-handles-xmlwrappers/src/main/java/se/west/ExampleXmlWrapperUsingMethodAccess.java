@@ -14,8 +14,6 @@ import java.util.TreeSet;
 
 /**
  * Another trivial transport object type for collections.
- *
- * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
 @XmlRootElement(namespace = "http://jaxb.mojohaus.org/wrappers")
 @XmlType(namespace = "http://jaxb.mojohaus.org/wrappers", propOrder = {"methodStrings", "methodIntegerSet"})
