@@ -1,5 +1,7 @@
 # jaxb2-maven-plugin
 
+[![Build Status](https://travis-ci.org/mojohaus/jaxb2-maven-plugin.svg?branch=master)](https://travis-ci.org/mojohaus/jaxb2-maven-plugin)
+
 This plugin uses the Java API for XML Binding (JAXB), version 2+, to generate Java classes from XML 
 Schemas (and optionally binding files) and to create XML Schemas from annotated Java classes.
  
