@@ -20,9 +20,13 @@ package org.codehaus.mojo.jaxb2.shared.environment;
  */
 
 /**
- * Specification for an Environment controller, which can infer a temporary and reversible change to the environment
- * of an executing task. Any changes performed by this Environment must be reversible, and should be restored to their
- * original values in the {@code restore()} method.
+ * <p>Specification for an Environment controller, which can infer a temporary and reversible change
+ * to the environment of an executing task. Any changes performed by this Environment
+ * must be reversible, and should be restored to their original values in the {@code restore()} method.</p>
+ * <p>EnvironmentFacets are required since the JDK tools (XJC, SchemaGen, JXC) expect certain configuration
+ * or setup to be present during their execution. For improved usability within the JAXB2-Maven-Plugin, we
+ * would like to supply all configuration to the plugin, and delegate the setting of various system-, thread-,
+ * logging- or environment properties to explicit EnvironmentFacet implementations.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  * @since 2.1

@@ -23,7 +23,6 @@ import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -61,7 +60,7 @@ import java.util.List;
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  * @since 2.0
  */
-public class ThreadContextClassLoaderBuilder {
+public final class ThreadContextClassLoaderBuilder {
 
     // Internal state
     private ClassLoader originalClassLoader;
@@ -225,8 +224,8 @@ public class ThreadContextClassLoaderBuilder {
      * @return A ThreadContextClassLoaderBuilder wrapping the supplied members.
      */
     public static ThreadContextClassLoaderBuilder createFor(final ClassLoader classLoader,
-            final Log log,
-            final String encoding) {
+                                                            final Log log,
+                                                            final String encoding) {
 
         // Check sanity
         Validate.notNull(classLoader, "classLoader");
@@ -246,8 +245,8 @@ public class ThreadContextClassLoaderBuilder {
      * @return A ThreadContextClassLoaderBuilder wrapping the supplied members.
      */
     public static ThreadContextClassLoaderBuilder createFor(final Class<?> aClass,
-            final Log log,
-            final String encoding) {
+                                                            final Log log,
+                                                            final String encoding) {
 
         // Check sanity
         Validate.notNull(aClass, "aClass");
@@ -331,6 +330,7 @@ public class ThreadContextClassLoaderBuilder {
      * with added finalizer to ensure we release the Thread reference no matter
      * what happens with any DefaultCleaner objects.
      */
+    @SuppressWarnings("all")
     class DefaultHolder implements ThreadContextClassLoaderHolder {
 
         // Internal state
@@ -338,9 +338,19 @@ public class ThreadContextClassLoaderBuilder {
         private ClassLoader originalClassLoader;
         private String classPathArgument;
 
+        /**
+         * Compound constructor creating a default-implementation {@link ThreadContextClassLoaderHolder} which
+         * wraps references to the {@link Thread} affected as well as the original ClassLoader to restore during
+         * the call to {@link #restoreClassLoaderAndReleaseThread()} method.
+         *
+         * @param affectedThread      The non-null Thread for which a new ClassLoader should be constructed.
+         * @param originalClassLoader The non-null original ClassLoader.
+         * @param classPathArgument   The non-null classpath argument, to be returned
+         *                            from the method call to {@link #getClassPathAsArgument()}.
+         */
         public DefaultHolder(final Thread affectedThread,
-                final ClassLoader originalClassLoader,
-                final String classPathArgument) {
+                             final ClassLoader originalClassLoader,
+                             final String classPathArgument) {
 
             // Check sanity
             Validate.notNull(affectedThread, "affectedThread");
@@ -358,6 +368,7 @@ public class ThreadContextClassLoaderBuilder {
          */
         @Override
         public void restoreClassLoaderAndReleaseThread() {
+
             if (affectedThread != null) {
 
                 // Restore original state
@@ -386,7 +397,9 @@ public class ThreadContextClassLoaderBuilder {
             try {
                 // First, release all resources held by this object.
                 restoreClassLoaderAndReleaseThread();
+
             } finally {
+
                 // Now, perform standard finalization.
                 super.finalize();
             }

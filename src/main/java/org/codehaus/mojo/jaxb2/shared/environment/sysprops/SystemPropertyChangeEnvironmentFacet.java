@@ -28,13 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * EnvironmentFacet which changes
- * system property key and two values (original and new values).
+ * EnvironmentFacet which changes the value of a system property for the duration
+ * of executing a tool. This is required for tools (such as the JDK SchemaGen) which
+ * relies on environment or system properties being set for their execution.
+ * This faced accepts one key and two values (original/new values).
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  * @since 2.1
  */
-public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet {
+public final class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet {
 
     /**
      * Operation definitions indicating how a System property should be changed by this EnvironmentFacet.
@@ -242,8 +244,9 @@ public class SystemPropertyChangeEnvironmentFacet extends AbstractLogAwareFacet 
             // Validate that the property name is not already present as a SystemPropertyChange.
             for (SystemPropertyChangeEnvironmentFacet current : toReturn) {
                 if (current.key.equals(propertyName)) {
-                    throw new IllegalArgumentException("A SystemPropertyChange for propertyName '" + propertyName +
-                            "' is already present. Only one SystemPropertyChange per propertyName should be supplied.");
+                    throw new IllegalArgumentException("A SystemPropertyChange for propertyName '"
+                            + propertyName + "' is already present. Only one SystemPropertyChange per propertyName "
+                            + "should be supplied.");
                 }
             }
         }

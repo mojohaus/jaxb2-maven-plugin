@@ -33,6 +33,8 @@ import java.util.logging.SimpleFormatter;
 
 /**
  * Handler implementation which delegates its actual logging to an internal Maven log.
+ * This is required to capture logging statements from tools that use the Java Util Logging
+ * system internally - such as the JDK SchemaGen tool.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  * @since 2.0
@@ -44,7 +46,7 @@ public class MavenLogHandler extends Handler {
     private String prefix;
 
     /**
-     * Creates a new MavenLogHandler which adapts a Handler to emit log messages onto a Maven Log.
+     * Creates a new MavenLogHandler which adapts a {@link Handler} to emit log messages onto a Maven Log.
      *
      * @param log                       The Maven Log to emit log messages to.
      * @param prefix                    An optional prefix used to prefix any log message.

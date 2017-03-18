@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 
 /**
  * EnvironmentFacet for replacing Handlers from Java Util Logging with a Maven Log.
+ * This is required as an environment facet for capturing log statements from tools
+ * that use the Java Util Logging system internally - such as the JDK SchemaGen tool.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  * @since 2.1
