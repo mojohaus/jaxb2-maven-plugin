@@ -211,9 +211,11 @@ public final class ArgumentBuilder {
         // Check sanity
         Validate.notEmpty(name, "name");
 
-        for (int i = 0; i < arguments.size(); i++) {
-            if (arguments.get(i).equalsIgnoreCase(name)) {
-                return i;
+        synchronized (lock) {
+            for (int i = 0; i < arguments.size(); i++) {
+                if (arguments.get(i).equalsIgnoreCase(name)) {
+                    return i;
+                }
             }
         }
 
