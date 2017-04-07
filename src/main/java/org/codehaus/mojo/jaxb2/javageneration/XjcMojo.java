@@ -52,7 +52,7 @@ import java.util.List;
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
  */
 @Mojo(name = "xjc",
-        threadSafe = false,
+        threadSafe = true,
         defaultPhase = LifecyclePhase.GENERATE_SOURCES,
         requiresDependencyResolution = ResolutionScope.COMPILE)
 public class XjcMojo extends AbstractJavaGeneratorMojo {
