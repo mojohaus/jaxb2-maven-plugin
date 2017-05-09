@@ -53,11 +53,12 @@ public class MethodLocation extends FieldLocation {
      *
      * @param packageName The name of the package for a class potentially holding JavaDoc. Cannot be {@code null}.
      * @param className   The (simple) name of a class. Cannot be null or empty.
-     * @param memberName  The name of a (method or) field. Cannot be null or empty.
      * @param classXmlName  The name given as the {@link XmlType#name()} value of an annotation placed on the Class,
      *                      or {@code  null} if none is provided.
+     * @param memberName  The name of a (method or) field. Cannot be null or empty.
      * @param memberXmlName The name given as the {@link XmlElement#name()} or {@link XmlAttribute#name()} value of
      *                      an annotation placed on this Field, or {@code null} if none is provided.
+     * @param parameters  The names of the types which are parameters to this method.
      */
     public MethodLocation(final String packageName,
             final String className,
