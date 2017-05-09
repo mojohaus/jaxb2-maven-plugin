@@ -594,9 +594,12 @@ public final class FileSystemUtilities {
         } else if (EXISTING_DIRECTORY.accept(fileOrDir)) {
 
             final File[] listedFiles = fileOrDir.listFiles();
+
             if (listedFiles != null) {
                 for (File current : listedFiles) {
-                    checkAndAdd(toReturn, current, fileFilters, excludeFilterOperation, log);
+                    // remove hidden files from consideration
+                    if (current.getName().charAt(0) != '.')
+                        checkAndAdd(toReturn, current, fileFilters, excludeFilterOperation, log);
                 }
             }
         }
