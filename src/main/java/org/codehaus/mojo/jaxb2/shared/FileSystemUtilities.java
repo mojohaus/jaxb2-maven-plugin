@@ -400,7 +400,7 @@ public final class FileSystemUtilities {
     }
 
     /**
-     * Filters all supplied files using the
+     * Filters all supplied files using the provided {@code acceptFilter}.
      *
      * @param files        The list of files to resolve, filter and return. If the {@code files} List
      *                     contains directories, they are searched for Files recursively. Any found Files in such
