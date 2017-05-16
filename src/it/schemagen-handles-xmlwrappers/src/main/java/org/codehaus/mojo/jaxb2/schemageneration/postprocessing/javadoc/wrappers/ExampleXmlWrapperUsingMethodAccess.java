@@ -13,7 +13,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Another trivial transport object type for collections.
+ * Another trivial transport object type for collections, demonstrating that
+ * the jaxb2-maven-plugin's schemagen goal correctly can extract XSD documentation
+ * annotations when using @XmlElementWrapper annotations placed on Method accessors
+ * (which is the default for SchemaGen).
  */
 @XmlRootElement(namespace = "http://jaxb.mojohaus.org/wrappers")
 @XmlType(namespace = "http://jaxb.mojohaus.org/wrappers", propOrder = {"methodStrings", "methodIntegerSet"})
@@ -32,7 +35,9 @@ public class ExampleXmlWrapperUsingMethodAccess implements Serializable {
     }
 
     /**
-     * List containing some methodStrings.
+     * JavaBean getter method containing some method strings.
+     *
+     * @return some method strings.
      */
     @XmlElementWrapper(name = "foobar")
     @XmlElement(name = "aString")
@@ -41,7 +46,10 @@ public class ExampleXmlWrapperUsingMethodAccess implements Serializable {
     }
 
     /**
-     * SortedSet containing Integers.
+     * JavaBean getter method returning Integers.
+     *
+     * @return a Set of integers.
+     * @see #getMethodStrings()
      */
     @XmlElementWrapper
     @XmlElement(name = "anInteger")

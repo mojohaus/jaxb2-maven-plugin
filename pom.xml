@@ -18,7 +18,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -86,8 +87,8 @@
         <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
         <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/mojohaus/jaxb2-maven-plugin/issues</url>
@@ -110,11 +111,11 @@
         <!-- JAXB tooling versions -->
         <jaxb.version>2.2.11</jaxb.version>
         <stax-ex.version>1.7.6</stax-ex.version>
-        <qdox.version>2.0-M3</qdox.version>
+        <qdox.version>2.0-M5</qdox.version>
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>1.6</xmlunit.version>
-        <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
+        <nazgul-core-xmlbinding-test.version>3.0.0</nazgul-core-xmlbinding-test.version>
         <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
     </properties>
 
@@ -275,6 +276,11 @@
             <artifactId>logback-classic</artifactId>
             <version>1.1.7</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-runtime</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

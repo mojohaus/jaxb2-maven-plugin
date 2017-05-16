@@ -6,7 +6,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvnet.staxex.StreamingDataHandler;
+import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -355,7 +355,7 @@ public class FileSystemUtilitiesTest {
     public void validateGettingFileForClassURL() {
 
         // Assemble
-        final URL streamingDhURL = StreamingDataHandler.class.getProtectionDomain().getCodeSource().getLocation();
+        final URL streamingDhURL = XmlTestUtils.class.getProtectionDomain().getCodeSource().getLocation();
         Assert.assertNotNull(streamingDhURL);
 
         // Act
@@ -370,7 +370,7 @@ public class FileSystemUtilitiesTest {
     public void validateGettingFileForClassResourceURL() {
 
         // Assemble
-        final String classResource = StreamingDataHandler.class.getName().replace(".", "/") + ".class";
+        final String classResource = XmlTestUtils.class.getName().replace(".", "/") + ".class";
         final URL resource = getClass().getClassLoader().getResource(classResource);
         Assert.assertNotNull(resource);
 

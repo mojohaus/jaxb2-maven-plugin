@@ -13,7 +13,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Another trivial transport object type for collections.
+ * A really trivial transport object type for collections, demonstrating that
+ * the jaxb2-maven-plugin's schemagen goal correctly can extract XSD documentation
+ * annotations when using @XmlElementWrapper annotations placed on Fields.
+ *
+ * This requires use of the @XmlAccessorType(XmlAccessType.FIELD) on the class in question,
+ * or - alternatively - on a package-info.java file containing the equivalent annotation.
  */
 @XmlRootElement(namespace = "http://jaxb.mojohaus.org/wrappers")
 @XmlType(namespace = "http://jaxb.mojohaus.org/wrappers", propOrder = {"strings", "integerSet"})
