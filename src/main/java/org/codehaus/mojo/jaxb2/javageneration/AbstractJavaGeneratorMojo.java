@@ -546,7 +546,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         // Add all arguments on the form '-argumentName argumentValue'
         // (i.e. in 2 separate elements of the returned String[])
         builder.withNamedArgument("httpproxy", getProxyString(settings.getActiveProxy()));
-        builder.withNamedArgument("encoding", getEncoding(true));
+        builder.withNamedArgument("encoding", getEncoding(false));
         builder.withNamedArgument("p", packageName);
         builder.withNamedArgument("target", target);
         builder.withNamedArgument("d", getOutputDirectory().getAbsolutePath());
