@@ -339,8 +339,8 @@ public class XjcMojo extends AbstractJavaGeneratorMojo {
      * {@inheritDoc}
      */
     @Override
-    protected void addGeneratedSourcesToProjectSourceRoot() {
-        getProject().addCompileSourceRoot(FileSystemUtilities.getCanonicalPath(getOutputDirectory()));
+    protected void updateProject() {
+        getProject().addCompileSourceRoot(getOutputDirectory().getAbsolutePath());
     }
 
     /**
