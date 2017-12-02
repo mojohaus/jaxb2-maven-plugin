@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -33,11 +32,13 @@
     <packaging>maven-plugin</packaging>
 
     <name>JAXB-2 Maven Plugin</name>
-    <description>Mojo's JAXB-2 Maven plugin is used to create an object graph from XSDs based on the JAXB 2.x
-        implementation and to generate XSDs from JAXB annotated Java classes.
+    <description>Mojo's JAXB-2 Maven plugin is used to create an object graph
+        from XSDs based on the JAXB 2.x implementation and to generate XSDs
+        from JAXB annotated Java classes.
     </description>
     <url>http://www.mojohaus.org/jaxb2-maven-plugin/</url>
     <inceptionYear>2005</inceptionYear>
+    
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -101,20 +102,20 @@
     <properties>
         <!-- Define Maven and JDK versions-->
         <mavenVersion>3.0.5</mavenVersion>
-        <mojo.java.target>1.6</mojo.java.target>
+        <mojo.java.target>1.7</mojo.java.target>
 
         <!-- Plexus component versions -->
         <plexus-compiler-api.version>2.5</plexus-compiler-api.version>
-        <plexus-utils.version>3.0.22</plexus-utils.version>
+        <plexus-utils.version>3.1.0</plexus-utils.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
         <!-- JAXB tooling versions -->
         <jaxb.version>2.2.11</jaxb.version>
-        <stax-ex.version>1.7.6</stax-ex.version>
-        <qdox.version>2.0-M5</qdox.version>
+        <stax-ex.version>1.7.8</stax-ex.version>
+        <qdox.version>2.0-M7</qdox.version>
 
         <!-- Test scope dependencies' versions -->
-        <xmlunit.version>1.6</xmlunit.version>
+        <xmlunit.version>2.5.1</xmlunit.version>
         <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
         <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
     </properties>
@@ -260,8 +261,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-matchers</artifactId>
             <version>${xmlunit.version}</version>
             <scope>test</scope>
         </dependency>
