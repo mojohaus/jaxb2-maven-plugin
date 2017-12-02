@@ -582,7 +582,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("d", getWorkDirectory().getAbsolutePath());
         builder.withNamedArgument("classpath", classPath);
 
-        if (episodeFileNameOrNull != null) {
+        // Generate/use an episode only when 'generateEpisode' is true and we have an episode file name.
+        if (generateEpisode && episodeFileNameOrNull != null) {
             final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
             final String canonicalPath = FileSystemUtilities.getCanonicalPath(episodeFile);
             final String episodeFileArgument;
