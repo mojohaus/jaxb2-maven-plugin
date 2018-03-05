@@ -354,12 +354,18 @@ public final class XsdGeneratorHelper {
 
         // Now, rename the actual files.
         for (SimpleNamespaceResolver currentResolver : resolverMap.values()) {
-            final String localNamespaceURI = currentResolver.getLocalNamespaceURI();
+          String localNamespaceURI = currentResolver.getLocalNamespaceURI();
 
-            if (StringUtils.isEmpty(localNamespaceURI)) {
-                mavenLog.warn("SimpleNamespaceResolver contained no localNamespaceURI; aborting rename.");
-                continue;
+          if (StringUtils.isEmpty(localNamespaceURI)) {
+            if (resolverMap.size() > 1) {
+              mavenLog.warn("SimpleNamespaceResolver contained no localNamespaceURI; aborting rename.");
+              continue;
+            } else if (resolverMap.size() == 1) {
+              // only one localNamespaceURI can exist as absence of namespace
+              // do rename generated file with user value
+              localNamespaceURI = "";
             }
+          }
 
             final String newFilename = namespaceUriToDesiredFilenameMap.get(localNamespaceURI);
             final File originalFile = new File(schemaDirectory, currentResolver.getSourceFilename());
