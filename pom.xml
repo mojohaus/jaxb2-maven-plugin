@@ -36,7 +36,7 @@
         from XSDs based on the JAXB 2.x implementation and to generate XSDs
         from JAXB annotated Java classes.
     </description>
-    <url>http://www.mojohaus.org/jaxb2-maven-plugin/</url>
+    <url>https://github.com/mojohaus/jaxb2-maven-plugin/</url>
     <inceptionYear>2005</inceptionYear>
     
     <licenses>
