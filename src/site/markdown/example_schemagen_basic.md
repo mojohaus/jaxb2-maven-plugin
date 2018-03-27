@@ -59,7 +59,12 @@ for each of its "java files" arguments:
 **Note**: `schemagen` does not accept a mix of source and bytecode arguments as "java files".
 While the jaxb2-maven-plugin ensures that any sources added to the schemagen goals adheres to
 the criteria defined in the table above, it would lead too far to let the plugin validate that
-the user does not supply a mix of java source and bytecode files as arguments.
+the user does not supply a mix of java source and bytecode files as arguments. If you would like
+to operate on bytecode files only, the plugin configuration must remove the sourcePath from the
+paths where it looks for jaxb sources. 
+
+**Note**: `schemagen` can only insert documentation annotations when run against java source code
+files - not bytecode files.
 
 **Note**: The `SchemaGen` tool internally converts File paths to URIs and back, which means that exceptions
 occur when paths to your maven project contains whitespace. The current workaround is to avoid
