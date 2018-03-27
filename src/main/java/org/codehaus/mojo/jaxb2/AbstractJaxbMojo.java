@@ -47,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -451,7 +452,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         // Check sanity
         final String effectiveEpisodeFileName = customEpisodeFileName == null
-                ? "sun-jaxb.episode"
+                ? STANDARD_EPISODE_FILENAME
                 : customEpisodeFileName;
         Validate.notEmpty(effectiveEpisodeFileName, "effectiveEpisodeFileName");
 
@@ -468,8 +469,16 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             }
         }
 
-        // All done.
-        return new File(generatedMetaInfDirectory, effectiveEpisodeFileName);
+        // Is there already an episode file here?
+        File episodeFile = new File(generatedMetaInfDirectory, effectiveEpisodeFileName);
+        final AtomicInteger index = new AtomicInteger(1);
+        while(episodeFile.exists()) {
+            episodeFile = new File(generatedMetaInfDirectory,
+                    effectiveEpisodeFileName + "_" + index.getAndIncrement());
+        }
+
+        // All Done.
+        return episodeFile;
     }
 
     //
