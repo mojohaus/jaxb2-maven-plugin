@@ -221,7 +221,6 @@ public final class SystemPropertyChangeEnvironmentFacet extends AbstractLogAware
 
             // All done.
             return this;
-
         }
 
         /**

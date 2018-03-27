@@ -86,6 +86,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         // Pre-populate the namespace2SystemIdMap
         namespace2SystemIdMap.put(SomewhatNamedPerson.NAMESPACE, "somewhatNamedPerson.xsd");
         namespace2SystemIdMap.put("http://jaxb.mojohaus.org/wrappers", "wrapperExample.xsd");
+        namespace2SystemIdMap.put("http://gnat.west.se/foods", "anotherExample.xsd");
         namespace2SystemIdMap.put("", DEFAULT_EMPTY_NAMESPACE_SYSTEM_ID);
 
         // Create the JAXBContext
@@ -249,8 +250,13 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
      */
     protected void onAcceptedNode(final Node aNode) {
         // name="firstName"
-        final String nodeName = aNode.getAttributes().getNamedItem("name").getNodeValue();
-        log.info("Accepted node [" + aNode.getNodeName() + "] " + nodeName);
+
+        final Node nameAttribute = aNode.getAttributes().getNamedItem("name");
+        if(nameAttribute != null) {
+
+            final String nodeName = nameAttribute.getNodeValue();
+            log.info("Accepted node [" + aNode.getNodeName() + "] " + nodeName);
+        }
     }
 
     /**

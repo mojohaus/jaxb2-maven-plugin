@@ -35,6 +35,7 @@ import org.codehaus.mojo.jaxb2.shared.environment.ToolExecutionEnvironment;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
+import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertyChangeEnvironmentFacet;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -271,6 +272,30 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     protected String xsdPathWithinArtifact;
 
     /**
+     * <p>If set to <code>true</code>, the system property <code>enableExternalEntityProcessing</code> is set for the
+     * duration of the Java generation by this plugin, permitting DTD sources to use external entity URIs such as
+     * <code>file://</code>. Typically, this is used in conjunction with the <code>sourceType</code> similar to the
+     * configuration snippet below where DTDs are used as sourceType and read from the <code>src/main/dtd</code>
+     * directory. This implies a <code>file://</code> URI.</p>
+     * <pre>
+     *      <code>
+     *      &lt;configuration&gt;
+     *          ...
+     *          &lt;sourceType&gt;dtd&lt;/sourceType&gt;
+     *          &lt;sources&gt;
+     *              &lt;source&gt;src/main/dtd&lt;/source&gt;
+     *          &lt;/sources&gt;
+     *          &lt;externalEntityProcessing&gt;true&lt;/externalEntityProcessing&gt;
+     *      &lt;/configuration&gt;
+     *      </code>
+     * </pre>
+     *
+     * @since 2.4
+     */
+    @Parameter(defaultValue = "false")
+    protected boolean externalEntityProcessing;
+
+    /**
      * <p>Java generation is required if any of the file products is outdated/stale.</p>
      * {@inheritDoc}
      */
@@ -376,6 +401,19 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 // Add any extra configured EnvironmentFacets, as configured in the POM.
                 if (extraFacets != null) {
                     for (EnvironmentFacet current : extraFacets) {
+                        environment.add(current);
+                    }
+                }
+
+                // Handle extended properties?
+                if(externalEntityProcessing) {
+
+                    final List<SystemPropertyChangeEnvironmentFacet> sysPropChanges =
+                            SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
+                            .addOrChange("enableExternalEntityProcessing", "" + externalEntityProcessing)
+                            .build();
+                    
+                    for(SystemPropertyChangeEnvironmentFacet current : sysPropChanges) {
                         environment.add(current);
                     }
                 }

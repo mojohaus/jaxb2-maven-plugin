@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:tns="http://some/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://some/namespace" version="1.0">
+
+    <xs:element name="exampleEnumHolder" type="tns:exampleEnumHolder"/>
+
+    <xs:complexType name="exampleEnumHolder">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="coins">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="coin" type="tns:americanCoin"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="foodPreferences">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="preference" type="tns:foodPreference"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="americanCoin">
+        <xs:annotation>
+            <xs:documentation><![CDATA[Simple enumeration example defining standard US coins.
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:int">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[A Penny, worth 1 cent.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="5">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[A Nickel, worth 5 cents.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="10">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[A Nickel, worth 5 cents.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="25"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="foodPreference">
+        <xs:annotation>
+            <xs:documentation><![CDATA[Simple enumeration example defining some Food preferences.
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[No special food preferences; eats everything.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="LACTO_VEGETARIAN">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[Vegetarian who will not eat meats, but drinks milk.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="VEGAN">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[Vegan who will neither eat meats nor drink milk.]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

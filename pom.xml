@@ -110,7 +110,7 @@
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
         <!-- JAXB tooling versions -->
-        <jaxb.version>2.2.11</jaxb.version>
+        <jaxb.version>2.3.0</jaxb.version>
         <stax-ex.version>1.7.8</stax-ex.version>
         <qdox.version>2.0-M7</qdox.version>
 
@@ -147,6 +147,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
     <dependencies>
         <!--
             Use the modern, modularized JAXB structure as indicated
@@ -290,6 +291,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.5.1</version>
                 <configuration>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
@@ -353,6 +355,58 @@
     </build>
 
     <profiles>
+
+        <!--
+            Augment the build module path to include javax.bind when compiling using java 9
+
+            When: Compiling with java 9
+        -->
+        <profile>
+            <id>jdk9</id>
+
+            <activation>
+                <jdk>9</jdk>
+            </activation>
+
+            <properties>
+                <mojo.java.target>9</mojo.java.target>
+            </properties>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>3.5.1</version>
+                            <configuration>
+                                <source>${mojo.java.target}</source>
+                                <target>${mojo.java.target}</target>
+                                <compilerArgs>
+                                    <arg>--add-modules</arg>
+                                    <arg>java.xml.bind</arg>
+                                </compilerArgs>
+                            </configuration>
+                        </plugin>
+
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>2.19.1</version>
+                            <configuration>
+                                <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}</redirectTestOutputToFile>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <!--
+            Run all integration tests, unless the "skipTests" flag is set.
+
+            When: Normal build cycle
+        -->
         <profile>
             <id>run-its</id>
             <activation>
@@ -391,6 +445,7 @@
                 </plugins>
             </build>
         </profile>
+        
         <profile>
             <id>reporting</id>
             <activation>

@@ -20,6 +20,7 @@ import java.util.List;
 public class ThreadContextClassLoaderBuilderTest {
 
     // Shared state
+    private boolean isJdk9;
     private ThreadContextClassLoaderHolder holder;
     private URL extraClassLoaderDirURL;
     private File extraClassLoaderDirFile;
@@ -30,6 +31,7 @@ public class ThreadContextClassLoaderBuilderTest {
     @Before
     public void setupSharedState() {
 
+        isJdk9 = System.getProperty("java.version").contains("9");
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         final String extraPath = "testdata/shared/classloader";
@@ -56,6 +58,7 @@ public class ThreadContextClassLoaderBuilderTest {
     public void validateAddingURLsToThreadContextClassLoader() throws Exception {
 
         // Assemble
+        final int numExpectedResources = isJdk9 ? 4 : 3;
         holder = ThreadContextClassLoaderBuilder
                 .createFor(originalClassLoader, log, encoding)
                 .addURL(extraClassLoaderDirURL)
@@ -66,15 +69,25 @@ public class ThreadContextClassLoaderBuilderTest {
         final List<URL> resources = Collections.list(ctxClassLoader.getResources(""));
 
         // Assert
-        Assert.assertEquals(3, resources.size());
+        Assert.assertEquals("Expected [" + numExpectedResources + "] resources but got ["
+                        + resources.size() + "]: " + getCommaSeparated(resources),
+                numExpectedResources, resources.size());
         validateContains(resources, "target/classes");
         validateContains(resources, "target/test-classes");
         validateContains(resources, "target/test-classes/testdata/shared/classloader");
 
         for (URL current : resources) {
-            final File aFile = new File(current.getPath());
-            Assert.assertTrue(aFile.exists() && aFile.isDirectory());
-            System.out.println("[" + current.getPath() + "]: " + aFile.getPath());
+
+            if(current.getProtocol().equalsIgnoreCase("file")) {
+
+                final File aFile = new File(current.getPath());
+                Assert.assertTrue(aFile.exists() && aFile.isDirectory());
+
+            } else if (current.getProtocol().equalsIgnoreCase("jar")) {
+
+                // This happens in JDK 9
+                Assert.assertTrue(current.toString().contains("!/META-INF/versions/"));
+            }
         }
     }
 
@@ -129,6 +142,19 @@ public class ThreadContextClassLoaderBuilderTest {
     //
     // Private helpers
     //
+
+    private String getCommaSeparated(final List<URL> resources) {
+
+        final StringBuilder toReturn = new StringBuilder();
+
+        for(URL current : resources) {
+            toReturn.append(current.toString()).append(", ");
+        }
+
+        // All Done.
+        final String fullString = toReturn.toString();
+        return fullString.substring(0, fullString.length() - 2);
+    }
 
     private void validateContains(final List<URL> resources, final String snippet) {
 

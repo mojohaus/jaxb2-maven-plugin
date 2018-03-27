@@ -40,29 +40,79 @@ final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
 final File workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 
 /*
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://gnat.west.se/foods" targetNamespace="http://gnat.west.se/foods" version="1.0">
+
+  <xs:element name="foodPreferences" type="tns:foodPreferences"/>
+
+  <xs:complexType name="foodPreferences">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Trivial transport object type for enumerations.
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="preferences">
+        <xs:annotation>
+          <xs:documentation><![CDATA[A List of {@link FoodPreference} instances.]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="preference" type="tns:foodPreference"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="coins">
+        <xs:annotation>
+          <xs:documentation><![CDATA[A List of {@link FoodPreference} instances.]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="coin" type="tns:americanCoin"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="americanCoin">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Simple enumeration example defining standard US coins.
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="5"/>
+      <xs:enumeration value="10"/>
+      <xs:enumeration value="25"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="foodPreference">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Simple enumeration example defining some Food preferences.
+
+(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="NONE"/>
       <xs:enumeration value="LACTO_VEGETARIAN"/>
       <xs:enumeration value="VEGAN"/>
     </xs:restriction>
   </xs:simpleType>
-
-  <xs:simpleType name="americanCoin">
-    <xs:restriction base="xs:int">
-      <xs:enumeration value="25"/>
-      <xs:enumeration value="1"/>
-      <xs:enumeration value="5"/>
-      <xs:enumeration value="10"/>
-    </xs:restriction>
-  </xs:simpleType>
+</xs:schema>
 */
 
 // Act: Validate content
 def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
 assert 1 == xml.complexType.size();
-assert 'foodPreference' == xml.simpleType[0].@name.text();
-assert 'americanCoin' == xml.simpleType[1].@name.text();
+
+def americanCoinElement = xml.simpleType.find { it.@name == 'americanCoin' }
+def foodPreferenceElement = xml.simpleType.find { it.@name == 'foodPreference' }
+
+assert null != americanCoinElement.annotation.documentation.text()
+assert null != foodPreferenceElement.annotation.documentation.text()
 
 // Assert
 println "\nValidating work directory content"
