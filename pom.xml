@@ -117,7 +117,7 @@
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>2.5.1</xmlunit.version>
         <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
-        <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.0</maven-plugin-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -273,6 +273,18 @@
             <version>${nazgul-core-xmlbinding-test.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- dependency>
+            <groupId>org.eclipse.ecf</groupId>
+            <artifactId>org.objectweb.asm</artifactId>
+            <version>5.0.1.v201404251740</version>
+            <scope>test</scope>
+        </dependency -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

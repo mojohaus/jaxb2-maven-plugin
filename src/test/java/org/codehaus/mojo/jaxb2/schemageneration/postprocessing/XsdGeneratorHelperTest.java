@@ -21,6 +21,7 @@ import org.custommonkey.xmlunit.ElementNameAndAttributeQualifier;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,15 +45,27 @@ import java.util.Map;
  */
 public class XsdGeneratorHelperTest {
 
-    private static final TransformerFactory FACTORY = TransformerFactory.newInstance();
+    private static TransformerFactory factory;
 
-    static {
+    @BeforeClass
+    public static void setupSharedState() {
+        
         // Configure XMLUnit.
         XMLUnit.setIgnoreWhitespace(true);
         XMLUnit.setIgnoreAttributeOrder(true);
 
         // Configure the TransformerFactory
-        FACTORY.setAttribute("indent-number", 2);
+        try {
+
+            factory = TransformerFactory.newInstance();
+            final CodeSource codeSource = factory.getClass().getProtectionDomain().getCodeSource();
+
+            System.out.println("-- Found TransformerFactory of type [" + factory.getClass().getName()
+                    + "] loaded from [" + codeSource.getLocation().toString() + "]");
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Test(expected = MojoExecutionException.class)
