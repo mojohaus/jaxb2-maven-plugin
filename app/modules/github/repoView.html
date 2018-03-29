@@ -1,0 +1,44 @@
+<div class="page-header">
+    <h1>Repository Overview
+        <small>({{repo.name}})</small>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-offset-2"></div>
+    <div class="col-sm-8">
+        <p>The Github repository {{repo.name}} is owned by {{repo.owner}}, and
+            has {{repo.tagList.length}} release tags. (Latest 5 releases shown).</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-offset-2"></div>
+    <div data-ng-hide="repo.hasTags()" class="col-sm-8"><h2>No Documentation</h2>
+        <p>No releases have been made from {{repo.name}} yet.</p></div>
+    <div data-ng-show="repo.hasTags()" class="col-sm-8">
+        <h2>Documentation <small>(Per release)</small></h2>
+        <table class="table-responsive table-condensed table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Tag Name</th>
+                <th>Release version</th>
+                <th>Commit SHA</th>
+                <th>Maven Documentation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="current in repo.tagList|limitTo:5">
+                <td><nobr>{{current.name}}</nobr></td>
+                <td>{{current.name | releaseNumberFilter}}</td>
+                <td>{{current.commit.sha}}</td>
+                <td>
+                    <nobr><a
+                            href="https://www.mojohaus.org/jaxb2-maven-plugin/Documentation/{{current.name | releaseNumberFilter}}/index.html">To Maven Documentation</a>
+                    </nobr>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
