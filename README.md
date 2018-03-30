@@ -13,13 +13,14 @@ This Maven plugin uses the Java API for XML Binding (JAXB), version 2+, to perfo
    Documentation for the Schemagen tool is also found at two places - the [Unix Documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/schemagen.html)
    and the [Windows Documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/schemagen.html) 
 
-## [Plugin Documentation](https://www.mojohaus.org/jaxb2-maven-plugin/)
+## [Plugin Documentation Hub](https://www.mojohaus.org/jaxb2-maven-plugin/)
 
 On Github, Maven site documentation is shown for the 
 [5 latest releases of the JAXB2 plugin](https://www.mojohaus.org/jaxb2-maven-plugin/).
 The root URL for each static site is `http://www.mojohaus.org/jaxb2-maven-plugin/Documentation/v{theVersionNumber}/index.html`
-where `{theVersionNumber}` should be replaced with the actual version, such as `2.3.1`. However, the landing page
-attempts to simplify access by presenting version number and link to the documentation for each listed release.    
+where `{theVersionNumber}` should be replaced with the actual version, such as `2.3.1`. However, 
+[the documentation hub page](https://www.mojohaus.org/jaxb2-maven-plugin/) attempts to simplify access by presenting 
+version number and link to the documentation for each listed release.    
  
 # Release process for Jaxb2-Maven-Plugin 
 
@@ -52,6 +53,17 @@ We have still not pushed anything to any source code or artifact repository.
     * b4499f9 - Lennart Jörelid (9 hours ago) (origin/master, origin/HEAD)
     |   Using only JDK 8 since that is the defaults in travis.
     
+#### b. Perform normal deployment of the artifact
+
+Checkout the release tag on the master branch, rebuild and deploy to the OSS repository server.
+
+    git checkout jaxb2-maven-plugin-2.4.0
+    
+    mvn clean deploy
+    
+The normal Mojohaus process for the binary release (send mail to group etc.) follows.
+When the release is approved by the community, build and publish the release documentation as 
+described below.          
 
 ## Publishing the Plugin Documentation to Github
 
