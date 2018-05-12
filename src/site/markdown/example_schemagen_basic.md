@@ -10,6 +10,18 @@ into a Maven project. Also, the jaxb2-maven-plugin
 [performs post-processing on generated XSD files](./example_schemagen_postprocessing.html) to improve usability
 and quality of the XSD files generated. 
 
+> ### Jaxb2-Maven-Plugin and `Schemagen` known issues
+>  
+> The `Schemagen` tool has been around in the JDK for quite awhile, and should be considered a mature codebase. 
+> However, schemagen has some long-outstanding issues, as is shown by the
+> 
+> [SchemaGen Issue Tracker on GitHub](https://github.com/javaee/jaxb-v2/labels/Component%3A%20schemagen).
+> 
+> The Jaxb2-Maven-Plugin delegates its operations to the JDK-installed schemagen tool, and performs some 
+> post-processing operations to yield schemas with somewhat improved usability than the XSDs emitted by SchemaGen. 
+> However, the Jaxb2-Maven-Plugin does not aim to replace schemagen's implementation. Issues within SchemaGen 
+> must be solved in that codebase. 
+
 ## SchemaGenerator in the JDK
 
 The JDK contains the documentation for the SchemaGenerator arguments and switches. However, that documentation is
@@ -69,6 +81,8 @@ files - not bytecode files.
 **Note**: The `SchemaGen` tool internally converts File paths to URIs and back, which means that exceptions
 occur when paths to your maven project contains whitespace. The current workaround is to avoid
 whitespace in paths whenever you need the plugin's `schemagen` goal to work properly.
+
+**Note**: The `episode` argument of schemagen does not seem to work.
 
 ## Recommended JAXB Annotations for XSD generation
 

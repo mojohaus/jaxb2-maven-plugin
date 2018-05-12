@@ -36,13 +36,14 @@ def validateNonexistentDirectory(final File aDirectory, final int index) {
   println "" + index + ". Directory correctly non-existent. [" + path + "]";
 }
 
-final File outputDir = new File(basedir, 'some_project/target/generated-resources/schemagen')
-final File workDir = new File(basedir, 'some_project/target/schemagen-work/compile_scope')
+def outputDir = new File(basedir, 'some_project/target/generated-resources/schemagen')
+def workDir = new File(basedir, 'some_project/target/schemagen-work/compile_scope')
 
 // Act: Validate content
-def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
-assert 1 == xml.complexType.size();
-assert 'foo' == xml.complexType[0].@name.text();
+def schemaElement = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
+
+assert 1 == schemaElement.complexType.size();
+assert "foo" == ("" + schemaElement.complexType[0].@name);
 
 // Assert
 println "\nValidating work directory content"
@@ -56,6 +57,6 @@ println "\nValidating output directory content"
 println "====================================="
 
 validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(outputDir, 'META-INF/sun-jaxb.episode'), 2);
+validateExistingFile(new File(outputDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2);
 validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3);
 validateNonexistentDirectory(new File(basedir, 'some_project/target/generated-test-resources/schemagen/'), 4);

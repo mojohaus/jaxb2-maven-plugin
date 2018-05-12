@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder.SupportedURLProtocols.*;
+
 /**
  * <p>Utility class which assists in synthesizing a URLClassLoader for use as a ThreadLocal ClassLoader.
  * Typical use:</p>
@@ -61,6 +63,31 @@ import java.util.List;
  * @since 2.0
  */
 public final class ThreadContextClassLoaderBuilder {
+
+    /**
+     * Simple enumeration of supported classpath URL protocols.
+     */
+    enum SupportedURLProtocols {
+
+        FILE,
+
+        JAR,
+
+        HTTP,
+
+        HTTPS,
+
+        BUNDLERESOURCE;
+
+        /**
+         * Filter function, indicating if this {@link SupportedURLProtocols} instance can handle the supplied protocol.
+         * @param protocol The protocol to support.
+         * @return <code>true</code> if this {@link SupportedURLProtocols} instance supports the given protocol.
+         */
+        public boolean supports(final String protocol) {
+            return protocol != null && this.name().equalsIgnoreCase(protocol.trim());
+        }
+    }
 
     // Internal state
     private ClassLoader originalClassLoader;
@@ -271,7 +298,7 @@ public final class ThreadContextClassLoaderBuilder {
         final String protocol = anURL.getProtocol();
         String toReturn = null;
 
-        if ("file".equalsIgnoreCase(protocol)) {
+        if (FILE.supports(protocol)) {
 
             final String originalPath = anURL.getPath();
             try {
@@ -280,11 +307,11 @@ public final class ThreadContextClassLoaderBuilder {
                 throw new IllegalArgumentException("Could not URLDecode path [" + originalPath
                         + "] using encoding [" + encoding + "]", e);
             }
-        } else if ("jar".equalsIgnoreCase(protocol)) {
+        } else if (JAR.supports(protocol)) {
             toReturn = anURL.getPath();
-        } else if ("http".equalsIgnoreCase(protocol) || "https".equalsIgnoreCase(protocol)) {
+        } else if (HTTP.supports(protocol) || HTTPS.supports(protocol)) {
             toReturn = anURL.toString();
-        } else if ("bundleresource".equalsIgnoreCase(protocol)) { // e.g. when used in Eclipse/m2e
+        } else if (BUNDLERESOURCE.supports(protocol)) { // e.g. when used in Eclipse/m2e
             toReturn = anURL.toString();
         } else {
             throw new IllegalArgumentException("Unknown protocol [" + protocol + "]; could not handle URL ["

@@ -17,8 +17,13 @@
  * under the License.
  */
 
-final File testSchema = new File(basedir, 'target/generated-test-resources/schemagen/schema1.xsd');
-final File testEpisode = new File(basedir, 'target/generated-test-resources/schemagen/META-INF/sun-jaxb.episode');
+// java.lang.AssertionError: Expected file [/Users/lenjor/Development/Projects/Mojohaus/jaxb2-maven-plugin/target/
+// it/schemagen-test/target/generated-test-resources/schemagen/META-INF/sun-jaxb.episode] not found..
+// Expression: testEpisode.exists()
+
+def testSchema = new File(basedir, 'target/generated-test-resources/schemagen/schema1.xsd');
+def testEpisode = new File(basedir, 'target/generated-test-resources/schemagen/META-INF' +
+        '/JAXB/episode_schemagen-test.xjb');
 
 assert testSchema.exists(), "Expected file [" + testSchema.getAbsolutePath() + "] not found."
 assert testEpisode.exists(), "Expected file [" + testEpisode.getAbsolutePath() + "] not found."

@@ -36,8 +36,9 @@ def validateNonexistentDirectory(final File aDirectory, final int index) {
   println "" + index + ". Directory correctly non-existent. [" + path + "]";
 }
 
-final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
-final File workDir = new File(basedir, 'target/schemagen-work/compile_scope')
+def outputDir = new File(basedir, 'target/generated-resources/schemagen')
+def workDir = new File(basedir, 'target/schemagen-work/compile_scope')
+def episodeFile = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb')
 
 /*
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -77,6 +78,6 @@ println "\nValidating output directory content"
 println "====================================="
 
 validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(outputDir, 'META-INF/sun-jaxb.episode'), 2);
+validateExistingFile(episodeFile, 2);
 validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3);
 validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4);

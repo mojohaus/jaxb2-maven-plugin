@@ -65,11 +65,11 @@ def ignoredPrefix = "[INFO] Ignored given or default sources [";
 def ignoredSuffix = slashify("target/it/mjaxb-71/src/main/nonexistent], "
         + "since it is not an existent file or directory.");
 
-final File generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen');
-final File vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd');
-final File processedSchema = new File(generatedSchemaDir, 'customer-api.xsd');
-final File generatedEpisode = new File(generatedSchemaDir, 'META-INF/sun-jaxb.episode');
-final File buildLog = new File(basedir, 'build.log');
+def generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen');
+def vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd');
+def processedSchema = new File(generatedSchemaDir, 'customer-api.xsd');
+def generatedEpisode = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb');
+def buildLog = new File(basedir, 'build.log');
 final List<String> lines = buildLog.readLines();
 
 assert processedSchema.exists(), "Expected file [" + processedSchema.getAbsolutePath() + "] not found."

@@ -20,6 +20,7 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  */
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -248,5 +249,42 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     @Override
     protected File getWorkDirectory() {
         return workDirectory;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void addResource(final Resource resource) {
+
+        if(resource != null) {
+
+            final String newDirectory = resource.getDirectory();
+
+            // Is the supplied resource already added?
+            final List<Resource> currentResources = getProject().getResources();
+
+            if(getLog().isDebugEnabled()) {
+                getLog().debug("Candidate Resource Directory [" + newDirectory + "]");
+                getLog().debug("Found [" + currentResources.size() + "] current Resources: "
+                        + currentResources);
+            }
+
+            for (Resource current : currentResources) {
+
+                // Is the resource already added?
+                if(current.getDirectory() != null && current.getDirectory().equalsIgnoreCase(newDirectory)) {
+                    getLog().debug("Resource already added [" + newDirectory + "]. Not adding again.");
+                    return;
+                }
+            }
+
+            // Add the new Resource
+            currentResources.add(resource);
+
+            if(getLog().isDebugEnabled()) {
+                getLog().debug("Added resource [" + newDirectory + "] to existing resources.");
+            }
+        }
     }
 }

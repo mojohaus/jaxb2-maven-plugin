@@ -20,6 +20,7 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  */
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -245,5 +246,42 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     @Override
     protected File getWorkDirectory() {
         return testWorkDirectory;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void addResource(final Resource resource) {
+
+        if(resource != null) {
+
+            final String newDirectory = resource.getDirectory();
+
+            // Is the supplied resource already added?
+            final List<Resource> currentResources = getProject().getTestResources();
+
+            if(getLog().isDebugEnabled()) {
+                getLog().debug("Candidate Test Resource Directory [" + newDirectory + "]");
+                getLog().debug("Found [" + currentResources.size() + "] current Test Resources: "
+                        + currentResources);
+            }
+
+            for (Resource current : currentResources) {
+
+                // Is the resource already added?
+                if(current.getDirectory() != null && current.getDirectory().equalsIgnoreCase(newDirectory)) {
+                    getLog().debug("Test resource already added [" + newDirectory + "]. Not adding again.");
+                    return;
+                }
+            }
+
+            // Add the new Resource
+            currentResources.add(resource);
+
+            if(getLog().isDebugEnabled()) {
+                getLog().debug("Added test resource [" + newDirectory + "] to existing test resources.");
+            }
+        }
     }
 }

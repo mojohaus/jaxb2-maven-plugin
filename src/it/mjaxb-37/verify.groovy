@@ -12,7 +12,8 @@ target/it/mjaxb-37/target/jaxb2/.xjc-xjcStaleFlag
 
 // Assemble
 File generatedSourcesDir = new File(basedir, "target/generated-sources")
-File episodeFile = new File(generatedSourcesDir, 'jaxb/META-INF/sun-jaxb.episode')
+File classesDir = new File(basedir, "target/classes")
+File episodeFile = new File(classesDir, 'META-INF/JAXB/episode_xjc.xjb')
 
 File addressTypeSourceFile = new File(generatedSourcesDir, 'jaxb/com/example/myschema/AddressType.java')
 List<String> addressTypeSource = addressTypeSourceFile.readLines();

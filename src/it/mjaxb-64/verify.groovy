@@ -59,13 +59,13 @@ def expectedXmlForm = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 final File classesDir = new File(basedir, 'target/classes')
 final File generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen');
-final File vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd');
+final File vanillaSchema = new File(basedir, 'target/schemagen-work/compile_scope/schema1.xsd');
 final File processedSchema = new File(generatedSchemaDir, 'customer-api.xsd');
-final File generatedEpisode = new File(classesDir, 'META-INF/sun-jaxb.episode');
+final File generatedEpisode = new File(classesDir, 'META-INF/JAXB/episode_schemagen.xjb');
 
 assert processedSchema.exists(), "Expected file [" + processedSchema.getAbsolutePath() + "] not found."
 assert generatedEpisode.exists(), "Expected file [" + generatedEpisode.getAbsolutePath() + "] not found."
-assert !vanillaSchema.exists(), "Found unexpected file [" + vanillaSchema.getAbsolutePath() + "]."
+assert vanillaSchema.exists(), "Expected file [" + vanillaSchema.getAbsolutePath() + "] not found."
 
 // Act
 def schemaElement = new XmlSlurper().parse(processedSchema)
@@ -74,8 +74,8 @@ def schemaElement = new XmlSlurper().parse(processedSchema)
 println "\nValidating namespace changes"
 println "==================================="
 def expectedTargetNS = 'http://acme.com/customer-api';
-assert ("" + ${schemaElement.@targetNamespace}) == expectedTargetNS,
-        "Incorrect target namespace ${schemaElement.@targetNamespace}. Expected " + expectedTargetNS + ".";
+assert ("" + schemaElement.@targetNamespace) == expectedTargetNS,
+        "Incorrect target namespace " + schemaElement.@targetNamespace + ". Expected " + expectedTargetNS + ".";
 println "1. Correct target namespace: " + expectedTargetNS;
 
 println "\nValidating schema content"

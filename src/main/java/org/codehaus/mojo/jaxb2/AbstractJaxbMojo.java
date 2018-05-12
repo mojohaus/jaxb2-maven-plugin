@@ -19,6 +19,7 @@ package org.codehaus.mojo.jaxb2;
  * under the License.
  */
 
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -39,14 +40,9 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -202,6 +198,14 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      */
     @Parameter(required = false)
     protected List<EnvironmentFacet> extraFacets;
+
+    /**
+     * Adds the supplied Resource to the project using the appropriate scope (i.e. resource or testResource)
+     * depending on the exact implementation of this AbstractJaxbMojo.
+     *
+     * @param resource The resource to add.
+     */
+    protected abstract void addResource(final Resource resource);
 
     /**
      * The Plexus BuildContext is used to identify files or directories modified since last build,
@@ -440,7 +444,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     }
 
     /**
-     * Retrieves the JAXB episode File, and ensures that the parent directory where it exists is created.
+     * Retrieves a File to the JAXB Episode (which is normally written during the XJC process).
+     * Moreover, ensures that the parent directory of that File is created, to enable writing the File.
      *
      * @param episodeFileName {@code null} to indicate that the standard episode file name ("sun-jaxb.episode")
      *                        should be used, and otherwise a non-empty name which should be used
@@ -450,11 +455,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      */
     protected File getEpisodeFile(final String episodeFileName) throws MojoExecutionException {
 
-        // Check sanity
-        // TODO: Remove after fixing.
-        getLog().info("Found execution: " + getExecution());
-        getLog().info("Found executionID: "
-                + (getExecution() != null ? getExecution().getExecutionId() : "<null>"));
+        // Get the execution ID
         final String executionID = getExecution() != null && getExecution().getExecutionId() != null
                 ? getExecution().getExecutionId()
                 : null;
@@ -462,31 +463,42 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         final String effectiveEpisodeFileName = episodeFileName == null
                 ? (executionID == null ? STANDARD_EPISODE_FILENAME : "episode_" + executionID)
                 : episodeFileName;
-        Validate.notEmpty(effectiveEpisodeFileName, "effectiveEpisodeFileName");
-
-        // We should place the generated episode file within the build output directory directly.
-        // However, the MavenProject is only available if the plugin is part of a Maven build, as
-        // opposed to being launched directly.
-        final MavenProject project = getProject();
-        final File generatedMetaInfDirectory = new File(
-                (project == null ? getOutputDirectory() : new File(project.getBuild().getOutputDirectory())),
-                "META-INF");
-
-        if (!generatedMetaInfDirectory.exists()) {
-
-            FileSystemUtilities.createDirectory(generatedMetaInfDirectory, false);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Created episode directory ["
-                        + FileSystemUtilities.getCanonicalPath(generatedMetaInfDirectory) + "]: "
-                        + generatedMetaInfDirectory.exists());
-            }
+        if (effectiveEpisodeFileName.isEmpty()) {
+            throw new MojoExecutionException("Cannot handle null or empty JAXB Episode filename. "
+                    + "Check 'episodeFileName' configuration property.");
         }
 
+        // Find or create the episode directory.
+        final Path episodePath;
+        final File generatedJaxbEpisodeDirectory;
+        try {
+            final Path path = Paths.get(getOutputDirectory().getAbsolutePath(), "META-INF", "JAXB");
+            episodePath = java.nio.file.Files.createDirectories(path);
+            generatedJaxbEpisodeDirectory = episodePath.toFile();
+
+            if(getLog().isInfoEnabled()) {
+                getLog().info("Created EpisodePath [" + episodePath.toString() + "]: " +
+                        (generatedJaxbEpisodeDirectory.exists() && generatedJaxbEpisodeDirectory.isDirectory()));
+            }
+
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not create output directory.", e);
+        }
+
+        if (!generatedJaxbEpisodeDirectory.exists() || !generatedJaxbEpisodeDirectory.isDirectory()) {
+            throw new MojoExecutionException("Could not create directory [" + episodePath.toString() + "]");
+        }
+
+        // Add the (generated) outputDirectory to the Resources.
+        final Resource outputDirectoryResource = new Resource();
+        outputDirectoryResource.setDirectory(getOutputDirectory().getAbsolutePath());
+        this.addResource(outputDirectoryResource);
+
         // Is there already an episode file here?
-        File episodeFile = new File(generatedMetaInfDirectory, effectiveEpisodeFileName + ".xjb");
+        File episodeFile = new File(generatedJaxbEpisodeDirectory, effectiveEpisodeFileName + ".xjb");
         final AtomicInteger index = new AtomicInteger(1);
         while (episodeFile.exists()) {
-            episodeFile = new File(generatedMetaInfDirectory,
+            episodeFile = new File(generatedJaxbEpisodeDirectory,
                     effectiveEpisodeFileName + "_" + index.getAndIncrement() + ".xjb");
         }
 

@@ -85,11 +85,25 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
     /**
      * <p>Corresponding XJC parameter: {@code episode}.</p>
-     * <p>Generate an episode file with the supplied name from this JAXB compilation, so that other
-     * schemas that rely on this schema can be compiled later and rely on classes that are generated from this
-     * compilation. The generated episode file is really just a JAXB customization file (with vendor extensions).</p>
-     * <p>If this parameter is not supplied, the episode file generated uses the standard name
-     * {@code META-INF/sun-jaxb.episode}, and included in the artifact.</p>
+     * <p>Generate an episode file with the supplied name from this XJC compilation, so that other schemas that rely
+     * on this schema can be compiled later and rely on classes that are generated from this compilation.
+     * The generated episode file is simply a JAXB customization file (but with vendor extensions), normally known
+     * as a <em>binding file</em> with the suffix <code>.xjb</code>.</p>
+     * <p>If the <code>episodeFileName</code> parameter is not given, the episode file name is synthesized on the form
+     * <code>"episode_" + executionID + ".xjb"</code> - typically something like <em>episode_my_xjc.xjb</em>, but
+     * it depends on the actual ID given in the execution element:</p>
+     * <pre>
+     *     <code>
+     * &lt;executions&gt;
+     *     &lt;execution&gt;
+     *         &lt;id&gt;my_xjc&lt;/id&gt;
+     *         &lt;goals&gt;
+     *             &lt;goal&gt;xjc&lt;/goal&gt;
+     *         &lt;/goals&gt;
+     *     &lt;/execution&gt;
+     * &lt;/executions&gt;
+     *      </code>
+     * </pre>
      *
      * @see #STANDARD_EPISODE_FILENAME
      * @since 2.4
@@ -563,14 +577,6 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * of this AbstractJavaGeneratorMojo.
      */
     protected abstract void addGeneratedSourcesToProjectSourceRoot();
-
-    /**
-     * Adds the supplied Resource to the project using the appropriate scope (i.e. resource or testResource)
-     * depending on the exact implementation of this AbstractJavaGeneratorMojo.
-     *
-     * @param resource The resource to add.
-     */
-    protected abstract void addResource(final Resource resource);
 
     //
     // Private helpers

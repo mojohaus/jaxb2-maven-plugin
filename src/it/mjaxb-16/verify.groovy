@@ -47,7 +47,8 @@ Pattern expectedTargetVersionPattern = Pattern.compile(logPattern + "2.0");
 Pattern expectedExtensionPattern = Pattern.compile(logPattern + "\\-extension");
 Pattern expectedEpisodePattern = Pattern.compile(logPattern + "\\-episode");
 Pattern expectedEpisodeFilePattern = Pattern.compile(logPattern +
-        ".*target" + sep + "generated-sources" + sep + "jaxb" + sep + "META-INF" + sep + "sun-jaxb.episode");
+        ".*target" + sep + "generated-sources" + sep + "jaxb" + sep + "META-INF" + sep +
+        "JAXB" + sep + "episode_xjc\\.xjb");
 
 boolean foundTarget = false;
 boolean foundTargetVersion = false;

@@ -24,6 +24,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -49,19 +50,10 @@ import org.codehaus.plexus.util.FileUtils;
 import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -182,9 +174,23 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
      * <p>Corresponding SchemaGen parameter: {@code episode}.</p>
      * <p>Generate an episode file with the supplied name from this XSD generation, so that other schemas that rely
      * on this schema can be compiled later and rely on classes that are generated from this compilation.
-     * The generated episode file is really just a JAXB customization file (but with vendor extensions.)</p>
-     * <p>If this parameter is {@code true}, the episode file generated is called {@code META-INF/sun-jaxb.episode},
-     * and included in the artifact.</p>
+     * The generated episode file is simply a JAXB customization file (but with vendor extensions), normally known
+     * as a <em>binding file</em> with the suffix <code>.xjb</code>.</p>
+     * <p>If the <code>episodeFileName</code> parameter is not given, the episode file name is synthesized on the form
+     * <code>"episode_" + executionID + ".xjb"</code> - typically something like <em>episode_schemagen.xjb</em>, but
+     * it depends on the actual ID given in the execution element:</p>
+     * <pre>
+     *     <code>
+     * &lt;executions&gt;
+     *     &lt;execution&gt;
+     *         &lt;id&gt;schemagen&lt;/id&gt;
+     *         &lt;goals&gt;
+     *             &lt;goal&gt;schemagen&lt;/goal&gt;
+     *         &lt;/goals&gt;
+     *     &lt;/execution&gt;
+     * &lt;/executions&gt;
+     *      </code>
+     * </pre>
      *
      * @see #STANDARD_EPISODE_FILENAME
      * @since 2.4
@@ -360,10 +366,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             environment.setup();
 
             // Compile the SchemaGen arguments
+            final File episodeFile = getEpisodeFile(episodeFileName);
             final List<URL> sources = getSources();
             final String[] schemaGenArguments = getSchemaGenArguments(
                     environment.getClassPathAsArgument(),
-                    episodeFileName,
+                    episodeFile,
                     sources);
 
             // Ensure that the outputDirectory and workDirectory exists.
@@ -371,12 +378,14 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
             FileSystemUtilities.createDirectory(getWorkDirectory(), clearOutputDir);
 
-            // Do we need to re-create the episode file's parent directory.
-            // TODO: Here!
-            final boolean reCreateEpisodeFileParentDirectory = generateEpisode && clearOutputDir;
+            // Re-generate the episode file's parent directory.
+            getEpisodeFile(episodeFileName);
+            // Do we need to re-create the episode file's parent directory?
+            /*final boolean reCreateEpisodeFileParentDirectory = generateEpisode && clearOutputDir;
             if (reCreateEpisodeFileParentDirectory) {
-                getEpisodeFile(STANDARD_EPISODE_FILENAME);
+
             }
+            */
 
             try {
 
@@ -547,6 +556,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             }
         }
 
+        // Add generated directories to
+
         // All done.
         return updateStaleFileTimestamp;
     }
@@ -582,8 +593,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     //
 
     private String[] getSchemaGenArguments(final String classPath,
-            final String episodeFileNameOrNull,
-            final List<URL> sources)
+                                           final File episodeFile,
+                                           final List<URL> sources)
             throws MojoExecutionException {
 
         final ArgumentBuilder builder = new ArgumentBuilder();
@@ -597,19 +608,9 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("d", getWorkDirectory().getAbsolutePath());
         builder.withNamedArgument("classpath", classPath);
 
-        // Generate/use an episode for the supplied episode file name.
-        // TODO: Fix this
-        if (episodeFileNameOrNull != null) {
-            final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
-            final String canonicalPath = FileSystemUtilities.getCanonicalPath(episodeFile);
-            final String episodeFileArgument;
-            try {
-                episodeFileArgument = URLDecoder.decode(canonicalPath, getEncoding(false));
-            } catch (UnsupportedEncodingException e) {
-                throw new MojoExecutionException("Could not URLDecoder.decode File path [" + canonicalPath + "]", e);
-            }
-            builder.withNamedArgument("episode", episodeFileArgument);
-        }
+        // From 2.4: Always generate an episode file.
+        //
+        builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
 
         try {
 
@@ -878,10 +879,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     }
 
     private void printSchemaGenCommandAndThrowException(final String projectBasedirPath,
-            final List<URL> sources,
-            final String[] schemaGenArguments,
-            final int result,
-            final Throwable cause) throws MojoExecutionException {
+                                                        final List<URL> sources,
+                                                        final String[] schemaGenArguments,
+                                                        final int result,
+                                                        final Throwable cause) throws MojoExecutionException {
 
         final StringBuilder errorMsgBuilder = new StringBuilder();
         errorMsgBuilder.append("\n+=================== [SchemaGenerator Error '"

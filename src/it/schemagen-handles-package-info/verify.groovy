@@ -54,9 +54,9 @@ def validateNonexistentDirectory(final File aDirectory, final int index) {
 
  */
 
-final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
-final File transformed = new File(outputDir, 'example.xsd')
-final File episodeFile = new File(outputDir, 'META-INF/sun-jaxb.episode')
+def outputDir = new File(basedir, 'target/generated-resources/schemagen')
+def transformed = new File(outputDir, 'example.xsd')
+def episodeFile = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb')
 
 // Assert: Validate existing files
 validateExistingFile(transformed, 1)

@@ -2,6 +2,7 @@ package org.codehaus.mojo.jaxb2.shared.classloader;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.JavaVersion;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
 import org.junit.After;
@@ -11,8 +12,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -20,7 +20,6 @@ import java.util.List;
 public class ThreadContextClassLoaderBuilderTest {
 
     // Shared state
-    private boolean isJdk9;
     private ThreadContextClassLoaderHolder holder;
     private URL extraClassLoaderDirURL;
     private File extraClassLoaderDirFile;
@@ -31,7 +30,6 @@ public class ThreadContextClassLoaderBuilderTest {
     @Before
     public void setupSharedState() {
 
-        isJdk9 = System.getProperty("java.version").contains("9");
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         final String extraPath = "testdata/shared/classloader";
@@ -58,7 +56,7 @@ public class ThreadContextClassLoaderBuilderTest {
     public void validateAddingURLsToThreadContextClassLoader() throws Exception {
 
         // Assemble
-        final int numExpectedResources = isJdk9 ? 4 : 3;
+        final int numExpectedResources = JavaVersion.isJdk8OrLower() ? 3 : 4;
         holder = ThreadContextClassLoaderBuilder
                 .createFor(originalClassLoader, log, encoding)
                 .addURL(extraClassLoaderDirURL)
