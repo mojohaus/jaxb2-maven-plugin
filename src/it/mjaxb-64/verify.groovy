@@ -23,11 +23,11 @@
 | [0]: -encoding
 | [1]: UTF-8
 | [2]: -d
-| [3]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-64/target/generated-resources/schemagen
+| [3]: /Users/lj/Development/Projects/Mojohaus/jaxb2-maven-plugin/target/it/mjaxb-64/target/schemagen-work/compile_scope
 | [4]: -classpath
-| [5]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-64/src/main/java/
+| [5]: /Users/lj/Development/Projects/Mojohaus/jaxb2-maven-plugin/target/it/mjaxb-64/src/main/java/
 | [6]: -episode
-| [7]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-64/target/generated-resources/schemagen/META-INF/sun-jaxb.episode
+| [7]: /Users/lj/Development/Projects/Mojohaus/jaxb2-maven-plugin/target/it/mjaxb-64/target/classes/META-INF/sun-jaxb.episode
 | [8]: src/main/java/se/west/shauqra/FooWithEmptyXmlTypeName.java
 | [9]: src/main/java/se/west/shauqra/FooWithSuppliedXmlTypeName.java
 |
@@ -57,10 +57,11 @@ def expectedXmlForm = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   </xs:complexType>
 </xs:schema>'''
 
+final File classesDir = new File(basedir, 'target/classes')
 final File generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen');
 final File vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd');
 final File processedSchema = new File(generatedSchemaDir, 'customer-api.xsd');
-final File generatedEpisode = new File(generatedSchemaDir, 'META-INF/sun-jaxb.episode');
+final File generatedEpisode = new File(classesDir, 'META-INF/sun-jaxb.episode');
 
 assert processedSchema.exists(), "Expected file [" + processedSchema.getAbsolutePath() + "] not found."
 assert generatedEpisode.exists(), "Expected file [" + generatedEpisode.getAbsolutePath() + "] not found."
@@ -73,7 +74,7 @@ def schemaElement = new XmlSlurper().parse(processedSchema)
 println "\nValidating namespace changes"
 println "==================================="
 def expectedTargetNS = 'http://acme.com/customer-api';
-assert "${schemaElement.@targetNamespace}" == expectedTargetNS,
+assert ("" + ${schemaElement.@targetNamespace}) == expectedTargetNS,
         "Incorrect target namespace ${schemaElement.@targetNamespace}. Expected " + expectedTargetNS + ".";
 println "1. Correct target namespace: " + expectedTargetNS;
 

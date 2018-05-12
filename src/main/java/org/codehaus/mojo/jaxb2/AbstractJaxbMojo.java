@@ -272,11 +272,11 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         }
 
         // 4) If the output directories exist, add them to the MavenProject's source directories
-        if(getOutputDirectory().exists() && getOutputDirectory().isDirectory()) {
+        if (getOutputDirectory().exists() && getOutputDirectory().isDirectory()) {
 
             final String canonicalPathToOutputDirectory = FileSystemUtilities.getCanonicalPath(getOutputDirectory());
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Adding existing JAXB outputDirectory [" + canonicalPathToOutputDirectory
                         + "] to Maven's sources.");
             }
@@ -429,7 +429,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         // Should we warn if using platform encoding (i.e. platform dependent)?
         if (!configuredEncoding && warnIfPlatformEncoding) {
-            getLog().warn("Using platform encoding ["+ effectiveEncoding + "], i.e. build is platform dependent!");
+            getLog().warn("Using platform encoding [" + effectiveEncoding + "], i.e. build is platform dependent!");
         } else if (getLog().isDebugEnabled()) {
             getLog().debug("Using " + (configuredEncoding ? "explicitly configured" : "system property")
                     + " encoding [" + effectiveEncoding + "]");
@@ -442,22 +442,35 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     /**
      * Retrieves the JAXB episode File, and ensures that the parent directory where it exists is created.
      *
-     * @param customEpisodeFileName {@code null} to indicate that the standard episode file name ("sun-jaxb.episode")
-     *                              should be used, and otherwise a non-empty name which should be used
-     *                              as the episode file name.
+     * @param episodeFileName {@code null} to indicate that the standard episode file name ("sun-jaxb.episode")
+     *                        should be used, and otherwise a non-empty name which should be used
+     *                        as the episode file name.
      * @return A non-null File where the JAXB episode file should be written.
      * @throws MojoExecutionException if the parent directory of the episode file could not be created.
      */
-    protected File getEpisodeFile(final String customEpisodeFileName) throws MojoExecutionException {
+    protected File getEpisodeFile(final String episodeFileName) throws MojoExecutionException {
 
         // Check sanity
-        final String effectiveEpisodeFileName = customEpisodeFileName == null
-                ? STANDARD_EPISODE_FILENAME
-                : customEpisodeFileName;
+        // TODO: Remove after fixing.
+        getLog().info("Found execution: " + getExecution());
+        getLog().info("Found executionID: "
+                + (getExecution() != null ? getExecution().getExecutionId() : "<null>"));
+        final String executionID = getExecution() != null && getExecution().getExecutionId() != null
+                ? getExecution().getExecutionId()
+                : null;
+
+        final String effectiveEpisodeFileName = episodeFileName == null
+                ? (executionID == null ? STANDARD_EPISODE_FILENAME : "episode_" + executionID)
+                : episodeFileName;
         Validate.notEmpty(effectiveEpisodeFileName, "effectiveEpisodeFileName");
 
-        // Use the standard episode location
-        final File generatedMetaInfDirectory = new File(getOutputDirectory(), "META-INF");
+        // We should place the generated episode file within the build output directory directly.
+        // However, the MavenProject is only available if the plugin is part of a Maven build, as
+        // opposed to being launched directly.
+        final MavenProject project = getProject();
+        final File generatedMetaInfDirectory = new File(
+                (project == null ? getOutputDirectory() : new File(project.getBuild().getOutputDirectory())),
+                "META-INF");
 
         if (!generatedMetaInfDirectory.exists()) {
 
@@ -470,11 +483,11 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         }
 
         // Is there already an episode file here?
-        File episodeFile = new File(generatedMetaInfDirectory, effectiveEpisodeFileName);
+        File episodeFile = new File(generatedMetaInfDirectory, effectiveEpisodeFileName + ".xjb");
         final AtomicInteger index = new AtomicInteger(1);
-        while(episodeFile.exists()) {
+        while (episodeFile.exists()) {
             episodeFile = new File(generatedMetaInfDirectory,
-                    effectiveEpisodeFileName + "_" + index.getAndIncrement());
+                    effectiveEpisodeFileName + "_" + index.getAndIncrement() + ".xjb");
         }
 
         // All Done.
