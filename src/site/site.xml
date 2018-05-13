@@ -19,18 +19,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 <project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd">
-  <body>
-    <menu name="Overview">
-      <item name="Introduction" href="index.html"/>
-      <item name="Goals" href="plugin-info.html"/>
-      <item name="Filters" href="filters.html"/>
-      <item name="FAQ" href="faq.html"/>
-    </menu>
-    <menu name="Examples">
-      <item name="XJC: Usage" href="example_xjc_basic.html"/>
-      <item name="Schemagen: Usage" href="example_schemagen_basic.html"/>
-      <item name="Schemagen: Post-processing" href="example_schemagen_postprocessing.html"/>
-    </menu>
-  </body>
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd">
+
+    <custom>
+        <fluidoSkin>
+            <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+            <gitHub>
+                <projectId>mojohaus/jaxb2-maven-plugin</projectId>
+                <ribbonOrientation>right</ribbonOrientation>
+                <ribbonColor>gray</ribbonColor>
+            </gitHub>
+        </fluidoSkin>
+    </custom>
+    
+    <body>
+        <menu name="Overview">
+            <item name="Introduction" href="index.html"/>
+            <item name="Goals" href="plugin-info.html"/>
+            <item name="Filters" href="filters.html"/>
+            <item name="FAQ" href="faq.html"/>
+        </menu>
+        <menu name="Examples">
+            <item name="XJC: Usage" href="example_xjc_basic.html"/>
+            <item name="Schemagen: Usage" href="example_schemagen_basic.html"/>
+            <item name="Schemagen: Post-processing" href="example_schemagen_postprocessing.html"/>
+        </menu>
+    </body>
 </project>
