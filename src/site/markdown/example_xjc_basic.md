@@ -236,6 +236,11 @@ but exclude `src/main/some/other/xsds/thisIsASource.xsd` due to the pattern defi
                     <xsdPathWithinArtifact>source/xsds</xsdPathWithinArtifact>
                 </configuration>
             </plugin>
+            
+Unless xjcSourceExclude filters are given, standard excludes are in effect. These are:
+
+1. Files with the name "README.*"
+2. Files with the suffixes ".xml", ".txt" or ".xjb"
 
 ## Example 5: Multiple schemas with different configuration
 
@@ -344,6 +349,11 @@ which case all its files are searched and included recursively) or explicit file
             </xjbSources>
         ...
         </configuration>
+
+Unless xjbExcludes filters are given, standard excludes are in effect. These are:
+
+1. Files with the name "README.*"
+2. Files with the suffixes ".xml", ".txt" or ".xsd"        
 
 ## Example 7: Debugging jaxb2-maven-plugin executions
 
