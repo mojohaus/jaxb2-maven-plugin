@@ -14,7 +14,7 @@ import java.util.Map;
 public class PatternFileFilterTest extends AbstractPatternFilterTest {
 
     // Shared state
-    private static final StringConverter<File> FILENAME_CONVERTER = new StringConverter<File>() {
+    public static final StringConverter<File> FILENAME_CONVERTER = new StringConverter<File>() {
         @Override
         public String convert(final File toConvert) {
             return toConvert.getName();

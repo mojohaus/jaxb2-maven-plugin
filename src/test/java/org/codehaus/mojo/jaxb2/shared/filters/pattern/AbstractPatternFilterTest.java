@@ -19,6 +19,15 @@ public abstract class AbstractPatternFilterTest {
     protected File exclusionDirectory;
     protected File[] fileList;
     protected BufferingLog log;
+    private String defaultExclusionDirectory;
+
+    public AbstractPatternFilterTest(final String defaultExclusionDirectory) {
+        this.defaultExclusionDirectory = defaultExclusionDirectory;
+    }
+
+    public AbstractPatternFilterTest() {
+        this("testdata/shared/filefilter/exclusion");
+    }
 
     @Before
     @SuppressWarnings("all")
@@ -26,7 +35,7 @@ public abstract class AbstractPatternFilterTest {
 
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
-        final URL exclusionDirUrl = getClass().getClassLoader().getResource("testdata/shared/filefilter/exclusion");
+        final URL exclusionDirUrl = getClass().getClassLoader().getResource(defaultExclusionDirectory);
         exclusionDirectory = new File(exclusionDirUrl.getPath());
         Assert.assertTrue(FileSystemUtilities.EXISTING_DIRECTORY.accept(exclusionDirectory));
 

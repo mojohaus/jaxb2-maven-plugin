@@ -32,17 +32,26 @@ import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.EnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
+import org.codehaus.mojo.jaxb2.shared.filters.pattern.FileFilterAdapter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.mojo.jaxb2.shared.version.DependencyInfo;
 import org.codehaus.mojo.jaxb2.shared.version.DependsFileParser;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -92,6 +101,23 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         // The standard exclude filters contain simple, exclude pattern filters.
         final List<Filter<File>> tmp = new ArrayList<Filter<File>>();
         tmp.add(new PatternFileFilter(Arrays.asList(STANDARD_EXCLUDE_SUFFIXES), true));
+        tmp.add(new FileFilterAdapter(new FileFilter() {
+            @Override
+            public boolean accept(final File aFileOrDir) {
+
+                // Check sanity
+                if (aFileOrDir == null) {
+                    return false;
+                }
+
+                final String name = aFileOrDir.getName();
+
+                // Ignore hidden files and CVS directories
+                return name.startsWith(".")
+                        || (aFileOrDir.isDirectory() && name.equals("CVS"));
+
+            }
+        }));
 
         // Make STANDARD_EXCLUDE_FILTERS be unmodifiable.
         STANDARD_EXCLUDE_FILTERS = Collections.unmodifiableList(tmp);
@@ -476,7 +502,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             episodePath = java.nio.file.Files.createDirectories(path);
             generatedJaxbEpisodeDirectory = episodePath.toFile();
 
-            if(getLog().isInfoEnabled()) {
+            if (getLog().isInfoEnabled()) {
                 getLog().info("Created EpisodePath [" + episodePath.toString() + "]: " +
                         (generatedJaxbEpisodeDirectory.exists() && generatedJaxbEpisodeDirectory.isDirectory()));
             }

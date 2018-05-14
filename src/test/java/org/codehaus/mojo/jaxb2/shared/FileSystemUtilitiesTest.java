@@ -1,7 +1,9 @@
 package org.codehaus.mojo.jaxb2.shared;
 
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
+import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
@@ -197,6 +199,33 @@ public class FileSystemUtilitiesTest {
         // Assert
         Assert.assertEquals(1, result.size());
         Assert.assertEquals("AnXmlFile.xml", result.get(0).getName());
+    }
+
+    @Test
+    public void validateDefaultExclusionsIncludeDotDirectories() {
+
+        // Assemble
+        final URL fileFilterDirUrl = getClass().getClassLoader().getResource("testdata/shared/standard/exclusions");
+        final File fileFilterDir = new File(fileFilterDirUrl.getPath());
+
+        final List<File> fileList = new ArrayList<File>();
+        fileList.add(fileFilterDir);
+
+        final List<Filter<File>> standardExcludeFilters = AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS;
+        Filters.initialize(log, standardExcludeFilters);
+
+        // Act
+        final List<File> result = FileSystemUtilities.resolveRecursively(fileList,
+                standardExcludeFilters,
+                log);
+
+        // Assert
+        final StringBuilder builder = new StringBuilder();
+        for(File current : result) {
+            builder.append(current.getPath() + ", ");
+        }
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals("someFile.log", result.get(0).getName());
     }
 
     @Test

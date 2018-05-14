@@ -241,6 +241,8 @@ Unless xjcSourceExclude filters are given, standard excludes are in effect. Thes
 
 1. Files with the name "README.*"
 2. Files with the suffixes ".xml", ".txt" or ".xjb"
+3. Files or Directories whose names starts with "." (normally this implies hidden directories and setting files)
+4. Directories with the name "CVS"
 
 ## Example 5: Multiple schemas with different configuration
 
@@ -353,7 +355,9 @@ which case all its files are searched and included recursively) or explicit file
 Unless xjbExcludes filters are given, standard excludes are in effect. These are:
 
 1. Files with the name "README.*"
-2. Files with the suffixes ".xml", ".txt" or ".xsd"        
+2. Files with the suffixes ".xml", ".txt" or ".xsd"
+3. Files or Directories whose names starts with "." (normally this implies hidden directories and setting files)
+4. Directories with the name "CVS"        
 
 ## Example 7: Debugging jaxb2-maven-plugin executions
 

@@ -257,6 +257,15 @@ Please refer to the standard
 [Maven Documentation for configuring plugins](http://maven.apache.org/guides/mini/guide-configuring-plugins.html) for
 further information about configuring plugins.
 
+### Default excludes
+
+Should no configuration be given, standard excludes are:
+
+1. Files with the name "README.*"
+2. Files with the suffixes ".xml", ".txt" or ".xsd"
+3. Files or Directories whose names starts with "." (normally this implies hidden directories and setting files)
+4. Directories with the name "CVS" 
+
 ## Example 3: PatternFileFilter custom configuration
 
 Your project might have complex rules for determining which files should be excluded from a schemagen compilation.
