@@ -69,7 +69,7 @@ Also, feel free to investigate the integration tests of the plugin itself.
 
 ## Example 1: Generate Java code within provided package
 
-The plugin will process all XSD files found within the [schema directory](xjc-mojo.html#schemaDirectory),
+The plugin will process all XSD files found within the [source directories](xjc-mojo.html#sources),
 and create Java source code in the given package (`com.example.myschema`) as defined by the `packageName`
 configuration parameter. The required JAXB runtime version of the generated code will be the same as the
 plugin's JAXB implementation dependency (see the [target parameter](./xjc-mojo.html#target)).
