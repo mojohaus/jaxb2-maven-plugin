@@ -1,0 +1,17 @@
+org.codehaus.mojo.jaxb2.javageneration
+org.codehaus.mojo.jaxb2
+org.codehaus.mojo.jaxb2.schemageneration
+org.codehaus.mojo.jaxb2.schemageneration.postprocessing
+org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement
+org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc
+org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
+org.codehaus.mojo.jaxb2.shared.filters
+org.codehaus.mojo.jaxb2.shared.filters.pattern
+org.codehaus.mojo.jaxb2.shared
+org.codehaus.mojo.jaxb2.shared.version
+org.codehaus.mojo.jaxb2.shared.environment.locale
+org.codehaus.mojo.jaxb2.shared.environment
+org.codehaus.mojo.jaxb2.shared.environment.classloading
+org.codehaus.mojo.jaxb2.shared.environment.sysprops
+org.codehaus.mojo.jaxb2.shared.environment.logging
+org.codehaus.mojo.jaxb2.shared.arguments
