@@ -73,11 +73,13 @@ some of the release documentation images. Graphviz can be downloaded from its si
 
 #### a. Checkout the local release and build the release Documentation      
 
-Checkout the newly prepared release and build its artifact and release documentation:
+Checkout the newly prepared release and build its artifact and release documentation. 
+Note that the system property `https.protocols` is required to generate the site, since
+GitHub's api refuses to use the default TLS version of java (i.e. TLSv1.0).
 
     git checkout jaxb2-maven-plugin-2.4.0
     
-    mvn clean package site
+    mvn -Dhttps.protocols="TLSv1,TLSv1.1,TLSv1.2" clean package site
     
 #### b. Copy the content of the `target/site` directory
 
