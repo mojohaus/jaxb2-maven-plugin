@@ -38,7 +38,7 @@
     </description>
     <url>https://github.com/mojohaus/jaxb2-maven-plugin/</url>
     <inceptionYear>2005</inceptionYear>
-    
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -112,16 +112,19 @@
         <!-- JAXB tooling versions -->
         <jaxb.version>2.3.0</jaxb.version>
         <stax-ex.version>1.7.8</stax-ex.version>
-        <qdox.version>2.0-M7</qdox.version>
+        <qdox.version>2.0-M8</qdox.version>
+        <asm.version>4.0</asm.version>
+        <additionalparam>-Xdoclint:none</additionalparam>
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>2.5.1</xmlunit.version>
         <nazgul-core-xmlbinding-test.version>1.7.1</nazgul-core-xmlbinding-test.version>
-        <maven-plugin-annotations.version>3.0</maven-plugin-annotations.version>
+        <maven-plugin-plugin.version>3.5.1</maven-plugin-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-bom</artifactId>
@@ -129,6 +132,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            
             <dependency>
                 <groupId>org.jvnet.staxex</groupId>
                 <artifactId>stax-ex</artifactId>
@@ -147,7 +151,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
         <!--
             Use the modern, modularized JAXB structure as indicated
@@ -226,12 +230,18 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>${maven-plugin-annotations.version}</version>
+            <version>${maven-plugin-plugin.version}</version>
             <!--
                 Annotations are not needed for plugin execution.
-                Therefore, use provided scope, to remove this from compile path.
+                Therefore, use optional scope.
             -->
-            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.maven.skins</groupId>
+            <artifactId>maven-fluido-skin</artifactId>
+            <version>1.6</version>
         </dependency>
 
         <!--
@@ -279,12 +289,12 @@
             <version>2.7.2</version>
             <scope>test</scope>
         </dependency>
-        <!-- dependency>
+        <dependency>
             <groupId>org.eclipse.ecf</groupId>
             <artifactId>org.objectweb.asm</artifactId>
             <version>5.0.1.v201404251740</version>
             <scope>test</scope>
-        </dependency -->
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -299,14 +309,55 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                    <configuration>
+                        <skipDeploy>true</skipDeploy><!-- don't deploy site with maven-site-plugin -->
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.ow2.asm</groupId>
+                            <artifactId>asm</artifactId>
+                            <version>${asm.version}</version> <!-- Use newer version of ASM -->
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven-plugin-plugin.version}</version>
+                    <configuration>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.plugin-tools</groupId>
+                            <artifactId>maven-plugin-annotations</artifactId>
+                            <version>${maven-plugin-plugin.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>help-mojo</id>
+                            <goals>
+                                <goal>helpmojo</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                </configuration>
                 <executions>
                     <execution>
                         <id>generate-descriptor</id>
@@ -366,6 +417,26 @@
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <!-- Apache plugins in alphabetical order -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>${maven-plugin-plugin.version}</version>
+                <configuration>
+                    <requirements>
+                        <!--
+                        NOTE: Maven 2.x does not interpolate properties of the form project.*|pom.* so the Maven Plugin Plugin
+                        gets garbage when manually examining the config of the Maven Compiler Plugin.
+                        -->
+                        <jdk>${mojo.java.target}</jdk>
+                    </requirements>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <profiles>
 
         <!--
@@ -399,6 +470,13 @@
                                     <arg>java.xml.bind</arg>
                                 </compilerArgs>
                             </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.ow2.asm</groupId>
+                                    <artifactId>asm</artifactId>
+                                    <version>6.1.1</version> <!-- Use newer version of ASM -->
+                                </dependency>
+                            </dependencies>
                         </plugin>
 
                         <plugin>
@@ -406,7 +484,8 @@
                             <artifactId>maven-surefire-plugin</artifactId>
                             <version>2.19.1</version>
                             <configuration>
-                                <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}</redirectTestOutputToFile>
+                                <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}
+                                </redirectTestOutputToFile>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -457,7 +536,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <id>reporting</id>
             <activation>

@@ -63,8 +63,19 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     public static final String STALE_FILENAME = "schemaGenerationStaleFlag";
 
     /**
-     * Default exclude file name suffixes for sources, used unless overridden by an
+     * <p>Default exclude file name suffixes for sources, used unless overridden by an
      * explicit configuration in the {@code sourceExcludeSuffixes} parameter.
+     * The default values are found as follows:</p>
+     * <pre>
+     *     <code>
+     *         final List&lt;Filter&lt;File&gt;&gt; srcTemp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
+     *         srcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
+     *         srcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
+     *         STANDARD_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(srcTemp);
+     *     </code>
+     * </pre>
+     *
+     * @see #STANDARD_EXCLUDE_FILTERS
      */
     public static final List<Filter<File>> STANDARD_SOURCE_EXCLUDE_FILTERS;
 

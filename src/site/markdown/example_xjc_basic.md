@@ -18,6 +18,55 @@ and this plugin, but that is typically viewed as advanced usage. A better option
 version of the compiled code with the requirement on the JAXB runtime environment of the generated
 code.
 
+## Standard (implicit) configuration
+
+To find which files should be included within an XJC compilation the jaxb2-maven-plugin uses 
+the following algorithm. Note that the find-and-filter algorithm is applied to find both XSD files and XJB files.
+
+1. Find source files. Source files are either given as an explicit path, or found by recursively listing 
+   all files below a source directory given as an explicit path. For example, if `<source>src/main/xsd</source>` 
+   is the relative path to a directory, all files within it would be found.
+2. Filter source files. A (set of) exclude Filters are applied to each found source file. Any file matching 
+   at least one Filter is excluded from the XJC compilation.
+   
+<img src="images/plantuml/sourceAndExcludeFilter.png" />  
+
+Unless overridden by the configuration, the following settings are used by default:
+
+1. The `src/main/xsd` directory (including subdirectories) is expected to contain compile-scope XSD files, as 
+   documented within the `XjcMojo.STANDARD_SOURCE_DIRECTORY` property. By default, files matching some 
+   Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
+   `"README.*", "\.xml", "\.txt", "\.java", "\.scala", "\.mdo"`. 
+2. The `src/test/xsd` directory (including subdirectories) is expected to contain test-scope XSD files, as 
+   documented within the `TestXjcMojo.STANDARD_TEST_SOURCE_DIRECTORY` property. By default, files matching some 
+   Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
+   `"README.*", "\.xml", "\.txt", "\.java", "\.scala", "\.mdo"`.   
+3. The `src/main/xjb` directory (including subdirectories) is expected to contain compile-scope XJB files, as 
+   documented within the `XjcMojo.STANDARD_XJB_DIRECTORY` property. By default, files matching some 
+   Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
+   `"README.*", "\\.xml", "\\.txt", "\\.xsd"`.
+4. The `src/test/xjb` directory (including subdirectories) is expected to contain test-scope XJB files, as 
+   documented within the `TestXjcMojo.STANDARD_TEST_XJB_DIRECTORY` property. By default, files matching some 
+   Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
+   `"README.*", "\\.xml", "\\.txt", "\\.xsd"`.          
+
+The standard behavior can be overridden by the following elements:
+
+1. `sources` - replace `src/main/xsd` as the directory containing XSD files
+2. `xjbSource` - replace `src/main/xjb` as the directory containing XJB files
+3. `xjcSourceExcludeFilters` - replace the default Filters for XSD file exclusions
+4. `xjbExcludeFilters` - replace the default Filters for the XJB file exclusions
+
+For test-scope XJC compilation, the following configuration elements can be used to override the default behavior:
+
+1. `testSources` - replace `src/test/xsd` as the directory containing (test-scope) XSD files
+2. `testXjbSources` - replace `src/test/xjb` as the directory containing (test-scope) XJB files
+3. `testSourceExcludeFilters` - replace the default Filters for (test-scope) XSD exclusions 
+4. `testXjbExcludeFilters` - replace the default Filters for (test-scope) XJB exclusions.  
+   
+These configuration options are illustrated within the examples below. 
+Also, feel free to investigate the integration tests of the plugin itself.   
+
 ## Example 1: Generate Java code within provided package
 
 The plugin will process all XSD files found within the [schema directory](xjc-mojo.html#schemaDirectory),
@@ -169,7 +218,7 @@ Refer to the plugin's [JavaDoc](./apidocs/index.html) to see all possible values
 
 ## Example 4: Defining sources and XJC exclude filters
 
-By default, the jaxb2-maven-plugin examines the directory `src/main/xsd` for XML schema files
+By default, the jaxb2-maven-plugin examines the directory `src/main/xsd` for XSD files
 which should be used by JAXB to create Java source code (and `src/test/xsd` for test XSD sources).
 If you would like to place your XSD somewhere else, you need to define source elements
 as shown in the configuration below. The paths given are interpreted relative to

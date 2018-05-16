@@ -64,13 +64,25 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
 
     /**
      * Standard directory path (relative to basedir) searched recursively for test
-     * source files (typically XSDs), unless overridden by an <code>testSources</code> configuration element.
+     * source files (typically XSDs), unless overridden by a
+     * <code>testSources</code> configuration element.
      */
     public static final String STANDARD_TEST_SOURCE_DIRECTORY = "src/test/xsd";
 
     /**
-     * Default exclude Filters for test sources, used unless overridden by an
+     * <p>Default exclude Filters for test sources, used unless overridden by an
      * explicit configuration in the {@code testSourceExcludeFilters} parameter.
+     * The default values are found as follows:</p>
+     * <pre>
+     *     <code>
+     *         final List&lt;Filter&lt;File&gt;&gt; xjbTemp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
+     *         xjbTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
+     *         xsdTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb"), true));
+     *         STANDARD_TEST_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(xsdTemp);
+     *     </code>
+     * </pre>
+     *
+     * @see #STANDARD_EXCLUDE_FILTERS
      */
     public static final List<Filter<File>> STANDARD_TEST_SOURCE_EXCLUDE_FILTERS;
 
@@ -83,8 +95,19 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
     public static final String STANDARD_TEST_XJB_DIRECTORY = "src/test/xjb";
 
     /**
-     * Default List of exclude Filters for XJB files, unless overridden by providing
+     * <p>Default List of exclude Filters for XJB files, unless overridden by providing
      * an explicit configuration in the {@code testXjbExcludeFilters} parameter.
+     * The default values are found as follows:</p>
+     * <pre>
+     *     <code>
+     *         final List&lt;Filter&lt;File&gt;&gt; xjbTemp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
+     *         xjbTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
+     *         xjbTemp.add(new PatternFileFilter(Arrays.asList("\\.xsd"), true));
+     *         STANDARD_TEST_XJB_EXCLUDE_FILTERS = Collections.unmodifiableList(xjbTemp);
+     *     </code>
+     * </pre>
+     *
+     * @see #STANDARD_EXCLUDE_FILTERS
      */
     public static final List<Filter<File>> STANDARD_TEST_XJB_EXCLUDE_FILTERS;
 

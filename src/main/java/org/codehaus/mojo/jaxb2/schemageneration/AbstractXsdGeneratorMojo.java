@@ -83,8 +83,17 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     public static final JavaDocRenderer STANDARD_JAVADOC_RENDERER = new DefaultJavaDocRenderer();
 
     /**
-     * Default exclude file name suffixes for testSources, used unless overridden by an
+     * <p>Default exclude file name suffixes for testSources, used unless overridden by an
      * explicit configuration in the {@code testSourceExcludeSuffixes} parameter.
+     * </p>
+     * <pre>
+     *     <code>
+     *         final List<Filter<File>> schemagenTmp = new ArrayList<Filter<File>>();
+     *         schemagenTmp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
+     *         schemagenTmp.add(new PatternFileFilter(Arrays.asList("\\.java", "\\.scala", "\\.mdo"), false));
+     *         STANDARD_BYTECODE_EXCLUDE_FILTERS = Collections.unmodifiableList(schemagenTmp);
+     *     </code>
+     * </pre>
      */
     public static final List<Filter<File>> STANDARD_BYTECODE_EXCLUDE_FILTERS;
 

@@ -85,8 +85,35 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     public static final Pattern CONTAINS_WHITESPACE = Pattern.compile("(\\S*\\s+\\S*)+", Pattern.UNICODE_CASE);
 
     /**
-     * Standard excludes Filters for all Java generator Mojos.
-     * The List is unmodifiable.
+     * <p>Standard excludes Filters for all Java generator Mojos.
+     * The List is unmodifiable, and contains Filters on the following form:</p>
+     * <pre>
+     *     <code>
+     *         // The standard exclude filters contain simple, exclude pattern filters.
+     *         final List&lt;Filter&lt;File&gt;&gt; tmp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
+     *         tmp.add(new PatternFileFilter(Arrays.asList({"README.*", "\\.xml", "\\.txt"}), true));
+     *         tmp.add(new FileFilterAdapter(new FileFilter() {
+     *
+     *             &#64;Override
+     *             public boolean accept(final File aFileOrDir) {
+     *
+     *                 // Check sanity
+     *                 if (aFileOrDir == null) {
+     *                     return false;
+     *                 }
+     *
+     *                 final String name = aFileOrDir.getName();
+     *
+     *                 // Ignore hidden files and CVS directories
+     *                 return name.startsWith(".")
+     *                         || (aFileOrDir.isDirectory() && name.equals("CVS"));
+     *
+     *             }
+     *         }));
+     *     </code>
+     * </pre>
+     * <p><b>Note</b>! Since the plugin is currently developed in jdk 1.7-compliant code, we cannot
+     * use lambdas within Filters just yet.</p>
      */
     public static final List<Filter<File>> STANDARD_EXCLUDE_FILTERS;
 

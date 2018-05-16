@@ -166,6 +166,35 @@ The example above is by no means a complete guide to JAXB compliant class design
 practises which eliminate some of the more common mistakes for correct XSD generation. Again, for further/full
 information about the JAXB annotations, please refer to the [JAXB Reference Implementation](https://jaxb.java.net/).
 
+## Standard (implicit) configuration
+
+The following settings are used by default.
+
+1. The standard source folders (i.e. `getProject().getCompileSourceRoots()`) are expected to contain 
+   JAXB-annotated files, to be included within the Xml Schema Compilation operation. 
+   By default, files matching some Java Regexp patterns are excluded from the JXC compilation. 
+   The default exclude patterns are  
+   `"README.*", "\.xml", "\.txt", "\\.xjb", "\\.xsd", "\\.properties"` as documented on the 
+   `SchemaGenerationMojo.STANDARD_SOURCE_EXCLUDE_FILTERS` property.
+2. The standard test source folders (i.e. `getProject().getTestCompileSourceRoots()`) are expected to contain 
+   JAXB-annotated files, to be included within the test-scope Xml Schema Compilation operation. 
+   By default, files matching some Java Regexp patterns are excluded from the JXC compilation. 
+   The default exclude patterns are  
+   `"README.*", "\.xml", "\.txt", "\\.xjb", "\\.xsd", "\\.properties"` as documented on the 
+   `TestSchemaGenerationMojo.STANDARD_TEST_SOURCE_EXCLUDE_FILTERS` property.             
+
+The standard behavior can be overridden by the following elements:
+
+1. `sources` - replace `getProject().getCompileSourceRoots()` as the files or directories containing 
+    JAXB-annotated source files. 
+2. `schemaSourceExcludeFilters` - Replace the default exclusion filters with a custom suite of Filters.
+3. `testSources` - replace `getProject().getTestCompileSourceRoots()` as the files or directories
+    containing JAXB-annotated source files for the test-scope compilation
+4. `testSchemaSourceExcludeFilters` - Replace the default test-scope exclusion filters with a custom suite of Filters. 
+   
+These configuration options are illustrated within the examples below. 
+Also, feel free to investigate the integration tests of the plugin itself.
+
 ## Example 1: Default XSD generation
 
 Generate XSD files from annotated Java classes is simple with the jaxb2-maven-plugin.

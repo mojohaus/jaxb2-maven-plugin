@@ -1,0 +1,45 @@
+@startuml
+|Find Source Files|
+start
+while (for each source)
+    :Add all source files;
+endwhile
+
+note left
+  **Sources** configuration may
+  contain several directories and/or
+  explicit files, such as:
+
+  <sources>
+    <source>src/main/xsd</source>
+    <source>src/main/foobar</source>
+    <source>src/someExplicit.myFile</source>
+  </sources>
+end note
+
+|#AntiqueWhite|Filter Found Source Files|
+
+while (exclude filters remaining?)
+
+    :Remove file if matched by an **exclude Filter**;
+    
+    note right
+        **Exclude Filters** configuration may
+        contain several directories and/or
+        explicit files, such as:
+
+        <xjcSourceExcludeFilters>
+            <filter implementation="org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter">
+                <patterns>
+                    <pattern>\.xsd</pattern>
+                    <pattern>\.foo</pattern>
+                </patterns>
+            </filter>
+        </xjcSourceExcludeFilters>
+    end note
+endwhile
+
+:Include file into XJC / JXC compilation;
+
+stop
+@enduml

@@ -63,8 +63,19 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     public static final String STALE_FILENAME = "testSchemaGenerationStaleFlag";
 
     /**
-     * Default exclude file name suffixes for testSources, used unless overridden by an
+     * <p>Default exclude file name suffixes for testSources, used unless overridden by an
      * explicit configuration in the {@code testSchemaSourceExcludeFilters} parameter.
+     * The default values are found as follows:</p>
+     * <pre>
+     *     <code>
+     *         final List&lt;Filter&lt;File&gt&gt; testSrcTemp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
+     *         testSrcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
+     *         testSrcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
+     *         STANDARD_TEST_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(testSrcTemp);
+     *     </code>
+     * </pre>
+     *
+     * @see #STANDARD_EXCLUDE_FILTERS
      */
     public static final List<Filter<File>> STANDARD_TEST_SOURCE_EXCLUDE_FILTERS;
 
@@ -95,7 +106,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      * </pre>
      * <p><strong>Note</strong>: if configured, the sources parameters replace the default
      * value, which is a List containing the paths to the directories defined by
-     * {@code getProject().getBuild().getTestSourceDirectory()}.</p>
+     * {@code getProject().getTestCompileSourceRoots()}.</p>
      *
      * @since 2.0
      */
@@ -254,14 +265,14 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     @Override
     protected void addResource(final Resource resource) {
 
-        if(resource != null) {
+        if (resource != null) {
 
             final String newDirectory = resource.getDirectory();
 
             // Is the supplied resource already added?
             final List<Resource> currentResources = getProject().getTestResources();
 
-            if(getLog().isDebugEnabled()) {
+            if (getLog().isDebugEnabled()) {
                 getLog().debug("Candidate Test Resource Directory [" + newDirectory + "]");
                 getLog().debug("Found [" + currentResources.size() + "] current Test Resources: "
                         + currentResources);
@@ -270,7 +281,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
             for (Resource current : currentResources) {
 
                 // Is the resource already added?
-                if(current.getDirectory() != null && current.getDirectory().equalsIgnoreCase(newDirectory)) {
+                if (current.getDirectory() != null && current.getDirectory().equalsIgnoreCase(newDirectory)) {
                     getLog().debug("Test resource already added [" + newDirectory + "]. Not adding again.");
                     return;
                 }
@@ -279,7 +290,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
             // Add the new Resource
             currentResources.add(resource);
 
-            if(getLog().isDebugEnabled()) {
+            if (getLog().isDebugEnabled()) {
                 getLog().debug("Added test resource [" + newDirectory + "] to existing test resources.");
             }
         }
