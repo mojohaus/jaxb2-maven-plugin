@@ -59,7 +59,7 @@ Checkout the release tag on the master branch, rebuild and deploy to the OSS rep
 
     git checkout jaxb2-maven-plugin-2.4.0
     
-    mvn clean deploy
+    mvn -Pmojo-release clean deploy
     
 The normal Mojohaus process for the binary release (send mail to group etc.) follows.
 When the release is approved by the community, build and publish the release documentation as 

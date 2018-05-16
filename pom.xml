@@ -108,13 +108,13 @@
         <plexus-compiler-api.version>2.5</plexus-compiler-api.version>
         <plexus-utils.version>3.1.0</plexus-utils.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
+        <maven-changes-plugin.version>2.12.1</maven-changes-plugin.version>
 
         <!-- JAXB tooling versions -->
         <jaxb.version>2.3.0</jaxb.version>
         <stax-ex.version>1.7.8</stax-ex.version>
         <qdox.version>2.0-M8</qdox.version>
         <asm.version>4.0</asm.version>
-        <additionalparam>-Xdoclint:none</additionalparam>
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>2.5.1</xmlunit.version>
@@ -124,7 +124,7 @@
 
     <dependencyManagement>
         <dependencies>
-            
+
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-bom</artifactId>
@@ -132,7 +132,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jvnet.staxex</groupId>
                 <artifactId>stax-ex</artifactId>
@@ -237,7 +237,7 @@
             -->
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.maven.skins</groupId>
             <artifactId>maven-fluido-skin</artifactId>
@@ -311,7 +311,7 @@
     <build>
         <pluginManagement>
             <plugins>
-                
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
@@ -353,7 +353,7 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -491,6 +491,40 @@
                     </plugins>
                 </pluginManagement>
             </build>
+        </profile>
+
+        <profile>
+            <!--
+            On travis-ci, the API rate limit for github reports is sometimes exceeded,
+            so only render this when not run on travis.
+            -->
+            <id>mojo-enable-githubreport-when-not-on-travis</id>
+            <activation>
+                <property>
+                    <name>!env.CONTINUOUS_INTEGRATION</name>
+                </property>
+            </activation>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changes-plugin</artifactId>
+                        <version>${maven-changes-plugin.version}</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>github-report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                        <configuration>
+                            <includeOpenIssues>false</includeOpenIssues>
+                            <onlyMilestoneIssues>true</onlyMilestoneIssues>
+                            <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
 
         <!--
