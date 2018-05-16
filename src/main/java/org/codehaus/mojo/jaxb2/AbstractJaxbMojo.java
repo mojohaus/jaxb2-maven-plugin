@@ -106,7 +106,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      *
      *                 // Ignore hidden files and CVS directories
      *                 return name.startsWith(".")
-     *                         || (aFileOrDir.isDirectory() && name.equals("CVS"));
+     *                         || (aFileOrDir.isDirectory() &amp;&amp; name.equals("CVS"));
      *
      *             }
      *         }));

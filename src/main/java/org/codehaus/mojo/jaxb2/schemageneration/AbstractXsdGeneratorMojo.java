@@ -88,7 +88,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
      * </p>
      * <pre>
      *     <code>
-     *         final List<Filter<File>> schemagenTmp = new ArrayList<Filter<File>>();
+     *         final List&lt;Filter&lt;File&gt;&gt; schemagenTmp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
      *         schemagenTmp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
      *         schemagenTmp.add(new PatternFileFilter(Arrays.asList("\\.java", "\\.scala", "\\.mdo"), false));
      *         STANDARD_BYTECODE_EXCLUDE_FILTERS = Collections.unmodifiableList(schemagenTmp);

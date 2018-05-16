@@ -68,7 +68,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      * The default values are found as follows:</p>
      * <pre>
      *     <code>
-     *         final List&lt;Filter&lt;File&gt&gt; testSrcTemp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
+     *         final List&lt;Filter&lt;File&gt;&gt; testSrcTemp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
      *         testSrcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
      *         testSrcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
      *         STANDARD_TEST_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(testSrcTemp);
