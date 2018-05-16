@@ -431,7 +431,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     // Get the path to the current file
                     final String currentPath = FileSystemUtilities.getCanonicalPath(current.getAbsoluteFile());
                     final File target = new File(getOutputDirectory(),
-                            FileSystemUtilities.relativize(currentPath, getWorkDirectory()));
+                            FileSystemUtilities.relativize(currentPath, getWorkDirectory(), true));
 
                     // Copy the file to the same relative structure within the output directory.
                     FileSystemUtilities.createDirectory(target.getParentFile(), false);
@@ -693,7 +693,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             // Calculate the relative path for the current source
             final String relativePath = FileSystemUtilities.relativize(
                     FileSystemUtilities.getCanonicalPath(sourceCodeFile),
-                    userDir);
+                    userDir,
+                    true);
 
             if (getLog().isDebugEnabled()) {
                 getLog().debug("SourceCodeFile ["

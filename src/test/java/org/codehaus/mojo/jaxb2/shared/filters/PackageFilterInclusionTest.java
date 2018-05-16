@@ -49,7 +49,7 @@ public class PackageFilterInclusionTest {
         srcMainJavaDir = new File(basedir, "src/main/java");
         Assert.assertTrue(srcMainJavaDir.exists() && srcMainJavaDir.isDirectory());
 
-        contextRoot = FileSystemUtilities.relativize(srcMainJavaDir.getPath(), baseDirectory);
+        contextRoot = FileSystemUtilities.relativize(srcMainJavaDir.getPath(), baseDirectory, true);
     }
 
     @Test

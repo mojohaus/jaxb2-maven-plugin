@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -372,7 +374,7 @@ public class FileSystemUtilitiesTest {
 
         // Act
         final File jarFile = FileSystemUtilities.getFileFor(resource, "UTF-8");
-        final String relativized = FileSystemUtilities.relativize(jarFile.getPath(), srcTestResources);
+        final String relativized = FileSystemUtilities.relativize(jarFile.getPath(), srcTestResources, true);
 
         // Assert
         Assert.assertTrue(jarFile.exists());
@@ -426,6 +428,30 @@ public class FileSystemUtilitiesTest {
         // Assert
         Assert.assertTrue(normalizedPath.endsWith("file%20with%20spaces.txt"));
         Assert.assertTrue(decoded.endsWith("file with spaces.txt"));
+    }
+
+    @Test
+    public void validateRelativizingPaths() throws Exception {
+
+        // Assemble
+        final String path = "/project/backend/foobar/my-schema.xsd";
+        final SortedMap<String, String> parentDir2Expected = new TreeMap<>();
+        parentDir2Expected.put("/", "project/backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("", "project/backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("/project", "backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("/not/a/path", "project/backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("/project/", "backend/foobar/my-schema.xsd");
+
+        // Act & Assert
+        for(Map.Entry<String, String> current : parentDir2Expected.entrySet()) {
+
+            final String expectedMessage = "Given parent dir [" + current.getKey() + "], expected ["
+                    + current.getValue() + "] from [" + path + "] but found: ";
+
+            final String result = FileSystemUtilities.relativize(path, new File(current.getKey()), true);
+
+            Assert.assertEquals(expectedMessage + result, current.getValue(), result);
+        }
     }
 
     //

@@ -269,7 +269,7 @@ public final class FileSystemUtilities {
             for (File currentResolvedSource : FileSystemUtilities.filterFiles(
                     baseDir,
                     sources,
-                    FileSystemUtilities.relativize(current, baseDir),
+                    FileSystemUtilities.relativize(current, baseDir, true),
                     log,
                     fileTypeDescription,
                     excludePatterns)) {
@@ -524,9 +524,12 @@ public final class FileSystemUtilities {
      *
      * @param path      The path to strip off basedir path from, and return.
      * @param parentDir The maven project basedir.
+     * @param removeInitialFileSep If true, an initial {@code File#separator} is removed before returning.
      * @return The path relative to basedir, if it is situated below the basedir. Otherwise the supplied path.
      */
-    public static String relativize(final String path, final File parentDir) {
+    public static String relativize(final String path,
+                                    final File parentDir,
+                                    final boolean removeInitialFileSep) {
 
         // Check sanity
         Validate.notNull(path, "path");
@@ -537,11 +540,13 @@ public final class FileSystemUtilities {
 
         // Compare case insensitive
         if (path.toLowerCase().startsWith(basedirPath.toLowerCase())) {
-            toReturn = path.substring(basedirPath.length() + 1);
+            toReturn = path.substring(basedirPath.length());
         }
 
         // Handle whitespace in the argument.
-        return toReturn;
+        return removeInitialFileSep && toReturn.startsWith(File.separator)
+                ? toReturn.substring(File.separator.length())
+                : toReturn;
     }
 
     /**
