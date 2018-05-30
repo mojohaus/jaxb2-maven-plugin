@@ -17,7 +17,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -437,16 +438,33 @@
 
     <profiles>
 
-        <!--
-            Augment the build module path to include javax.bind when compiling using java 9
+        <profile>
+            <id>default-tools.jar</id>
+            <activation>
+                <jdk>(,9)</jdk> <!-- System.getProperty( “java.version” ) -->
+            </activation>
 
-            When: Compiling with java 9
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                    <version>1.4.2</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!--
+            Augment the build module path to include javax.bind when compiling using java 9+
+
+            When: Compiling with java 9+
         -->
         <profile>
             <id>jdk9</id>
 
             <activation>
-                <jdk>9</jdk>
+                <jdk>[9,)</jdk>
             </activation>
 
             <properties>
@@ -482,8 +500,8 @@
                             <artifactId>maven-surefire-plugin</artifactId>
                             <version>2.19.1</version>
                             <configuration>
-                                <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}
-                                </redirectTestOutputToFile>
+                                <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}</redirectTestOutputToFile>
+                                <argLine>--add-modules=java.xml.bind</argLine>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -512,7 +530,6 @@
                         <configuration>
                             <debug>true</debug>
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                            <!--<preBuildHookScript>setup</preBuildHookScript>-->
                             <postBuildHookScript>verify</postBuildHookScript>
                             <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                             <settingsFile>src/it/settings.xml</settingsFile>
@@ -530,6 +547,13 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.sun.activation</groupId>
+                                <artifactId>javax.activation</artifactId>
+                                <version>1.2.0</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
