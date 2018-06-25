@@ -46,6 +46,18 @@
                  <p>An example is given on the usage page for the schemagen goal.</p>
             </answer>
         </faq>
+        <faq id="SchemagenEmptyNamespacePrefix">
+            <question>Can I generate XSDs without a namespace prefix on the target namespace?</question>
+            <answer>
+                <p>The 2.x line of the Jaxb2-Maven-Plugin requires the namespaceURI to relate to at least one
+                non-empty value out of the two properties below. Hence, at least one of these values must be
+                provided and given a non-empty value:</p>
+                <ol>
+                    <li>prefix</li>
+                    <li>toFile</li>
+                </ol>
+            </answer>
+        </faq>
         <faq id="SchemaGenWhitespace">
                     <question>When I try to generate Schema and any path contain whitespace, I get an
                     Exception</question>
