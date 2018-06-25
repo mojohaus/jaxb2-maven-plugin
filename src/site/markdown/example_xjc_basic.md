@@ -18,6 +18,10 @@ and this plugin, but that is typically viewed as advanced usage. A better option
 version of the compiled code with the requirement on the JAXB runtime environment of the generated
 code.
 
+**Note**: The plugin currently requires that you run it from within the maven project directory,
+          i.e. where the `pom.xml` file resides. If the project is part of a multi-module Maven build,
+          Maven will take care of this for you. 
+
 ## Standard (implicit) configuration
 
 To find which files should be included within an XJC compilation the jaxb2-maven-plugin uses 

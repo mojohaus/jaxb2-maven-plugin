@@ -84,6 +84,10 @@ whitespace in paths whenever you need the plugin's `schemagen` goal to work prop
 
 **Note**: The `episode` argument of schemagen does not seem to work.
 
+**Note**: The plugin currently requires that you run it from within the maven project directory,
+          i.e. where the `pom.xml` file resides. If the project is part of a multi-module Maven build,
+          Maven will take care of this for you.  
+
 ## Recommended JAXB Annotations for XSD generation
 
 XSD generation from JAXB-annotated Java classes uses schemagen from the JAXB specification to generate XSDs from
