@@ -542,11 +542,6 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             throw new MojoExecutionException("Could not create directory [" + episodePath.toString() + "]");
         }
 
-        // Add the (generated) outputDirectory to the Resources.
-        final Resource outputDirectoryResource = new Resource();
-        outputDirectoryResource.setDirectory(getOutputDirectory().getAbsolutePath());
-        this.addResource(outputDirectoryResource);
-
         // Is there already an episode file here?
         File episodeFile = new File(generatedJaxbEpisodeDirectory, effectiveEpisodeFileName + ".xjb");
         final AtomicInteger index = new AtomicInteger(1);
@@ -554,6 +549,12 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             episodeFile = new File(generatedJaxbEpisodeDirectory,
                     effectiveEpisodeFileName + "_" + index.getAndIncrement() + ".xjb");
         }
+
+        // Add the (generated) outputDirectory to the Resources.
+        final Resource outputDirectoryResource = new Resource();
+        outputDirectoryResource.setDirectory(getOutputDirectory().getAbsolutePath());
+        outputDirectoryResource.setIncludes(Collections.singletonList("**/" + episodeFile.getName()));
+        this.addResource(outputDirectoryResource);
 
         // All Done.
         return episodeFile;
