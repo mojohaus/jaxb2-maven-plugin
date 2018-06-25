@@ -7,6 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -39,6 +42,31 @@ public class LocaleFacetTest {
 
         facet.restore();
         Assert.assertEquals(defaultLocale.toString(), Locale.getDefault().toString());
+    }
+
+    @Test
+    public void validateOptimalLocaleFindingIgnoringScripts() throws MojoExecutionException {
+
+        // Assemble
+        final SortedMap<String, Locale> lang2Locale = new TreeMap<String, Locale>();
+        for (Locale current : Locale.getAvailableLocales()) {
+            lang2Locale.put(current.toLanguageTag(), current);
+        }
+
+        // Act & Assert
+        for (Map.Entry<String, Locale> current : lang2Locale.entrySet()) {
+
+            final String language = current.getValue().getLanguage();
+            final String country = current.getValue().getCountry();
+            final String variant = current.getValue().getVariant();
+            final String script = current.getValue().getScript();
+
+            // Ignore Locales with Scripts.
+            if (script == null) {
+                Assert.assertSame(Locale.forLanguageTag(current.getValue().toLanguageTag()),
+                        LocaleFacet.findOptimumLocale(language, country, variant));
+            }
+        }
     }
 
     @Test(expected = MojoExecutionException.class)

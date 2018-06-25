@@ -45,6 +45,7 @@ public class LocaleFacet extends AbstractLogAwareFacet {
      * @param log       The active Maven Log.
      * @param newLocale The non-null Locale to be set by this LocaleFacet during execution.
      */
+    @SuppressWarnings("WeakerAccess")
     public LocaleFacet(final Log log, final Locale newLocale) {
         super(log);
 
@@ -116,22 +117,55 @@ public class LocaleFacet extends AbstractLogAwareFacet {
                     + "form <language>[,<country>[,<variant>]]. Received incorrect value '" + localeString + "'");
         }
 
-        Locale locale = null;
-        switch (numTokens) {
-            case 3:
-                locale = new Locale(tok.nextToken().trim(), tok.nextToken().trim(), tok.nextToken().trim());
-                break;
-
-            case 2:
-                locale = new Locale(tok.nextToken().trim(), tok.nextToken().trim());
-                break;
-
-            default:
-                locale = new Locale(tok.nextToken().trim());
-                break;
-        }
+        // Extract the locale configuration data.
+        final String language = tok.nextToken().trim();
+        final String country = numTokens > 1 ? tok.nextToken().trim() : null;
+        final String variant = numTokens > 2 ? tok.nextToken().trim() : null;
 
         // All done.
-        return new LocaleFacet(log, locale);
+        return new LocaleFacet(log, findOptimumLocale(language, country, variant));
+    }
+
+    /**
+     * Helper method to find the best matching locale, implying a workaround for problematic
+     * case-sensitive Locale detection within the JDK. (C.f. Issue #112).
+     *
+     * @param language The given Language.
+     * @param country  The given Country. May be null or empty to indicate that the Locale returned should not
+     *                 contain a Country definition.
+     * @param variant  The given Variant. May be null or empty to indicate that the Locale returned should not
+     *                 contain a Variant definition.
+     * @return The optimally matching Locale.
+     */
+    @SuppressWarnings("All")
+    public static Locale findOptimumLocale(final String language, final String country, final String variant) {
+
+        final boolean hasCountry = country != null && !country.isEmpty();
+        final boolean hasVariant = variant != null && !variant.isEmpty();
+
+        final Locale[] availableLocales = Locale.getAvailableLocales();
+        for (int i = 0; i < availableLocales.length; i++) {
+
+            final Locale current = availableLocales[i];
+
+            // Extract the language/country/variant of the current Locale.
+            final String currentLanguage = current.getLanguage();
+            final String currentCountry = current.getCountry();
+            final String currentVariant = current.getVariant();
+
+            // Check if the current Locale matches the supplied
+            final boolean isLanguageMatch = language.equalsIgnoreCase(currentLanguage);
+            final boolean isCountryMatch = (hasCountry && country.equalsIgnoreCase(currentCountry))
+                    || (!hasCountry && (currentCountry == null || currentCountry.isEmpty()));
+            final boolean isVariantMatch = (hasVariant && variant.equalsIgnoreCase(currentVariant))
+                    || (!hasVariant && (currentVariant == null || currentVariant.isEmpty()));
+
+            if (isLanguageMatch && isCountryMatch && isVariantMatch) {
+                return current;
+            }
+        }
+
+        // Default to the default platform locale.
+        return Locale.getDefault();
     }
 }
