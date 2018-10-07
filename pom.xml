@@ -112,7 +112,7 @@
         <jaxb.version>2.3.0</jaxb.version>
         <stax-ex.version>1.7.8</stax-ex.version>
         <qdox.version>2.0-M8</qdox.version>
-        <asm.version>4.0</asm.version>
+        <asm.version>6.2.1</asm.version>
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>2.5.1</xmlunit.version>

@@ -52,9 +52,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -203,9 +204,10 @@ public final class XsdGeneratorHelper {
      * @return The number of processed XSDs.
      */
     public static int insertJavaDocAsAnnotations(final Log log,
-            final File outputDir,
-            final SearchableDocumentation docs,
-            final JavaDocRenderer renderer) {
+                                                 final String encoding,
+                                                 final File outputDir,
+                                                 final SearchableDocumentation docs,
+                                                 final JavaDocRenderer renderer) {
 
         // Check sanity
         Validate.notNull(docs, "docs");
@@ -235,7 +237,7 @@ public final class XsdGeneratorHelper {
                 processedXSDs++;
 
                 // Overwrite the vanilla file.
-                savePrettyPrintedDocument(generatedSchemaFileDocument, current);
+                savePrettyPrintedDocument(generatedSchemaFileDocument, current, encoding);
             }
 
         } else {
@@ -256,12 +258,15 @@ public final class XsdGeneratorHelper {
      * @param configuredTransformSchemas The Schema instances read from the configuration of this plugin.
      * @param mavenLog                   The active Log.
      * @param schemaDirectory            The directory where all generated schema files reside.
+     * @param encoding                   The encoding to use when writing the file.
      * @throws MojoExecutionException If the namespace replacement could not be done.
      */
-    public static void replaceNamespacePrefixes(final Map<String, SimpleNamespaceResolver> resolverMap,
+    public static void replaceNamespacePrefixes(
+            final Map<String, SimpleNamespaceResolver> resolverMap,
             final List<TransformSchema> configuredTransformSchemas,
             final Log mavenLog,
-            final File schemaDirectory) throws MojoExecutionException {
+            final File schemaDirectory,
+            final String encoding) throws MojoExecutionException {
 
         if (mavenLog.isDebugEnabled()) {
             mavenLog.debug("Got resolverMap.keySet() [generated filenames]: " + resolverMap.keySet());
@@ -305,7 +310,7 @@ public final class XsdGeneratorHelper {
                 // Overwrite the generatedSchemaFile with the content of the generatedSchemaFileDocument.
                 mavenLog.debug("Overwriting file [" + currentResolver.getSourceFilename() + "] with content ["
                         + getHumanReadableXml(generatedSchemaFileDocument) + "]");
-                savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile);
+                savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile, encoding);
             } else {
                 mavenLog.debug("No namespace prefix changes to generated schema file ["
                         + generatedSchemaFile.getName() + "]");
@@ -321,11 +326,13 @@ public final class XsdGeneratorHelper {
      * @param configuredTransformSchemas The Schema instances read from the configuration of this plugin.
      * @param mavenLog                   The active Log.
      * @param schemaDirectory            The directory where all generated schema files reside.
+     * @param charsetName                The encoding / charset name.
      */
     public static void renameGeneratedSchemaFiles(final Map<String, SimpleNamespaceResolver> resolverMap,
-            final List<TransformSchema> configuredTransformSchemas,
-            final Log mavenLog,
-            final File schemaDirectory) {
+                                                  final List<TransformSchema> configuredTransformSchemas,
+                                                  final Log mavenLog,
+                                                  final File schemaDirectory,
+                                                  final String charsetName) {
 
         // Create the map relating namespace URI to desired filenames.
         Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<String, String>();
@@ -349,7 +356,7 @@ public final class XsdGeneratorHelper {
                 mavenLog.debug("Changed schemaLocation entries within [" + currentResolver.getSourceFilename() + "]. "
                         + "Result: [" + getHumanReadableXml(generatedSchemaFileDocument) + "]");
             }
-            savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile);
+            savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile, charsetName);
         }
 
         // Now, rename the actual files.
@@ -460,7 +467,7 @@ public final class XsdGeneratorHelper {
     //
 
     private static String getDuplicationErrorMessage(final String propertyName, final String propertyValue,
-            final int firstIndex, final int currentIndex) {
+                                                     final int firstIndex, final int currentIndex) {
         return MISCONFIG + "Duplicate '" + propertyName + "' property with value [" + propertyValue
                 + "] found in plugin configuration. Correct schema elements index (" + firstIndex + ") and ("
                 + currentIndex + "), to ensure that all '" + propertyName + "' values are unique.";
@@ -477,7 +484,7 @@ public final class XsdGeneratorHelper {
      * @throws MojoExecutionException if any schema file currently uses <code>newPrefix</code>.
      */
     private static void validatePrefixSubstitutionIsPossible(final String oldPrefix, final String newPrefix,
-            final SimpleNamespaceResolver currentResolver)
+                                                             final SimpleNamespaceResolver currentResolver)
             throws MojoExecutionException {
         // Make certain the newPrefix does not exist already.
         if (currentResolver.getNamespaceURI2PrefixMap().containsValue(newPrefix)) {
@@ -508,10 +515,12 @@ public final class XsdGeneratorHelper {
         return result;
     }
 
-    private static void savePrettyPrintedDocument(final Document toSave, final File targetFile) {
+    private static void savePrettyPrintedDocument(final Document toSave,
+                                                  final File targetFile,
+                                                  final String charsetName) {
         Writer out = null;
         try {
-            out = new BufferedWriter(new FileWriter(targetFile));
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), charsetName));
             out.write(getHumanReadableXml(toSave.getFirstChild()));
         } catch (IOException e) {
             throw new IllegalStateException("Could not write to file [" + targetFile.getAbsolutePath() + "]", e);
@@ -521,8 +530,8 @@ public final class XsdGeneratorHelper {
     }
 
     private static void addRecursively(final List<File> toPopulate,
-            final FileFilter fileFilter,
-            final File aDir) {
+                                       final FileFilter fileFilter,
+                                       final File aDir) {
 
         // Check sanity
         Validate.notNull(toPopulate, "toPopulate");

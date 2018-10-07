@@ -24,7 +24,6 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
-import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -53,7 +52,14 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /**
@@ -488,6 +494,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                                 ? STANDARD_JAVADOC_RENDERER
                                 : javaDocRenderer;
                         final int numProcessedFiles = XsdGeneratorHelper.insertJavaDocAsAnnotations(getLog(),
+                                getEncoding(false),
                                 getOutputDirectory(),
                                 javaDocs,
                                 renderer);
@@ -507,13 +514,15 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                         XsdGeneratorHelper.replaceNamespacePrefixes(resolverMap,
                                 transformSchemas,
                                 getLog(),
-                                getOutputDirectory());
+                                getOutputDirectory(),
+                                getEncoding(false));
 
                         // Rename all generated schema files as requested.
                         XsdGeneratorHelper.renameGeneratedSchemaFiles(resolverMap,
                                 transformSchemas,
                                 getLog(),
-                                getOutputDirectory());
+                                getOutputDirectory(),
+                                getEncoding(false));
                     }
                 }
 
