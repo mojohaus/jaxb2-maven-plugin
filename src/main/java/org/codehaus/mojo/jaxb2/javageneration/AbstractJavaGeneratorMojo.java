@@ -35,6 +35,7 @@ import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClas
 import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertyChangeEnvironmentFacet;
+import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertySaveEnvironmentFacet;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -57,6 +58,8 @@ import java.util.List;
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
  */
 public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
+
+    private static final List<String> PROXY_PROPERTY_KEYS = Arrays.asList("http.proxyHost", "http.proxyPort", "https.proxyHost", "https.proxyPort");
 
     private static final int XJC_COMPLETED_OK = 0;
 
@@ -443,6 +446,11 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                     for (SystemPropertyChangeEnvironmentFacet current : sysPropChanges) {
                         environment.add(current);
                     }
+                }
+
+                // XJC overwrites proxy properties if so inclined, so we use this facet to save them
+                for (String key : PROXY_PROPERTY_KEYS) {
+                    environment.add(new SystemPropertySaveEnvironmentFacet(key, getLog()));
                 }
 
                 // Setup the environment.
