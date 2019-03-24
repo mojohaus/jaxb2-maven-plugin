@@ -262,6 +262,16 @@
         </dependency>
 
         <!--
+            Xalan dependency (to avoid subtle differences in output between Java versions)
+        -->
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
             Test-scope dependencies.
         -->
         <dependency>
@@ -279,12 +289,6 @@
             <groupId>se.jguru.nazgul.test.xmlbinding</groupId>
             <artifactId>nazgul-core-xmlbinding-test</artifactId>
             <version>${nazgul-core-xmlbinding-test.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

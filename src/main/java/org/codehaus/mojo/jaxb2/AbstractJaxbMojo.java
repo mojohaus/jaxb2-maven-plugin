@@ -148,6 +148,19 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         // Make STANDARD_EXCLUDE_FILTERS be unmodifiable.
         STANDARD_EXCLUDE_FILTERS = Collections.unmodifiableList(tmp);
+
+        // Preload relevant package-info classes to work around MNG-6506.
+        try {
+            ClassLoader cl = AbstractJaxbMojo.class.getClassLoader();
+            cl.loadClass("com.sun.tools.xjc.addon.episode.package-info");
+            cl.loadClass("com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info");
+            cl.loadClass("com.sun.xml.bind.v2.model.core.package-info");
+            cl.loadClass("com.sun.xml.bind.v2.model.runtime.package-info");
+            cl.loadClass("com.sun.xml.bind.v2.schemagen.episode.package-info");
+            cl.loadClass("com.sun.xml.bind.v2.schemagen.xmlschema.package-info");
+        } catch (ClassNotFoundException ex) {
+            throw new Error(ex);
+        }
     }
 
     /**
