@@ -56,7 +56,7 @@ public class ThreadContextClassLoaderBuilderTest {
     public void validateAddingURLsToThreadContextClassLoader() throws Exception {
 
         // Assemble
-        final int numExpectedResources = JavaVersion.isJdk8OrLower() ? 3 : 4;
+        final int numExpectedResources = JavaVersion.isJdk8OrLower() ? 3 : 6;
         holder = ThreadContextClassLoaderBuilder
                 .createFor(originalClassLoader, log, encoding)
                 .addURL(extraClassLoaderDirURL)

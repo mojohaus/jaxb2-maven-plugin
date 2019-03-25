@@ -109,7 +109,7 @@
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
         <!-- JAXB tooling versions -->
-        <jaxb.version>2.3.0</jaxb.version>
+        <jaxb.version>2.3.2</jaxb.version>
         <stax-ex.version>1.7.8</stax-ex.version>
         <qdox.version>2.0-M8</qdox.version>
         <asm.version>6.2.1</asm.version>
@@ -156,45 +156,12 @@
             within the JAXB RI artifacts.
         -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>${jaxb.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-xjc</artifactId>
-            <exclusions>
-                <!--
-                    Classes from tools.jar must be loaded by the plugin to enable schemagen.
-                    However, this hampers JDK 9 adoption.
-                -->
-                <exclusion>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-jxc</artifactId>
-            <exclusions>
-                <!--
-                    Classes from tools.jar must be loaded by the plugin to enable schemagen.
-                    However, this hampers JDK 9 adoption.
-                -->
-                <exclusion>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- QDox, used for JavaDoc processing -->
@@ -302,11 +269,6 @@
             <artifactId>logback-classic</artifactId>
             <version>1.1.7</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.istack</groupId>
-            <artifactId>istack-commons-runtime</artifactId>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -440,97 +402,6 @@
     </reporting>
 
     <profiles>
-
-        <profile>
-            <id>default-tools.jar</id>
-            <activation>
-                <jdk>(,9)</jdk> <!-- System.getProperty( “java.version” ) -->
-            </activation>
-
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.4.2</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!--
-            Augment the build module path to include javax.bind when compiling using java 9+
-
-            When: Compiling with java 9+
-        -->
-        <profile>
-            <id>jdk9</id>
-
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-
-            <properties>
-                <mojo.java.target>9</mojo.java.target>
-                <codecoverage>false</codecoverage>
-            </properties>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.jaxb</groupId>
-                    <artifactId>jaxb-jxc-jdk9</artifactId>
-                    <version>${jaxb.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.jaxb</groupId>
-                    <artifactId>jaxb-xjc-jdk9</artifactId>
-                    <version>${jaxb.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>javax.activation-api</artifactId>
-                    <version>1.2.0</version>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <version>3.5.1</version>
-                            <configuration>
-                                <source>${mojo.java.target}</source>
-                                <target>${mojo.java.target}</target>
-                                <compilerArgs>
-                                    <arg>--add-modules</arg>
-                                    <arg>java.xml.bind</arg>
-                                </compilerArgs>
-                            </configuration>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>org.ow2.asm</groupId>
-                                    <artifactId>asm</artifactId>
-                                    <version>6.1.1</version> <!-- Use newer version of ASM -->
-                                </dependency>
-                            </dependencies>
-                        </plugin>
-
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.19.1</version>
-                            <configuration>
-                                <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}</redirectTestOutputToFile>
-                                <argLine>--add-modules=java.xml.bind</argLine>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-
         <!--
             Run all integration tests, unless the "skipTests" flag is set.
 
