@@ -1,6 +1,7 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
-import org.apache.commons.lang3.Validate;
+
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;

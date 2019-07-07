@@ -316,8 +316,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
             IOException {
 
         // Check sanity
-        org.apache.commons.lang3.Validate.notNull(expected, "Cannot handle null expected argument.");
-        org.apache.commons.lang3.Validate.notNull(actual, "Cannot handle null actual argument.");
+        Validate.notNull(expected, "Cannot handle null expected argument.");
+        Validate.notNull(actual, "Cannot handle null actual argument.");
 
         // Ignore whitespace - and also normalize the Documents.
         XMLUnit.setNormalize(true);

@@ -33,11 +33,10 @@
     </properties>
 
     <dependencies>
-        <!-- Just for clarifying that we're using JAXB 2.0 -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.0</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
         </dependency>
     </dependencies>
 

@@ -118,10 +118,18 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     public static final List<Filter<File>> STANDARD_EXCLUDE_FILTERS;
 
     private static final List<String> RELEVANT_GROUPIDS =
-            Arrays.asList("org.glassfish.jaxb", "javax.xml.bind");
+            Arrays.asList("org.glassfish.jaxb", "jakarta.xml.bind");
     private static final String OWN_ARTIFACT_ID = "jaxb2-maven-plugin";
     private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
     private static final String[] STANDARD_EXCLUDE_SUFFIXES = {"README.*", "\\.xml", "\\.txt"};
+    private static final String[] STANDARD_PRELOADED_CLASSES = {
+            "com.sun.tools.xjc.addon.episode.package-info",
+            "com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info",
+            "com.sun.xml.bind.v2.model.core.package-info",
+            "com.sun.xml.bind.v2.model.runtime.package-info",
+            "com.sun.xml.bind.v2.schemagen.episode.package-info",
+            "com.sun.xml.bind.v2.schemagen.xmlschema.package-info"
+    };
 
     static {
 
@@ -149,15 +157,16 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         // Make STANDARD_EXCLUDE_FILTERS be unmodifiable.
         STANDARD_EXCLUDE_FILTERS = Collections.unmodifiableList(tmp);
 
+        // TODO: These are hardcoded. Move to overridable using a system property?
         // Preload relevant package-info classes to work around MNG-6506.
         try {
-            ClassLoader cl = AbstractJaxbMojo.class.getClassLoader();
-            cl.loadClass("com.sun.tools.xjc.addon.episode.package-info");
-            cl.loadClass("com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info");
-            cl.loadClass("com.sun.xml.bind.v2.model.core.package-info");
-            cl.loadClass("com.sun.xml.bind.v2.model.runtime.package-info");
-            cl.loadClass("com.sun.xml.bind.v2.schemagen.episode.package-info");
-            cl.loadClass("com.sun.xml.bind.v2.schemagen.xmlschema.package-info");
+
+            final ClassLoader cl = AbstractJaxbMojo.class.getClassLoader();
+
+            for(String current : STANDARD_PRELOADED_CLASSES) {
+                cl.loadClass(current);
+            }
+
         } catch (ClassNotFoundException ex) {
             throw new Error(ex);
         }
