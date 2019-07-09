@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>jaxb2-maven-plugin</artifactId>
-    <version>2.5.0</version>
+    <version>2.5.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>JAXB-2 Maven Plugin</name>
@@ -87,7 +87,7 @@
         <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
         <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
-        <tag>jaxb2-maven-plugin-2.5.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
