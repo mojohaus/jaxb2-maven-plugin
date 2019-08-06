@@ -541,12 +541,13 @@ public final class FileSystemUtilities {
         // Compare case insensitive
         if (path.toLowerCase().startsWith(basedirPath.toLowerCase())) {
             toReturn = path.substring(basedirPath.length());
+            if (removeInitialFileSep && toReturn.startsWith(File.separator)) {
+                toReturn = toReturn.substring(File.separator.length());
+            }
         }
 
         // Handle whitespace in the argument.
-        return removeInitialFileSep && toReturn.startsWith(File.separator)
-                ? toReturn.substring(File.separator.length())
-                : toReturn;
+        return toReturn;
     }
 
     /**
