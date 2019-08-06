@@ -427,9 +427,9 @@ public class FileSystemUtilitiesTest {
         final String path = "/project/backend/foobar/my-schema.xsd";
         final SortedMap<String, String> parentDir2Expected = new TreeMap<>();
         parentDir2Expected.put("/", "project/backend/foobar/my-schema.xsd");
-        parentDir2Expected.put("", "project/backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("", "/project/backend/foobar/my-schema.xsd");
         parentDir2Expected.put("/project", "backend/foobar/my-schema.xsd");
-        parentDir2Expected.put("/not/a/path", "project/backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("/not/a/path", "/project/backend/foobar/my-schema.xsd");
         parentDir2Expected.put("/project/", "backend/foobar/my-schema.xsd");
 
         // Act & Assert
