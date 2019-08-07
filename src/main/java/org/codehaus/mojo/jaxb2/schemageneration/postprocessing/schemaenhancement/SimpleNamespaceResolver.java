@@ -211,7 +211,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
                                 + "]");
             }
             //If old prefix has changed, throw exception. The "tns" prefix may be overridden by a specific namespace in @XmlSchema(xmlns=...), and is therefore ignored here
-            if (oldPrefixValue != null && !oldPrefixValue.equals(cacheKey) && !cacheKey.equals("tns")) {
+            if (oldPrefixValue != null && !oldPrefixValue.equals(cacheKey) && !oldPrefixValue.equals("tns") && !cacheKey.equals("tns")) {
                 throw new IllegalStateException(
                         "Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey + "] for URI [" + aNode.getNodeValue()
                                 + "]");
@@ -219,3 +219,4 @@ public class SimpleNamespaceResolver implements NamespaceContext {
         }
     }
 }
+
