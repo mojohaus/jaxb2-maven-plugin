@@ -201,20 +201,25 @@ public class SimpleNamespaceResolver implements NamespaceContext {
             final String nodeValue = aNode.getNodeValue();
 
             // Cache the namespace in both caches.
-            final String oldUriValue = prefix2Uri.put(cacheKey, nodeValue);
-            final String oldPrefixValue = uri2Prefix.put(nodeValue, cacheKey);
 
-            // Check sanity; we should not be overwriting values here.
-            if (oldUriValue != null) {
-                throw new IllegalStateException(
-                        "Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue() + "] for prefix [" + cacheKey
-                                + "]");
-            }
-            //If old prefix has changed, throw exception. The "tns" prefix may be overridden by a specific namespace in @XmlSchema(xmlns=...), and is therefore ignored here
-            if (oldPrefixValue != null && !oldPrefixValue.equals(cacheKey) && !oldPrefixValue.equals("tns") && !cacheKey.equals("tns")) {
-                throw new IllegalStateException(
-                        "Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey + "] for URI [" + aNode.getNodeValue()
-                                + "]");
+            //"tns" must not be replaced here
+            String oldPrefix = uri2Prefix.get(nodeValue);
+            if (oldPrefix == null || !oldPrefix.equals("tns")) {
+                final String oldUriValue = prefix2Uri.put(cacheKey, nodeValue);
+                final String oldPrefixValue = uri2Prefix.put(nodeValue, cacheKey);
+
+                // Check sanity; we should not be overwriting values here.
+                if (oldUriValue != null) {
+                    throw new IllegalStateException(
+                            "Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue() + "] for prefix [" + cacheKey
+                                    + "]");
+                }
+                //If old prefix has changed, throw exception. The "tns" prefix may be overridden by a specific namespace in @XmlSchema(xmlns=...), and is therefore ignored here
+                if (oldPrefixValue != null && !oldPrefixValue.equals(cacheKey) && !oldPrefixValue.equals("tns") && !cacheKey.equals("tns")) {
+                    throw new IllegalStateException(
+                            "Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey + "] for URI [" + aNode.getNodeValue()
+                                    + "]");
+                }
             }
         }
     }
