@@ -126,9 +126,9 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             "com.sun.tools.xjc.addon.episode.package-info",
             "com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info",
             "com.sun.xml.bind.v2.model.core.package-info",
-            "com.sun.xml.bind.v2.model.runtime.package-info",
+            "org.glassfish.jaxb.runtime.v2.model.runtime.package-info",
             "com.sun.xml.bind.v2.schemagen.episode.package-info",
-            "com.sun.xml.bind.v2.schemagen.xmlschema.package-info"
+            "org.glassfish.jaxb.runtime.v2.schemagen.xmlschema.package-info"
     };
 
     static {

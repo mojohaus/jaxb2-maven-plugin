@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>jaxb2-maven-plugin</artifactId>
-    <version>2.5.1-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>JAXB-2 Maven Plugin</name>
@@ -109,10 +109,10 @@
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
         <!-- JAXB tooling versions -->
-        <jaxb.version>2.3.2</jaxb.version>
+        <jaxb.version>3.0.0-M2</jaxb.version>
         <stax-ex.version>1.8.1</stax-ex.version>
         <qdox.version>2.0-M10</qdox.version>
-        <asm.version>7.1</asm.version>
+        <asm.version>8.0.1</asm.version>
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>2.6.3</xmlunit.version>

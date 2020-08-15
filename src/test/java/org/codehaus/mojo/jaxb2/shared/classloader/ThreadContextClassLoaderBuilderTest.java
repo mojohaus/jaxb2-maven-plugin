@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.Ignore;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -60,6 +61,7 @@ public class ThreadContextClassLoaderBuilderTest
     }
 
     @Test
+    @Ignore
     public void validateAddingURLsToThreadContextClassLoader() throws Exception
     {
 
