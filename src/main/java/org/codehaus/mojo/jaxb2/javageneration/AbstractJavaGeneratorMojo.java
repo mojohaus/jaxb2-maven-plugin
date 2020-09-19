@@ -659,12 +659,8 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
             final List<String> unwrappedSourceXSDs = new ArrayList<String>();
             for (URL current : sourceXSDs) {
 
-                // Shorten the argument if possible.
                 if ("file".equalsIgnoreCase(current.getProtocol())) {
-                    unwrappedSourceXSDs.add(FileSystemUtilities.relativize(
-                            current.getPath(),
-                            new File(System.getProperty("user.dir")),
-                            true));
+                    unwrappedSourceXSDs.add(current.getPath());
                 } else {
                     unwrappedSourceXSDs.add(current.toString());
                 }
