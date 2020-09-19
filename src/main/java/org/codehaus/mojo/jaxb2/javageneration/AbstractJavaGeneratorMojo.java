@@ -42,7 +42,6 @@ import org.codehaus.plexus.util.IOUtil;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -659,16 +658,14 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
             final List<String> unwrappedSourceXSDs = new ArrayList<String>();
             for (URL current : sourceXSDs) {
-
                 // Shorten the argument if possible.
-                if ("file".equalsIgnoreCase(current.getProtocol())) {
-                    try {
-                        unwrappedSourceXSDs.add(new File(current.toURI()).getPath());
-                    } catch (final URISyntaxException e) {
-                        throw new MojoExecutionException(e.getMessage(), e);
-                    }
-                } else {
-                    unwrappedSourceXSDs.add(current.toString());
+                if ( "file".equalsIgnoreCase( current.getProtocol() ) )
+                {
+                    unwrappedSourceXSDs.add( current.getPath() );
+                }
+                else
+                {
+                    unwrappedSourceXSDs.add( current.toString() );
                 }
             }
 
