@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.junit.Ignore;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -225,7 +224,6 @@ public class XsdGeneratorHelperTest
     }
 
     @Test
-    @Ignore
     public void validateProcessingXSDsWithEnumerations() throws Exception
     {
 
