@@ -118,17 +118,17 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     public static final List<Filter<File>> STANDARD_EXCLUDE_FILTERS;
 
     private static final List<String> RELEVANT_GROUPIDS =
-            Arrays.asList("org.glassfish.jaxb", "jakarta.xml.bind");
+            Arrays.asList("com.sun.xml.bind", "jakarta.xml.bind");
     private static final String OWN_ARTIFACT_ID = "jaxb2-maven-plugin";
     private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
     private static final String[] STANDARD_EXCLUDE_SUFFIXES = {"README.*", "\\.xml", "\\.txt"};
     private static final String[] STANDARD_PRELOADED_CLASSES = {
             "com.sun.tools.xjc.addon.episode.package-info",
             "com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info",
-            "com.sun.xml.bind.v2.model.core.package-info",
-            "com.sun.xml.bind.v2.model.runtime.package-info",
-            "com.sun.xml.bind.v2.schemagen.episode.package-info",
-            "com.sun.xml.bind.v2.schemagen.xmlschema.package-info"
+            "org.glassfish.jaxb.core.v2.model.core.package-info",
+            "org.glassfish.jaxb.runtime.v2.model.runtime.package-info",
+            "org.glassfish.jaxb.core.v2.schemagen.episode.package-info",
+            "org.glassfish.jaxb.runtime.v2.schemagen.xmlschema.package-info"
     };
 
     static {

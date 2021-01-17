@@ -74,9 +74,9 @@ public class DependencyFileParserTest {
 
         // Assert
         Assert.assertEquals("Wed Nov 19 20:11:15 CET 2014", versionMap.get(DependsFileParser.BUILDTIME_KEY));
-        Assert.assertEquals("compile", versionMap.get("javax.xml.bind/jaxb-api/scope"));
-        Assert.assertEquals("jar", versionMap.get("javax.xml.bind/jaxb-api/type"));
-        Assert.assertEquals("2.2.11", versionMap.get("javax.xml.bind/jaxb-api/version"));
+        Assert.assertEquals("compile", versionMap.get("jakarta.xml.bind/jaxb-api/scope"));
+        Assert.assertEquals("jar", versionMap.get("jakarta.xml.bind/jaxb-api/type"));
+        Assert.assertEquals("3.0.0", versionMap.get("jakarta.xml.bind/jaxb-api/version"));
 
         /*
         for(Map.Entry<String, String> current : versionMap.entrySet()) {
@@ -89,7 +89,7 @@ public class DependencyFileParserTest {
     public void validateCreatingDependencyInformationMapFromDependencyPropertiesFile() {
 
         // Assemble
-        final String jaxbApiKey = "javax.xml.bind/jaxb-api";
+        final String jaxbApiKey = "jakarta.xml.bind/jaxb-api";
         final URL depsPropResource = getClass().getResource(DEPS1_PROPERTYFILE);
 
         // Act
@@ -100,9 +100,9 @@ public class DependencyFileParserTest {
         final DependencyInfo dependencyInfo = diMap.get(jaxbApiKey);
         Assert.assertNotNull(dependencyInfo);
 
-        Assert.assertEquals("javax.xml.bind", dependencyInfo.getGroupId());
+        Assert.assertEquals("jakarta.xml.bind", dependencyInfo.getGroupId());
         Assert.assertEquals("jaxb-api", dependencyInfo.getArtifactId());
-        Assert.assertEquals("2.2.11", dependencyInfo.getVersion());
+        Assert.assertEquals("3.0.0", dependencyInfo.getVersion());
         Assert.assertEquals("jar", dependencyInfo.getType());
         Assert.assertEquals("compile", dependencyInfo.getScope());
 

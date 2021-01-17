@@ -36,7 +36,7 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.2</version>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
 
@@ -69,7 +69,7 @@
                 </executions>
                 <configuration>
                     <packageName>com.example.myschema</packageName>
-                    <target>2.0</target>
+                    <target>3.0</target>
                 </configuration>
             </plugin>
         </plugins>
