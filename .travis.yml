@@ -1,54 +1,41 @@
-language: java
-
-jdk:
-  - openjdk8
-  - openjdk11
+language: shell
 
 os:
   - linux
   - osx
-  # - windows
+  - windows
+
+env:
+  - JAVA_VERSION=8
+  - JAVA_VERSION=11
+
+dist:
+  xenial
 
 osx_image:
   - xcode9.1  # used for JDK 8
-  - xcode9.3  # used for OpenJDK 11
-
-matrix:
-  exclude:
-    # these are not valid for Linux
-    - os: linux
-      osx_image: xcode9.1
-    - os: linux
-      osx_image: xcode9.3
-
-    # these are not valid for Windows
-    - os: windows
-      osx_image: xcode9.1
-    - os: windows
-      osx_image: xcode9.3
-
-    # these are instead included via `osx_image` on OSX
-    - os: osx
-      jdk: openjdk8
-    - os: osx
-      jdk: openjdk11
-
-#addons:
-#  apt:
-#    packages:
-#      - graphviz
 
 # make sure the correct java is available
 install:
   - |
-    if [ "${TRAVIS_OS_NAME}" == osx ]; then
-      if xcodebuild -version | grep 9.1; then
-        # xcode 9.1
-        export JAVA_HOME=$(/usr/libexec/java_home)
+    if [ "${TRAVIS_OS_NAME}" == linux ]; then
+      if ["${JAVA_VERSION}" == "8"]; then
+        jdk_switcher use openjdk8
       else
-        # xcode 9.3
+        jdk_switcher use openjdk11
+      endif
+    elif [ "${TRAVIS_OS_NAME}" == osx ]; then
+      if ["${JAVA_VERSION}" == "8"]; then
+      else
         brew tap AdoptOpenJDK/openjdk || exit $?
         brew cask install adoptopenjdk11 || exit $?
+      fi
+      export JAVA_HOME=$(/usr/libexec/java_home)
+    elif [ "${TRAVIS_OS_NAME}" == windows ]; then
+      if ["${JAVA_VERSION}" == "8"]; then
+        choco install openjdk8
+      else
+        choco install openjdk11
       fi
     fi
     echo "JAVA_HOME=${JAVA_HOME}"
