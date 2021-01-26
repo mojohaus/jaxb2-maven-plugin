@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -535,18 +537,26 @@ public final class FileSystemUtilities {
         Validate.notNull(path, "path");
         Validate.notNull(parentDir, "parentDir");
 
-        final String basedirPath = FileSystemUtilities.getCanonicalPath(parentDir);
-        String toReturn = path;
+        final Path p = Paths.get(path);
+        final Path pd = parentDir.toPath();
 
-        // Compare case insensitive
-        if (path.toLowerCase().startsWith(basedirPath.toLowerCase())) {
-            toReturn = path.substring(basedirPath.length());
+        String platformSpecificPath;
+        if (p.normalize().startsWith(pd.normalize().toString())) {
+            platformSpecificPath = pd.relativize(p).toString();
+        } else {
+            platformSpecificPath = p.toString();
         }
 
-        // Handle whitespace in the argument.
-        return removeInitialFileSep && toReturn.startsWith(File.separator)
-                ? toReturn.substring(File.separator.length())
-                : toReturn;
+        if (removeInitialFileSep && platformSpecificPath.startsWith(File.separator)) {
+            platformSpecificPath = platformSpecificPath.substring(File.separator.length());
+        }
+
+        // NOTE: it appears this function is meant to preserve the file separator that was passed in the path
+        if (path.indexOf('\\') == -1) {
+            platformSpecificPath = platformSpecificPath.replace('\\', '/');
+        }
+
+        return platformSpecificPath;
     }
 
     /**
