@@ -57,7 +57,7 @@ File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFa
 | [7]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\target\generated-sources\jaxb\META-INF\sun-jaxb.episode
 | [8]: -b
 | [9]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\src\main\xjb\spaced filename.xjb
-| [10]: /E:/Mojohaus/jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/src/main/xsd/address.xsd
+| [10]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\src\main\xsd\address.xsd
 |
 +=================== [End 11 XJC Arguments]
  */
@@ -66,7 +66,7 @@ def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
 Pattern expectedBArgumentPattern  = Pattern.compile(xjcArgumentPatternPrefix + "\\-b");
 Pattern expectedXjbArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix
         + ".*src/main/xjb/spaced filename.xjb".replace("/", sep));
-Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + ".*src/main/xsd/address.xsd");
+Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + ".*src(/|\\\\)main(/|\\\\)xsd(/|\\\\)address.xsd");
 
 boolean foundBArgument = false;
 boolean foundXjbArgument = false;
