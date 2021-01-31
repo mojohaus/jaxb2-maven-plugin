@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>Municipality xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../../testapidocs/org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/enums/Municipality.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> org.codehaus.mojo.jaxb2.shared.Validate;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> jakarta.xml.bind.annotation.XmlEnum;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> jakarta.xml.bind.annotation.XmlEnumValue;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> jakarta.xml.bind.annotation.XmlSeeAlso;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> jakarta.xml.bind.annotation.XmlType;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.text.DecimalFormat;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.util.SortedSet;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> java.util.TreeSet;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Enumeration of Swedish Municipalities. The enumeration name of each municipality is synthesized from the</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * lower-case name of the municipality by replacing each scandinavian character with the corresponding ASCII</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * character and replacing whitespace and punctuation with underscore. For example, this implies that "Järfälla"</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * municipality has the enum constant "jarfalla", and that "Östra Göinge" has the enum constant "ostra_goinge".&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;A special case exists for the two municipalities "Håbo" in Uppsala county and "Habo" in Jönköping county.</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * Since the enum constant for both these municipalities would be "habo", the county name is appended yielding the</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * two constants {@code habo_uppsala} and {@code habo_jonkoping}.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:lj@jguru.se" target="alexandria_uri">mailto:lj@jguru.se</a>"&gt;Lennart J&amp;ouml;relid&lt;/a&gt;, jGuru Europe AB</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  @XmlType(namespace = <span class="jxr_string">"http://sweden.is.amazing"</span>)
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  @XmlEnum
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  @XmlSeeAlso(County.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">public</strong> enum <a href="../../../../../../../../org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/enums/Municipality.html">Municipality</a> <strong class="jxr_keyword">implements</strong> Serializable {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <em class="jxr_comment">// Stockholm municipalities</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      @XmlEnumValue(<span class="jxr_string">"0114"</span>)upplands_vasby(1, 114, <span class="jxr_string">"Upplands Väsby"</span>),
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      @XmlEnumValue(<span class="jxr_string">"0115"</span>)vallentuna(1, 115, <span class="jxr_string">"Vallentuna"</span>),
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      @XmlEnumValue(<span class="jxr_string">"0117"</span>)osteraker(1, 117, <span class="jxr_string">"Österåker"</span>),
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      @XmlEnumValue(<span class="jxr_string">"0120"</span>)varmdo(1, 120, <span class="jxr_string">"Värmdö"</span>),
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      @XmlEnumValue(<span class="jxr_string">"0123"</span>)jarfalla(1, 123, <span class="jxr_string">"Järfälla"</span>),
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      @XmlEnumValue(<span class="jxr_string">"0125"</span>)ekero(1, 125, <span class="jxr_string">"Ekerö"</span>),
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      @XmlEnumValue(<span class="jxr_string">"0126"</span>)huddinge(1, 126, <span class="jxr_string">"Huddinge"</span>),
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      @XmlEnumValue(<span class="jxr_string">"0127"</span>)botkyrka(1, 127, <span class="jxr_string">"Botkyrka"</span>),
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      @XmlEnumValue(<span class="jxr_string">"0128"</span>)salem(1, 128, <span class="jxr_string">"Salem"</span>),
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      @XmlEnumValue(<span class="jxr_string">"0136"</span>)haninge(1, 136, <span class="jxr_string">"Haninge"</span>),
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      @XmlEnumValue(<span class="jxr_string">"0138"</span>)tyreso(1, 138, <span class="jxr_string">"Tyresö"</span>),
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      @XmlEnumValue(<span class="jxr_string">"0139"</span>)upplands_bro(1, 139, <span class="jxr_string">"Upplands-Bro"</span>),
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      @XmlEnumValue(<span class="jxr_string">"0140"</span>)nykvarn(1, 140, <span class="jxr_string">"Nykvarn"</span>),
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      @XmlEnumValue(<span class="jxr_string">"0160"</span>)taby(1, 160, <span class="jxr_string">"Täby"</span>),
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      @XmlEnumValue(<span class="jxr_string">"0162"</span>)danderyd(1, 162, <span class="jxr_string">"Danderyd"</span>),
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      @XmlEnumValue(<span class="jxr_string">"0163"</span>)sollentuna(1, 163, <span class="jxr_string">"Sollentuna"</span>),
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @XmlEnumValue(<span class="jxr_string">"0180"</span>)stockholm(1, 180, <span class="jxr_string">"Stockholm"</span>),
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      @XmlEnumValue(<span class="jxr_string">"0181"</span>)sodertalje(1, 181, <span class="jxr_string">"Södertälje"</span>),
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      @XmlEnumValue(<span class="jxr_string">"0182"</span>)nacka(1, 182, <span class="jxr_string">"Nacka"</span>),
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      @XmlEnumValue(<span class="jxr_string">"0183"</span>)sundbyberg(1, 183, <span class="jxr_string">"Sundbyberg"</span>),
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      @XmlEnumValue(<span class="jxr_string">"0184"</span>)solna(1, 184, <span class="jxr_string">"Solna"</span>),
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      @XmlEnumValue(<span class="jxr_string">"0186"</span>)lidingo(1, 186, <span class="jxr_string">"Lidingö"</span>),
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      @XmlEnumValue(<span class="jxr_string">"0187"</span>)vaxholm(1, 187, <span class="jxr_string">"Vaxholm"</span>),
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      @XmlEnumValue(<span class="jxr_string">"0188"</span>)norrtalje(1, 188, <span class="jxr_string">"Norrtälje"</span>),
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      @XmlEnumValue(<span class="jxr_string">"0191"</span>)sigtuna(1, 191, <span class="jxr_string">"Sigtuna"</span>),
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      @XmlEnumValue(<span class="jxr_string">"0192"</span>)nynashamn(1, 192, <span class="jxr_string">"Nynäshamn"</span>),
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <em class="jxr_comment">// Uppsala municipalities</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      @XmlEnumValue(<span class="jxr_string">"0305"</span>)habo_uppsala(3, 305, <span class="jxr_string">"Håbo"</span>),
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      @XmlEnumValue(<span class="jxr_string">"0319"</span>)alvkarleby(3, 319, <span class="jxr_string">"Älvkarleby"</span>),
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      @XmlEnumValue(<span class="jxr_string">"0330"</span>)knivsta(3, 330, <span class="jxr_string">"Knivsta"</span>),
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      @XmlEnumValue(<span class="jxr_string">"0331"</span>)heby(3, 331, <span class="jxr_string">"Heby"</span>),
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      @XmlEnumValue(<span class="jxr_string">"0360"</span>)tierp(3, 360, <span class="jxr_string">"Tierp"</span>),
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      @XmlEnumValue(<span class="jxr_string">"0380"</span>)uppsala(3, 380, <span class="jxr_string">"Uppsala"</span>),
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      @XmlEnumValue(<span class="jxr_string">"0381"</span>)enkoping(3, 381, <span class="jxr_string">"Enköping"</span>),
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      @XmlEnumValue(<span class="jxr_string">"0382"</span>)osthammar(3, 382, <span class="jxr_string">"Östhammar"</span>),
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <em class="jxr_comment">// Södermanland municipalities</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      @XmlEnumValue(<span class="jxr_string">"0428"</span>)vingaker(4, 428, <span class="jxr_string">"Vingåker"</span>),
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      @XmlEnumValue(<span class="jxr_string">"0461"</span>)gnesta(4, 461, <span class="jxr_string">"Gnesta"</span>),
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      @XmlEnumValue(<span class="jxr_string">"0480"</span>)nykoping(4, 480, <span class="jxr_string">"Nyköping"</span>),
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      @XmlEnumValue(<span class="jxr_string">"0481"</span>)oxelosund(4, 481, <span class="jxr_string">"Oxelösund"</span>),
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      @XmlEnumValue(<span class="jxr_string">"0482"</span>)flen(4, 482, <span class="jxr_string">"Flen"</span>),
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      @XmlEnumValue(<span class="jxr_string">"0483"</span>)katrineholm(4, 483, <span class="jxr_string">"Katrineholm"</span>),
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      @XmlEnumValue(<span class="jxr_string">"0484"</span>)eskilstuna(4, 484, <span class="jxr_string">"Eskilstuna"</span>),
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      @XmlEnumValue(<span class="jxr_string">"0486"</span>)strangnas(4, 486, <span class="jxr_string">"Strängnäs"</span>),
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      @XmlEnumValue(<span class="jxr_string">"0488"</span>)trosa(4, 488, <span class="jxr_string">"Trosa"</span>),
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <em class="jxr_comment">// Östergötland municipalities</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      @XmlEnumValue(<span class="jxr_string">"0509"</span>)odeshog(5, 509, <span class="jxr_string">"Ödeshög"</span>),
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      @XmlEnumValue(<span class="jxr_string">"0512"</span>)ydre(5, 512, <span class="jxr_string">"Ydre"</span>),
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      @XmlEnumValue(<span class="jxr_string">"0513"</span>)kinda(5, 513, <span class="jxr_string">"Kinda"</span>),
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      @XmlEnumValue(<span class="jxr_string">"0560"</span>)boxholm(5, 560, <span class="jxr_string">"Boxholm"</span>),
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      @XmlEnumValue(<span class="jxr_string">"0561"</span>)atvidaberg(5, 561, <span class="jxr_string">"Åtvidaberg"</span>),
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      @XmlEnumValue(<span class="jxr_string">"0562"</span>)finspang(5, 562, <span class="jxr_string">"Finspång"</span>),
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      @XmlEnumValue(<span class="jxr_string">"0563"</span>)valdemarsvik(5, 563, <span class="jxr_string">"Valdemarsvik"</span>),
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      @XmlEnumValue(<span class="jxr_string">"0580"</span>)linkoping(5, 580, <span class="jxr_string">"Linköping"</span>),
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      @XmlEnumValue(<span class="jxr_string">"0581"</span>)norrkoping(5, 581, <span class="jxr_string">"Norrköping"</span>),
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      @XmlEnumValue(<span class="jxr_string">"0582"</span>)soderkoping(5, 582, <span class="jxr_string">"Söderköping"</span>),
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      @XmlEnumValue(<span class="jxr_string">"0583"</span>)motala(5, 583, <span class="jxr_string">"Motala"</span>),
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      @XmlEnumValue(<span class="jxr_string">"0584"</span>)vadstena(5, 584, <span class="jxr_string">"Vadstena"</span>),
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      @XmlEnumValue(<span class="jxr_string">"0586"</span>)mjolby(5, 586, <span class="jxr_string">"Mjölby"</span>),
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <em class="jxr_comment">// Jönköping municipalities</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      @XmlEnumValue(<span class="jxr_string">"0604"</span>)aneby(6, 604, <span class="jxr_string">"Aneby"</span>),
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      @XmlEnumValue(<span class="jxr_string">"0617"</span>)gnosjo(6, 617, <span class="jxr_string">"Gnosjö"</span>),
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      @XmlEnumValue(<span class="jxr_string">"0642"</span>)mullsjo(6, 642, <span class="jxr_string">"Mullsjö"</span>),
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      @XmlEnumValue(<span class="jxr_string">"0643"</span>)habo_jonkoping(6, 643, <span class="jxr_string">"Habo"</span>),
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     @XmlEnumValue(<span class="jxr_string">"0662"</span>)gislaved(6, 662, <span class="jxr_string">"Gislaved"</span>),
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     @XmlEnumValue(<span class="jxr_string">"0665"</span>)vaggeryd(6, 665, <span class="jxr_string">"Vaggeryd"</span>),
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     @XmlEnumValue(<span class="jxr_string">"0680"</span>)jonkoping(6, 680, <span class="jxr_string">"Jönköping"</span>),
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     @XmlEnumValue(<span class="jxr_string">"0682"</span>)nassjo(6, 682, <span class="jxr_string">"Nässjö"</span>),
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     @XmlEnumValue(<span class="jxr_string">"0683"</span>)varnamo(6, 683, <span class="jxr_string">"Värnamo"</span>),
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     @XmlEnumValue(<span class="jxr_string">"0684"</span>)savsjo(6, 684, <span class="jxr_string">"Sävsjö"</span>),
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     @XmlEnumValue(<span class="jxr_string">"0685"</span>)vetlanda(6, 685, <span class="jxr_string">"Vetlanda"</span>),
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     @XmlEnumValue(<span class="jxr_string">"0686"</span>)eksjo(6, 686, <span class="jxr_string">"Eksjö"</span>),
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     @XmlEnumValue(<span class="jxr_string">"0687"</span>)tranas(6, 687, <span class="jxr_string">"Tranås"</span>),
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <em class="jxr_comment">// Kronoberg municipalities</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     @XmlEnumValue(<span class="jxr_string">"0760"</span>)uppvidinge(7, 760, <span class="jxr_string">"Uppvidinge"</span>),
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     @XmlEnumValue(<span class="jxr_string">"0761"</span>)lessebo(7, 761, <span class="jxr_string">"Lessebo"</span>),
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     @XmlEnumValue(<span class="jxr_string">"0763"</span>)tingsryd(7, 763, <span class="jxr_string">"Tingsryd"</span>),
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     @XmlEnumValue(<span class="jxr_string">"0764"</span>)alvesta(7, 764, <span class="jxr_string">"Alvesta"</span>),
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     @XmlEnumValue(<span class="jxr_string">"0765"</span>)almhult(7, 765, <span class="jxr_string">"Älmhult"</span>),
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     @XmlEnumValue(<span class="jxr_string">"0767"</span>)markaryd(7, 767, <span class="jxr_string">"Markaryd"</span>),
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     @XmlEnumValue(<span class="jxr_string">"0780"</span>)vaxjo(7, 780, <span class="jxr_string">"Växjö"</span>),
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     @XmlEnumValue(<span class="jxr_string">"0781"</span>)ljungby(7, 781, <span class="jxr_string">"Ljungby"</span>),
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <em class="jxr_comment">// Kalmar municipalities</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     @XmlEnumValue(<span class="jxr_string">"0821"</span>)hogsby(8, 821, <span class="jxr_string">"Högsby"</span>),
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     @XmlEnumValue(<span class="jxr_string">"0834"</span>)torsas(8, 834, <span class="jxr_string">"Torsås"</span>),
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     @XmlEnumValue(<span class="jxr_string">"0830"</span>)morbylanga(8, 840, <span class="jxr_string">"Mörbylånga"</span>),
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     @XmlEnumValue(<span class="jxr_string">"0860"</span>)hultsfred(8, 860, <span class="jxr_string">"Hultsfred"</span>),
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     @XmlEnumValue(<span class="jxr_string">"0861"</span>)monsteras(8, 861, <span class="jxr_string">"Mönsterås"</span>),
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     @XmlEnumValue(<span class="jxr_string">"0862"</span>)emmaboda(8, 862, <span class="jxr_string">"Emmaboda"</span>),
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     @XmlEnumValue(<span class="jxr_string">"0880"</span>)kalmar(8, 880, <span class="jxr_string">"Kalmar"</span>),
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     @XmlEnumValue(<span class="jxr_string">"0881"</span>)nybro(8, 881, <span class="jxr_string">"Nybro"</span>),
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     @XmlEnumValue(<span class="jxr_string">"0882"</span>)oskarshamn(8, 882, <span class="jxr_string">"Oskarshamn"</span>),
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     @XmlEnumValue(<span class="jxr_string">"0883"</span>)vastervik(8, 883, <span class="jxr_string">"Västervik"</span>),
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     @XmlEnumValue(<span class="jxr_string">"0884"</span>)vimmerby(8, 884, <span class="jxr_string">"Vimmerby"</span>),
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     @XmlEnumValue(<span class="jxr_string">"0885"</span>)borgholm(8, 885, <span class="jxr_string">"Borgholm"</span>),
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <em class="jxr_comment">// Gotland municipality</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     @XmlEnumValue(<span class="jxr_string">"0980"</span>)gotland(9, 980, <span class="jxr_string">"Gotland"</span>),
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <em class="jxr_comment">// Blekinge municipalities</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     @XmlEnumValue(<span class="jxr_string">"1060"</span>)olofstrom(10, 1060, <span class="jxr_string">"Olofström"</span>),
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     @XmlEnumValue(<span class="jxr_string">"1080"</span>)karlskrona(10, 1080, <span class="jxr_string">"Karlskrona"</span>),
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     @XmlEnumValue(<span class="jxr_string">"1081"</span>)ronneby(10, 1081, <span class="jxr_string">"Ronneby"</span>),
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     @XmlEnumValue(<span class="jxr_string">"1082"</span>)karlshamn(10, 1082, <span class="jxr_string">"Karlshamn"</span>),
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     @XmlEnumValue(<span class="jxr_string">"1083"</span>)solvesborg(10, 1083, <span class="jxr_string">"Sölvesborg"</span>),
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <em class="jxr_comment">// Skåne municipalities</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     @XmlEnumValue(<span class="jxr_string">"1214"</span>)svalov(12, 1214, <span class="jxr_string">"Svalöv"</span>),
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     @XmlEnumValue(<span class="jxr_string">"1230"</span>)staffanstorp(12, 1230, <span class="jxr_string">"Staffanstorp"</span>),
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     @XmlEnumValue(<span class="jxr_string">"1231"</span>)bjurlov(12, 1231, <span class="jxr_string">"Burlöv"</span>),
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     @XmlEnumValue(<span class="jxr_string">"1233"</span>)vellinge(12, 1233, <span class="jxr_string">"Vellinge"</span>),
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     @XmlEnumValue(<span class="jxr_string">"1256"</span>)ostra_goinge(12, 1256, <span class="jxr_string">"Östra Göinge"</span>),
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     @XmlEnumValue(<span class="jxr_string">"1257"</span>)orkelljunga(12, 1257, <span class="jxr_string">"Örkelljunga"</span>),
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     @XmlEnumValue(<span class="jxr_string">"1260"</span>)bjuv(12, 1260, <span class="jxr_string">"Bjuv"</span>),
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     @XmlEnumValue(<span class="jxr_string">"1261"</span>)kavlinge(12, 1261, <span class="jxr_string">"Kävlinge"</span>),
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     @XmlEnumValue(<span class="jxr_string">"1262"</span>)lomma(12, 1262, <span class="jxr_string">"Lomma"</span>),
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     @XmlEnumValue(<span class="jxr_string">"1263"</span>)svedala(12, 1263, <span class="jxr_string">"Svedala"</span>),
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     @XmlEnumValue(<span class="jxr_string">"1264"</span>)skurup(12, 1264, <span class="jxr_string">"Skurup"</span>),
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     @XmlEnumValue(<span class="jxr_string">"1265"</span>)sjobo(12, 1265, <span class="jxr_string">"Sjöbo"</span>),
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     @XmlEnumValue(<span class="jxr_string">"1266"</span>)horby(12, 1266, <span class="jxr_string">"Hörby"</span>),
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     @XmlEnumValue(<span class="jxr_string">"1267"</span>)hoor(12, 1267, <span class="jxr_string">"Höör"</span>),
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     @XmlEnumValue(<span class="jxr_string">"1270"</span>)tomelilla(12, 1270, <span class="jxr_string">"Tomelilla"</span>),
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     @XmlEnumValue(<span class="jxr_string">"1272"</span>)bromolla(12, 1272, <span class="jxr_string">"Bromölla"</span>),
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     @XmlEnumValue(<span class="jxr_string">"1273"</span>)osby(12, 1273, <span class="jxr_string">"Osby"</span>),
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     @XmlEnumValue(<span class="jxr_string">"1275"</span>)perstorp(12, 1275, <span class="jxr_string">"Perstorp"</span>),
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     @XmlEnumValue(<span class="jxr_string">"1276"</span>)klippan(12, 1276, <span class="jxr_string">"Klippan"</span>),
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     @XmlEnumValue(<span class="jxr_string">"1277"</span>)astorp(12, 1277, <span class="jxr_string">"Åstorp"</span>),
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     @XmlEnumValue(<span class="jxr_string">"1278"</span>)bastad(12, 1278, <span class="jxr_string">"Båstad"</span>),
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     @XmlEnumValue(<span class="jxr_string">"1280"</span>)malmo(12, 1280, <span class="jxr_string">"Malmö"</span>),
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     @XmlEnumValue(<span class="jxr_string">"1281"</span>)lund(12, 1281, <span class="jxr_string">"Lund"</span>),
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     @XmlEnumValue(<span class="jxr_string">"1282"</span>)landskrona(12, 1282, <span class="jxr_string">"Landskrona"</span>),
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     @XmlEnumValue(<span class="jxr_string">"1283"</span>)helsingborg(12, 1283, <span class="jxr_string">"Helsingborg"</span>),
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>     @XmlEnumValue(<span class="jxr_string">"1284"</span>)hoganas(12, 1284, <span class="jxr_string">"Höganäs"</span>),
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     @XmlEnumValue(<span class="jxr_string">"1285"</span>)eslov(12, 1285, <span class="jxr_string">"Eslöv"</span>),
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     @XmlEnumValue(<span class="jxr_string">"1286"</span>)ystad(12, 1286, <span class="jxr_string">"Ystad"</span>),
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     @XmlEnumValue(<span class="jxr_string">"1287"</span>)trelleborg(12, 1287, <span class="jxr_string">"Trelleborg"</span>),
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     @XmlEnumValue(<span class="jxr_string">"1290"</span>)kristianstad(12, 1290, <span class="jxr_string">"Kristianstad"</span>),
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     @XmlEnumValue(<span class="jxr_string">"1291"</span>)simrishamn(12, 1291, <span class="jxr_string">"Simrishamn"</span>),
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     @XmlEnumValue(<span class="jxr_string">"1292"</span>)angelholm(12, 1292, <span class="jxr_string">"Ängelholm"</span>),
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     @XmlEnumValue(<span class="jxr_string">"1293"</span>)hassleholm(12, 1293, <span class="jxr_string">"Hässleholm"</span>),
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> 
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <em class="jxr_comment">// Halland municipalities</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     @XmlEnumValue(<span class="jxr_string">"1315"</span>)hylte(13, 1315, <span class="jxr_string">"Hylte"</span>),
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     @XmlEnumValue(<span class="jxr_string">"1380"</span>)halmstad(13, 1380, <span class="jxr_string">"Halmstad"</span>),
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     @XmlEnumValue(<span class="jxr_string">"1381"</span>)laholm(13, 1381, <span class="jxr_string">"Laholm"</span>),
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     @XmlEnumValue(<span class="jxr_string">"1382"</span>)falkenberg(13, 1382, <span class="jxr_string">"Falkenberg"</span>),
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>     @XmlEnumValue(<span class="jxr_string">"1383"</span>)varberg(13, 1383, <span class="jxr_string">"Varberg"</span>),
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     @XmlEnumValue(<span class="jxr_string">"1384"</span>)kungsbacka(13, 1384, <span class="jxr_string">"Kungsbacka"</span>),
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> 
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <em class="jxr_comment">// Västra Götaland municipalities</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     @XmlEnumValue(<span class="jxr_string">"1401"</span>)harryda(14, 1401, <span class="jxr_string">"Härryda"</span>),
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     @XmlEnumValue(<span class="jxr_string">"1402"</span>)partille(14, 1402, <span class="jxr_string">"Partille"</span>),
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>     @XmlEnumValue(<span class="jxr_string">"1407"</span>)ockero(14, 1407, <span class="jxr_string">"Öckerö"</span>),
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     @XmlEnumValue(<span class="jxr_string">"1415"</span>)stenungsund(14, 1415, <span class="jxr_string">"Stenungsund"</span>),
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     @XmlEnumValue(<span class="jxr_string">"1419"</span>)tjorn(14, 1419, <span class="jxr_string">"Tjörn"</span>),
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     @XmlEnumValue(<span class="jxr_string">"1421"</span>)orust(14, 1421, <span class="jxr_string">"Orust"</span>),
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>     @XmlEnumValue(<span class="jxr_string">"1427"</span>)sotenas(14, 1427, <span class="jxr_string">"Sotenäs"</span>),
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>     @XmlEnumValue(<span class="jxr_string">"1430"</span>)munkedal(14, 1430, <span class="jxr_string">"Munkedal"</span>),
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     @XmlEnumValue(<span class="jxr_string">"1435"</span>)tanum(14, 1435, <span class="jxr_string">"Tanum"</span>),
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>     @XmlEnumValue(<span class="jxr_string">"1438"</span>)dals_ed(14, 1438, <span class="jxr_string">"Dals-Ed"</span>),
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     @XmlEnumValue(<span class="jxr_string">"1439"</span>)fargelanda(14, 1439, <span class="jxr_string">"Färgelanda"</span>),
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>     @XmlEnumValue(<span class="jxr_string">"1440"</span>)ale(14, 1440, <span class="jxr_string">"Ale"</span>),
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>     @XmlEnumValue(<span class="jxr_string">"1441"</span>)lerum(14, 1441, <span class="jxr_string">"Lerum"</span>),
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>     @XmlEnumValue(<span class="jxr_string">"1442"</span>)vargarda(14, 1442, <span class="jxr_string">"Vårgårda"</span>),
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>     @XmlEnumValue(<span class="jxr_string">"1443"</span>)bollebygd(14, 1443, <span class="jxr_string">"Bollebygd"</span>),
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     @XmlEnumValue(<span class="jxr_string">"1444"</span>)grastorp(14, 1444, <span class="jxr_string">"Grästorp"</span>),
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>     @XmlEnumValue(<span class="jxr_string">"1445"</span>)essunga(14, 1445, <span class="jxr_string">"Essunga"</span>),
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     @XmlEnumValue(<span class="jxr_string">"1446"</span>)karlsborg(14, 1446, <span class="jxr_string">"Karlsborg"</span>),
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     @XmlEnumValue(<span class="jxr_string">"1447"</span>)gullspang(14, 1447, <span class="jxr_string">"Gullspång"</span>),
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>     @XmlEnumValue(<span class="jxr_string">"1452"</span>)tranemo(14, 1452, <span class="jxr_string">"Tranemo"</span>),
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>     @XmlEnumValue(<span class="jxr_string">"1460"</span>)bengtsfors(14, 1460, <span class="jxr_string">"Bengtsfors"</span>),
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     @XmlEnumValue(<span class="jxr_string">"1461"</span>)mellerud(14, 1461, <span class="jxr_string">"Mellerud"</span>),
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     @XmlEnumValue(<span class="jxr_string">"1462"</span>)lilla_edet(14, 1462, <span class="jxr_string">"Lilla Edet"</span>),
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     @XmlEnumValue(<span class="jxr_string">"1463"</span>)mark(14, 1463, <span class="jxr_string">"Mark"</span>),
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>     @XmlEnumValue(<span class="jxr_string">"1465"</span>)svenljunga(14, 1465, <span class="jxr_string">"Svenljunga"</span>),
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     @XmlEnumValue(<span class="jxr_string">"1466"</span>)herrljunga(14, 1466, <span class="jxr_string">"Herrljunga"</span>),
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>     @XmlEnumValue(<span class="jxr_string">"1470"</span>)vara(14, 1470, <span class="jxr_string">"Vara"</span>),
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>     @XmlEnumValue(<span class="jxr_string">"1471"</span>)gotene(14, 1471, <span class="jxr_string">"Götene"</span>),
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     @XmlEnumValue(<span class="jxr_string">"1472"</span>)tibro(14, 1472, <span class="jxr_string">"Tibro"</span>),
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     @XmlEnumValue(<span class="jxr_string">"1473"</span>)toreboda(14, 1473, <span class="jxr_string">"Töreboda"</span>),
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     @XmlEnumValue(<span class="jxr_string">"1480"</span>)goteborg(14, 1480, <span class="jxr_string">"Göteborg"</span>),
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     @XmlEnumValue(<span class="jxr_string">"1481"</span>)molndal(14, 1481, <span class="jxr_string">"Mölndal"</span>),
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     @XmlEnumValue(<span class="jxr_string">"1482"</span>)kungalv(14, 1482, <span class="jxr_string">"Kungälv"</span>),
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>     @XmlEnumValue(<span class="jxr_string">"1484"</span>)lysekil(14, 1484, <span class="jxr_string">"Lysekil"</span>),
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     @XmlEnumValue(<span class="jxr_string">"1485"</span>)uddevalla(14, 1485, <span class="jxr_string">"Uddevalla"</span>),
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     @XmlEnumValue(<span class="jxr_string">"1486"</span>)stromstad(14, 1486, <span class="jxr_string">"Strömstad"</span>),
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>     @XmlEnumValue(<span class="jxr_string">"1487"</span>)vanersborg(14, 1487, <span class="jxr_string">"Vänersborg"</span>),
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     @XmlEnumValue(<span class="jxr_string">"1488"</span>)trollhattan(14, 1488, <span class="jxr_string">"Trollhättan"</span>),
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     @XmlEnumValue(<span class="jxr_string">"1489"</span>)alingsas(14, 1489, <span class="jxr_string">"Alingsås"</span>),
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>     @XmlEnumValue(<span class="jxr_string">"1490"</span>)boras(14, 1490, <span class="jxr_string">"Borås"</span>),
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     @XmlEnumValue(<span class="jxr_string">"1491"</span>)ulricehamn(14, 1491, <span class="jxr_string">"Ulricehamn"</span>),
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     @XmlEnumValue(<span class="jxr_string">"1492"</span>)amal(14, 1492, <span class="jxr_string">"Åmål"</span>),
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     @XmlEnumValue(<span class="jxr_string">"1493"</span>)mariestad(14, 1493, <span class="jxr_string">"Mariestad"</span>),
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     @XmlEnumValue(<span class="jxr_string">"1494"</span>)lidkoping(14, 1494, <span class="jxr_string">"Lidköping"</span>),
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     @XmlEnumValue(<span class="jxr_string">"1495"</span>)skara(14, 1495, <span class="jxr_string">"Skara"</span>),
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     @XmlEnumValue(<span class="jxr_string">"1496"</span>)skovde(14, 1496, <span class="jxr_string">"Skövde"</span>),
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     @XmlEnumValue(<span class="jxr_string">"1497"</span>)hjo(14, 1497, <span class="jxr_string">"Hjo"</span>),
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     @XmlEnumValue(<span class="jxr_string">"1498"</span>)tidaholm(14, 1498, <span class="jxr_string">"Tidaholm"</span>),
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>     @XmlEnumValue(<span class="jxr_string">"1499"</span>)falkoping(14, 1499, <span class="jxr_string">"Falköping"</span>),
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <em class="jxr_comment">// Värmland municipalities</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     @XmlEnumValue(<span class="jxr_string">"1715"</span>)kil(17, 1715, <span class="jxr_string">"Kil"</span>),
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     @XmlEnumValue(<span class="jxr_string">"1730"</span>)eda(17, 1730, <span class="jxr_string">"Eda"</span>),
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     @XmlEnumValue(<span class="jxr_string">"1737"</span>)torsby(17, 1737, <span class="jxr_string">"Torsby"</span>),
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>     @XmlEnumValue(<span class="jxr_string">"1760"</span>)storfors(17, 1760, <span class="jxr_string">"Storfors"</span>),
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     @XmlEnumValue(<span class="jxr_string">"1761"</span>)hammaro(17, 1761, <span class="jxr_string">"Hammarö"</span>),
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     @XmlEnumValue(<span class="jxr_string">"1762"</span>)munkfors(17, 1762, <span class="jxr_string">"Munkfors"</span>),
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     @XmlEnumValue(<span class="jxr_string">"1763"</span>)forshaga(17, 1763, <span class="jxr_string">"Forshaga"</span>),
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     @XmlEnumValue(<span class="jxr_string">"1764"</span>)grums(17, 1764, <span class="jxr_string">"Grums"</span>),
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     @XmlEnumValue(<span class="jxr_string">"1765"</span>)arjang(17, 1765, <span class="jxr_string">"Årjäng"</span>),
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     @XmlEnumValue(<span class="jxr_string">"1766"</span>)sunne(17, 1766, <span class="jxr_string">"Sunne"</span>),
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     @XmlEnumValue(<span class="jxr_string">"1780"</span>)karlstad(17, 1780, <span class="jxr_string">"Karlstad"</span>),
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     @XmlEnumValue(<span class="jxr_string">"1781"</span>)kristinehamn(17, 1781, <span class="jxr_string">"Kristinehamn"</span>),
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     @XmlEnumValue(<span class="jxr_string">"1782"</span>)filipstad(17, 1782, <span class="jxr_string">"Filipstad"</span>),
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     @XmlEnumValue(<span class="jxr_string">"1783"</span>)hagfors(17, 1783, <span class="jxr_string">"Hagfors"</span>),
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     @XmlEnumValue(<span class="jxr_string">"1784"</span>)arvika(17, 1784, <span class="jxr_string">"Arvika"</span>),
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     @XmlEnumValue(<span class="jxr_string">"1785"</span>)saffle(17, 1785, <span class="jxr_string">"Säffle"</span>),
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <em class="jxr_comment">// Örebro municipalities</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     @XmlEnumValue(<span class="jxr_string">"1814"</span>)lekeberg(18, 1814, <span class="jxr_string">"Lekeberg"</span>),
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>     @XmlEnumValue(<span class="jxr_string">"1860"</span>)laxa(18, 1860, <span class="jxr_string">"Laxå"</span>),
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     @XmlEnumValue(<span class="jxr_string">"1861"</span>)hallsberg(18, 1861, <span class="jxr_string">"Hallsberg"</span>),
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     @XmlEnumValue(<span class="jxr_string">"1862"</span>)degerfors(18, 1862, <span class="jxr_string">"Degerfors"</span>),
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     @XmlEnumValue(<span class="jxr_string">"1863"</span>)hallefors(18, 1863, <span class="jxr_string">"Hällefors"</span>),
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     @XmlEnumValue(<span class="jxr_string">"1864"</span>)ljusnarsberg(18, 1864, <span class="jxr_string">"Ljusnarsberg"</span>),
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     @XmlEnumValue(<span class="jxr_string">"1880"</span>)orebro(18, 1880, <span class="jxr_string">"Örebro"</span>),
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     @XmlEnumValue(<span class="jxr_string">"1881"</span>)kumla(18, 1881, <span class="jxr_string">"Kumla"</span>),
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     @XmlEnumValue(<span class="jxr_string">"1882"</span>)askersund(18, 1882, <span class="jxr_string">"Askersund"</span>),
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     @XmlEnumValue(<span class="jxr_string">"1883"</span>)karlskoga(18, 1883, <span class="jxr_string">"Karlskoga"</span>),
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     @XmlEnumValue(<span class="jxr_string">"1884"</span>)nora(18, 1884, <span class="jxr_string">"Nora"</span>),
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     @XmlEnumValue(<span class="jxr_string">"1885"</span>)lindesberg(18, 1885, <span class="jxr_string">"Lindesberg"</span>),
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     <em class="jxr_comment">// Västmanland municipalities</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     @XmlEnumValue(<span class="jxr_string">"1904"</span>)skinskatteberg(19, 1904, <span class="jxr_string">"Skinnskatteberg"</span>),
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>     @XmlEnumValue(<span class="jxr_string">"1907"</span>)surahammar(19, 1907, <span class="jxr_string">"Surahammar"</span>),
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     @XmlEnumValue(<span class="jxr_string">"1960"</span>)kungsor(19, 1960, <span class="jxr_string">"Kungsör"</span>),
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>     @XmlEnumValue(<span class="jxr_string">"1961"</span>)hallstahammar(19, 1961, <span class="jxr_string">"Hallstahammar"</span>),
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     @XmlEnumValue(<span class="jxr_string">"1962"</span>)norberg(19, 1962, <span class="jxr_string">"Norberg"</span>),
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>     @XmlEnumValue(<span class="jxr_string">"1980"</span>)vasteras(19, 1980, <span class="jxr_string">"Västerås"</span>),
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     @XmlEnumValue(<span class="jxr_string">"1981"</span>)sala(19, 1981, <span class="jxr_string">"Sala"</span>),
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     @XmlEnumValue(<span class="jxr_string">"1982"</span>)fagersta(19, 1982, <span class="jxr_string">"Fagersta"</span>),
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     @XmlEnumValue(<span class="jxr_string">"1983"</span>)koping(19, 1983, <span class="jxr_string">"Köping"</span>),
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     @XmlEnumValue(<span class="jxr_string">"1984"</span>)arboga(19, 1984, <span class="jxr_string">"Arboga"</span>),
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <em class="jxr_comment">// Dalarna municipalities</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     @XmlEnumValue(<span class="jxr_string">"2021"</span>)vansbro(20, 2021, <span class="jxr_string">"Vansbro"</span>),
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     @XmlEnumValue(<span class="jxr_string">"2023"</span>)malung_salen(20, 2023, <span class="jxr_string">"Malung-Sälen"</span>),
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     @XmlEnumValue(<span class="jxr_string">"2026"</span>)gagnef(20, 2026, <span class="jxr_string">"Gagnef"</span>),
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>     @XmlEnumValue(<span class="jxr_string">"2029"</span>)leksand(20, 2029, <span class="jxr_string">"Leksand"</span>),
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     @XmlEnumValue(<span class="jxr_string">"2031"</span>)rattvik(20, 2031, <span class="jxr_string">"Rättvik"</span>),
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     @XmlEnumValue(<span class="jxr_string">"2034"</span>)orsa(20, 2034, <span class="jxr_string">"Orsa"</span>),
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     @XmlEnumValue(<span class="jxr_string">"2039"</span>)alvdalen(20, 2039, <span class="jxr_string">"Älvdalen"</span>),
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     @XmlEnumValue(<span class="jxr_string">"2061"</span>)smedjebacken(20, 2061, <span class="jxr_string">"Smedjebacken"</span>),
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     @XmlEnumValue(<span class="jxr_string">"2062"</span>)mora(20, 2062, <span class="jxr_string">"Mora"</span>),
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     @XmlEnumValue(<span class="jxr_string">"2080"</span>)falun(20, 2080, <span class="jxr_string">"Falun"</span>),
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     @XmlEnumValue(<span class="jxr_string">"2081"</span>)borlange(20, 2081, <span class="jxr_string">"Borlänge"</span>),
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     @XmlEnumValue(<span class="jxr_string">"2082"</span>)sater(20, 2082, <span class="jxr_string">"Säter"</span>),
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     @XmlEnumValue(<span class="jxr_string">"2083"</span>)hedemora(20, 2083, <span class="jxr_string">"Hedemora"</span>),
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>     @XmlEnumValue(<span class="jxr_string">"2084"</span>)avesta(20, 2084, <span class="jxr_string">"Avesta"</span>),
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     @XmlEnumValue(<span class="jxr_string">"2085"</span>)ludvika(20, 2085, <span class="jxr_string">"Ludvika"</span>),
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <em class="jxr_comment">// Gävleborg municipalities</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     @XmlEnumValue(<span class="jxr_string">"2101"</span>)ockelbo(21, 2101, <span class="jxr_string">"Ockelbo"</span>),
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>     @XmlEnumValue(<span class="jxr_string">"2104"</span>)hofors(21, 2104, <span class="jxr_string">"Hofors"</span>),
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     @XmlEnumValue(<span class="jxr_string">"2121"</span>)ovanaker(21, 2121, <span class="jxr_string">"Ovanåker"</span>),
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     @XmlEnumValue(<span class="jxr_string">"2132"</span>)nordanstig(21, 2132, <span class="jxr_string">"Nordanstig"</span>),
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>     @XmlEnumValue(<span class="jxr_string">"2161"</span>)ljusdal(21, 2161, <span class="jxr_string">"Ljusdal"</span>),
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     @XmlEnumValue(<span class="jxr_string">"2180"</span>)gavle(21, 2180, <span class="jxr_string">"Gävle"</span>),
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     @XmlEnumValue(<span class="jxr_string">"2181"</span>)sandviken(21, 2181, <span class="jxr_string">"Sandviken"</span>),
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>     @XmlEnumValue(<span class="jxr_string">"2182"</span>)soderhamn(21, 2182, <span class="jxr_string">"Söderhamn"</span>),
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     @XmlEnumValue(<span class="jxr_string">"2183"</span>)bollnas(21, 2183, <span class="jxr_string">"Bollnäs"</span>),
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>     @XmlEnumValue(<span class="jxr_string">"2184"</span>)hudiksvall(21, 2184, <span class="jxr_string">"Hudiksvall"</span>),
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> 
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     <em class="jxr_comment">// Västernorrland municipalities</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>     @XmlEnumValue(<span class="jxr_string">"2260"</span>)ange(22, 2260, <span class="jxr_string">"Ånge"</span>),
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     @XmlEnumValue(<span class="jxr_string">"2262"</span>)timra(22, 2262, <span class="jxr_string">"Timrå"</span>),
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>     @XmlEnumValue(<span class="jxr_string">"2280"</span>)harnosand(22, 2280, <span class="jxr_string">"Härnösand"</span>),
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>     @XmlEnumValue(<span class="jxr_string">"2280"</span>)sundsvall(22, 2281, <span class="jxr_string">"Sundsvall"</span>),
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>     @XmlEnumValue(<span class="jxr_string">"2282"</span>)kramfors(22, 2282, <span class="jxr_string">"Kramfors"</span>),
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>     @XmlEnumValue(<span class="jxr_string">"2283"</span>)solleftea(22, 2283, <span class="jxr_string">"Sollefteå"</span>),
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>     @XmlEnumValue(<span class="jxr_string">"2283"</span>)ornskoldsvik(22, 2284, <span class="jxr_string">"Örnsköldsvik"</span>),
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> 
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     <em class="jxr_comment">// Jämtland municipalities</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     @XmlEnumValue(<span class="jxr_string">"2303"</span>)ragunda(23, 2303, <span class="jxr_string">"Ragunda"</span>),
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     @XmlEnumValue(<span class="jxr_string">"2305"</span>)bracke(23, 2305, <span class="jxr_string">"Bräcke"</span>),
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>     @XmlEnumValue(<span class="jxr_string">"2319"</span>)krokom(23, 2309, <span class="jxr_string">"Krokom"</span>),
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     @XmlEnumValue(<span class="jxr_string">"2313"</span>)stromsund(23, 2313, <span class="jxr_string">"Strömsund"</span>),
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     @XmlEnumValue(<span class="jxr_string">"2321"</span>)are(23, 2321, <span class="jxr_string">"Åre"</span>),
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>     @XmlEnumValue(<span class="jxr_string">"2326"</span>)berg(23, 2326, <span class="jxr_string">"Berg"</span>),
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>     @XmlEnumValue(<span class="jxr_string">"2361"</span>)harjedalen(23, 2361, <span class="jxr_string">"Härjedalen"</span>),
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     @XmlEnumValue(<span class="jxr_string">"2380"</span>)ostersund(23, 2380, <span class="jxr_string">"Östersund"</span>),
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>     <em class="jxr_comment">// Västerbotten municipalities</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>     @XmlEnumValue(<span class="jxr_string">"2401"</span>)nordmaling(24, 2401, <span class="jxr_string">"Nordmaling"</span>),
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>     @XmlEnumValue(<span class="jxr_string">"2403"</span>)bjurholm(24, 2403, <span class="jxr_string">"Bjurholm"</span>),
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     @XmlEnumValue(<span class="jxr_string">"2404"</span>)vindeln(24, 2404, <span class="jxr_string">"Vindeln"</span>),
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>     @XmlEnumValue(<span class="jxr_string">"2409"</span>)robertsfors(24, 2409, <span class="jxr_string">"Robertsfors"</span>),
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>     @XmlEnumValue(<span class="jxr_string">"2417"</span>)nordsjo(24, 2417, <span class="jxr_string">"Norsjö"</span>),
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     @XmlEnumValue(<span class="jxr_string">"2418"</span>)mala(24, 2418, <span class="jxr_string">"Malå"</span>),
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     @XmlEnumValue(<span class="jxr_string">"2421"</span>)storuman(24, 2421, <span class="jxr_string">"Storuman"</span>),
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>     @XmlEnumValue(<span class="jxr_string">"2422"</span>)sorsele(24, 2422, <span class="jxr_string">"Sorsele"</span>),
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>     @XmlEnumValue(<span class="jxr_string">"2425"</span>)dorotea(24, 2425, <span class="jxr_string">"Dorotea"</span>),
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>     @XmlEnumValue(<span class="jxr_string">"2460"</span>)vannas(24, 2460, <span class="jxr_string">"Vännäs"</span>),
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     @XmlEnumValue(<span class="jxr_string">"2462"</span>)vilhelmina(24, 2462, <span class="jxr_string">"Vilhelmina"</span>),
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>     @XmlEnumValue(<span class="jxr_string">"2463"</span>)asele(24, 2463, <span class="jxr_string">"Åsele"</span>),
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>     @XmlEnumValue(<span class="jxr_string">"2480"</span>)umea(24, 2480, <span class="jxr_string">"Umeå"</span>),
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>     @XmlEnumValue(<span class="jxr_string">"2481"</span>)lycksele(24, 2481, <span class="jxr_string">"Lycksele"</span>),
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>     @XmlEnumValue(<span class="jxr_string">"2482"</span>)skelleftea(24, 2482, <span class="jxr_string">"Skellefteå"</span>),
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> 
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>     <em class="jxr_comment">// Norrbotten municipalities</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>     @XmlEnumValue(<span class="jxr_string">"2505"</span>)arvidsjaur(25, 2505, <span class="jxr_string">"Arvidsjaur"</span>),
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>     @XmlEnumValue(<span class="jxr_string">"2506"</span>)arjeplog(25, 2506, <span class="jxr_string">"Arjeplog"</span>),
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>     @XmlEnumValue(<span class="jxr_string">"2510"</span>)jokkmokk(25, 2510, <span class="jxr_string">"Jokkmokk"</span>),
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>     @XmlEnumValue(<span class="jxr_string">"2513"</span>)overkalix(25, 2513, <span class="jxr_string">"Överkalix"</span>),
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>     @XmlEnumValue(<span class="jxr_string">"2514"</span>)kalix(25, 2514, <span class="jxr_string">"Kalix"</span>),
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>     @XmlEnumValue(<span class="jxr_string">"2518"</span>)overtornea(25, 2518, <span class="jxr_string">"Övertorneå"</span>),
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>     @XmlEnumValue(<span class="jxr_string">"2521"</span>)pajala(25, 2521, <span class="jxr_string">"Pajala"</span>),
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>     @XmlEnumValue(<span class="jxr_string">"2523"</span>)gallivare(25, 2523, <span class="jxr_string">"Gällivare"</span>),
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>     @XmlEnumValue(<span class="jxr_string">"2560"</span>)alvsbyn(25, 2560, <span class="jxr_string">"Älvsbyn"</span>),
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>     @XmlEnumValue(<span class="jxr_string">"2580"</span>)lulea(25, 2580, <span class="jxr_string">"Luleå"</span>),
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>     @XmlEnumValue(<span class="jxr_string">"2581"</span>)pitea(25, 2581, <span class="jxr_string">"Piteå"</span>),
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>     @XmlEnumValue(<span class="jxr_string">"2582"</span>)boden(25, 2582, <span class="jxr_string">"Boden"</span>),
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     @XmlEnumValue(<span class="jxr_string">"2583"</span>)haparanda(25, 2583, <span class="jxr_string">"Haparanda"</span>),
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>     @XmlEnumValue(<span class="jxr_string">"2584"</span>)kiruna(25, 2584, <span class="jxr_string">"Kiruna"</span>);
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> 
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>     <em class="jxr_comment">// Internal state</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> DecimalFormat FOUR_DIGIT_FORMAT = <strong class="jxr_keyword">new</strong> DecimalFormat(<span class="jxr_string">"####"</span>);
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> municipalityId;
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../../org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/enums/County.html">County</a> county;
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>     <strong class="jxr_keyword">private</strong> String municipalityName;
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> 
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>     <a href="../../../../../../../../org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/enums/Municipality.html">Municipality</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> countyId,
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> municipalityId,
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>             <strong class="jxr_keyword">final</strong> String municipalityName) {
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> 
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         <em class="jxr_comment">// Assign internal state</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         <strong class="jxr_keyword">this</strong>.municipalityId = municipalityId;
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <strong class="jxr_keyword">this</strong>.municipalityName = municipalityName;
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> 
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>         <em class="jxr_comment">// Synthesize derived state</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         <strong class="jxr_keyword">this</strong>.county = County.getCountyById(countyId);
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     }
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     * @return The county of this Municipality.</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/enums/County.html">County</a> getCounty() {
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>         <strong class="jxr_keyword">return</strong> county;
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     }
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> 
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     * @return The name of this Municipality.</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>     <strong class="jxr_keyword">public</strong> String getMunicipalityName() {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">return</strong> municipalityName;
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>     }
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> 
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">     * @return The Municipality ID of this Municipality.</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMunicipalityId() {
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         <strong class="jxr_keyword">return</strong> municipalityId;
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">     * @return The 4-digit municipality ID as a String.</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>     <strong class="jxr_keyword">public</strong> String get4DigitMunicipalityId() {
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>         <strong class="jxr_keyword">return</strong> FOUR_DIGIT_FORMAT.format(municipalityId);
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     }
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> 
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     * Acquires all municipalities within the supplied County.</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">     * @param county The non-null county for which all Municipalities should be retrieved.</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">     * @return A SortedSet containing the Municipalities within the supplied County.</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> SortedSet&lt;Municipality&gt; getMunicipalitiesIn(<strong class="jxr_keyword">final</strong> <a href="../../../../../../../../org/codehaus/mojo/jaxb2/schemageneration/postprocessing/javadoc/enums/County.html">County</a> county) {
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <em class="jxr_comment">// Check sanity</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>         Validate.notNull(county, <span class="jxr_string">"Cannot handle null 'county' argument."</span>);
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> 
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         <em class="jxr_comment">// Find all Municipalities within the supplied county.</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>         <strong class="jxr_keyword">final</strong> SortedSet&lt;Municipality&gt; toReturn = <strong class="jxr_keyword">new</strong> TreeSet&lt;Municipality&gt;();
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         <strong class="jxr_keyword">for</strong> (Municipality current : values()) {
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>             <strong class="jxr_keyword">if</strong> (current.getCounty() == county) {
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>                 toReturn.add(current);
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>             }
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         }
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         <em class="jxr_comment">// All done.</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>         <strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>     }
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2005&#x2013;2021 <a href="https://www.mojohaus.org">MojoHaus</a>. All rights reserved.</div>
+</body>
+</html>
