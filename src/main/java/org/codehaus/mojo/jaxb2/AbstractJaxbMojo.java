@@ -358,9 +358,16 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             }
 
             // Add the output Directory.
-            getProject().addCompileSourceRoot(canonicalPathToOutputDirectory);
+            addGeneratedSourcesToProjectSourceRoot(canonicalPathToOutputDirectory);
         }
     }
+
+    /**
+     * Adds any directories containing the generated XJC classes to the appropriate Project compilation sources;
+     * either {@code TestCompileSourceRoot} or {@code CompileSourceRoot} depending on the exact Mojo implementation
+     * of this AbstractJavaGeneratorMojo.
+     */
+    protected abstract void addGeneratedSourcesToProjectSourceRoot(String canonicalPathToOutputDirectory);
 
     /**
      * Implement this method to check if this AbstractJaxbMojo should skip executing altogether.
