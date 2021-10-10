@@ -328,7 +328,7 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
      * {@inheritDoc}
      */
     @Override
-    protected void addGeneratedSourcesToProjectSourceRoot() {
+    protected void addGeneratedSourcesToProjectSourceRoot(String canonicalPathToOutputDirectory) {
         getProject().addTestCompileSourceRoot(getOutputDirectory().getAbsolutePath());
     }
 

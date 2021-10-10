@@ -250,6 +250,14 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      * {@inheritDoc}
      */
     @Override
+    protected void addGeneratedSourcesToProjectSourceRoot(String canonicalPathToOutputDirectory) {
+        getProject().addCompileSourceRoot(canonicalPathToOutputDirectory);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected String getStaleFileName() {
         return STALE_FILENAME;
     }
