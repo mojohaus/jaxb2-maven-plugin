@@ -1,5 +1,6 @@
 # About the Jaxb2-Maven-Plugin
 
+[![Maven Central](https://img.shields.io/maven-central/v/org.codehaus.mojo/jaxb2-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.codehaus.mojo/jaxb2-maven-plugin)
 [![Build Status](https://travis-ci.org/mojohaus/jaxb2-maven-plugin.svg?branch=master)](https://travis-ci.org/mojohaus/jaxb2-maven-plugin)
 
 This Maven plugin uses the Java API for XML Binding (JAXB), version 2+, to perform one of 2 main tasks:
