@@ -38,10 +38,10 @@ that we do not automatically publish the plugin documentation.
 Clone the repo and issue the standard maven release preparation, substituting the appropriate values for the 
 release version and tag. Semantic versioning applies, so unless you know that the next upcoming version should
 contain only documentation changes, let the development version have its minor version number bumped by 1 
-(i.e. use `2.5.0` instead of `2.4.1` in the example below). Of course, since the snapshot/development stream may 
+(i.e. use `3.2.0` instead of `3.1.0` in the example below). Of course, since the snapshot/development stream may 
 contain unexpected changes, the development version is merely an indication. 
 
-    mvn -DpushChanges=false -DreleaseVersion=2.4.0 -DdevelopmentVersion=2.5.0-SNAPSHOT -Dtag=jaxb2-maven-plugin-2.4.0 release:prepare
+    mvn -DpushChanges=false -DreleaseVersion=3.1.0 -DdevelopmentVersion=3.2.0-SNAPSHOT -Dtag=jaxb2-maven-plugin-3.1.0 release:prepare
     
 If the release preparation build completed without errors, your local release repository should now contain 
 two new commits with the commit message starting with `[maven-release-plugin]` on the form shown below. 
@@ -58,7 +58,7 @@ We have still not pushed anything to any source code or artifact repository.
 
 Checkout the release tag on the master branch, rebuild and deploy to the OSS repository server.
 
-    git checkout jaxb2-maven-plugin-2.4.0
+    git checkout jaxb2-maven-plugin-3.1.0
     
     mvn -Pmojo-release clean deploy
     
@@ -78,7 +78,7 @@ Checkout the newly prepared release and build its artifact and release documenta
 Note that the system property `https.protocols` is required to generate the site, since
 GitHub's api refuses to use the default TLS version of java (i.e. TLSv1.0).
 
-    git checkout jaxb2-maven-plugin-2.4.0
+    git checkout jaxb2-maven-plugin-3.1.0
     
     mvn -Dhttps.protocols="TLSv1,TLSv1.1,TLSv1.2" clean package site
     
@@ -102,9 +102,9 @@ Simply build on the structure shown in the image below:
 Assuming that the repository id is `github`, add the static documentation pages to git, 
 commit the addition using a standard message, and push:
 
-    git add Documentation/v2.4.0
+    git add Documentation/v3.1.0
     
-    git commit -m "Added plugin documentation for version 2.4.0"
+    git commit -m "Added plugin documentation for version 3.1.0"
     
     git push github 
 
