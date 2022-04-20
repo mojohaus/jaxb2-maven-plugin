@@ -85,12 +85,12 @@ public class MavenLogHandler extends Handler {
      * {@inheritDoc}
      */
     @Override
-    public void publish(final LogRecord record) {
+    public void publish(final LogRecord logRecord) {
 
-        if (this.isLoggable(record)) {
+        if (this.isLoggable(logRecord)) {
 
-            final Level level = record.getLevel();
-            final String message = prefix + getFormatter().format(record);
+            final Level level = logRecord.getLevel();
+            final String message = prefix + getFormatter().format(logRecord);
 
             if (Level.SEVERE.equals(level)) {
                 log.error(message);
