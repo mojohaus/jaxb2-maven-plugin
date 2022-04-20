@@ -38,7 +38,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'microsoft'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Build with Maven
