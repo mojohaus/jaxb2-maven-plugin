@@ -24,8 +24,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        java: [11]
+        os: [ubuntu-latest, windows-latest]
+        java: [8, 11, 17]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -42,4 +42,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn verify -e -B -V -P run-its javadoc:javadoc
+        run: mvn verify -e -V -P run-its
