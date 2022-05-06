@@ -8,6 +8,8 @@ updates:
       # Checkstyle >=10 requires Java 11+
       - dependency-name: "com.puppycrawl.tools:checkstyle"
         versions: [">= 10.0"]
+      - dependency-name: "se.jguru.shared.algorithms.api:jguru-shared-algorithms-api"
+        versions: [">= 0.13.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
