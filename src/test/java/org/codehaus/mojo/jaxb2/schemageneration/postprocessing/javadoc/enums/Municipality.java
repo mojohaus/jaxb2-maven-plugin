@@ -3,10 +3,10 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnumValue;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
+import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.SortedSet;

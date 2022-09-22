@@ -63,8 +63,9 @@ public class XsdGeneratorHelperTest
             factory = TransformerFactory.newInstance();
             final CodeSource codeSource = factory.getClass().getProtectionDomain().getCodeSource();
 
+            final String location = codeSource == null ? "Unknown" : codeSource.getLocation().toString();
             System.out.println(
-                    "-- Found TransformerFactory of type [" + factory.getClass().getName() + "] loaded from [" + codeSource.getLocation().toString() + "]" );
+                    "-- Found TransformerFactory of type [" + factory.getClass().getName() + "] loaded from [" + location + "]" );
 
         }
         catch ( Exception ex )
