@@ -502,5 +502,17 @@
                 </plugins>
             </reporting>
         </profile>
+
+        <!-- Only for development groovy scripts -->
+        <profile>
+            <id>groovy</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-all</artifactId>
+                    <version>2.0.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 </project>
