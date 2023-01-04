@@ -16,8 +16,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.SchemaOutputResolver;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.SchemaOutputResolver;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -316,8 +316,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
             IOException {
 
         // Check sanity
-        org.apache.commons.lang3.Validate.notNull(expected, "Cannot handle null expected argument.");
-        org.apache.commons.lang3.Validate.notNull(actual, "Cannot handle null actual argument.");
+        Validate.notNull(expected, "Cannot handle null expected argument.");
+        Validate.notNull(actual, "Cannot handle null actual argument.");
 
         // Ignore whitespace - and also normalize the Documents.
         XMLUnit.setNormalize(true);

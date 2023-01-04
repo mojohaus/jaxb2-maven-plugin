@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
+import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class DomHelperTest {
     public void validateDomHelperAccessors() throws Exception {
 
         // Assemble
-        final String xsd = XmlTestUtils.readFully("testdata/schemageneration/javadoc/enums/rawEnumSchema.xsd");
+        final String xsd = PropertyResources.readFully("testdata/schemageneration/javadoc/enums/rawEnumSchema.xsd");
         final Document document = XsdGeneratorHelper.parseXmlStream(new StringReader(xsd));
 
         final Element schemaElement = document.getDocumentElement();

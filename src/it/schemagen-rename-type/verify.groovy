@@ -61,10 +61,10 @@ def renamedFooType = xml.complexType[0];
 def renamedBarAttribute = renamedFooType.attribute[0];
 
 assert 1 == xml.complexType.size();
-assert 'RenamedFoo' == renamedFooType.@name.text();
-assert 'renamedBar' == renamedBarAttribute.@name.text();
-assert 'xs:string' == renamedBarAttribute.@type.text();
-assert 'This is a Bar.' == renamedBarAttribute.annotation[0].documentation[0].text();
+assert 'RenamedFoo' == renamedFooType.@name.text().trim()
+assert 'renamedBar' == renamedBarAttribute.@name.text().trim()
+assert 'xs:string' == renamedBarAttribute.@type.text().trim()
+assert 'This is a Bar.' == renamedBarAttribute.annotation[0].documentation[0].text().trim()
 
 // Assert
 println "\nValidating work directory content"

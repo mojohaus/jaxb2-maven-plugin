@@ -29,4 +29,12 @@
   </parent>
   <artifactId>mjaxb-59-module1</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+  </dependencies>
+
 </project>

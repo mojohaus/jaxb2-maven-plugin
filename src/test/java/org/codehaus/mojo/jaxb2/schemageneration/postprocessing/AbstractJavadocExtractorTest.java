@@ -11,7 +11,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.w3c.dom.Document;
-import se.jguru.nazgul.test.xmlbinding.XmlTestUtils;
+import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
 import java.io.File;
 import java.io.StringReader;
@@ -92,7 +92,7 @@ public abstract class AbstractJavadocExtractorTest {
         Validate.notEmpty(resource, "resource");
 
         // Read data, and convert into a Document.
-        final String xmlData = XmlTestUtils.readFully(resource);
+        final String xmlData = PropertyResources.readFully(resource);
         return XsdGeneratorHelper.parseXmlStream(new StringReader(xmlData));
     }
 }

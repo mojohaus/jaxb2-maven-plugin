@@ -22,9 +22,9 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
 import com.thoughtworks.qdox.model.JavaParameter;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.util.List;
 
 /**

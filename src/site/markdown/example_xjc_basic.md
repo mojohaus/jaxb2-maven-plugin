@@ -132,15 +132,15 @@ plugin's JAXB implementation dependency (see the [target parameter](./xjc-mojo.h
 
 ## Example 2: Aligning JDK with JAXB API and JAXB runtime environment
 
-So you want to use JAXB on JDK 1.6? You would then need to configure the jaxb2-maven-plugin for a Java 6+ project,
+So you want to use JAXB on JDK 8? You would then need to configure the jaxb2-maven-plugin for a Java 8+ project,
 which implies two separate configuration properties:
 
-1. *maven-compiler-plugin*: Define java version 1.6 for the compiler, to use the Java 6+ platform as the runtime
-    environment for the compiled code. Use 1.6 for both the `source` and `target` properties.
+1. *maven-compiler-plugin*: Define java version 8 for the compiler, to use the Java 8+ platform as the runtime
+    environment for the compiled code. Use 1.8 for both the `source` and `target` properties.
 2. *jaxb-maven-plugin*: Use the `target` configuration parameter to set the JAXB runtime version to 2.1, which is
     included in the JDK 1.6 (starting with JDK 1.6u4).
 
-The project can now be built with JDK 1.6.
+The project can now be built with JDK 8.
 
     <project>
         ...
@@ -151,8 +151,8 @@ The project can now be built with JDK 1.6.
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
-                            <source>1.6</source>
-                            <target>1.6</target>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
                     </plugin>
                 </plugins>

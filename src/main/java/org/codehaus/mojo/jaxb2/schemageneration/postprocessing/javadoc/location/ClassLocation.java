@@ -21,9 +21,9 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
 
 import org.codehaus.mojo.jaxb2.shared.Validate;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * Comparable path structure to locate a particular class within compilation unit.
@@ -71,7 +71,7 @@ public class ClassLocation extends PackageLocation {
      * If the {@link #getAnnotationRenamedTo()} method returns a non-null value, that value is the effective className.
      * Otherwise, the {@link #getClassName()} method is used as the effective className.
      *
-     * This is to handle renames such as provided in a {@link javax.xml.bind.annotation.XmlType} annotation's
+     * This is to handle renames such as provided in a {@link jakarta.xml.bind.annotation.XmlType} annotation's
      * {@link XmlType#name()} attribute value.
      *
      * @return the path of the PackageLocation superclass, appended with the effective className.

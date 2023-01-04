@@ -35,12 +35,14 @@ import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClas
 import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertyChangeEnvironmentFacet;
+import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertySaveEnvironmentFacet;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -57,6 +59,8 @@ import java.util.List;
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
  */
 public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
+
+    private static final List<String> PROXY_PROPERTY_KEYS = Arrays.asList("http.proxyHost", "http.proxyPort", "https.proxyHost", "https.proxyPort");
 
     private static final int XJC_COMPLETED_OK = 0;
 
@@ -445,6 +449,11 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                     }
                 }
 
+                // XJC overwrites proxy properties if so inclined, so we use this facet to save them
+                for (String key : PROXY_PROPERTY_KEYS) {
+                    environment.add(new SystemPropertySaveEnvironmentFacet(key, getLog()));
+                }
+
                 // Setup the environment.
                 environment.setup();
 
@@ -653,10 +662,11 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
                 // Shorten the argument if possible.
                 if ("file".equalsIgnoreCase(current.getProtocol())) {
-                    unwrappedSourceXSDs.add(FileSystemUtilities.relativize(
-                            current.getPath(),
-                            new File(System.getProperty("user.dir")),
-                            true));
+                    try {
+                        unwrappedSourceXSDs.add(new File(current.toURI()).getPath());
+                    } catch (final URISyntaxException e) {
+                        throw new MojoExecutionException(e.getMessage(), e);
+                    }
                 } else {
                     unwrappedSourceXSDs.add(current.toString());
                 }

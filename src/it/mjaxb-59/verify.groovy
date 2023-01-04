@@ -81,7 +81,7 @@ for (line in lines) {
 }
 
 // Assert
-def missingRequired(Pattern pattern) {
+static def missingRequired(Pattern pattern) {
   return "Missing required pattern: [" + pattern.pattern() + "]" ;
 }
 

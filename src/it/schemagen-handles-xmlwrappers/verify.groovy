@@ -103,6 +103,7 @@ println "===================================================="
 // /xs:schema/xs:complexType/xs:sequence/xs:element/xs:annotation/xs:documentation
 def expectedStringListDocComment = "List containing some strings."
 def expectedIntegerSetDocComment = "SortedSet containing Integers."
+
 def stringListDocComment = xml.complexType
         .find { it.@name == 'exampleXmlWrapperUsingFieldAccess' }
         .sequence
@@ -111,6 +112,8 @@ def stringListDocComment = xml.complexType
         .annotation
         .documentation
         .toString()
+        .trim()
+
 def intSetDocComment = xml.complexType
         .find { it.@name == 'exampleXmlWrapperUsingFieldAccess' }
         .sequence
@@ -119,6 +122,7 @@ def intSetDocComment = xml.complexType
         .annotation
         .documentation
         .toString()
+        .trim()
 
 assert expectedStringListDocComment == stringListDocComment, "Expected [" + expectedStringListDocComment +
         "], but got [" + stringListDocComment + "]"
