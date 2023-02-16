@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import groovy.xml.XmlSlurper
 
 def expectedSchemaPath = 'target/generated-resources/schemagen/smooth.xsd'
 File schema = new File( basedir, expectedSchemaPath)

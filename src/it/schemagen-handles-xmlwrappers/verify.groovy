@@ -17,6 +17,7 @@
  * under the License.
  */
 import groovy.util.slurpersupport.*;
+import groovy.xml.XmlSlurper
 
 // Assemble
 final File outputDir = new File(basedir, 'target/generated-resources/schemagen')

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import groovy.xml.XmlSlurper
 
 File schema = new File( basedir,'target/generated-resources/schemagen/some.xsd' )
 assert schema.exists()
