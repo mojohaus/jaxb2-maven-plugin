@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import groovy.xml.XmlSlurper
 
 // Assemble
 def validateExistingFile(final File aFile, final int index) {

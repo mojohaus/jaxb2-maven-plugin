@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import groovy.xml.XmlSlurper
+
 final File generatedSchema = new File(basedir, 'target/generated-resources/schemagen/schema1.xsd')
 final File generatedEpisode = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb')
 

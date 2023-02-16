@@ -20,6 +20,7 @@
 // java.lang.AssertionError: Expected file [/Users/lenjor/Development/Projects/Mojohaus/jaxb2-maven-plugin/target/
 // it/schemagen-test/target/generated-test-resources/schemagen/META-INF/sun-jaxb.episode] not found..
 // Expression: testEpisode.exists()
+import groovy.xml.XmlSlurper
 
 def testSchema = new File(basedir, 'target/generated-test-resources/schemagen/schema1.xsd');
 def testEpisode = new File(basedir, 'target/generated-test-resources/schemagen/META-INF' +
