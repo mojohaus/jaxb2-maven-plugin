@@ -113,7 +113,7 @@
 
     <properties>
         <!-- Define Maven and JDK versions-->
-        <mavenVersion>3.2.5</mavenVersion>
+        <mavenVersion>3.5.4</mavenVersion>
         <mojo.java.target>1.8</mojo.java.target>
 
         <!-- Plexus component versions -->
