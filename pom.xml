@@ -118,7 +118,7 @@
 
         <!-- Plexus component versions -->
         <plexus-compiler-api.version>2.13.0</plexus-compiler-api.version>
-        <plexus-utils.version>3.5.1</plexus-utils.version>
+        <plexus-utils.version>4.0.0</plexus-utils.version>
         <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
         <!-- JAXB tooling versions -->
