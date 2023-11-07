@@ -129,7 +129,7 @@
 
         <!-- Test scope dependencies' versions -->
         <xmlunit.version>2.9.0</xmlunit.version>
-        <maven-plugin-plugin.version>3.10.1</maven-plugin-plugin.version>
+        <maven-plugin-plugin.version>3.10.2</maven-plugin-plugin.version>
         <shared-algorithms.version>0.12.0</shared-algorithms.version><!-- 0.13 require 11 -->
         <project.build.outputTimestamp>2022-04-20T23:14:54Z</project.build.outputTimestamp>
     </properties>
