@@ -543,12 +543,12 @@ public final class FileSystemUtilities {
         String platformSpecificPath;
         if (p.normalize().startsWith(pd.normalize().toString())) {
             platformSpecificPath = pd.relativize(p).toString();
+            if (removeInitialFileSep && platformSpecificPath.startsWith(File.separator)) {
+                platformSpecificPath = platformSpecificPath.substring(File.separator.length());
+            }
+
         } else {
             platformSpecificPath = p.toString();
-        }
-
-        if (removeInitialFileSep && platformSpecificPath.startsWith(File.separator)) {
-            platformSpecificPath = platformSpecificPath.substring(File.separator.length());
         }
 
         // NOTE: it appears this function is meant to preserve the file separator that was passed in the path
