@@ -502,9 +502,6 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 }
             }
 
-            // Add the generated source root to the project, enabling tooling and other plugins to see them.
-            addGeneratedSourcesToProjectSourceRoot();
-
             // Copy all source XSDs to the resulting artifact?
             if (xsdPathWithinArtifact != null) {
 
@@ -578,13 +575,6 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * @return A non-null List holding binding files.
      */
     protected abstract List<File> getSourceXJBs();
-
-    /**
-     * Adds any directories containing the generated XJC classes to the appropriate Project compilation sources;
-     * either {@code TestCompileSourceRoot} or {@code CompileSourceRoot} depending on the exact Mojo implementation
-     * of this AbstractJavaGeneratorMojo.
-     */
-    protected abstract void addGeneratedSourcesToProjectSourceRoot();
 
     //
     // Private helpers

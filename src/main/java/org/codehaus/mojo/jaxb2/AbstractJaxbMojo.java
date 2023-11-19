@@ -350,19 +350,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             log.info("No changes detected in schema or binding files - skipping JAXB generation.");
         }
 
-        // 4) If the output directories exist, add them to the MavenProject's source directories
-        if (getOutputDirectory().exists() && getOutputDirectory().isDirectory()) {
-
-            final String canonicalPathToOutputDirectory = FileSystemUtilities.getCanonicalPath(getOutputDirectory());
-
-            if (log.isDebugEnabled()) {
-                log.debug("Adding existing JAXB outputDirectory [" + canonicalPathToOutputDirectory
-                        + "] to Maven's sources.");
-            }
-
-            // Add the output Directory.
-            getProject().addCompileSourceRoot(canonicalPathToOutputDirectory);
-        }
+        // 4) Update the project always.
+        updateProject();
     }
 
     /**
@@ -389,6 +378,13 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      *                                Throwing this exception causes a "BUILD FAILURE" message to be displayed.
      */
     protected abstract boolean performExecution() throws MojoExecutionException, MojoFailureException;
+
+    /**
+     * Update the Maven project if necessary. This method will be called if {@code !shouldExecutionBeSkipped()}
+     * (even if {@link #performExecution()} is skipped).
+     */
+    protected void updateProject() {
+    }
 
     /**
      * Override this method to acquire a List holding all URLs to the sources which this
