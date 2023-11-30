@@ -286,22 +286,26 @@ public final class XsdGeneratorHelper {
                     final String oldPrefix = currentResolver.getNamespaceURI2PrefixMap().get(currentUri);
 
                     if (StringUtils.isNotEmpty(oldPrefix)) {
-                        // Can we perform the prefix substitution?
-                        validatePrefixSubstitutionIsPossible(oldPrefix, newPrefix, currentResolver);
+                        if (newPrefix.equals(oldPrefix)) {
+                            mavenLog.warn("The namespace prefix [" + oldPrefix + "] is already present in file [" + currentResolver.getSourceFilename() + "]. Skipping substitution for this prefix.");
+                        } else {
+                            // Can we perform the prefix substitution?
+                            validatePrefixSubstitutionIsPossible(oldPrefix, newPrefix, currentResolver);
 
-                        if (mavenLog.isDebugEnabled()) {
-                            mavenLog.debug("Subtituting namespace prefix [" + oldPrefix + "] with [" + newPrefix
-                                    + "] in file [" + currentResolver.getSourceFilename() + "].");
+                            if (mavenLog.isDebugEnabled()) {
+                                mavenLog.debug("Subtituting namespace prefix [" + oldPrefix + "] with [" + newPrefix
+                                        + "] in file [" + currentResolver.getSourceFilename() + "].");
+                            }
+
+                            // Get the Document of the current schema file.
+                            if (generatedSchemaFileDocument == null) {
+                                generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile);
+                            }
+
+                            // Replace all namespace prefixes within the provided document.
+                            process(generatedSchemaFileDocument.getFirstChild(), true,
+                                    new ChangeNamespacePrefixProcessor(oldPrefix, newPrefix));
                         }
-
-                        // Get the Document of the current schema file.
-                        if (generatedSchemaFileDocument == null) {
-                            generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile);
-                        }
-
-                        // Replace all namespace prefixes within the provided document.
-                        process(generatedSchemaFileDocument.getFirstChild(), true,
-                                new ChangeNamespacePrefixProcessor(oldPrefix, newPrefix));
                     }
                 }
             }

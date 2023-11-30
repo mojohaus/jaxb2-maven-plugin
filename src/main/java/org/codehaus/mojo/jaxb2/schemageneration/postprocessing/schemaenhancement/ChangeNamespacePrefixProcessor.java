@@ -94,6 +94,7 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
 
             if (isNamespaceDefinition(attribute)
                     || isElementReference(attribute)
+                    || isElementReferenceWithoutPrefix(attribute)
                     || isTypeAttributeWithPrefix(attribute)
                     || isExtension(attribute)) {
                 return true;
@@ -128,6 +129,9 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
                 final String value = attribute.getValue();
                 final String elementName = value.substring(value.indexOf(":") + 1);
                 attribute.setValue(newPrefix + ":" + elementName);
+            } else if (isElementReferenceWithoutPrefix(attribute) && oldPrefix.equals("tns")) {
+                //For some reason schemagen does not generate the default namespace prefix for references to simpletypes, such as enum types => we want to add the default namespace prefix to those nodes in order to get xjc-compatible XSD:s
+                attribute.setValue(newPrefix + ":" + attribute.getValue());
             }
         }
 
@@ -169,6 +173,17 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
     private boolean isElementReference(final Attr attribute) {
         return REFERENCE_ATTRIBUTE_NAME.equals(attribute.getName())
                 && attribute.getValue().startsWith(oldPrefix + ":");
+    }
+
+    /**
+     * Discovers if the provided attribute is a namespace reference to the default namespace, on the form
+     * <code>&lt;xs:element ref="anElementInTheDefaultNamespace"/&gt;</code>
+     *
+     * @param attribute the attribute to test.
+     * @return <code>true</code> if the provided attribute is named "ref" and has no namespace prefix, in which case it belongs to the default namespace.
+     */
+    private boolean isElementReferenceWithoutPrefix(final Attr attribute) {
+        return REFERENCE_ATTRIBUTE_NAME.equals(attribute.getName()) && !attribute.getValue().contains(":");
     }
 
     /**
