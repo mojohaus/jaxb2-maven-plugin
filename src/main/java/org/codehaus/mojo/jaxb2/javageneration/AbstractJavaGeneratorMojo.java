@@ -225,6 +225,26 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     protected boolean readOnly;
 
     /**
+     * <p>List of plugins that should be enabled.</p>
+     * <pre>
+     * <code>
+     *   &lt;configuration&gt;
+     *   ...
+     *       &lt;plugins&gt;
+     *          &lt;plugin&gt;fluent-api&lt;/plugin&gt;
+     *          &lt;plugin&gt;inheritance&lt;/plugin&gt;
+     *      &lt;/plugins&gt;
+     *   &lt;/configuration&gt;
+     * </code>
+     * </pre>
+     * <p>The arguments configured above yields the following extra arguments to the XJC command:
+     * <code>-Xfluent-api -Xinheritance</code></p>
+     *
+     * @since 3.2
+     */
+    protected List<String> plugins;
+
+    /**
      * <p>List of ordered extra arguments to the XJC command. Each extra argument is interpreted as a word, intended
      * to be copied verbatim to the XJC argument list with spaces in between:</p>
      * <pre>
@@ -632,6 +652,10 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
         if (catalog != null) {
             builder.withNamedArgument("catalog", FileSystemUtilities.getCanonicalPath(catalog));
+        }
+
+        if (plugins != null) {
+            builder.withPrefixedArguments("X", plugins);
         }
 
         if (arguments != null) {

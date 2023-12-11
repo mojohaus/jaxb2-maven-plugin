@@ -181,6 +181,31 @@ public final class ArgumentBuilder {
     }
 
     /**
+     * Adds the supplied prefixed arguments in the same order as they were given.
+     *
+     * @param prefix The prefix to add.
+     * @param values A non-null List holding arguments.
+     * @return This ArgumentBuilder, for chaining.
+     */
+    public ArgumentBuilder withPrefixedArguments(String prefix, final List<String> values) {
+
+        // Check sanity
+        Validate.notNull(prefix, "prefix");
+        Validate.notNull(values, "arguments");
+
+        // Add the arguments in the exact order they were given.
+        synchronized (lock) {
+            for (String value : values) {
+                String trimmedValue = value.trim();
+                arguments.add("-" + prefix + trimmedValue);
+            }
+        }
+
+        // All done.
+        return this;
+    }
+
+    /**
      * Adds the supplied pre-compiled arguments in the same order as they were given.
      *
      * @param preCompiledArguments A non-null List holding pre-compiled arguments.

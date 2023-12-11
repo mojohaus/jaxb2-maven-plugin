@@ -3,6 +3,8 @@ package org.codehaus.mojo.jaxb2.shared.arguments;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
@@ -85,5 +87,25 @@ public class ArgumentBuilderTest {
         Assert.assertEquals("-name1", result[0]);
         Assert.assertEquals("value1", result[1]);
         Assert.assertEquals("-flag2", result[2]);
+    }
+
+    @Test
+    public void validatePrefixedArgument() {
+
+        // Assemble
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+
+        // Act
+        final String[] result = unitUnderTest
+                .withPrefixedArguments("X", Arrays.asList("plugin1", "plugin2"))
+                .withPrefixedArguments("X", Arrays.asList("plugin3", "plugin4"))
+                .build();
+
+        // Assert
+        Assert.assertEquals(4, result.length);
+        Assert.assertEquals("-Xplugin1", result[0]);
+        Assert.assertEquals("-Xplugin2", result[1]);
+        Assert.assertEquals("-Xplugin3", result[2]);
+        Assert.assertEquals("-Xplugin4", result[3]);
     }
 }
