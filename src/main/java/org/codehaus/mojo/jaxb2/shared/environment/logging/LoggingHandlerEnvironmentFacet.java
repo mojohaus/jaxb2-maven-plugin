@@ -19,16 +19,16 @@ package org.codehaus.mojo.jaxb2.shared.environment.logging;
  * under the License.
  */
 
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.codehaus.mojo.jaxb2.shared.environment.AbstractLogAwareFacet;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
+import org.codehaus.mojo.jaxb2.shared.Validate;
+import org.codehaus.mojo.jaxb2.shared.environment.AbstractLogAwareFacet;
 
 /**
  * EnvironmentFacet for replacing Handlers from Java Util Logging with a Maven Log.
@@ -43,7 +43,7 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
     /**
      * Standard logger names/categories for the java.util.Logger.
      */
-    public static final String[] DEFAULT_LOGGER_NAMES = new String[]{"com.sun", "javax.xml", "javax.tools"};
+    public static final String[] DEFAULT_LOGGER_NAMES = new String[] {"com.sun", "javax.xml", "javax.tools"};
 
     // Internal state
     private boolean restored;
@@ -66,10 +66,8 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
      * @param encoding           The configured encoding.
      * @param loggerNamePrefixes The prefixes of the Logger names to be permitted logging.
      */
-    public LoggingHandlerEnvironmentFacet(final String logPrefix,
-                                          final Log mavenLog,
-                                          final String encoding,
-                                          final String[] loggerNamePrefixes) {
+    public LoggingHandlerEnvironmentFacet(
+            final String logPrefix, final Log mavenLog, final String encoding, final String[] loggerNamePrefixes) {
 
         super(mavenLog);
 
@@ -139,9 +137,8 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
      * @param encoding The encoding used by the Maven Mojo subclass.
      * @return A fully set up LoggingHandlerEnvironmentFacet
      */
-    public static LoggingHandlerEnvironmentFacet create(final Log mavenLog,
-                                                        final Class<? extends AbstractJaxbMojo> caller,
-                                                        final String encoding) {
+    public static LoggingHandlerEnvironmentFacet create(
+            final Log mavenLog, final Class<? extends AbstractJaxbMojo> caller, final String encoding) {
 
         // Check sanity
         Validate.notNull(mavenLog, "mavenLog");
@@ -149,9 +146,8 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
         Validate.notEmpty(encoding, "encoding");
 
         // Find the standard log prefix for the tool in question.
-        final String logPrefix = caller.getClass().getCanonicalName().toUpperCase().contains("XJC")
-                ? "XJC"
-                : "SchemaGen";
+        final String logPrefix =
+                caller.getClass().getCanonicalName().toUpperCase().contains("XJC") ? "XJC" : "SchemaGen";
 
         // All done.
         return new LoggingHandlerEnvironmentFacet(logPrefix, mavenLog, encoding, DEFAULT_LOGGER_NAMES);

@@ -104,8 +104,7 @@ public class TransformSchema {
     /**
      * Default constructor.
      */
-    public TransformSchema() {
-    }
+    public TransformSchema() {}
 
     /**
      * Compound constructor, creating a TransformSchema instruction wrapping the supplied data.

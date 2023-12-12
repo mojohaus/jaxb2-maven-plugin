@@ -1,13 +1,13 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.wrappers.ExampleXmlWrapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB

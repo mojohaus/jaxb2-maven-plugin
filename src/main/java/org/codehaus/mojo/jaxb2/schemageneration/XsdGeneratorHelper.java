@@ -19,6 +19,31 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  * under the License.
  */
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
@@ -40,30 +65,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Utility class holding algorithms used when generating XSD schema.
@@ -97,7 +98,9 @@ public final class XsdGeneratorHelper {
                     // Accept directories for recursive operation, and
                     // files with names matching the SCHEMAGEN_EMITTED_FILENAME Pattern.
                     return toMatch.isDirectory()
-                            || AbstractXsdGeneratorMojo.SCHEMAGEN_EMITTED_FILENAME.matcher(toMatch.getName()).matches();
+                            || AbstractXsdGeneratorMojo.SCHEMAGEN_EMITTED_FILENAME
+                                    .matcher(toMatch.getName())
+                                    .matches();
                 }
 
                 // Not a directory or XSD file.
@@ -122,7 +125,8 @@ public final class XsdGeneratorHelper {
         // Each generated schema file should have a unique targetNamespace.
         File[] generatedSchemaFiles = outputDirectory.listFiles(new FileFilter() {
             public boolean accept(File pathname) {
-                return pathname.getName().startsWith("schema") && pathname.getName().endsWith(".xsd");
+                return pathname.getName().startsWith("schema")
+                        && pathname.getName().endsWith(".xsd");
             }
         });
 
@@ -172,22 +176,22 @@ public final class XsdGeneratorHelper {
 
             // Validate that all given uris are unique.
             if (uris.contains(currentURI)) {
-                throw new MojoExecutionException(getDuplicationErrorMessage("uri", currentURI,
-                        uris.indexOf(currentURI), i));
+                throw new MojoExecutionException(
+                        getDuplicationErrorMessage("uri", currentURI, uris.indexOf(currentURI), i));
             }
             uris.add(currentURI);
 
             // Validate that all given prefixes are unique.
             if (prefixes.contains(currentPrefix) && !(currentPrefix == null)) {
-                throw new MojoExecutionException(getDuplicationErrorMessage("prefix", currentPrefix,
-                        prefixes.indexOf(currentPrefix), i));
+                throw new MojoExecutionException(
+                        getDuplicationErrorMessage("prefix", currentPrefix, prefixes.indexOf(currentPrefix), i));
             }
             prefixes.add(currentPrefix);
 
             // Validate that all given files are unique.
             if (fileNames.contains(currentFile)) {
-                throw new MojoExecutionException(getDuplicationErrorMessage("file", currentFile,
-                        fileNames.indexOf(currentFile), i));
+                throw new MojoExecutionException(
+                        getDuplicationErrorMessage("file", currentFile, fileNames.indexOf(currentFile), i));
             }
             fileNames.add(currentFile);
         }
@@ -203,11 +207,12 @@ public final class XsdGeneratorHelper {
      * @param renderer  The JavaDocRenderer used to convert JavaDoc annotations into XML documentation annotations.
      * @return The number of processed XSDs.
      */
-    public static int insertJavaDocAsAnnotations(final Log log,
-                                                 final String encoding,
-                                                 final File outputDir,
-                                                 final SearchableDocumentation docs,
-                                                 final JavaDocRenderer renderer) {
+    public static int insertJavaDocAsAnnotations(
+            final Log log,
+            final String encoding,
+            final File outputDir,
+            final SearchableDocumentation docs,
+            final JavaDocRenderer renderer) {
 
         // Check sanity
         Validate.notNull(docs, "docs");
@@ -224,8 +229,8 @@ public final class XsdGeneratorHelper {
 
             // Create the processors.
             final XsdAnnotationProcessor classProcessor = new XsdAnnotationProcessor(docs, renderer);
-            final XsdEnumerationAnnotationProcessor enumProcessor
-                    = new XsdEnumerationAnnotationProcessor(docs, renderer);
+            final XsdEnumerationAnnotationProcessor enumProcessor =
+                    new XsdEnumerationAnnotationProcessor(docs, renderer);
 
             for (File current : foundFiles) {
 
@@ -266,7 +271,8 @@ public final class XsdGeneratorHelper {
             final List<TransformSchema> configuredTransformSchemas,
             final Log mavenLog,
             final File schemaDirectory,
-            final String encoding) throws MojoExecutionException {
+            final String encoding)
+            throws MojoExecutionException {
 
         if (mavenLog.isDebugEnabled()) {
             mavenLog.debug("Got resolverMap.keySet() [generated filenames]: " + resolverMap.keySet());
@@ -283,7 +289,8 @@ public final class XsdGeneratorHelper {
 
                 if (StringUtils.isNotEmpty(newPrefix)) {
                     // Find the old/current prefix of the namespace for the current schema uri.
-                    final String oldPrefix = currentResolver.getNamespaceURI2PrefixMap().get(currentUri);
+                    final String oldPrefix =
+                            currentResolver.getNamespaceURI2PrefixMap().get(currentUri);
 
                     if (StringUtils.isNotEmpty(oldPrefix)) {
                         // Can we perform the prefix substitution?
@@ -300,7 +307,9 @@ public final class XsdGeneratorHelper {
                         }
 
                         // Replace all namespace prefixes within the provided document.
-                        process(generatedSchemaFileDocument.getFirstChild(), true,
+                        process(
+                                generatedSchemaFileDocument.getFirstChild(),
+                                true,
                                 new ChangeNamespacePrefixProcessor(oldPrefix, newPrefix));
                     }
                 }
@@ -312,8 +321,8 @@ public final class XsdGeneratorHelper {
                         + getHumanReadableXml(generatedSchemaFileDocument) + "]");
                 savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile, encoding);
             } else {
-                mavenLog.debug("No namespace prefix changes to generated schema file ["
-                        + generatedSchemaFile.getName() + "]");
+                mavenLog.debug(
+                        "No namespace prefix changes to generated schema file [" + generatedSchemaFile.getName() + "]");
             }
         }
     }
@@ -328,11 +337,12 @@ public final class XsdGeneratorHelper {
      * @param schemaDirectory            The directory where all generated schema files reside.
      * @param charsetName                The encoding / charset name.
      */
-    public static void renameGeneratedSchemaFiles(final Map<String, SimpleNamespaceResolver> resolverMap,
-                                                  final List<TransformSchema> configuredTransformSchemas,
-                                                  final Log mavenLog,
-                                                  final File schemaDirectory,
-                                                  final String charsetName) {
+    public static void renameGeneratedSchemaFiles(
+            final Map<String, SimpleNamespaceResolver> resolverMap,
+            final List<TransformSchema> configuredTransformSchemas,
+            final Log mavenLog,
+            final File schemaDirectory,
+            final String charsetName) {
 
         // Create the map relating namespace URI to desired filenames.
         Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<String, String>();
@@ -348,7 +358,9 @@ public final class XsdGeneratorHelper {
             Document generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile);
 
             // Replace all namespace prefixes within the provided document.
-            process(generatedSchemaFileDocument.getFirstChild(), true,
+            process(
+                    generatedSchemaFileDocument.getFirstChild(),
+                    true,
                     new ChangeFilenameProcessor(namespaceUriToDesiredFilenameMap));
 
             // Overwrite the generatedSchemaFile with the content of the generatedSchemaFileDocument.
@@ -466,8 +478,8 @@ public final class XsdGeneratorHelper {
     // Private helpers
     //
 
-    private static String getDuplicationErrorMessage(final String propertyName, final String propertyValue,
-                                                     final int firstIndex, final int currentIndex) {
+    private static String getDuplicationErrorMessage(
+            final String propertyName, final String propertyValue, final int firstIndex, final int currentIndex) {
         return MISCONFIG + "Duplicate '" + propertyName + "' property with value [" + propertyValue
                 + "] found in plugin configuration. Correct schema elements index (" + firstIndex + ") and ("
                 + currentIndex + "), to ensure that all '" + propertyName + "' values are unique.";
@@ -483,8 +495,8 @@ public final class XsdGeneratorHelper {
      * @param currentResolver The currently active SimpleNamespaceResolver.
      * @throws MojoExecutionException if any schema file currently uses <code>newPrefix</code>.
      */
-    private static void validatePrefixSubstitutionIsPossible(final String oldPrefix, final String newPrefix,
-                                                             final SimpleNamespaceResolver currentResolver)
+    private static void validatePrefixSubstitutionIsPossible(
+            final String oldPrefix, final String newPrefix, final SimpleNamespaceResolver currentResolver)
             throws MojoExecutionException {
         // Make certain the newPrefix does not exist already.
         if (currentResolver.getNamespaceURI2PrefixMap().containsValue(newPrefix)) {
@@ -515,9 +527,8 @@ public final class XsdGeneratorHelper {
         return result;
     }
 
-    private static void savePrettyPrintedDocument(final Document toSave,
-                                                  final File targetFile,
-                                                  final String charsetName) {
+    private static void savePrettyPrintedDocument(
+            final Document toSave, final File targetFile, final String charsetName) {
         Writer out = null;
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), charsetName));
@@ -529,9 +540,7 @@ public final class XsdGeneratorHelper {
         }
     }
 
-    private static void addRecursively(final List<File> toPopulate,
-                                       final FileFilter fileFilter,
-                                       final File aDir) {
+    private static void addRecursively(final List<File> toPopulate, final FileFilter fileFilter, final File aDir) {
 
         // Check sanity
         Validate.notNull(toPopulate, "toPopulate");

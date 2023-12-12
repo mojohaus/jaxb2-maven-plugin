@@ -19,13 +19,13 @@ package org.codehaus.mojo.jaxb2.shared.environment.locale;
  * under the License.
  */
 
+import java.util.Locale;
+import java.util.StringTokenizer;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.AbstractLogAwareFacet;
-
-import java.util.Locale;
-import java.util.StringTokenizer;
 
 /**
  * EnvironmentFacet implementation which alters the default Locale for the
@@ -71,8 +71,7 @@ public class LocaleFacet extends AbstractLogAwareFacet {
         try {
             Locale.setDefault(newLocale);
         } catch (Exception e) {
-            log.error("Could not switch locale to ["
-                    + newLocale + "]. Continuing with standard locale.", e);
+            log.error("Could not switch locale to [" + newLocale + "]. Continuing with standard locale.", e);
         }
     }
 
@@ -90,8 +89,10 @@ public class LocaleFacet extends AbstractLogAwareFacet {
         try {
             Locale.setDefault(originalLocale);
         } catch (Exception e) {
-            log.error("Could not restore locale to [" + originalLocale + "]. Continuing with ["
-                    + Locale.getDefault() + "]", e);
+            log.error(
+                    "Could not restore locale to [" + originalLocale + "]. Continuing with [" + Locale.getDefault()
+                            + "]",
+                    e);
         }
     }
 

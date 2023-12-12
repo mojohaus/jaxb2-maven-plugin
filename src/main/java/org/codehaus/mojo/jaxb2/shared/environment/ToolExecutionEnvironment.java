@@ -19,15 +19,15 @@ package org.codehaus.mojo.jaxb2.shared.environment;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
 import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Compound EnvironmentFacet implementation which is used to set up and use a collection
@@ -54,10 +54,11 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
      *                            the localeFacet is {@code null}, the locale will not be changed.
      * @param loggingHandlerFacet The EnvironmentFacet for replacing Handlers from Java Util Logging with a Maven Log.
      */
-    public ToolExecutionEnvironment(final Log mavenLog,
-                                    final ThreadContextClassLoaderBuilder builder,
-                                    final LoggingHandlerEnvironmentFacet loggingHandlerFacet,
-                                    final LocaleFacet localeFacet) {
+    public ToolExecutionEnvironment(
+            final Log mavenLog,
+            final ThreadContextClassLoaderBuilder builder,
+            final LoggingHandlerEnvironmentFacet loggingHandlerFacet,
+            final LocaleFacet localeFacet) {
         super(mavenLog);
 
         // Check sanity
@@ -132,8 +133,10 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                 try {
                     current.setup();
                 } catch (Exception e) {
-                    throw new IllegalStateException("Could not setup() EnvironmentFacet of type ["
-                            + current.getClass().getName() + "]", e);
+                    throw new IllegalStateException(
+                            "Could not setup() EnvironmentFacet of type ["
+                                    + current.getClass().getName() + "]",
+                            e);
                 }
             }
 
@@ -164,8 +167,10 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
                 try {
                     current.restore();
                 } catch (Exception e) {
-                    throw new IllegalStateException("Could not restore() EnvironmentFacet of type ["
-                            + current.getClass().getName() + "]", e);
+                    throw new IllegalStateException(
+                            "Could not restore() EnvironmentFacet of type ["
+                                    + current.getClass().getName() + "]",
+                            e);
                 }
             }
         } finally {

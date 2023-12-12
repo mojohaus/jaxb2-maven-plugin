@@ -31,7 +31,9 @@ import jakarta.xml.bind.annotation.XmlType;
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
 @XmlRootElement
-@XmlType(namespace = SomewhatNamedPerson.NAMESPACE, propOrder = {"documented", "unDocumented"})
+@XmlType(
+        namespace = SomewhatNamedPerson.NAMESPACE,
+        propOrder = {"documented", "unDocumented"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SemiDocumentedClass {
 
@@ -52,8 +54,7 @@ public class SemiDocumentedClass {
     /**
      * JAXB-friendly constructor.
      */
-    public SemiDocumentedClass() {
-    }
+    public SemiDocumentedClass() {}
 
     public String getDocumented() {
         return documented;

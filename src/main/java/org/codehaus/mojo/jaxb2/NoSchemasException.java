@@ -19,7 +19,6 @@ package org.codehaus.mojo.jaxb2;
  * under the License.
  */
 
-
 /**
  * @author <a href="mailto:Olivier.LAMY@accor.com">olamy</a>
  * @version $Id$

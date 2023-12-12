@@ -1,9 +1,9 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
-import org.w3c.dom.Node;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.w3c.dom.Node;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>

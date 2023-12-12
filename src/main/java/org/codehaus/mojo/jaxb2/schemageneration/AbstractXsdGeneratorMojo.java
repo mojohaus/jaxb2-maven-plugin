@@ -19,6 +19,23 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  * under the License.
  */
 
+import javax.tools.ToolProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
 import com.sun.tools.jxc.SchemaGenerator;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -45,22 +62,6 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.FileUtils;
-
-import javax.tools.ToolProvider;
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 /**
  * <p>Abstract superclass for Mojos that generate XSD files from annotated Java Sources.
@@ -115,12 +116,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
      *
      * @see ToolProvider#getSystemToolClassLoader()
      */
-    public static final List<String> SYSTEM_TOOLS_CLASSLOADER_PACKAGES = Arrays.asList(
-            "com.sun.source.util",
-            "com.sun.source.tree");
+    public static final List<String> SYSTEM_TOOLS_CLASSLOADER_PACKAGES =
+            Arrays.asList("com.sun.source.util", "com.sun.source.tree");
 
     static {
-
         final List<Filter<File>> schemagenTmp = new ArrayList<Filter<File>>();
         schemagenTmp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         schemagenTmp.add(new PatternFileFilter(Arrays.asList("\\.java", "\\.scala", "\\.mdo"), false));
@@ -355,8 +354,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             }
 
             // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.
-            final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder
-                    .createFor(this.getClass(), getLog(), getEncoding(false))
+            final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder.createFor(
+                            this.getClass(), getLog(), getEncoding(false))
                     .addPaths(getClasspath())
                     .addPaths(getProject().getCompileSourceRoots());
 
@@ -368,7 +367,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                     classLoaderBuilder,
                     LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)),
                     localeFacet);
-            final String projectBasedirPath = FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
+            final String projectBasedirPath =
+                    FileSystemUtilities.getCanonicalPath(getProject().getBasedir());
 
             // Add any extra configured EnvironmentFacets, as configured in the POM.
             if (extraFacets != null) {
@@ -383,10 +383,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             // Compile the SchemaGen arguments
             final File episodeFile = getEpisodeFile(episodeFileName);
             final List<URL> sources = getSources();
-            final String[] schemaGenArguments = getSchemaGenArguments(
-                    environment.getClassPathAsArgument(),
-                    episodeFile,
-                    sources);
+            final String[] schemaGenArguments =
+                    getSchemaGenArguments(environment.getClassPathAsArgument(), episodeFile, sources);
 
             // Ensure that the outputDirectory and workDirectory exists.
             // Clear them if configured to do so.
@@ -409,15 +407,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
                 // Fire the SchemaGenerator
                 final int result = SchemaGenerator.run(
-                        schemaGenArguments,
-                        Thread.currentThread().getContextClassLoader());
+                        schemaGenArguments, Thread.currentThread().getContextClassLoader());
 
                 if (SCHEMAGEN_INCORRECT_OPTIONS == result) {
-                    printSchemaGenCommandAndThrowException(projectBasedirPath,
-                            sources,
-                            schemaGenArguments,
-                            result,
-                            null);
+                    printSchemaGenCommandAndThrowException(
+                            projectBasedirPath, sources, schemaGenArguments, result, null);
                 } else if (SCHEMAGEN_JAXB_ERRORS == result) {
 
                     // TODO: Collect the error message(s) which was emitted by SchemaGen. How can this be done?
@@ -426,17 +420,17 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
                 // Copy generated XSDs and episode files from the WorkDirectory to the OutputDirectory,
                 // but do not copy the intermediary bytecode files generated by schemagen.
-                final List<Filter<File>> exclusionFilters = PatternFileFilter.createIncludeFilterList(
-                        getLog(), "\\.class");
+                final List<Filter<File>> exclusionFilters =
+                        PatternFileFilter.createIncludeFilterList(getLog(), "\\.class");
 
                 final List<File> toCopy = FileSystemUtilities.resolveRecursively(
-                        Arrays.asList(getWorkDirectory()),
-                        exclusionFilters, getLog());
+                        Arrays.asList(getWorkDirectory()), exclusionFilters, getLog());
                 for (File current : toCopy) {
 
                     // Get the path to the current file
                     final String currentPath = FileSystemUtilities.getCanonicalPath(current.getAbsoluteFile());
-                    final File target = new File(getOutputDirectory(),
+                    final File target = new File(
+                            getOutputDirectory(),
                             FileSystemUtilities.relativize(currentPath, getWorkDirectory(), true));
 
                     // Copy the file to the same relative structure within the output directory.
@@ -482,22 +476,17 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                             }
                         }
 
-                        final List<File> files = FileSystemUtilities.resolveRecursively(
-                                fileSources, null, getLog());
+                        final List<File> files = FileSystemUtilities.resolveRecursively(fileSources, null, getLog());
 
                         // Acquire JavaDocs
                         final JavaDocExtractor extractor = new JavaDocExtractor(getLog()).addSourceFiles(files);
                         final SearchableDocumentation javaDocs = extractor.process();
 
                         // Modify the 'vanilla' generated XSDs by inserting the JavaDoc as annotations
-                        final JavaDocRenderer renderer = javaDocRenderer == null
-                                ? STANDARD_JAVADOC_RENDERER
-                                : javaDocRenderer;
-                        final int numProcessedFiles = XsdGeneratorHelper.insertJavaDocAsAnnotations(getLog(),
-                                getEncoding(false),
-                                getOutputDirectory(),
-                                javaDocs,
-                                renderer);
+                        final JavaDocRenderer renderer =
+                                javaDocRenderer == null ? STANDARD_JAVADOC_RENDERER : javaDocRenderer;
+                        final int numProcessedFiles = XsdGeneratorHelper.insertJavaDocAsAnnotations(
+                                getLog(), getEncoding(false), getOutputDirectory(), javaDocs, renderer);
 
                         if (getLog().isDebugEnabled()) {
                             getLog().info("XSD post-processing: " + numProcessedFiles + " files processed.");
@@ -511,18 +500,12 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                         }
 
                         // Transform all namespace prefixes as requested.
-                        XsdGeneratorHelper.replaceNamespacePrefixes(resolverMap,
-                                transformSchemas,
-                                getLog(),
-                                getOutputDirectory(),
-                                getEncoding(false));
+                        XsdGeneratorHelper.replaceNamespacePrefixes(
+                                resolverMap, transformSchemas, getLog(), getOutputDirectory(), getEncoding(false));
 
                         // Rename all generated schema files as requested.
-                        XsdGeneratorHelper.renameGeneratedSchemaFiles(resolverMap,
-                                transformSchemas,
-                                getLog(),
-                                getOutputDirectory(),
-                                getEncoding(false));
+                        XsdGeneratorHelper.renameGeneratedSchemaFiles(
+                                resolverMap, transformSchemas, getLog(), getOutputDirectory(), getEncoding(false));
                     }
                 }
 
@@ -552,12 +535,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 }
                 getLog().error(rootCauseBuilder.toString().replaceAll("[\r\n]+", "\n"));
 
-                printSchemaGenCommandAndThrowException(projectBasedirPath,
-                        sources,
-                        schemaGenArguments,
-                        -1,
-                        current);
-
+                printSchemaGenCommandAndThrowException(projectBasedirPath, sources, schemaGenArguments, -1, current);
             }
 
             // Indicate that the output directory was updated.
@@ -610,9 +588,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     // Private helpers
     //
 
-    private String[] getSchemaGenArguments(final String classPath,
-                                           final File episodeFile,
-                                           final List<URL> sources)
+    private String[] getSchemaGenArguments(final String classPath, final File episodeFile, final List<URL> sources)
             throws MojoExecutionException {
 
         final ArgumentBuilder builder = new ArgumentBuilder();
@@ -640,7 +616,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             // There seems to be two ways of adding sources to the SchemaGen tool:
             // 1) Using java source files
             //    Define the relative paths to source files, calculated from the System.property "user.dir"
-            //    (i.e. *not* the Maven "basedir" property) on the form 'src/main/java/se/west/something/SomeClass.java'.
+            //    (i.e. *not* the Maven "basedir" property) on the form
+            // 'src/main/java/se/west/something/SomeClass.java'.
             //    Sample: javac -d . ../github_jaxb2_plugin/src/it/schemagen-main/src/main/java/se/west/gnat/Foo.java
             //
             // 2) Using bytecode files
@@ -700,10 +677,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             final File sourceCodeFile = FileSystemUtilities.getFileFor(current, encoding);
 
             // Calculate the relative path for the current source
-            final String relativePath = FileSystemUtilities.relativize(
-                    FileSystemUtilities.getCanonicalPath(sourceCodeFile),
-                    userDir,
-                    true);
+            final String relativePath =
+                    FileSystemUtilities.relativize(FileSystemUtilities.getCanonicalPath(sourceCodeFile), userDir, true);
 
             if (getLog().isDebugEnabled()) {
                 getLog().debug("SourceCodeFile ["
@@ -727,8 +702,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 builder.addSource(current);
                 final Collection<JavaPackage> packages = builder.getPackages();
                 if (packages.size() != 1) {
-                    throw new MojoExecutionException("Exactly one package should be present in file ["
-                            + sourceCodeFile.getPath() + "]");
+                    throw new MojoExecutionException(
+                            "Exactly one package should be present in file [" + sourceCodeFile.getPath() + "]");
                 }
 
                 // Make the key indicate that this is the package-info.java file.
@@ -883,8 +858,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
             int i = 0;
             for (Map.Entry<String, String> current : className2SourcePath.entrySet()) {
-                getLog().debug("  " + (++i) + "/" + size + ": [" + current.getKey() + "]: "
-                        + current.getValue());
+                getLog().debug("  " + (++i) + "/" + size + ": [" + current.getKey() + "]: " + current.getValue());
             }
             getLog().debug("... End [ClassName-2-SourcePath Map]");
         }
@@ -897,15 +871,17 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         return toReturn;
     }
 
-    private void printSchemaGenCommandAndThrowException(final String projectBasedirPath,
-                                                        final List<URL> sources,
-                                                        final String[] schemaGenArguments,
-                                                        final int result,
-                                                        final Throwable cause) throws MojoExecutionException {
+    private void printSchemaGenCommandAndThrowException(
+            final String projectBasedirPath,
+            final List<URL> sources,
+            final String[] schemaGenArguments,
+            final int result,
+            final Throwable cause)
+            throws MojoExecutionException {
 
         final StringBuilder errorMsgBuilder = new StringBuilder();
-        errorMsgBuilder.append("\n+=================== [SchemaGenerator Error '"
-                + (result == -1 ? "<unknown>" : result) + "']\n");
+        errorMsgBuilder.append(
+                "\n+=================== [SchemaGenerator Error '" + (result == -1 ? "<unknown>" : result) + "']\n");
         errorMsgBuilder.append("|\n");
         errorMsgBuilder.append("| SchemaGen did not complete its operation correctly.\n");
         errorMsgBuilder.append("|\n");
@@ -924,7 +900,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         errorMsgBuilder.append("| The following source files should be processed by schemagen:\n");
 
         for (int i = 0; i < sources.size(); i++) {
-            errorMsgBuilder.append("| " + i + ": ").append(sources.get(i).toString()).append("\n");
+            errorMsgBuilder
+                    .append("| " + i + ": ")
+                    .append(sources.get(i).toString())
+                    .append("\n");
         }
 
         errorMsgBuilder.append("|\n");

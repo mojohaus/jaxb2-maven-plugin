@@ -1,5 +1,15 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import javax.xml.XMLConstants;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.SortedMap;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
@@ -8,15 +18,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
-import javax.xml.XMLConstants;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.SortedMap;
 
 /**
  * Helper class stashing commonly used algorithms to work with DOM documents.
@@ -60,8 +61,7 @@ public final class DomHelper {
     /*
      * Hide constructor for utility classes
      */
-    private DomHelper() {
-    }
+    private DomHelper() {}
 
     /**
      * Retrieves the value of the {@code name} attribute of the supplied Node.
@@ -137,10 +137,9 @@ public final class DomHelper {
 
             // Add the new Elements, as required.
             final Document doc = aNode.getOwnerDocument();
-            final Element annotation = doc.createElementNS(
-                    XMLConstants.W3C_XML_SCHEMA_NS_URI, ANNOTATION_ELEMENT_NAME);
-            final Element docElement = doc.createElementNS(
-                    XMLConstants.W3C_XML_SCHEMA_NS_URI, DOCUMENTATION_ELEMENT_NAME);
+            final Element annotation = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, ANNOTATION_ELEMENT_NAME);
+            final Element docElement =
+                    doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, DOCUMENTATION_ELEMENT_NAME);
             final CDATASection xsdDocumentation = doc.createCDATASection(formattedDocumentation);
 
             // Set the prefixes
@@ -213,13 +212,12 @@ public final class DomHelper {
      */
     public static ClassLocation getClassLocation(final Node aNode, final Set<ClassLocation> classLocations) {
 
-
         if (aNode != null) {
 
             // The LocalName of the supplied DOM Node should be either "complexType" or "simpleType".
             final String nodeLocalName = aNode.getLocalName();
-            final boolean acceptableType = "complexType".equalsIgnoreCase(nodeLocalName)
-                    || "simpleType".equalsIgnoreCase(nodeLocalName);
+            final boolean acceptableType =
+                    "complexType".equalsIgnoreCase(nodeLocalName) || "simpleType".equalsIgnoreCase(nodeLocalName);
 
             if (acceptableType) {
 
@@ -254,11 +252,12 @@ public final class DomHelper {
 
         MethodLocation toReturn = null;
 
-        if (aNode != null && CLASS_FIELD_METHOD_ELEMENT_NAMES.contains(aNode.getLocalName().toLowerCase())) {
+        if (aNode != null
+                && CLASS_FIELD_METHOD_ELEMENT_NAMES.contains(
+                        aNode.getLocalName().toLowerCase())) {
 
-            final MethodLocation validLocation = getFieldOrMethodLocationIfValid(aNode,
-                    getContainingClassOrNull(aNode),
-                    methodLocations);
+            final MethodLocation validLocation =
+                    getFieldOrMethodLocationIfValid(aNode, getContainingClassOrNull(aNode), methodLocations);
 
             // The MethodLocation should represent a normal getter; no arguments should be present.
             if (validLocation != null
@@ -288,7 +287,8 @@ public final class DomHelper {
 
                 // This is a ComplexType which correspond to a Java class.
                 toReturn = getFieldOrMethodLocationIfValid(aNode, getContainingClassOrNull(aNode), fieldLocations);
-            } else if (ENUMERATION_FIELD_METHOD_ELEMENT_NAMES.contains(aNode.getLocalName().toLowerCase())) {
+            } else if (ENUMERATION_FIELD_METHOD_ELEMENT_NAMES.contains(
+                    aNode.getLocalName().toLowerCase())) {
 
                 // This is a SimpleType which correspond to a Java enum.
                 toReturn = getFieldOrMethodLocationIfValid(aNode, getContainingClassOrNull(aNode), fieldLocations);
@@ -310,9 +310,7 @@ public final class DomHelper {
      * @return The Matching Field- or MethodLocation.
      */
     public static <T extends FieldLocation> T getFieldOrMethodLocationIfValid(
-            final Node aNode,
-            final Node containingClassNode,
-            final Set<? extends FieldLocation> locations) {
+            final Node aNode, final Node containingClassNode, final Set<? extends FieldLocation> locations) {
 
         T toReturn = null;
 
@@ -357,8 +355,10 @@ public final class DomHelper {
                         toReturn = (T) current;
                     }
                 } catch (Exception e) {
-                    throw new IllegalStateException("Could not acquire FieldLocation for fieldName ["
-                            + fieldName + "] and className [" + className + "]", e);
+                    throw new IllegalStateException(
+                            "Could not acquire FieldLocation for fieldName [" + fieldName + "] and className ["
+                                    + className + "]",
+                            e);
                 }
             }
         }
@@ -417,8 +417,8 @@ public final class DomHelper {
                 humanReadableName = "enumeration#" + getValueAttribute(aNode);
             }
 
-            throw new IllegalStateException("Could not find JavaDocData for XSD node ["
-                    + humanReadableName + "] with XPath [" + DomHelper.getXPathFor(aNode) + "]");
+            throw new IllegalStateException("Could not find JavaDocData for XSD node [" + humanReadableName
+                    + "] with XPath [" + DomHelper.getXPathFor(aNode) + "]");
         }
 
         // Add the XML documentation annotation.
@@ -435,8 +435,8 @@ public final class DomHelper {
         for (Node current = aNode.getParentNode(); current != null; current = current.getParentNode()) {
 
             final String localName = current.getLocalName();
-            final boolean foundClassMatch = "complexType".equalsIgnoreCase(localName)
-                    || "simpleType".equalsIgnoreCase(localName);
+            final boolean foundClassMatch =
+                    "complexType".equalsIgnoreCase(localName) || "simpleType".equalsIgnoreCase(localName);
 
             if (foundClassMatch) {
                 return current;

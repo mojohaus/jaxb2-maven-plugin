@@ -19,13 +19,13 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
-import com.thoughtworks.qdox.model.DocletTag;
-import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
-
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import com.thoughtworks.qdox.model.DocletTag;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 
 /**
  * Simplified structure containing comments and tags read from a JavaDoc comment block.
@@ -116,7 +116,11 @@ public class JavaDocData {
 
             toReturn.append("| ").append(tag2ValueMap.size()).append(" JavaDoc tags ...\n");
             for (Map.Entry<String, String> current : tag2ValueMap.entrySet()) {
-                toReturn.append("| ").append(current.getKey()).append(": ").append(current.getValue()).append("\n");
+                toReturn.append("| ")
+                        .append(current.getKey())
+                        .append(": ")
+                        .append(current.getValue())
+                        .append("\n");
             }
         }
         toReturn.append("+=================\n\n");

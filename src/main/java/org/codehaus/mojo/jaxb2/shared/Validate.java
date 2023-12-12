@@ -30,8 +30,7 @@ public final class Validate {
     /**
      * Hide constructor for utility classes.
      */
-    private Validate() {
-    }
+    private Validate() {}
 
     /**
      * Validates that the supplied object is not null, and throws a NullPointerException otherwise.

@@ -1,15 +1,16 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement;
 
-import org.codehaus.plexus.util.FileUtils;
-import org.junit.Assert;
-import org.junit.Test;
-
 import javax.xml.XMLConstants;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.codehaus.plexus.util.FileUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -46,7 +47,8 @@ public class SimpleNamespaceResolverTest {
     public void validateCollectingSchemaInfoForMultipleNamespaceSchemaFile() {
         // Assemble
         final String schemaFile = "anotherSchema.xsd";
-        final SimpleNamespaceResolver unitUnderTest = new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
 
         // Act
         final Map<String, String> namespaceURI2PrefixMap = unitUnderTest.getNamespaceURI2PrefixMap();
@@ -73,8 +75,8 @@ public class SimpleNamespaceResolverTest {
 
         // Act & Assert
         new SimpleNamespaceResolver(getSchemaFile(incorrectEmpty));
-        Assert.fail(
-                "Creating a SimpleNamespaceResolver with empty argument " + "should yield an IllegalArgumentException.");
+        Assert.fail("Creating a SimpleNamespaceResolver with empty argument "
+                + "should yield an IllegalArgumentException.");
     }
 
     @Test
@@ -91,7 +93,8 @@ public class SimpleNamespaceResolverTest {
         } catch (IllegalArgumentException e) {
             // Expected
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but received [" + e.getClass().getName() + "]");
+            Assert.fail("Expected IllegalArgumentException, but received ["
+                    + e.getClass().getName() + "]");
         }
     }
 
@@ -99,7 +102,8 @@ public class SimpleNamespaceResolverTest {
     public void validateJaxbNamespaceResolverComplianceInThrowingExceptionOnNullNamespaceResolverArguments() {
         // Assemble
         final String schemaFile = "yetAnotherSchema.xsd";
-        final SimpleNamespaceResolver unitUnderTest = new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
         final String incorrectNull = null;
 
         // Act & Assert
@@ -109,7 +113,8 @@ public class SimpleNamespaceResolverTest {
         } catch (IllegalArgumentException e) {
             // Expected
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but received [" + e.getClass().getName() + "]");
+            Assert.fail("Expected IllegalArgumentException, but received ["
+                    + e.getClass().getName() + "]");
         }
 
         try {
@@ -118,7 +123,8 @@ public class SimpleNamespaceResolverTest {
         } catch (IllegalArgumentException e) {
             // Expected
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but received [" + e.getClass().getName() + "]");
+            Assert.fail("Expected IllegalArgumentException, but received ["
+                    + e.getClass().getName() + "]");
         }
 
         try {
@@ -127,7 +133,8 @@ public class SimpleNamespaceResolverTest {
         } catch (IllegalArgumentException e) {
             // Expected
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but received [" + e.getClass().getName() + "]");
+            Assert.fail("Expected IllegalArgumentException, but received ["
+                    + e.getClass().getName() + "]");
         }
     }
 
@@ -135,7 +142,8 @@ public class SimpleNamespaceResolverTest {
     public void validatePrefixesIterator() {
         // Assemble
         final String schemaFile = "yetAnotherSchema.xsd";
-        final SimpleNamespaceResolver unitUnderTest = new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
 
         // Act
         List<String> prefixesList = new ArrayList<String>();

@@ -1,15 +1,15 @@
 package org.codehaus.mojo.jaxb2.shared.environment.locale;
 
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -63,7 +63,8 @@ public class LocaleFacetTest {
 
             // Ignore Locales with Scripts.
             if (script == null) {
-                Assert.assertSame(Locale.forLanguageTag(current.getValue().toLanguageTag()),
+                Assert.assertSame(
+                        Locale.forLanguageTag(current.getValue().toLanguageTag()),
                         LocaleFacet.findOptimumLocale(language, country, variant));
             }
         }

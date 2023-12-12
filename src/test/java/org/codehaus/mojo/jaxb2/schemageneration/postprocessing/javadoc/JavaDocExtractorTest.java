@@ -1,5 +1,15 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
@@ -12,18 +22,8 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -43,27 +43,21 @@ public class JavaDocExtractorTest {
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         // Find the desired directory
-        final URL dirURL = getClass()
-                .getClassLoader()
-                .getResource("testdata/schemageneration/javadoc/basic");
+        final URL dirURL = getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/basic");
         this.javaDocBasicDir = new File(dirURL.getPath());
         Assert.assertTrue(javaDocBasicDir.exists() && javaDocBasicDir.isDirectory());
 
-        final URL annotatedDirURL = getClass()
-                .getClassLoader()
-                .getResource("testdata/schemageneration/javadoc/annotated");
+        final URL annotatedDirURL =
+                getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/annotated");
         this.javaDocAnnotatedDir = new File(annotatedDirURL.getPath());
         Assert.assertTrue(javaDocAnnotatedDir.exists() && javaDocAnnotatedDir.isDirectory());
 
-        final URL enumsDirURL = getClass()
-                .getClassLoader()
-                .getResource("testdata/schemageneration/javadoc/enums");
+        final URL enumsDirURL = getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/enums");
         this.javaDocEnumsDir = new File(enumsDirURL.getPath());
         Assert.assertTrue(javaDocEnumsDir.exists() && javaDocEnumsDir.isDirectory());
 
-        final URL wrappersDirURL = getClass()
-                .getClassLoader()
-                .getResource("testdata/schemageneration/javadoc/xmlwrappers");
+        final URL wrappersDirURL =
+                getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/xmlwrappers");
         this.javaDocXmlWrappersDir = new File(wrappersDirURL.getPath());
         Assert.assertTrue(javaDocXmlWrappersDir.exists() && javaDocXmlWrappersDir.isDirectory());
     }
@@ -96,14 +90,16 @@ public class JavaDocExtractorTest {
         Assert.assertEquals("001: (INFO) Processing [1] java sources.", keys.get(1));
         Assert.assertEquals("002: (DEBUG) Added package-level JavaDoc for [basic]", keys.get(2));
         Assert.assertEquals("003: (DEBUG) Added class-level JavaDoc for [basic.NodeProcessor]", keys.get(3));
-        Assert.assertEquals("004: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#accept(org.w3c.dom.Node)]",
+        Assert.assertEquals(
+                "004: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#accept(org.w3c.dom.Node)]",
                 keys.get(4));
-        Assert.assertEquals("005: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#process(org.w3c.dom.Node)]",
+        Assert.assertEquals(
+                "005: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#process(org.w3c.dom.Node)]",
                 keys.get(5));
     }
 
     @Test
-    @Ignore    
+    @Ignore
     public void validateExtractingXmlAnnotatedName() throws Exception {
 
         // Assemble
@@ -133,18 +129,26 @@ public class JavaDocExtractorTest {
         Assert.assertEquals("annotatedStringField", stringFieldLocation.getAnnotationRenamedTo());
         Assert.assertEquals("annotatedIntegerField", integerFieldLocation.getAnnotationRenamedTo());
 
-        Assert.assertEquals(JavaDocData.NO_COMMENT, result.getJavaDoc(stringMethodLocation.getPath()).getComment());
-        Assert.assertEquals(JavaDocData.NO_COMMENT, result.getJavaDoc(integerMethodLocation.getPath()).getComment());
-        Assert.assertEquals("This is a string field.", result.getJavaDoc(stringFieldLocation.getPath()).getComment());
-        Assert.assertEquals("This is an integer field.",
+        Assert.assertEquals(
+                JavaDocData.NO_COMMENT,
+                result.getJavaDoc(stringMethodLocation.getPath()).getComment());
+        Assert.assertEquals(
+                JavaDocData.NO_COMMENT,
+                result.getJavaDoc(integerMethodLocation.getPath()).getComment());
+        Assert.assertEquals(
+                "This is a string field.",
+                result.getJavaDoc(stringFieldLocation.getPath()).getComment());
+        Assert.assertEquals(
+                "This is an integer field.",
                 result.getJavaDoc(integerFieldLocation.getPath()).getComment());
 
         // Secondly, check the method-annotated class.
         final SortableLocation stringFieldLocation2 = result.getLocation(methodAccessPrefix + "stringField");
         final SortableLocation integerFieldLocation2 = result.getLocation(methodAccessPrefix + "integerField");
-        final SortableLocation stringMethodLocation2 = result.getLocation(methodAccessPrefix + "annotatedStringMethod()");
-        final SortableLocation integerMethodLocation2 = result.getLocation(methodAccessPrefix +
-                "annotatedIntegerMethod()");
+        final SortableLocation stringMethodLocation2 =
+                result.getLocation(methodAccessPrefix + "annotatedStringMethod()");
+        final SortableLocation integerMethodLocation2 =
+                result.getLocation(methodAccessPrefix + "annotatedIntegerMethod()");
 
         Assert.assertTrue(stringFieldLocation2 instanceof FieldLocation);
         Assert.assertTrue(integerFieldLocation2 instanceof FieldLocation);
@@ -156,13 +160,17 @@ public class JavaDocExtractorTest {
         Assert.assertEquals("annotatedStringMethod", stringMethodLocation2.getAnnotationRenamedTo());
         Assert.assertEquals("annotatedIntegerMethod", integerMethodLocation2.getAnnotationRenamedTo());
 
-        Assert.assertEquals("Getter for the stringField.",
+        Assert.assertEquals(
+                "Getter for the stringField.",
                 result.getJavaDoc(stringMethodLocation2.getPath()).getComment());
-        Assert.assertEquals("Getter for the integerField.",
+        Assert.assertEquals(
+                "Getter for the integerField.",
                 result.getJavaDoc(integerMethodLocation2.getPath()).getComment());
-        Assert.assertEquals(JavaDocData.NO_COMMENT,
+        Assert.assertEquals(
+                JavaDocData.NO_COMMENT,
                 result.getJavaDoc(stringFieldLocation2.getPath()).getComment());
-        Assert.assertEquals(JavaDocData.NO_COMMENT,
+        Assert.assertEquals(
+                JavaDocData.NO_COMMENT,
                 result.getJavaDoc(integerFieldLocation2.getPath()).getComment());
     }
 
@@ -174,9 +182,7 @@ public class JavaDocExtractorTest {
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
 
         // Act
-        final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest,
-                3,
-                javaDocEnumsDir);
+        final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest, 3, javaDocEnumsDir);
         final MapWrapper mapWrapper = new MapWrapper(result);
 
         // Assert
@@ -205,43 +211,32 @@ public class JavaDocExtractorTest {
                 "enums.FoodPreference#meatEater",
                 "enums.FoodPreference#milkDrinker");
         for (String current : paths) {
-            Assert.assertTrue("Required path [" + current + "] not found.",
+            Assert.assertTrue(
+                    "Required path [" + current + "] not found.",
                     mapWrapper.path2LocationMap.keySet().contains(current.trim()));
         }
 
         // Finally, validate that the injected XML document comments
         // match the expected/corresponding JavaDoc comments.
         mapWrapper.validateJavaDocCommentText(
-                "Simple enumeration example defining some Food preferences.",
-                "enums.FoodPreference");
+                "Simple enumeration example defining some Food preferences.", "enums.FoodPreference");
 
         mapWrapper.validateJavaDocCommentText(
-                "No special food preferences; eats everything.",
-                "enums.FoodPreference#NONE");
+                "No special food preferences; eats everything.", "enums.FoodPreference#NONE");
 
         mapWrapper.validateJavaDocCommentText(
-                "Vegan who will neither eat meats nor drink milk.",
-                "enums.FoodPreference#VEGAN");
+                "Vegan who will neither eat meats nor drink milk.", "enums.FoodPreference#VEGAN");
 
         mapWrapper.validateJavaDocCommentText(
-                "Vegetarian who will not eat meats, but drinks milk.",
-                "enums.FoodPreference#LACTO_VEGETARIAN");
+                "Vegetarian who will not eat meats, but drinks milk.", "enums.FoodPreference#LACTO_VEGETARIAN");
 
-        mapWrapper.validateJavaDocCommentText(
-                "A Penny, worth 1 cent.",
-                "enums.AmericanCoin#1");
+        mapWrapper.validateJavaDocCommentText("A Penny, worth 1 cent.", "enums.AmericanCoin#1");
 
-        mapWrapper.validateJavaDocCommentText(
-                "A Nickel, worth 5 cents.",
-                "enums.AmericanCoin#5");
+        mapWrapper.validateJavaDocCommentText("A Nickel, worth 5 cents.", "enums.AmericanCoin#5");
 
-        mapWrapper.validateJavaDocCommentText(
-                "A Dime, worth 10 cents.",
-                "enums.AmericanCoin#10");
+        mapWrapper.validateJavaDocCommentText("A Dime, worth 10 cents.", "enums.AmericanCoin#10");
 
-        mapWrapper.validateJavaDocCommentText(
-                "A Quarter, worth 25 cents.",
-                "enums.AmericanCoin#25");
+        mapWrapper.validateJavaDocCommentText("A Quarter, worth 25 cents.", "enums.AmericanCoin#25");
     }
 
     @Test
@@ -260,7 +255,8 @@ public class JavaDocExtractorTest {
 
         final String packagePrefix = "org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.wrappers";
         final List<String> paths = new ArrayList<String>();
-        for (String current : Arrays.asList("",
+        for (String current : Arrays.asList(
+                "",
                 ".ExampleXmlWrapperUsingFieldAccess",
                 ".ExampleXmlWrapperUsingFieldAccess#foobar",
                 ".ExampleXmlWrapperUsingFieldAccess#getIntegerSet()",
@@ -275,20 +271,22 @@ public class JavaDocExtractorTest {
         }
 
         for (String current : paths) {
-            Assert.assertTrue("Required path [" + current + "] not found.",
+            Assert.assertTrue(
+                    "Required path [" + current + "] not found.",
                     mapWrapper.path2LocationMap.keySet().contains(current.trim()));
         }
 
-        mapWrapper.validateJavaDocCommentText("List containing some strings.",
-                packagePrefix + ".ExampleXmlWrapperUsingFieldAccess#foobar");
+        mapWrapper.validateJavaDocCommentText(
+                "List containing some strings.", packagePrefix + ".ExampleXmlWrapperUsingFieldAccess#foobar");
 
-        mapWrapper.validateJavaDocCommentText("SortedSet containing Integers.",
-                packagePrefix + ".ExampleXmlWrapperUsingFieldAccess#integerSet");
+        mapWrapper.validateJavaDocCommentText(
+                "SortedSet containing Integers.", packagePrefix + ".ExampleXmlWrapperUsingFieldAccess#integerSet");
 
-        mapWrapper.validateJavaDocCommentText("List containing some methodStrings.",
-                packagePrefix + ".ExampleXmlWrapperUsingMethodAccess#foobar()");
+        mapWrapper.validateJavaDocCommentText(
+                "List containing some methodStrings.", packagePrefix + ".ExampleXmlWrapperUsingMethodAccess#foobar()");
 
-        mapWrapper.validateJavaDocCommentText("SortedSet containing Integers.",
+        mapWrapper.validateJavaDocCommentText(
+                "SortedSet containing Integers.",
                 packagePrefix + ".ExampleXmlWrapperUsingMethodAccess#getMethodIntegerSet()");
     }
 
@@ -302,7 +300,8 @@ public class JavaDocExtractorTest {
         final SearchableDocumentation result = getSearchableDocumentationFor(unitUnderTest, 1, javaDocBasicDir);
 
         // Assert
-        final ArrayList<SortableLocation> sortableLocations = new ArrayList<SortableLocation>(result.getAll().keySet());
+        final ArrayList<SortableLocation> sortableLocations =
+                new ArrayList<SortableLocation>(result.getAll().keySet());
         Assert.assertEquals(4, sortableLocations.size());
 
         final List<String> paths = new ArrayList<String>(result.getPaths());
@@ -332,11 +331,11 @@ public class JavaDocExtractorTest {
 
         // Assert
         /*
-         +=================
-         | Comment:
-         | No JavaDoc tags.
-         +=================
-         */
+        +=================
+        | Comment:
+        | No JavaDoc tags.
+        +=================
+        */
         final SortableLocation packageLocation = result.getLocation(basicPackagePath);
         final JavaDocData basicPackageJavaDoc = result.getJavaDoc(basicPackagePath);
         Assert.assertTrue(packageLocation instanceof PackageLocation);
@@ -347,13 +346,13 @@ public class JavaDocExtractorTest {
         Assert.assertEquals(0, basicPackageJavaDoc.getTag2ValueMap().size());
 
         /*
-         +=================
-         | Comment: Processor/visitor pattern specification for DOM Nodes.
-         | 2 JavaDoc tags ...
-         | author: <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, Mr. Foo
-         | see: org.w3c.dom.Node
-         +=================
-         */
+        +=================
+        | Comment: Processor/visitor pattern specification for DOM Nodes.
+        | 2 JavaDoc tags ...
+        | author: <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, Mr. Foo
+        | see: org.w3c.dom.Node
+        +=================
+        */
         final SortableLocation classLocation = result.getLocation(nodeProcessorClassPath);
         final JavaDocData nodeProcessorClassJavaDoc = result.getJavaDoc(nodeProcessorClassPath);
         Assert.assertTrue(classLocation instanceof ClassLocation);
@@ -361,24 +360,23 @@ public class JavaDocExtractorTest {
         final ClassLocation castClassLocation = (ClassLocation) classLocation;
         Assert.assertEquals("basic", castClassLocation.getPackageName());
         Assert.assertEquals("NodeProcessor", castClassLocation.getClassName());
-        Assert.assertEquals("Processor/visitor pattern specification for DOM Nodes.",
-                nodeProcessorClassJavaDoc.getComment());
-
+        Assert.assertEquals(
+                "Processor/visitor pattern specification for DOM Nodes.", nodeProcessorClassJavaDoc.getComment());
 
         final SortedMap<String, String> classTag2ValueMap = nodeProcessorClassJavaDoc.getTag2ValueMap();
         Assert.assertEquals(2, classTag2ValueMap.size());
         Assert.assertEquals("org.w3c.dom.Node", classTag2ValueMap.get("see"));
-        Assert.assertEquals("<a href=\"mailto:lj@jguru.se\">Lennart J&ouml;relid</a>, Mr. Foo",
-                classTag2ValueMap.get("author"));
+        Assert.assertEquals(
+                "<a href=\"mailto:lj@jguru.se\">Lennart J&ouml;relid</a>, Mr. Foo", classTag2ValueMap.get("author"));
 
         /*
-         +=================
-         | Comment: Defines if this visitor should process the provided node.
-         | 2 JavaDoc tags ...
-         | param: aNode The DOM node to process.
-         | return: <code>true</code> if the provided Node should be processed by this NodeProcessor.
-         +=================
-         */
+        +=================
+        | Comment: Defines if this visitor should process the provided node.
+        | 2 JavaDoc tags ...
+        | param: aNode The DOM node to process.
+        | return: <code>true</code> if the provided Node should be processed by this NodeProcessor.
+        +=================
+        */
         final SortableLocation acceptMethodLocation = result.getLocation(acceptMethodPath);
         final JavaDocData acceptMethodClassJavaDoc = result.getJavaDoc(acceptMethodPath);
         Assert.assertTrue(acceptMethodLocation instanceof MethodLocation);
@@ -387,13 +385,14 @@ public class JavaDocExtractorTest {
         Assert.assertEquals("basic", castMethodLocation.getPackageName());
         Assert.assertEquals("NodeProcessor", castMethodLocation.getClassName());
         Assert.assertEquals("(org.w3c.dom.Node)", castMethodLocation.getParametersAsString());
-        Assert.assertEquals("Defines if this visitor should process the provided node.",
-                acceptMethodClassJavaDoc.getComment());
+        Assert.assertEquals(
+                "Defines if this visitor should process the provided node.", acceptMethodClassJavaDoc.getComment());
 
         final SortedMap<String, String> methodTag2ValueMap = acceptMethodClassJavaDoc.getTag2ValueMap();
         Assert.assertEquals(2, methodTag2ValueMap.size());
         Assert.assertEquals("aNode The DOM node to process.", methodTag2ValueMap.get("param"));
-        Assert.assertEquals("<code>true</code> if the provided Node should be processed by this NodeProcessor.",
+        Assert.assertEquals(
+                "<code>true</code> if the provided Node should be processed by this NodeProcessor.",
                 methodTag2ValueMap.get("return"));
     }
 
@@ -445,10 +444,7 @@ public class JavaDocExtractorTest {
         }
     }
 
-    private void validateJavaDocCommentText(
-            final MapWrapper wrapper,
-            final String expected,
-            final String path) {
+    private void validateJavaDocCommentText(final MapWrapper wrapper, final String expected, final String path) {
 
         final SortableLocation sortableLocation = wrapper.path2LocationMap.get(path);
         final JavaDocData xmlWrapperJavaDocData = wrapper.sortableLocations2JavaDocDataMap.get(sortableLocation);
@@ -457,9 +453,10 @@ public class JavaDocExtractorTest {
         Assert.assertEquals(expected, xmlWrapperJavaDocData.getComment());
     }
 
-    private SearchableDocumentation getSearchableDocumentationFor(final JavaDocExtractor unitUnderTest,
-                                                                  final int expectedNumberOfFiles,
-                                                                  final File... sourceFileDirectories) {
+    private SearchableDocumentation getSearchableDocumentationFor(
+            final JavaDocExtractor unitUnderTest,
+            final int expectedNumberOfFiles,
+            final File... sourceFileDirectories) {
 
         // Ensure that the encoding is correctly set
         unitUnderTest.setEncoding("UTF-8");

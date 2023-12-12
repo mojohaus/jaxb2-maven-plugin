@@ -1,5 +1,12 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
+import java.io.File;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocExtractor;
@@ -12,13 +19,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.w3c.dom.Document;
 import se.jguru.shared.algorithms.api.resources.PropertyResources;
-
-import java.io.File;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -71,12 +71,8 @@ public abstract class AbstractJavadocExtractorTest {
         // First, add all sources to the extractor
         for (File current : sourceRootDirectories) {
 
-            final List<File> currentFiles = FileSystemUtilities.filterFiles(current,
-                    null,
-                    "",
-                    log,
-                    "JavaSources",
-                    javaSourceExcludeFilter);
+            final List<File> currentFiles =
+                    FileSystemUtilities.filterFiles(current, null, "", log, "JavaSources", javaSourceExcludeFilter);
 
             // Add All source files found.
             extractor.addSourceFiles(currentFiles);

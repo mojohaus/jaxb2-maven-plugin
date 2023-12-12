@@ -84,11 +84,12 @@ public class PatternURLFilter extends AbstractPatternFilter<URL> {
      *                                      {@code false}, this ExclusionRegularExpressionURLFilter will noFilterMatches
      *                                      candidates that match at least one of the supplied patterns.
      */
-    public PatternURLFilter(final boolean processNullValues,
-                            final String patternPrefix,
-                            final List<String> patterns,
-                            final StringConverter<URL> converter,
-                            final boolean acceptCandidateOnPatternMatch) {
+    public PatternURLFilter(
+            final boolean processNullValues,
+            final String patternPrefix,
+            final List<String> patterns,
+            final StringConverter<URL> converter,
+            final boolean acceptCandidateOnPatternMatch) {
         super();
 
         // Assign internal state

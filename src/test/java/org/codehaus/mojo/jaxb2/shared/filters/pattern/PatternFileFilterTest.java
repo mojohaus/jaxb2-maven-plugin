@@ -1,12 +1,12 @@
 package org.codehaus.mojo.jaxb2.shared.filters.pattern;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB

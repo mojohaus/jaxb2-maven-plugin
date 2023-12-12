@@ -1,14 +1,14 @@
 package org.codehaus.mojo.jaxb2.shared.filters.pattern;
 
-import org.codehaus.mojo.jaxb2.BufferingLog;
-import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.junit.Assert;
-import org.junit.Before;
-
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.codehaus.mojo.jaxb2.BufferingLog;
+import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.junit.Assert;
+import org.junit.Before;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -52,9 +52,8 @@ public abstract class AbstractPatternFilterTest {
         // Do nothing
     }
 
-    protected <T> Map<String, Boolean> applyFilterAndRetrieveResults(final AbstractPatternFilter<T> unitUnderTest,
-                                                                     final T[] candidates,
-                                                                     final StringConverter<T> converter) {
+    protected <T> Map<String, Boolean> applyFilterAndRetrieveResults(
+            final AbstractPatternFilter<T> unitUnderTest, final T[] candidates, final StringConverter<T> converter) {
 
         Map<String, Boolean> toReturn = new TreeMap<String, Boolean>();
 

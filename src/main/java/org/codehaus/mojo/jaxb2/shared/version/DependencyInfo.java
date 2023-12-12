@@ -126,10 +126,14 @@ public class DependencyInfo implements Comparable<DependencyInfo> {
      */
     @Override
     public String toString() {
-        return groupId + GROUP_ARTIFACT_SEPARATOR
-                + artifactId + GROUP_ARTIFACT_SEPARATOR
-                + version + GROUP_ARTIFACT_SEPARATOR
-                + scope + GROUP_ARTIFACT_SEPARATOR
+        return groupId
+                + GROUP_ARTIFACT_SEPARATOR
+                + artifactId
+                + GROUP_ARTIFACT_SEPARATOR
+                + version
+                + GROUP_ARTIFACT_SEPARATOR
+                + scope
+                + GROUP_ARTIFACT_SEPARATOR
                 + type;
     }
 

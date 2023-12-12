@@ -1,5 +1,8 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums.AmericanCoin;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums.ExampleEnumHolder;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums.FoodPreference;
@@ -7,9 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -25,7 +25,7 @@ public class XsdEnumerationAnnotationProcessorTest extends AbstractSourceCodeAwa
         // Assemble
         final String path = "testdata/schemageneration/javadoc/enums/expectedTransformedExampleEnumHolder.xsd";
         final String expected = readFully(path);
-        
+
         final Document xsdGeneratedFromClassesInMethod = namespace2DocumentMap.get(SomewhatNamedPerson.NAMESPACE);
         final Node rootNode = xsdGeneratedFromClassesInMethod.getFirstChild();
 

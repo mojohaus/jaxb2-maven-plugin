@@ -19,6 +19,13 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  * under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -32,13 +39,6 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * <p>Mojo that creates XML schema(s) from test-scope Java testSources or binaries
  * by invoking the JAXB SchemaGenerator. This implementation is tailored to use the
@@ -51,7 +51,8 @@ import java.util.List;
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
  */
-@Mojo(name = "testSchemagen",
+@Mojo(
+        name = "testSchemagen",
         defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES,
         requiresDependencyResolution = ResolutionScope.TEST,
         threadSafe = true)
@@ -80,7 +81,6 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     public static final List<Filter<File>> STANDARD_TEST_SOURCE_EXCLUDE_FILTERS;
 
     static {
-
         final List<Filter<File>> testSrcTemp = new ArrayList<Filter<File>>();
         testSrcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         testSrcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
@@ -274,8 +274,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
 
             if (getLog().isDebugEnabled()) {
                 getLog().debug("Candidate Test Resource Directory [" + newDirectory + "]");
-                getLog().debug("Found [" + currentResources.size() + "] current Test Resources: "
-                        + currentResources);
+                getLog().debug("Found [" + currentResources.size() + "] current Test Resources: " + currentResources);
             }
 
             for (Resource current : currentResources) {

@@ -1,16 +1,16 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement;
 
+import java.io.StringReader;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.DebugNodeProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import java.io.StringReader;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /** @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a> */
 public class ChangeFilenameProcessorTest {

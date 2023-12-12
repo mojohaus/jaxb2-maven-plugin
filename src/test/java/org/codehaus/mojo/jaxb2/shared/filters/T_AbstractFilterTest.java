@@ -1,11 +1,11 @@
 package org.codehaus.mojo.jaxb2.shared.filters;
 
+import java.util.SortedMap;
+
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.SortedMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB

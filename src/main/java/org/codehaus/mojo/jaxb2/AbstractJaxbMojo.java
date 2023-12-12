@@ -19,6 +19,23 @@ package org.codehaus.mojo.jaxb2;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
+
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
@@ -37,23 +54,6 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.mojo.jaxb2.shared.version.DependencyInfo;
 import org.codehaus.mojo.jaxb2.shared.version.DependsFileParser;
 import org.sonatype.plexus.build.incremental.BuildContext;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 /**
  * Abstract Mojo which collects common infrastructure, required and needed
@@ -117,18 +117,17 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      */
     public static final List<Filter<File>> STANDARD_EXCLUDE_FILTERS;
 
-    private static final List<String> RELEVANT_GROUPIDS =
-            Arrays.asList("com.sun.xml.bind", "jakarta.xml.bind");
+    private static final List<String> RELEVANT_GROUPIDS = Arrays.asList("com.sun.xml.bind", "jakarta.xml.bind");
     private static final String OWN_ARTIFACT_ID = "jaxb2-maven-plugin";
     private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
     private static final String[] STANDARD_EXCLUDE_SUFFIXES = {"README.*", "\\.xml", "\\.txt"};
     private static final String[] STANDARD_PRELOADED_CLASSES = {
-            "com.sun.tools.xjc.addon.episode.package-info",
-            "com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info",
-            "org.glassfish.jaxb.core.v2.model.core.package-info",
-            "org.glassfish.jaxb.runtime.v2.model.runtime.package-info",
-            "org.glassfish.jaxb.core.v2.schemagen.episode.package-info",
-            "org.glassfish.jaxb.runtime.v2.schemagen.xmlschema.package-info"
+        "com.sun.tools.xjc.addon.episode.package-info",
+        "com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info",
+        "org.glassfish.jaxb.core.v2.model.core.package-info",
+        "org.glassfish.jaxb.runtime.v2.model.runtime.package-info",
+        "org.glassfish.jaxb.core.v2.schemagen.episode.package-info",
+        "org.glassfish.jaxb.runtime.v2.schemagen.xmlschema.package-info"
     };
 
     static {
@@ -148,9 +147,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
                 final String name = aFileOrDir.getName();
 
                 // Ignore hidden files and CVS directories
-                return name.startsWith(".")
-                        || (aFileOrDir.isDirectory() && name.equals("CVS"));
-
+                return name.startsWith(".") || (aFileOrDir.isDirectory() && name.equals("CVS"));
             }
         }));
 
@@ -163,7 +160,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
             final ClassLoader cl = AbstractJaxbMojo.class.getClassLoader();
 
-            for(String current : STANDARD_PRELOADED_CLASSES) {
+            for (String current : STANDARD_PRELOADED_CLASSES) {
                 cl.loadClass(current);
             }
 
@@ -452,7 +449,12 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             argBuilder.append("\n+=================== [" + arguments.length + " " + toolName + " Arguments]\n");
             argBuilder.append("|\n");
             for (int i = 0; i < arguments.length; i++) {
-                argBuilder.append("| [").append(i).append("]: ").append(arguments[i]).append("\n");
+                argBuilder
+                        .append("| [")
+                        .append(i)
+                        .append("]: ")
+                        .append(arguments[i])
+                        .append("\n");
             }
             argBuilder.append("|\n");
             argBuilder.append("+=================== [End " + arguments.length + " " + toolName + " Arguments]\n\n");
@@ -510,8 +512,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         if (!configuredEncoding && warnIfPlatformEncoding) {
             getLog().warn("Using platform encoding [" + effectiveEncoding + "], i.e. build is platform dependent!");
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Using " + (configuredEncoding ? "explicitly configured" : "system property")
-                    + " encoding [" + effectiveEncoding + "]");
+            getLog().debug("Using " + (configuredEncoding ? "explicitly configured" : "system property") + " encoding ["
+                    + effectiveEncoding + "]");
         }
 
         // All Done.
@@ -552,8 +554,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             generatedJaxbEpisodeDirectory = episodePath.toFile();
 
             if (getLog().isInfoEnabled()) {
-                getLog().info("Created EpisodePath [" + episodePath.toString() + "]: " +
-                        (generatedJaxbEpisodeDirectory.exists() && generatedJaxbEpisodeDirectory.isDirectory()));
+                getLog().info("Created EpisodePath [" + episodePath.toString() + "]: "
+                        + (generatedJaxbEpisodeDirectory.exists() && generatedJaxbEpisodeDirectory.isDirectory()));
             }
 
         } catch (IOException e) {
@@ -568,8 +570,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         File episodeFile = new File(generatedJaxbEpisodeDirectory, effectiveEpisodeFileName + ".xjb");
         final AtomicInteger index = new AtomicInteger(1);
         while (episodeFile.exists()) {
-            episodeFile = new File(generatedJaxbEpisodeDirectory,
-                    effectiveEpisodeFileName + "_" + index.getAndIncrement() + ".xjb");
+            episodeFile = new File(
+                    generatedJaxbEpisodeDirectory, effectiveEpisodeFileName + "_" + index.getAndIncrement() + ".xjb");
         }
 
         // Add the (generated) outputDirectory to the Resources.
@@ -638,8 +640,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     private <T> T getInjectedObject(final T objectOrNull, final String objectName) {
 
         if (objectOrNull == null) {
-            getLog().error(
-                    "Found null '" + objectName + "', implying that Maven @Component injection was not done properly.");
+            getLog().error("Found null '" + objectName
+                    + "', implying that Maven @Component injection was not done properly.");
         }
 
         return objectOrNull;
@@ -684,7 +686,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
             // Sort the system properties
             final SortedMap<String, Object> props = new TreeMap<String, Object>();
-            props.put("basedir", FileSystemUtilities.getCanonicalPath(getProject().getBasedir()));
+            props.put(
+                    "basedir", FileSystemUtilities.getCanonicalPath(getProject().getBasedir()));
 
             for (Map.Entry<Object, Object> current : System.getProperties().entrySet()) {
                 props.put("" + current.getKey(), current.getValue());

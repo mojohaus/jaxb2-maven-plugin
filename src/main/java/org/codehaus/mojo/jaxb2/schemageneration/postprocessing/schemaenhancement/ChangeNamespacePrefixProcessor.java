@@ -19,12 +19,12 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancemen
  * under the License.
  */
 
+import javax.xml.XMLConstants;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import javax.xml.XMLConstants;
 
 /**
  * <p><code>NodeProcessor</code> which alters the namespace prefix for all relevant Nodes within an XML
@@ -180,7 +180,8 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
      * which case it is a type in the oldPrefix namespace.
      */
     private boolean isTypeAttributeWithPrefix(final Attr attribute) {
-        return TYPE_ATTRIBUTE_NAME.equals(attribute.getName()) && attribute.getValue().startsWith(oldPrefix + ":");
+        return TYPE_ATTRIBUTE_NAME.equals(attribute.getName())
+                && attribute.getValue().startsWith(oldPrefix + ":");
     }
 
     /**

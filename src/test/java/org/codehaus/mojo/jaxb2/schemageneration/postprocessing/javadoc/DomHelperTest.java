@@ -1,5 +1,11 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,12 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import se.jguru.shared.algorithms.api.resources.PropertyResources;
-
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -34,16 +34,17 @@ public class DomHelperTest {
         // Act
         final List<Element> enumElements = new ArrayList<Element>();
         final NodeList childNodes = restrictionElement.getChildNodes();
-        for(int i = 0; i < childNodes.getLength(); i++) {
+        for (int i = 0; i < childNodes.getLength(); i++) {
 
             final Node current = childNodes.item(i);
-            if(current.getNodeType() == Node.ELEMENT_NODE && current.getLocalName().equals("enumeration")) {
+            if (current.getNodeType() == Node.ELEMENT_NODE
+                    && current.getLocalName().equals("enumeration")) {
                 enumElements.add((Element) current);
             }
         }
 
         final Map<String, String> xpath2ValueMap = new TreeMap<String, String>();
-        for(Element current : enumElements) {
+        for (Element current : enumElements) {
             final String currentXPath = DomHelper.getXPathFor(current);
             xpath2ValueMap.put(currentXPath, DomHelper.getValueAttribute(current));
         }
@@ -52,8 +53,8 @@ public class DomHelperTest {
         Assert.assertNotNull(xpath2ValueMap);
         Assert.assertEquals(3, xpath2ValueMap.size());
 
-        final String prefix ="#document/xs:schema/xs:simpleType[@name='foodPreference']/" +
-                "xs:restriction/xs:enumeration[@value='";
+        final String prefix =
+                "#document/xs:schema/xs:simpleType[@name='foodPreference']/" + "xs:restriction/xs:enumeration[@value='";
 
         Assert.assertEquals("LACTO_VEGETARIAN", xpath2ValueMap.get(prefix + "LACTO_VEGETARIAN']"));
         Assert.assertEquals("NONE", xpath2ValueMap.get(prefix + "NONE']"));
@@ -75,7 +76,7 @@ public class DomHelperTest {
                 final String currentLocalName = current.getLocalName();
                 final String nameAttribute = DomHelper.getNameAttribute(current);
 
-                if(currentLocalName.equals(localName) && (name == null || name.equals(nameAttribute))) {
+                if (currentLocalName.equals(localName) && (name == null || name.equals(nameAttribute))) {
                     return (Element) current;
                 }
             }

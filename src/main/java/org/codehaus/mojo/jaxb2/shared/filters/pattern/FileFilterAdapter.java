@@ -19,12 +19,12 @@ package org.codehaus.mojo.jaxb2.shared.filters.pattern;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileFilter;
+
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.filters.AbstractFilter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
-
-import java.io.File;
-import java.io.FileFilter;
 
 /**
  * Filter implementation adapting a FileFilter instance to the Filter interface.

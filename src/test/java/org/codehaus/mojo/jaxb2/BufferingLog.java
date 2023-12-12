@@ -1,12 +1,12 @@
 package org.codehaus.mojo.jaxb2;
 
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import java.text.NumberFormat;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Trivial Maven Log implementation which stores all logged messages
@@ -97,7 +97,8 @@ public class BufferingLog implements Log {
 
             final Throwable error = current.getValue();
             if (error != null) {
-                builder.append(" [" + error.getMessage() + "]: " + error.getClass().getSimpleName());
+                builder.append(
+                        " [" + error.getMessage() + "]: " + error.getClass().getSimpleName());
             }
         }
 

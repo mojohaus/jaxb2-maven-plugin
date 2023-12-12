@@ -19,13 +19,13 @@ package org.codehaus.mojo.jaxb2.shared.filters;
  * under the License.
  */
 
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * <p>Algorithm definitions for common operations using Filters.</p>

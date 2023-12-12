@@ -19,11 +19,10 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Comparable path structure to locate a particular class within compilation unit.
@@ -106,9 +105,8 @@ public class ClassLocation extends PackageLocation {
     @Override
     public String toString() {
 
-        final String xmlOverriddenFrom = classXmlName != null && !className.equals(classXmlName)
-                ? " (from: " + className + ")"
-                : "";
+        final String xmlOverriddenFrom =
+                classXmlName != null && !className.equals(classXmlName) ? " (from: " + className + ")" : "";
 
         return super.toString() + "." + getClassName() + xmlOverriddenFrom;
     }

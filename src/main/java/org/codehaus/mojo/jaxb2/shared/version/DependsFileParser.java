@@ -19,8 +19,6 @@ package org.codehaus.mojo.jaxb2.shared.version;
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +29,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Trivial parser to handle depends-plugin-style files.
@@ -84,8 +84,7 @@ public final class DependsFileParser {
     /**
      * Hide constructors for utility classes
      */
-    private DependsFileParser() {
-    }
+    private DependsFileParser() {}
 
     /**
      * Extracts all build-time dependency information from a dependencies.properties file
@@ -106,8 +105,8 @@ public final class DependsFileParser {
         try {
             // Get the ClassLoader used
             final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            final List<URL> manifestURLs = Collections.list(
-                    contextClassLoader.getResources(DEPENDENCIES_PROPERTIES_FILE));
+            final List<URL> manifestURLs =
+                    Collections.list(contextClassLoader.getResources(DEPENDENCIES_PROPERTIES_FILE));
 
             // Find the latest of the URLs matching, to cope with test-scope dependencies.
             URL matching = null;
@@ -129,8 +128,8 @@ public final class DependsFileParser {
         if (extractionException != null) {
             throw new IllegalStateException("Could not read data from manifest.", extractionException);
         } else {
-            throw new IllegalStateException("Found no manifest corresponding to artifact name snippet '"
-                    + artifactId + "'.");
+            throw new IllegalStateException(
+                    "Found no manifest corresponding to artifact name snippet '" + artifactId + "'.");
         }
     }
 
@@ -168,8 +167,8 @@ public final class DependsFileParser {
 
                     // Stash this for later use.
                     StringTokenizer tok = new StringTokenizer(trimmedLine, KEY_VALUE_SEPARATOR, false);
-                    Validate.isTrue(tok.countTokens() == 2, "Found incorrect dependency.properties line ["
-                            + aLine + "]");
+                    Validate.isTrue(
+                            tok.countTokens() == 2, "Found incorrect dependency.properties line [" + aLine + "]");
 
                     final String key = tok.nextToken().trim();
                     final String value = tok.nextToken().trim();
@@ -208,9 +207,11 @@ public final class DependsFileParser {
             if (currentKey.contains(VERSION_LINE_INDICATOR)) {
 
                 final StringTokenizer tok = new StringTokenizer(currentKey, GROUP_ARTIFACT_SEPARATOR, false);
-                Validate.isTrue(tok.countTokens() == 3, "Expected key on the form [groupId]"
-                        + GROUP_ARTIFACT_SEPARATOR + "[artifactId]" + VERSION_LINE_INDICATOR + ", but got ["
-                        + currentKey + "]");
+                Validate.isTrue(
+                        tok.countTokens() == 3,
+                        "Expected key on the form [groupId]"
+                                + GROUP_ARTIFACT_SEPARATOR + "[artifactId]" + VERSION_LINE_INDICATOR + ", but got ["
+                                + currentKey + "]");
 
                 final String groupId = tok.nextToken();
                 final String artifactId = tok.nextToken();

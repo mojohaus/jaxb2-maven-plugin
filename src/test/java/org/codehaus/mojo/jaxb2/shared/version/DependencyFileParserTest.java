@@ -1,15 +1,15 @@
 package org.codehaus.mojo.jaxb2.shared.version;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -32,9 +32,8 @@ public class DependencyFileParserTest {
         final URL extraURL = getClass().getClassLoader().getResource(jarPath);
         Assert.assertNotNull("No resource found for path [" + jarPath + "]", extraURL);
 
-        final URLClassLoader decoratedClassLoader = new URLClassLoader(
-                new URL[]{extraURL},
-                originalThreadContextClassLoader);
+        final URLClassLoader decoratedClassLoader =
+                new URLClassLoader(new URL[] {extraURL}, originalThreadContextClassLoader);
         Assert.assertNotNull("Could not create decorated ClassLoader", decoratedClassLoader);
         Thread.currentThread().setContextClassLoader(decoratedClassLoader);
 
@@ -52,8 +51,7 @@ public class DependencyFileParserTest {
             }
         }
         Assert.assertNotNull(
-                "Expected resource not found for internal resource path [" + internalResourcePath + "] ",
-                urlToTestJar);
+                "Expected resource not found for internal resource path [" + internalResourcePath + "] ", urlToTestJar);
     }
 
     @After
@@ -152,7 +150,8 @@ public class DependencyFileParserTest {
 
         // Assemble
         final String resourcePath = "testdata/shared/not_a_dependency.properties";
-        final URL incorrectResource = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
+        final URL incorrectResource =
+                Thread.currentThread().getContextClassLoader().getResource(resourcePath);
 
         // Act & Assert
         DependsFileParser.getVersionMap(incorrectResource);

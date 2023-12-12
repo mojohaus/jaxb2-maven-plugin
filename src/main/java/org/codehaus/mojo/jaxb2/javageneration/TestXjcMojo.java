@@ -19,6 +19,13 @@ package org.codehaus.mojo.jaxb2.javageneration;
  * under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -32,13 +39,6 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * <p>Mojo that creates test-scope Java source or binaries from XML schema(s)
  * by invoking the JAXB XJC binding compiler. This implementation is tailored
@@ -51,7 +51,8 @@ import java.util.List;
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
  */
-@Mojo(name = "testXjc",
+@Mojo(
+        name = "testXjc",
         defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES,
         requiresDependencyResolution = ResolutionScope.TEST,
         threadSafe = false)
@@ -112,7 +113,6 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
     public static final List<Filter<File>> STANDARD_TEST_XJB_EXCLUDE_FILTERS;
 
     static {
-
         final List<Filter<File>> xjbTemp = new ArrayList<Filter<File>>();
         xjbTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         xjbTemp.add(new PatternFileFilter(Arrays.asList("\\.xsd"), true));
@@ -261,9 +261,8 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
     @Override
     protected List<URL> getSources() {
 
-        final List<Filter<File>> excludePatterns = testSourceExcludeFilters == null
-                ? STANDARD_TEST_SOURCE_EXCLUDE_FILTERS
-                : testSourceExcludeFilters;
+        final List<Filter<File>> excludePatterns =
+                testSourceExcludeFilters == null ? STANDARD_TEST_SOURCE_EXCLUDE_FILTERS : testSourceExcludeFilters;
         Filters.initialize(getLog(), excludePatterns);
 
         // All done.
@@ -282,9 +281,8 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
     @Override
     protected List<File> getSourceXJBs() {
 
-        final List<Filter<File>> excludePatterns = testXjbExcludeFilters == null
-                ? STANDARD_TEST_XJB_EXCLUDE_FILTERS
-                : testXjbExcludeFilters;
+        final List<Filter<File>> excludePatterns =
+                testXjbExcludeFilters == null ? STANDARD_TEST_XJB_EXCLUDE_FILTERS : testXjbExcludeFilters;
         Filters.initialize(getLog(), excludePatterns);
 
         return FileSystemUtilities.filterFiles(

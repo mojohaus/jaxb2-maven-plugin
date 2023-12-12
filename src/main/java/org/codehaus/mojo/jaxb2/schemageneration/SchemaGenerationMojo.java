@@ -19,6 +19,13 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  * under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -32,13 +39,6 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * <p>Mojo that creates XML schema(s) from compile-scope Java sources or binaries
  * by invoking the JAXB SchemaGenerator. This implementation is tailored to use the
@@ -51,7 +51,8 @@ import java.util.List;
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
  */
-@Mojo(name = "schemagen",
+@Mojo(
+        name = "schemagen",
         defaultPhase = LifecyclePhase.GENERATE_RESOURCES,
         requiresDependencyResolution = ResolutionScope.COMPILE,
         threadSafe = true)
@@ -80,7 +81,6 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     public static final List<Filter<File>> STANDARD_SOURCE_EXCLUDE_FILTERS;
 
     static {
-
         final List<Filter<File>> srcTemp = new ArrayList<Filter<File>>();
         srcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         srcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
@@ -180,9 +180,8 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     @Override
     protected List<URL> getCompiledClassNames() {
 
-        List<Filter<File>> excludeFilters = schemaSourceExcludeFilters == null
-                ? STANDARD_BYTECODE_EXCLUDE_FILTERS
-                : schemaSourceExcludeFilters;
+        List<Filter<File>> excludeFilters =
+                schemaSourceExcludeFilters == null ? STANDARD_BYTECODE_EXCLUDE_FILTERS : schemaSourceExcludeFilters;
         Filters.initialize(getLog(), excludeFilters);
 
         try {
@@ -204,9 +203,8 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     @Override
     protected List<URL> getSources() {
 
-        final List<Filter<File>> sourceExcludes = schemaSourceExcludeFilters == null
-                ? STANDARD_SOURCE_EXCLUDE_FILTERS
-                : schemaSourceExcludeFilters;
+        final List<Filter<File>> sourceExcludes =
+                schemaSourceExcludeFilters == null ? STANDARD_SOURCE_EXCLUDE_FILTERS : schemaSourceExcludeFilters;
         Filters.initialize(getLog(), sourceExcludes);
 
         final List<String> defaultSources = getProject().getCompileSourceRoots();
@@ -268,23 +266,22 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     @Override
     protected void addResource(final Resource resource) {
 
-        if(resource != null) {
+        if (resource != null) {
 
             final String newDirectory = resource.getDirectory();
 
             // Is the supplied resource already added?
             final List<Resource> currentResources = getProject().getResources();
 
-            if(getLog().isDebugEnabled()) {
+            if (getLog().isDebugEnabled()) {
                 getLog().debug("Candidate Resource Directory [" + newDirectory + "]");
-                getLog().debug("Found [" + currentResources.size() + "] current Resources: "
-                        + currentResources);
+                getLog().debug("Found [" + currentResources.size() + "] current Resources: " + currentResources);
             }
 
             for (Resource current : currentResources) {
 
                 // Is the resource already added?
-                if(current.getDirectory() != null && current.getDirectory().equalsIgnoreCase(newDirectory)) {
+                if (current.getDirectory() != null && current.getDirectory().equalsIgnoreCase(newDirectory)) {
                     getLog().debug("Resource already added [" + newDirectory + "]. Not adding again.");
                     return;
                 }
@@ -293,7 +290,7 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
             // Add the new Resource
             currentResources.add(resource);
 
-            if(getLog().isDebugEnabled()) {
+            if (getLog().isDebugEnabled()) {
                 getLog().debug("Added resource [" + newDirectory + "] to existing resources.");
             }
         }

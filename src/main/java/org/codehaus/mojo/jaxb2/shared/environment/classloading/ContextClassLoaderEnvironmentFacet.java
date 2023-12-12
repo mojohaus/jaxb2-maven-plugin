@@ -43,8 +43,7 @@ public class ContextClassLoaderEnvironmentFacet extends AbstractLogAwareFacet {
      *                should <strong>not</strong> be invoked yet.
      * @see ThreadContextClassLoaderBuilder
      */
-    public ContextClassLoaderEnvironmentFacet(final Log log,
-                                              final ThreadContextClassLoaderBuilder builder) {
+    public ContextClassLoaderEnvironmentFacet(final Log log, final ThreadContextClassLoaderBuilder builder) {
         super(log);
 
         // Check sanity
