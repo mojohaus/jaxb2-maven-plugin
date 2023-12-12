@@ -1,11 +1,11 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
+import java.io.Serializable;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlType;
-import java.io.Serializable;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
 
 /**
  * Swedish County ("län") enumeration.
@@ -15,28 +15,48 @@ import java.io.Serializable;
 @XmlType(namespace = SomewhatNamedPerson.NAMESPACE)
 @XmlEnum
 public enum County implements Serializable {
-
-    @XmlEnumValue("1")stockholm(1, "AB", true, "Stockholm"),
-    @XmlEnumValue("3")uppsala(3, "C", false, "Uppsala"),
-    @XmlEnumValue("4")sodermanland(4, "D", true, "Södermanland"),
-    @XmlEnumValue("5")ostergotland(5, "E", true, "Östergötland"),
-    @XmlEnumValue("6")jonkoping(6, "F", true, "Jönköping"),
-    @XmlEnumValue("7")kronoberg(7, "G", true, "Kronoberg"),
-    @XmlEnumValue("8")kalmar(8, "H", false, "Kalmar"),
-    @XmlEnumValue("9")gotland(9, "I", true, "Gotland"),
-    @XmlEnumValue("10")blekinge(10, "K", false, "Blekinge"),
-    @XmlEnumValue("12")skane(12, "M", false, "Skåne"),
-    @XmlEnumValue("13")halland(13, "N", true, "Halland"),
-    @XmlEnumValue("14")vastra_gotaland(14, "O", true, "Västra Götaland"),
-    @XmlEnumValue("17")varmland(17, "S", true, "Värmland"),
-    @XmlEnumValue("18")orebro(18, "T", false, "Örebro"),
-    @XmlEnumValue("19")vastmanland(19, "U", true, "Västmanland"),
-    @XmlEnumValue("20")dalarna(20, "W", true, "Dalarna"),
-    @XmlEnumValue("21")gavleborg(21, "X", true, "Gävleborg"),
-    @XmlEnumValue("22")vasternorrland(22, "Y", true, "Västernorrland"),
-    @XmlEnumValue("23")jamtland(23, "Z", true, "Jämtland"),
-    @XmlEnumValue("24")vasterbotten(24, "AC", true, "Västerbotten"),
-    @XmlEnumValue("25")norrbotten(25, "BD", true, "Norrbotten");
+    @XmlEnumValue("1")
+    stockholm(1, "AB", true, "Stockholm"),
+    @XmlEnumValue("3")
+    uppsala(3, "C", false, "Uppsala"),
+    @XmlEnumValue("4")
+    sodermanland(4, "D", true, "Södermanland"),
+    @XmlEnumValue("5")
+    ostergotland(5, "E", true, "Östergötland"),
+    @XmlEnumValue("6")
+    jonkoping(6, "F", true, "Jönköping"),
+    @XmlEnumValue("7")
+    kronoberg(7, "G", true, "Kronoberg"),
+    @XmlEnumValue("8")
+    kalmar(8, "H", false, "Kalmar"),
+    @XmlEnumValue("9")
+    gotland(9, "I", true, "Gotland"),
+    @XmlEnumValue("10")
+    blekinge(10, "K", false, "Blekinge"),
+    @XmlEnumValue("12")
+    skane(12, "M", false, "Skåne"),
+    @XmlEnumValue("13")
+    halland(13, "N", true, "Halland"),
+    @XmlEnumValue("14")
+    vastra_gotaland(14, "O", true, "Västra Götaland"),
+    @XmlEnumValue("17")
+    varmland(17, "S", true, "Värmland"),
+    @XmlEnumValue("18")
+    orebro(18, "T", false, "Örebro"),
+    @XmlEnumValue("19")
+    vastmanland(19, "U", true, "Västmanland"),
+    @XmlEnumValue("20")
+    dalarna(20, "W", true, "Dalarna"),
+    @XmlEnumValue("21")
+    gavleborg(21, "X", true, "Gävleborg"),
+    @XmlEnumValue("22")
+    vasternorrland(22, "Y", true, "Västernorrland"),
+    @XmlEnumValue("23")
+    jamtland(23, "Z", true, "Jämtland"),
+    @XmlEnumValue("24")
+    vasterbotten(24, "AC", true, "Västerbotten"),
+    @XmlEnumValue("25")
+    norrbotten(25, "BD", true, "Norrbotten");
 
     // Internal state
     private int countyId;
@@ -54,10 +74,7 @@ public enum County implements Serializable {
      *                          {@code Stockholms län} (note the extra 's')).
      * @param countyName        The name of this County.
      */
-    County(final int countyId,
-            final String letterCode,
-            final boolean injectFormalNameS,
-            final String countyName) {
+    County(final int countyId, final String letterCode, final boolean injectFormalNameS, final String countyName) {
 
         this.letterCode = letterCode;
         this.countyId = countyId;

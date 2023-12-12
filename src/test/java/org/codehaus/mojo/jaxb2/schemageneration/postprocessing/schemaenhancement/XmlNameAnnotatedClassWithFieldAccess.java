@@ -29,8 +29,7 @@ public class XmlNameAnnotatedClassWithFieldAccess {
     @XmlAttribute(name = "annotatedIntegerField")
     private Integer integerField;
 
-    public XmlNameAnnotatedClassWithFieldAccess() {
-    }
+    public XmlNameAnnotatedClassWithFieldAccess() {}
 
     public XmlNameAnnotatedClassWithFieldAccess(final String stringField, final Integer integerField) {
         this.stringField = stringField;

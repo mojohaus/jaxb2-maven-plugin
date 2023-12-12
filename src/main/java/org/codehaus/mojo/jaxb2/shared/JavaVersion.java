@@ -36,7 +36,8 @@ public final class JavaVersion {
      */
     public static int getJavaMajorVersion() {
 
-        final String[] versionElements = System.getProperty(JAVA_VERSION_PROPERTY).split("\\.");
+        final String[] versionElements =
+                System.getProperty(JAVA_VERSION_PROPERTY).split("\\.");
         final int[] versionNumbers = new int[versionElements.length];
 
         for (int i = 0; i < versionElements.length; i++) {

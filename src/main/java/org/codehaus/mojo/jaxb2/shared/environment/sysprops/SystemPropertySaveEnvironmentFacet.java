@@ -7,10 +7,10 @@ import org.codehaus.mojo.jaxb2.shared.environment.AbstractLogAwareFacet;
  * EnvironmentFacet which saves the value of a system property for the duration
  * of executing a tool. This may be required for tools (such as the XJC tool) which
  * may overwrite property values for its own purpose.
- * 
+ *
  * Unlike {@link SystemPropertyChangeEnvironmentFacet}, this does not a set a new
  * property value itself, just saves the old value and later restores or clears it.
- *  
+ *
  * This facet accepts the key of the property to save.
  *
  * @author <a href="https://github.com/shelgen">Svein Elgst&oslash;en</a>

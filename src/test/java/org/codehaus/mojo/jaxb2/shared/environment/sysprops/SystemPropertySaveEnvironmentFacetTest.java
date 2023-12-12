@@ -1,9 +1,9 @@
 package org.codehaus.mojo.jaxb2.shared.environment.sysprops;
 
-import static org.junit.Assert.assertEquals;
-
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class SystemPropertySaveEnvironmentFacetTest {
     private static final String PROPERTY_KEY_NOT_SAVED = "some.other.property";
@@ -11,7 +11,8 @@ public class SystemPropertySaveEnvironmentFacetTest {
 
     private SystemPropertySaveEnvironmentFacet createAndSetupFacet() {
         final BufferingLog log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
-        final SystemPropertySaveEnvironmentFacet facet = new SystemPropertySaveEnvironmentFacet(PROPERTY_KEY_SAVED, log);
+        final SystemPropertySaveEnvironmentFacet facet =
+                new SystemPropertySaveEnvironmentFacet(PROPERTY_KEY_SAVED, log);
         facet.setup();
         return facet;
     }

@@ -19,27 +19,6 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
-import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.JavaAnnotatedElement;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaPackage;
-import com.thoughtworks.qdox.model.JavaSource;
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.PackageLocation;
-import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
-import jakarta.xml.bind.annotation.XmlEnumValue;
-import jakarta.xml.bind.annotation.XmlType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -50,6 +29,27 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
+
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaAnnotatedElement;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaPackage;
+import com.thoughtworks.qdox.model.JavaSource;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlEnumValue;
+import jakarta.xml.bind.annotation.XmlType;
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.PackageLocation;
+import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * <p>The schemagen tool operates on compiled bytecode, where JavaDoc comments are not present.
@@ -114,8 +114,8 @@ public class JavaDocExtractor {
             try {
                 builder.addSource(current);
             } catch (IOException e) {
-                throw new IllegalArgumentException("Could not add file ["
-                        + FileSystemUtilities.getCanonicalPath(current) + "]", e);
+                throw new IllegalArgumentException(
+                        "Could not add file [" + FileSystemUtilities.getCanonicalPath(current) + "]", e);
             }
         }
 
@@ -179,9 +179,8 @@ public class JavaDocExtractor {
 
                 // Add the class-level JavaDoc
                 final String simpleClassName = currentClass.getName();
-                final String classXmlName = getAnnotationAttributeValueFrom(XmlType.class,
-                        "name",
-                        currentClass.getAnnotations());
+                final String classXmlName =
+                        getAnnotationAttributeValueFrom(XmlType.class, "name", currentClass.getAnnotations());
 
                 final ClassLocation classLocation = new ClassLocation(packageName, simpleClassName, classXmlName);
                 addEntry(dataHolder, classLocation, currentClass);
@@ -221,9 +220,7 @@ public class JavaDocExtractor {
                         // ==> annotatedXmlName == "integerSet"
                         //
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElementWrapper.class,
-                                "name",
-                                currentFieldAnnotations);
+                                XmlElementWrapper.class, "name", currentFieldAnnotations);
 
                         if (annotatedXmlName == null || annotatedXmlName.equals(DEFAULT_VALUE)) {
                             annotatedXmlName = currentField.getName();
@@ -232,32 +229,22 @@ public class JavaDocExtractor {
 
                     // Find the XML name if provided within an annotation.
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElement.class,
-                                "name",
-                                currentFieldAnnotations);
+                        annotatedXmlName =
+                                getAnnotationAttributeValueFrom(XmlElement.class, "name", currentFieldAnnotations);
                     }
 
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlAttribute.class,
-                                "name",
-                                currentFieldAnnotations);
+                        annotatedXmlName =
+                                getAnnotationAttributeValueFrom(XmlAttribute.class, "name", currentFieldAnnotations);
                     }
                     if (annotatedXmlName == null) {
-                        annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlEnumValue.class,
-                                "value",
-                                currentFieldAnnotations);
+                        annotatedXmlName =
+                                getAnnotationAttributeValueFrom(XmlEnumValue.class, "value", currentFieldAnnotations);
                     }
 
                     // Add the field-level JavaDoc
                     final FieldLocation fieldLocation = new FieldLocation(
-                            packageName,
-                            simpleClassName,
-                            classXmlName,
-                            currentField.getName(),
-                            annotatedXmlName);
+                            packageName, simpleClassName, classXmlName, currentField.getName(), annotatedXmlName);
 
                     addEntry(dataHolder, fieldLocation, currentField);
 
@@ -297,33 +284,27 @@ public class JavaDocExtractor {
                         // ==> annotatedXmlName == "getIntegerSet"
                         //
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElementWrapper.class,
-                                "name",
-                                currentMethodAnnotations);
+                                XmlElementWrapper.class, "name", currentMethodAnnotations);
 
                         if (annotatedXmlName == null || annotatedXmlName.equals(DEFAULT_VALUE)) {
                             annotatedXmlName = currentMethod.getName();
                         }
                     }
 
-
                     // Find the XML name if provided within an annotation.
                     if (annotatedXmlName == null) {
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElement.class,
-                                "name",
-                                currentMethod.getAnnotations());
+                                XmlElement.class, "name", currentMethod.getAnnotations());
                     }
 
                     if (annotatedXmlName == null) {
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlAttribute.class,
-                                "name",
-                                currentMethod.getAnnotations());
+                                XmlAttribute.class, "name", currentMethod.getAnnotations());
                     }
 
                     // Add the method-level JavaDoc
-                    final MethodLocation location = new MethodLocation(packageName,
+                    final MethodLocation location = new MethodLocation(
+                            packageName,
                             simpleClassName,
                             classXmlName,
                             currentMethod.getName(),
@@ -355,9 +336,7 @@ public class JavaDocExtractor {
      * @since 2.2
      */
     private static String getAnnotationAttributeValueFrom(
-            final Class<?> annotationType,
-            final String attributeName,
-            final List<JavaAnnotation> annotations) {
+            final Class<?> annotationType, final String attributeName, final List<JavaAnnotation> annotations) {
 
         // QDox uses the fully qualified class name of the annotation for comparison.
         // Extract it.
@@ -395,8 +374,7 @@ public class JavaDocExtractor {
         return toReturn;
     }
 
-    private static boolean hasAnnotation(final Class<?> annotationType,
-                                         final List<JavaAnnotation> annotations) {
+    private static boolean hasAnnotation(final Class<?> annotationType, final List<JavaAnnotation> annotations) {
 
         if (annotations != null && !annotations.isEmpty() && annotationType != null) {
 
@@ -416,9 +394,10 @@ public class JavaDocExtractor {
     // Private helpers
     //
 
-    private void addEntry(final SortedMap<SortableLocation, JavaDocData> map,
-                          final SortableLocation key,
-                          final JavaAnnotatedElement value) {
+    private void addEntry(
+            final SortedMap<SortableLocation, JavaDocData> map,
+            final SortableLocation key,
+            final JavaAnnotatedElement value) {
 
         // Check sanity
         if (map.containsKey(key)) {
@@ -429,8 +408,10 @@ public class JavaDocExtractor {
             // Is this an empty package-level documentation?
             if (key instanceof PackageLocation) {
 
-                final boolean emptyExisting = existing.getComment() == null || existing.getComment().isEmpty();
-                final boolean emptyGiven = value.getComment() == null || value.getComment().isEmpty();
+                final boolean emptyExisting =
+                        existing.getComment() == null || existing.getComment().isEmpty();
+                final boolean emptyGiven =
+                        value.getComment() == null || value.getComment().isEmpty();
 
                 if (emptyGiven) {
                     if (log.isDebugEnabled()) {

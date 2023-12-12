@@ -1,6 +1,10 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -8,11 +12,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
 
 /**
  * Trivial transport object type for Enums with different representations.
@@ -20,7 +20,9 @@ import java.util.TreeSet;
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
 @XmlRootElement(namespace = SomewhatNamedPerson.NAMESPACE)
-@XmlType(namespace = SomewhatNamedPerson.NAMESPACE, propOrder = {"coins", "foodPreferences"})
+@XmlType(
+        namespace = SomewhatNamedPerson.NAMESPACE,
+        propOrder = {"coins", "foodPreferences"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExampleEnumHolder implements Serializable {
 
@@ -37,7 +39,6 @@ public class ExampleEnumHolder implements Serializable {
     @XmlElementWrapper
     @XmlElement(name = "preference")
     private SortedSet<FoodPreference> foodPreferences;
-
 
     public ExampleEnumHolder() {
 

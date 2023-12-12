@@ -1,13 +1,13 @@
 package org.codehaus.mojo.jaxb2.shared.filters.pattern;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.SortedMap;
+
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -37,7 +37,6 @@ public class T_AbstractPatternFilterTest {
         final List<String> patterns = null;
         final boolean acceptCandidateOnPatternMatch = true;
 
-
         // Act & Assert
         new DebugPatternFilter(processNullValues, patterns, null, acceptCandidateOnPatternMatch);
     }
@@ -51,10 +50,7 @@ public class T_AbstractPatternFilterTest {
         final boolean acceptCandidateOnPatternMatch = true;
 
         final DebugPatternFilter unitUnderTest = new DebugPatternFilter(
-                processNullValues,
-                patterns,
-                UNITY_STRING_CONVERTER,
-                acceptCandidateOnPatternMatch);
+                processNullValues, patterns, UNITY_STRING_CONVERTER, acceptCandidateOnPatternMatch);
 
         // Act
         unitUnderTest.initialize(log);
@@ -80,10 +76,7 @@ public class T_AbstractPatternFilterTest {
         final List<String> patterns = Arrays.asList("f.*t"); // Should match 'first' but not 'third'
 
         final DebugPatternFilter unitUnderTest = new DebugPatternFilter(
-                processNullValues,
-                patterns,
-                UNITY_STRING_CONVERTER,
-                acceptCandidateOnPatternMatch);
+                processNullValues, patterns, UNITY_STRING_CONVERTER, acceptCandidateOnPatternMatch);
 
         // Act
         unitUnderTest.initialize(log);

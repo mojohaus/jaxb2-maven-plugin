@@ -19,9 +19,6 @@ package org.codehaus.mojo.jaxb2.shared.environment.classloading;
  * under the License.
  */
 
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -31,6 +28,9 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 import static org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder.SupportedURLProtocols.*;
 
@@ -68,7 +68,6 @@ public final class ThreadContextClassLoaderBuilder {
      * Simple enumeration of supported classpath URL protocols.
      */
     enum SupportedURLProtocols {
-
         FILE,
 
         JAR,
@@ -250,9 +249,8 @@ public final class ThreadContextClassLoaderBuilder {
      * @param encoding    The encoding used by Maven. Cannot be null.
      * @return A ThreadContextClassLoaderBuilder wrapping the supplied members.
      */
-    public static ThreadContextClassLoaderBuilder createFor(final ClassLoader classLoader,
-                                                            final Log log,
-                                                            final String encoding) {
+    public static ThreadContextClassLoaderBuilder createFor(
+            final ClassLoader classLoader, final Log log, final String encoding) {
 
         // Check sanity
         Validate.notNull(classLoader, "classLoader");
@@ -271,9 +269,8 @@ public final class ThreadContextClassLoaderBuilder {
      * @param encoding The encoding used by Maven. Cannot be null.
      * @return A ThreadContextClassLoaderBuilder wrapping the supplied members.
      */
-    public static ThreadContextClassLoaderBuilder createFor(final Class<?> aClass,
-                                                            final Log log,
-                                                            final String encoding) {
+    public static ThreadContextClassLoaderBuilder createFor(
+            final Class<?> aClass, final Log log, final String encoding) {
 
         // Check sanity
         Validate.notNull(aClass, "aClass");
@@ -304,8 +301,8 @@ public final class ThreadContextClassLoaderBuilder {
             try {
                 return URLDecoder.decode(anURL.getPath(), encoding);
             } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Could not URLDecode path [" + originalPath
-                        + "] using encoding [" + encoding + "]", e);
+                throw new IllegalArgumentException(
+                        "Could not URLDecode path [" + originalPath + "] using encoding [" + encoding + "]", e);
             }
         } else if (JAR.supports(protocol)) {
             toReturn = anURL.getPath();
@@ -314,8 +311,8 @@ public final class ThreadContextClassLoaderBuilder {
         } else if (BUNDLERESOURCE.supports(protocol)) { // e.g. when used in Eclipse/m2e
             toReturn = anURL.toString();
         } else {
-            throw new IllegalArgumentException("Unknown protocol [" + protocol + "]; could not handle URL ["
-                    + anURL + "]");
+            throw new IllegalArgumentException(
+                    "Unknown protocol [" + protocol + "]; could not handle URL [" + anURL + "]");
         }
 
         return toReturn;
@@ -375,9 +372,8 @@ public final class ThreadContextClassLoaderBuilder {
          * @param classPathArgument   The non-null classpath argument, to be returned
          *                            from the method call to {@link #getClassPathAsArgument()}.
          */
-        public DefaultHolder(final Thread affectedThread,
-                             final ClassLoader originalClassLoader,
-                             final String classPathArgument) {
+        public DefaultHolder(
+                final Thread affectedThread, final ClassLoader originalClassLoader, final String classPathArgument) {
 
             // Check sanity
             Validate.notNull(affectedThread, "affectedThread");

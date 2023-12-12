@@ -1,13 +1,5 @@
 package org.codehaus.mojo.jaxb2.shared.filters;
 
-import org.codehaus.mojo.jaxb2.BufferingLog;
-import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.codehaus.mojo.jaxb2.shared.filters.pattern.FileFilterAdapter;
-import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -15,6 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.codehaus.mojo.jaxb2.BufferingLog;
+import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.filters.pattern.FileFilterAdapter;
+import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import static java.io.File.separator;
 
@@ -36,7 +36,10 @@ public class PackageFilterInclusionTest {
 
         String basedir = System.getProperty("basedir");
         if (basedir == null) {
-            baseDirectory = new File(getClass().getClassLoader().getResource("logback-test.xml").getPath())
+            baseDirectory = new File(getClass()
+                            .getClassLoader()
+                            .getResource("logback-test.xml")
+                            .getPath())
                     .getParentFile()
                     .getParentFile()
                     .getParentFile();
@@ -56,16 +59,15 @@ public class PackageFilterInclusionTest {
     public void validateExcludingPackageInfoFiles() {
 
         // Assemble
-        final String rootPackagePath = contextRoot + separator + "org" + separator + "codehaus" + separator + "mojo"
-                + separator + "jaxb2";
+        final String rootPackagePath =
+                contextRoot + separator + "org" + separator + "codehaus" + separator + "mojo" + separator + "jaxb2";
         final String excludeFilenamePattern = "package-info\\.java";
-        final List<Filter<File>> excludedFilesIdentifierFilter = PatternFileFilter
-                .createIncludeFilterList(log, excludeFilenamePattern);
+        final List<Filter<File>> excludedFilesIdentifierFilter =
+                PatternFileFilter.createIncludeFilterList(log, excludeFilenamePattern);
 
         // Act
-        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(Collections.singletonList(srcMainJavaDir),
-                excludedFilesIdentifierFilter,
-                log);
+        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(
+                Collections.singletonList(srcMainJavaDir), excludedFilesIdentifierFilter, log);
         final SortedMap<String, File> path2FileMap = mapFiles(sourceFiles);
 
         // Assert
@@ -75,10 +77,10 @@ public class PackageFilterInclusionTest {
                     ? current.substring(baseDirectory.getPath().length() + 1)
                     : current;
 
-            Assert.assertTrue("Path " + relativePath + " did not start with the root package path " + rootPackagePath,
+            Assert.assertTrue(
+                    "Path " + relativePath + " did not start with the root package path " + rootPackagePath,
                     relativePath.startsWith(rootPackagePath));
-            Assert.assertTrue("Path " + current + " was a package-info.java file.",
-                    !current.contains("package-info"));
+            Assert.assertTrue("Path " + current + " was a package-info.java file.", !current.contains("package-info"));
         }
     }
 
@@ -96,9 +98,7 @@ public class PackageFilterInclusionTest {
         includeFilter.initialize(log);
 
         final List<File> allSourceFiles = FileSystemUtilities.resolveRecursively(
-                Collections.singletonList(srcMainJavaDir),
-                new ArrayList<Filter<File>>(),
-                log);
+                Collections.singletonList(srcMainJavaDir), new ArrayList<Filter<File>>(), log);
 
         // Act
         final List<File> result = FileSystemUtilities.filterFiles(allSourceFiles, includeFilter, log);
@@ -107,7 +107,8 @@ public class PackageFilterInclusionTest {
         // Assert
         Assert.assertTrue(result.size() > 1);
         for (String current : path2FileMap.keySet()) {
-            Assert.assertTrue("Path " + current + " contained disallowed pattern " + locationPackageDirName,
+            Assert.assertTrue(
+                    "Path " + current + " contained disallowed pattern " + locationPackageDirName,
                     current.contains(locationPackageDirName));
         }
     }

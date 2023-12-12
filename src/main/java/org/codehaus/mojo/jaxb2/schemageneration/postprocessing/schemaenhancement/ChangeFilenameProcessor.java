@@ -19,14 +19,15 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancemen
  * under the License.
  */
 
+import javax.xml.XMLConstants;
+
+import java.util.Map;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import javax.xml.XMLConstants;
-import java.util.Map;
 
 /**
  * <p>NodeProcessor which alters the filename for generated XML schema files.

@@ -19,12 +19,12 @@ package org.codehaus.mojo.jaxb2.shared.filters;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.Validate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Abstract Filter implementation which handles separating {@code null} candidate values from non-null
@@ -73,8 +73,9 @@ public abstract class AbstractFilter<T> implements Filter<T> {
      * @param setterPropertyName The name of the property to inject.
      */
     protected final void validateDiSetterCalledBeforeInitialization(final String setterPropertyName) {
-        Validate.isTrue(log == null, "DI Setters should only be called before initializing. Stray call: ["
-                + setterPropertyName + "]");
+        Validate.isTrue(
+                log == null,
+                "DI Setters should only be called before initializing. Stray call: [" + setterPropertyName + "]");
     }
 
     /**
@@ -164,8 +165,8 @@ public abstract class AbstractFilter<T> implements Filter<T> {
                 toReturn = onNullCandidate();
             } else {
                 if (log.isDebugEnabled()) {
-                    log.debug("Received null candidate, and Filter [" + getClass().getSimpleName()
-                            + "] is configured not to match nulls.");
+                    log.debug("Received null candidate, and Filter ["
+                            + getClass().getSimpleName() + "] is configured not to match nulls.");
                 }
             }
 
@@ -209,7 +210,7 @@ public abstract class AbstractFilter<T> implements Filter<T> {
      */
     @Override
     public String toString() {
-        return "Filter [" + getClass().getSimpleName() + "]" + AbstractJaxbMojo.NEWLINE
-                + TOSTRING_INDENT + "Processes nulls: [" + processNullValues + "]" + AbstractJaxbMojo.NEWLINE;
+        return "Filter [" + getClass().getSimpleName() + "]" + AbstractJaxbMojo.NEWLINE + TOSTRING_INDENT
+                + "Processes nulls: [" + processNullValues + "]" + AbstractJaxbMojo.NEWLINE;
     }
 }

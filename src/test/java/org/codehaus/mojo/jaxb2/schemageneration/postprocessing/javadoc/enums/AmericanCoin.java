@@ -1,12 +1,11 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums;
 
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlType;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
 
 /**
  * Simple enumeration example defining standard US coins.
@@ -21,18 +20,22 @@ public enum AmericanCoin {
     /**
      * A Penny, worth 1 cent.
      */
-    @XmlEnumValue("1") PENNY(1),
+    @XmlEnumValue("1")
+    PENNY(1),
 
     /**
      * A Nickel, worth 5 cents.
      */
-    @XmlEnumValue("5") NICKEL(5),
+    @XmlEnumValue("5")
+    NICKEL(5),
 
     /**
      * A Nickel, worth 5 cents.
      */
-    @XmlEnumValue("10") DIME(10),
-    @XmlEnumValue("25") QUARTER(25);
+    @XmlEnumValue("10")
+    DIME(10),
+    @XmlEnumValue("25")
+    QUARTER(25);
 
     // Internal state
     private int value;

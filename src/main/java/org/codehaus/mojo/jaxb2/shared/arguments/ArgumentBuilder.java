@@ -19,11 +19,11 @@ package org.codehaus.mojo.jaxb2.shared.arguments;
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Utility class to build an array containing method arguments, as received from a command-line invocation of a tool.
@@ -80,7 +80,8 @@ public final class ArgumentBuilder {
 
         // Check sanity
         Validate.notEmpty(flag, "flag");
-        Validate.isTrue(!AbstractJaxbMojo.CONTAINS_WHITESPACE.matcher(flag).matches(),
+        Validate.isTrue(
+                !AbstractJaxbMojo.CONTAINS_WHITESPACE.matcher(flag).matches(),
                 "Flags cannot contain whitespace. Got: [" + flag + "]");
 
         // Trim, and add the flag as an argument.
@@ -126,9 +127,7 @@ public final class ArgumentBuilder {
      * @param value            The value of the namedArgument to add.
      * @return This ArgumentBuilder, for chaining.
      */
-    public ArgumentBuilder withNamedArgument(final boolean addNamedArgument,
-                                             final String name,
-                                             final String value) {
+    public ArgumentBuilder withNamedArgument(final boolean addNamedArgument, final String name, final String value) {
 
         // Bail out?
         if (!addNamedArgument) {

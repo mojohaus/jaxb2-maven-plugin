@@ -19,14 +19,14 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
+import java.util.SortedMap;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.MethodLocation;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.w3c.dom.Node;
-
-import java.util.SortedMap;
 
 /**
  * <p>Node processor that injects XSD documentation annotations consisting of JavaDoc harvested Java source code

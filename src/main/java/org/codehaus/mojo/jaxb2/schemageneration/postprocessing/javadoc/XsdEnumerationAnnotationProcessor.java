@@ -1,5 +1,7 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import java.util.SortedMap;
+
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.ClassLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
@@ -7,9 +9,6 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import java.util.SortedMap;
-
 
 /**
  * <p>Node processor that injects XSD documentation annotations consisting of JavaDoc harvested Java source code
@@ -122,8 +121,7 @@ public class XsdEnumerationAnnotationProcessor implements NodeProcessor {
         if (localName != null) {
 
             final String trimmed = localName.trim();
-            return trimmed.equalsIgnoreCase("enumeration")
-                    || trimmed.equalsIgnoreCase("simpleType");
+            return trimmed.equalsIgnoreCase("enumeration") || trimmed.equalsIgnoreCase("simpleType");
         }
 
         /*
@@ -146,23 +144,23 @@ public class XsdEnumerationAnnotationProcessor implements NodeProcessor {
          */
 
         /*
-  <xs:simpleType name="foodPreference">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="NONE"/>
-      <xs:enumeration value="LACTO_VEGETARIAN"/>
-      <xs:enumeration value="VEGAN"/>
-    </xs:restriction>
-  </xs:simpleType>
+        <xs:simpleType name="foodPreference">
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="LACTO_VEGETARIAN"/>
+            <xs:enumeration value="VEGAN"/>
+          </xs:restriction>
+        </xs:simpleType>
 
-  <xs:simpleType name="americanCoin">
-    <xs:restriction base="xs:int">
-      <xs:enumeration value="25"/>
-      <xs:enumeration value="1"/>
-      <xs:enumeration value="5"/>
-      <xs:enumeration value="10"/>
-    </xs:restriction>
-  </xs:simpleType>
-        */
+        <xs:simpleType name="americanCoin">
+          <xs:restriction base="xs:int">
+            <xs:enumeration value="25"/>
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="5"/>
+            <xs:enumeration value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+              */
 
         // All done.
         return false;

@@ -19,6 +19,16 @@ package org.codehaus.mojo.jaxb2.javageneration;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileWriter;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.sun.tools.xjc.Driver;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -39,16 +49,6 @@ import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertySaveEnv
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * <p>Abstract superclass for Mojos generating Java source or binaries from XML schema(s) by invoking the JAXB XJC
  * binding compiler. Most of the Configuration options for the AbstractJavaGeneratorMojo are set or copied to the
@@ -60,7 +60,8 @@ import java.util.List;
  */
 public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
-    private static final List<String> PROXY_PROPERTY_KEYS = Arrays.asList("http.proxyHost", "http.proxyPort", "https.proxyHost", "https.proxyPort");
+    private static final List<String> PROXY_PROPERTY_KEYS =
+            Arrays.asList("http.proxyHost", "http.proxyPort", "https.proxyHost", "https.proxyPort");
 
     private static final int XJC_COMPLETED_OK = 0;
 
@@ -443,7 +444,8 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 final LocaleFacet localeFacet = locale == null ? null : LocaleFacet.createFor(locale, getLog());
 
                 // Create the ToolExecutionEnvironment
-                environment = new ToolExecutionEnvironment(getLog(),
+                environment = new ToolExecutionEnvironment(
+                        getLog(),
                         ThreadContextClassLoaderBuilder.createFor(this.getClass(), getLog(), getEncoding(false))
                                 .addPaths(getClasspath()),
                         LoggingHandlerEnvironmentFacet.create(getLog(), getClass(), getEncoding(false)),
@@ -501,7 +503,10 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
                     final List<URL> sourceXSDs = getSources();
                     for (int i = 0; i < sourceXSDs.size(); i++) {
-                        errorMsgBuilder.append("| " + i + ": ").append(sourceXSDs.get(i).toString()).append("\n");
+                        errorMsgBuilder
+                                .append("| " + i + ": ")
+                                .append(sourceXSDs.get(i).toString())
+                                .append("\n");
                     }
 
                     errorMsgBuilder.append("|\n");
@@ -543,8 +548,8 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                         // jar:file:/path/to/aJar.jar!/some/path/xsd/aResource.xsd
                         final int bangIndex = current.toString().indexOf("!");
                         if (bangIndex == -1) {
-                            throw new MojoExecutionException("Illegal JAR URL [" + current.toString()
-                                    + "]: lacks a '!'");
+                            throw new MojoExecutionException(
+                                    "Illegal JAR URL [" + current.toString() + "]: lacks a '!'");
                         }
 
                         final String internalPath = current.toString().substring(bangIndex + 1);

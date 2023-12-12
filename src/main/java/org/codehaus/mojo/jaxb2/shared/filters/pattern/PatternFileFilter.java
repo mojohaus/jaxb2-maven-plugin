@@ -19,18 +19,17 @@ package org.codehaus.mojo.jaxb2.shared.filters.pattern;
  * under the License.
  */
 
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.codehaus.mojo.jaxb2.shared.filters.Filter;
-import org.codehaus.mojo.jaxb2.shared.filters.Filters;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
+
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
+import org.codehaus.mojo.jaxb2.shared.Validate;
+import org.codehaus.mojo.jaxb2.shared.filters.Filter;
+import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 
 /**
  * <p>AbstractPatternFilter and FileFilter combination, using a set of Regular expressions
@@ -81,7 +80,8 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      *                                      if {@code false}, this PatternFileFilter will noFilterMatches
      *                                      candidates that match at least one of the supplied patterns.
      */
-    public PatternFileFilter(final boolean processNullValues,
+    public PatternFileFilter(
+            final boolean processNullValues,
             final String patternPrefix,
             final List<String> patterns,
             final StringConverter<File> converter,
@@ -149,8 +149,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      * @return A List containing a PatternFileFilter using the supplied suffix patterns to match Files.
      * @see PatternFileFilter
      */
-    public static List<Filter<File>> createExcludeFilterList(final Log log,
-            final String... patterns) {
+    public static List<Filter<File>> createExcludeFilterList(final Log log, final String... patterns) {
         return createFilterList(log, false, patterns);
     }
 
@@ -164,8 +163,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      * @return A List containing a PatternFileFilter using the supplied suffix patterns to match Files.
      * @see PatternFileFilter
      */
-    public static List<Filter<File>> createIncludeFilterList(final Log log,
-            final String... patterns) {
+    public static List<Filter<File>> createIncludeFilterList(final Log log, final String... patterns) {
         return createFilterList(log, true, patterns);
     }
 
@@ -173,9 +171,8 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
     // Private helpers
     //
 
-    private static List<Filter<File>> createFilterList(final Log log,
-            final boolean includeOperation,
-            final String... patterns) {
+    private static List<Filter<File>> createFilterList(
+            final Log log, final boolean includeOperation, final String... patterns) {
 
         // Check sanity
         Validate.notNull(patterns, "patterns");

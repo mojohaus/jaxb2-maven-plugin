@@ -19,10 +19,11 @@ public class DebugPatternFilter extends AbstractPatternFilter<String> {
         setAcceptCandidateOnPatternMatch(acceptCandidateOnPatternMatch);
     }
 
-    public DebugPatternFilter(final boolean processNullValues,
-                              final List<String> patterns,
-                              final StringConverter<String> converter,
-                              final boolean acceptCandidateOnPatternMatch) {
+    public DebugPatternFilter(
+            final boolean processNullValues,
+            final List<String> patterns,
+            final StringConverter<String> converter,
+            final boolean acceptCandidateOnPatternMatch) {
         super();
         setProcessNullValues(processNullValues);
         setPatterns(patterns);

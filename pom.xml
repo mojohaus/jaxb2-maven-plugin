@@ -18,504 +18,505 @@
   under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>mojo-parent</artifactId>
-        <version>77</version>
-    </parent>
+  <parent>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>mojo-parent</artifactId>
+    <version>77</version>
+  </parent>
 
-    <artifactId>jaxb2-maven-plugin</artifactId>
-    <version>3.2.0-SNAPSHOT</version>
-    <packaging>maven-plugin</packaging>
+  <artifactId>jaxb2-maven-plugin</artifactId>
+  <version>3.2.0-SNAPSHOT</version>
+  <packaging>maven-plugin</packaging>
 
-    <name>JAXB-2 Maven Plugin</name>
-    <description>Mojo's JAXB-2 Maven plugin is used to create an object graph
+  <name>JAXB-2 Maven Plugin</name>
+  <description>Mojo's JAXB-2 Maven plugin is used to create an object graph
         from XSDs based on the JAXB 2.x implementation and to generate XSDs
-        from JAXB annotated Java classes.
-    </description>
-    <url>https://github.com/mojohaus/jaxb2-maven-plugin/</url>
-    <inceptionYear>2005</inceptionYear>
+        from JAXB annotated Java classes.</description>
+  <url>https://github.com/mojohaus/jaxb2-maven-plugin/</url>
+  <inceptionYear>2005</inceptionYear>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-    <developers>
-        <developer>
-            <name>Lennart Jörelid</name>
-            <email>lj@jguru.se</email>
-            <roles>
-                <role>Committer</role>
-            </roles>
-            <organization>jGuru Europe AB</organization>
-            <organizationUrl>http://www.jguru.se</organizationUrl>
-            <timezone>Europe/Stockholm</timezone>
-        </developer>
-        <developer>
-            <id>jgenender</id>
-            <name>Jeff Genender</name>
-            <email>jgenender@codehaus.org</email>
-            <organization>Savoir Technologies, Inc</organization>
-            <organizationUrl>http://www.savoirtech.com</organizationUrl>
-            <roles>
-                <role>Committer</role>
-            </roles>
-            <timezone>-7</timezone>
-        </developer>
-        <developer>
-            <id>rfscholte</id>
-            <name>Robert Scholte</name>
-            <email>rfscholte@codehaus.org</email>
-            <roles>
-                <role>Committer</role>
-            </roles>
-            <timezone>Europe/Amsterdam</timezone>
-        </developer>
-    </developers>
+  <developers>
+    <developer>
+      <name>Lennart Jörelid</name>
+      <email>lj@jguru.se</email>
+      <organization>jGuru Europe AB</organization>
+      <organizationUrl>http://www.jguru.se</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>Europe/Stockholm</timezone>
+    </developer>
+    <developer>
+      <id>jgenender</id>
+      <name>Jeff Genender</name>
+      <email>jgenender@codehaus.org</email>
+      <organization>Savoir Technologies, Inc</organization>
+      <organizationUrl>http://www.savoirtech.com</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>-7</timezone>
+    </developer>
+    <developer>
+      <id>rfscholte</id>
+      <name>Robert Scholte</name>
+      <email>rfscholte@codehaus.org</email>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>Europe/Amsterdam</timezone>
+    </developer>
+  </developers>
 
-    <contributors>
-        <contributor>
-            <name>Adam Retter</name>
-            <email>adam@evolvedbinary.com</email>
-            <organization>Evolved Binary</organization>
-            <organizationUrl>https://www.evolvedbinary.com</organizationUrl>
-            <roles>
-                <role>Patch Contributor</role>
-            </roles>
-            <timezone>Europe/London</timezone>
-        </contributor>
-    </contributors>
+  <contributors>
+    <contributor>
+      <name>Adam Retter</name>
+      <email>adam@evolvedbinary.com</email>
+      <organization>Evolved Binary</organization>
+      <organizationUrl>https://www.evolvedbinary.com</organizationUrl>
+      <roles>
+        <role>Patch Contributor</role>
+      </roles>
+      <timezone>Europe/London</timezone>
+    </contributor>
+  </contributors>
 
-    <prerequisites>
-        <maven>${mavenVersion}</maven>
-    </prerequisites>
+  <prerequisites>
+    <maven>${mavenVersion}</maven>
+  </prerequisites>
 
-    <scm>
-        <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
-        <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
-        <tag>HEAD</tag>
-    </scm>
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/mojohaus/jaxb2-maven-plugin/issues</url>
-    </issueManagement>
-    <ciManagement>
-        <system>TravisCI</system>
-        <url>https://travis-ci.org/mojohaus/jaxb2-maven-plugin</url>
-    </ciManagement>
+  <scm>
+    <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/mojohaus/jaxb2-maven-plugin.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
+  </scm>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/mojohaus/jaxb2-maven-plugin/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>TravisCI</system>
+    <url>https://travis-ci.org/mojohaus/jaxb2-maven-plugin</url>
+  </ciManagement>
 
-    <properties>
-        <!-- Define Maven and JDK versions-->
-        <mavenVersion>3.5.4</mavenVersion>
-        <mojo.java.target>8</mojo.java.target>
+  <properties>
+    <!-- Define Maven and JDK versions-->
+    <mavenVersion>3.5.4</mavenVersion>
+    <mojo.java.target>8</mojo.java.target>
 
-        <!-- Plexus component versions -->
-        <plexus-compiler-api.version>2.14.0</plexus-compiler-api.version>
-        <plexus-utils.version>4.0.0</plexus-utils.version>
-        <plexus-build-api.version>0.0.7</plexus-build-api.version>
+    <!-- Plexus component versions -->
+    <plexus-compiler-api.version>2.14.0</plexus-compiler-api.version>
+    <plexus-utils.version>4.0.0</plexus-utils.version>
+    <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
-        <!-- JAXB tooling versions -->
-        <jaxb.version>3.0.2</jaxb.version>
-        <stax-ex.version>2.1.0</stax-ex.version>
-        <qdox.version>2.0.3</qdox.version>
-        <asm.version>9.6</asm.version>
+    <!-- JAXB tooling versions -->
+    <jaxb.version>3.0.2</jaxb.version>
+    <stax-ex.version>2.1.0</stax-ex.version>
+    <qdox.version>2.0.3</qdox.version>
+    <asm.version>9.6</asm.version>
 
-        <!-- Test scope dependencies' versions -->
-        <xmlunit.version>2.9.1</xmlunit.version>
-        <maven-plugin-plugin.version>3.10.2</maven-plugin-plugin.version>
-        <shared-algorithms.version>0.12.0</shared-algorithms.version><!-- 0.13 require 11 -->
-        <project.build.outputTimestamp>2022-04-20T23:14:54Z</project.build.outputTimestamp>
-    </properties>
+    <!-- Test scope dependencies' versions -->
+    <xmlunit.version>2.9.1</xmlunit.version>
+    <maven-plugin-plugin.version>3.10.2</maven-plugin-plugin.version>
+    <shared-algorithms.version>0.12.0</shared-algorithms.version>
+    <!-- 0.13 require 11 -->
+    <project.build.outputTimestamp>2022-04-20T23:14:54Z</project.build.outputTimestamp>
+  </properties>
 
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-xjc</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-jxc</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>se.jguru.shared.algorithms.api</groupId>
-                <artifactId>jguru-shared-algorithms-api</artifactId>
-                <version>${shared-algorithms.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jvnet.staxex</groupId>
-                <artifactId>stax-ex</artifactId>
-                <version>${stax-ex.version}</version>
-                <exclusions>
-                    <!-- part of JDK 6+ -->
-                    <exclusion>
-                        <groupId>javax.activation</groupId>
-                        <artifactId>activation</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>stax-api</artifactId>
-                        <groupId>javax.xml.stream</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
+  <dependencyManagement>
     <dependencies>
-        <!--
+
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-xjc</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-jxc</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>se.jguru.shared.algorithms.api</groupId>
+        <artifactId>jguru-shared-algorithms-api</artifactId>
+        <version>${shared-algorithms.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jvnet.staxex</groupId>
+        <artifactId>stax-ex</artifactId>
+        <version>${stax-ex.version}</version>
+        <exclusions>
+          <!-- part of JDK 6+ -->
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.stream</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!--
             Use the modern, modularized JAXB structure as indicated
             within the JAXB RI artifacts.
         -->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-xjc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-jxc</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-xjc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-jxc</artifactId>
+    </dependency>
 
-        <!-- QDox, used for JavaDoc processing -->
-        <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>${qdox.version}</version>
-        </dependency>
+    <!-- QDox, used for JavaDoc processing -->
+    <dependency>
+      <groupId>com.thoughtworks.qdox</groupId>
+      <artifactId>qdox</artifactId>
+      <version>${qdox.version}</version>
+    </dependency>
 
-        <!-- Maven dependencies -->
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <version>${mavenVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
-            <version>${mavenVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-artifact</artifactId>
-            <version>${mavenVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>${mavenVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <version>${maven-plugin-plugin.version}</version>
-            <scope>provided</scope>
-        </dependency>
+    <!-- Maven dependencies -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${mavenVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${mavenVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${mavenVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${mavenVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>${maven-plugin-plugin.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-        <!--
+    <!--
             Plexus components dependencies.
         -->
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-api</artifactId>
-            <version>${plexus-compiler-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>${plexus-utils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.plexus</groupId>
-            <artifactId>plexus-build-api</artifactId>
-            <version>${plexus-build-api.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-compiler-api</artifactId>
+      <version>${plexus-compiler-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>${plexus-utils.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-build-api</artifactId>
+      <version>${plexus-build-api.version}</version>
+    </dependency>
 
-        <!--
+    <!--
             Xalan dependency (to avoid subtle differences in output between Java versions)
         -->
-        <!-- dependency>
+    <!-- dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.2</version>
             <scope>runtime</scope>
         </dependency -->
 
-        <!--
+    <!--
             Test-scope dependencies.
         -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.xmlunit</groupId>
-            <artifactId>xmlunit-matchers</artifactId>
-            <version>${xmlunit.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.xmlunit</groupId>
-            <artifactId>xmlunit-legacy</artifactId>
-            <version>${xmlunit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>se.jguru.shared.algorithms.api</groupId>
-            <artifactId>jguru-shared-algorithms-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.ecf</groupId>
-            <artifactId>org.objectweb.asm</artifactId>
-            <version>5.0.1.v201404251740</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.14</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.istack</groupId>
-            <artifactId>istack-commons-runtime</artifactId>
-            <version>4.1.1</version>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-matchers</artifactId>
+      <version>${xmlunit.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-legacy</artifactId>
+      <version>${xmlunit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>se.jguru.shared.algorithms.api</groupId>
+      <artifactId>jguru-shared-algorithms-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.ecf</groupId>
+      <artifactId>org.objectweb.asm</artifactId>
+      <version>5.0.1.v201404251740</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.14</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.istack</groupId>
+      <artifactId>istack-commons-runtime</artifactId>
+      <version>4.1.1</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
 
-    <build>
-        <pluginManagement>
-            <plugins>
+  <build>
+    <pluginManagement>
+      <plugins>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <configuration>
-                        <skipDeploy>true</skipDeploy><!-- don't deploy site with maven-site-plugin -->
-                    </configuration>
-                </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <configuration>
+            <skipDeploy>true</skipDeploy>
+            <!-- don't deploy site with maven-site-plugin -->
+          </configuration>
+        </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-plugin-plugin</artifactId>
-                    <version>${maven-plugin-plugin.version}</version>
-                    <configuration>
-                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>help-mojo</id>
-                            <goals>
-                                <goal>helpmojo</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>${maven-plugin-plugin.version}</version>
+          <configuration>
+            <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+          </configuration>
+          <executions>
+            <execution>
+              <id>help-mojo</id>
+              <goals>
+                <goal>helpmojo</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-descriptor</id>
-                        <goals>
-                            <goal>descriptor</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-descriptor</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- Generate maven dependencies listing file -->
-            <plugin>
-                <groupId>org.apache.servicemix.tooling</groupId>
-                <artifactId>depends-maven-plugin</artifactId>
-                <version>1.5.0</version>
-                <executions>
-                    <execution>
-                        <id>generate-depends-file</id>
-                        <goals>
-                            <goal>generate-depends-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+      <!-- Generate maven dependencies listing file -->
+      <plugin>
+        <groupId>org.apache.servicemix.tooling</groupId>
+        <artifactId>depends-maven-plugin</artifactId>
+        <version>1.5.0</version>
+        <executions>
+          <execution>
+            <id>generate-depends-file</id>
+            <goals>
+              <goal>generate-depends-file</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- Provides PlantUML integration into site deployments. -->
-            <plugin>
-                <groupId>com.github.jeluard</groupId>
-                <artifactId>plantuml-maven-plugin</artifactId>
-                <version>7954</version>
-                <configuration>
-                    <sourceFiles>
-                        <directory>${basedir}</directory>
-                        <includes>
-                            <include>src/site/**/*.puml</include>
-                        </includes>
-                    </sourceFiles>
-                    <outputDirectory>${project.build.directory}/site/images/plantuml</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-plantuml-diagrams</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>pre-site</phase>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sourceforge.plantuml</groupId>
-                        <artifactId>plantuml</artifactId>
-                        <version>8059</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
+      <!-- Provides PlantUML integration into site deployments. -->
+      <plugin>
+        <groupId>com.github.jeluard</groupId>
+        <artifactId>plantuml-maven-plugin</artifactId>
+        <version>7954</version>
+        <configuration>
+          <sourceFiles>
+            <directory>${basedir}</directory>
+            <includes>
+              <include>src/site/**/*.puml</include>
+            </includes>
+          </sourceFiles>
+          <outputDirectory>${project.build.directory}/site/images/plantuml</outputDirectory>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>8059</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>generate-plantuml-diagrams</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>pre-site</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
-    <reporting>
-        <plugins>
-            <!-- Apache plugins in alphabetical order -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
+  <reporting>
+    <plugins>
+      <!-- Apache plugins in alphabetical order -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
 
-    <profiles>
-        <!--
+  <profiles>
+    <!--
             Run all integration tests, unless the "skipTests" flag is set.
 
             When: Normal build cycle
         -->
-        <profile>
-            <id>run-its</id>
-            <activation>
-                <property>
-                    <name>skipTests</name>
-                    <value>!true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-invoker-plugin</artifactId>
-                        <version>3.6.0</version>
-                        <configuration>
-                            <debug>true</debug>
-                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                            <postBuildHookScript>verify</postBuildHookScript>
-                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-                            <settingsFile>src/it/settings.xml</settingsFile>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>test-compile</goal>
-                            </goals>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>install</goal>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.xmlunit</groupId>
-                                <artifactId>xmlunit-matchers</artifactId>
-                                <version>${xmlunit.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.xmlunit</groupId>
-                                <artifactId>xmlunit-core</artifactId>
-                                <version>${xmlunit.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>jakarta.activation</groupId>
-                                <artifactId>jakarta.activation-api</artifactId>
-                                <version>2.1.2</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+    <profile>
+      <id>run-its</id>
+      <activation>
+        <property>
+          <name>skipTests</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+            <version>3.6.0</version>
+            <configuration>
+              <debug>true</debug>
+              <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+              <postBuildHookScript>verify</postBuildHookScript>
+              <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+              <settingsFile>src/it/settings.xml</settingsFile>
+              <goals>
+                <goal>clean</goal>
+                <goal>test-compile</goal>
+              </goals>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-matchers</artifactId>
+                <version>${xmlunit.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${xmlunit.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>2.1.2</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>install</goal>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-        <profile>
-            <id>reporting</id>
-            <activation>
-                <property>
-                    <name>skipReports</name>
-                    <value>!true</value>
-                </property>
-            </activation>
-            <reporting>
-                <plugins>
-                    <!-- Apache plugins in alphabetical order -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>${maven-checkstyle-plugin.version}</version>
-                        <configuration>
-                            <skip>true</skip>
-                            <configLocation>config/maven_checks.xml</configLocation>
-                            <headerLocation>config/maven-header.txt</headerLocation>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-        <profile>
-            <id>java11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
+    <profile>
+      <id>reporting</id>
+      <activation>
+        <property>
+          <name>skipReports</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <reporting>
+        <plugins>
+          <!-- Apache plugins in alphabetical order -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${maven-checkstyle-plugin.version}</version>
+            <configuration>
+              <skip>true</skip>
+              <configLocation>config/maven_checks.xml</configLocation>
+              <headerLocation>config/maven-header.txt</headerLocation>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+    <profile>
+      <id>java11+</id>
+      <activation>
+        <jdk>[11,)</jdk>
+      </activation>
 
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.diffplug.spotless</groupId>
-                        <artifactId>spotless-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

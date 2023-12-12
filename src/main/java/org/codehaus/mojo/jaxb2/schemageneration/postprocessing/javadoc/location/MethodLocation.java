@@ -19,13 +19,13 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
  * under the License.
  */
 
-import com.thoughtworks.qdox.model.JavaParameter;
-import org.codehaus.mojo.jaxb2.shared.Validate;
+import java.util.List;
 
+import com.thoughtworks.qdox.model.JavaParameter;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
-import java.util.List;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Comparable path structure to locate a particular method within compilation unit.
@@ -60,7 +60,8 @@ public class MethodLocation extends FieldLocation {
      *                      an annotation placed on this Field, or {@code null} if none is provided.
      * @param parameters  The names of the types which are parameters to this method.
      */
-    public MethodLocation(final String packageName,
+    public MethodLocation(
+            final String packageName,
             final String className,
             final String classXmlName,
             final String memberName,

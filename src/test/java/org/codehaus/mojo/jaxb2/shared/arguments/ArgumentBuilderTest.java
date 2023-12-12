@@ -1,9 +1,9 @@
 package org.codehaus.mojo.jaxb2.shared.arguments;
 
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -57,10 +57,8 @@ public class ArgumentBuilderTest {
         final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
 
         // Act
-        final String[] result = unitUnderTest
-                .withFlag(true, "flag1")
-                .withFlag(true, "-flag2")
-                .build();
+        final String[] result =
+                unitUnderTest.withFlag(true, "flag1").withFlag(true, "-flag2").build();
 
         // Assert
         Assert.assertEquals(2, result.length);

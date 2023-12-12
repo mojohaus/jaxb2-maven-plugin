@@ -19,15 +19,6 @@ package org.codehaus.mojo.jaxb2.shared;
  * under the License.
  */
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
-import org.codehaus.mojo.jaxb2.shared.filters.Filter;
-import org.codehaus.mojo.jaxb2.shared.filters.Filters;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -42,6 +33,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
+import org.codehaus.mojo.jaxb2.shared.filters.Filter;
+import org.codehaus.mojo.jaxb2.shared.filters.Filters;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.Os;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * The Jaxb2 Maven Plugin needs to fiddle with the filesystem a great deal, to create and optionally prune
@@ -114,8 +114,8 @@ public final class FileSystemUtilities {
         try {
             return file.getCanonicalFile();
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not acquire the canonical file for ["
-                    + file.getAbsolutePath() + "]", e);
+            throw new IllegalArgumentException(
+                    "Could not acquire the canonical file for [" + file.getAbsolutePath() + "]", e);
         }
     }
 
@@ -180,8 +180,8 @@ public final class FileSystemUtilities {
         try {
             return aFile.toURI().normalize().toURL();
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Could not retrieve the URL from file ["
-                    + getCanonicalPath(aFile) + "]", e);
+            throw new IllegalArgumentException(
+                    "Could not retrieve the URL from file [" + getCanonicalPath(aFile) + "]", e);
         }
     }
 
@@ -237,7 +237,6 @@ public final class FileSystemUtilities {
         return toReturn;
     }
 
-
     /**
      * Filters files found either in the sources paths (or in the standardDirectory if no explicit sources are given),
      * and retrieves a List holding those files that do not match any of the supplied Java Regular Expression
@@ -258,12 +257,13 @@ public final class FileSystemUtilities {
      * are given) which do not match the supplied Java Regular excludePatterns.
      */
     @SuppressWarnings("all")
-    public static List<URL> filterFiles(final File baseDir,
-                                        final List<String> sources,
-                                        final List<String> standardDirectories,
-                                        final Log log,
-                                        final String fileTypeDescription,
-                                        final List<Filter<File>> excludePatterns) {
+    public static List<URL> filterFiles(
+            final File baseDir,
+            final List<String> sources,
+            final List<String> standardDirectories,
+            final Log log,
+            final String fileTypeDescription,
+            final List<Filter<File>> excludePatterns) {
 
         final SortedMap<String, File> pathToResolvedSourceMap = new TreeMap<String, File>();
 
@@ -278,8 +278,7 @@ public final class FileSystemUtilities {
 
                 // Add the source
                 pathToResolvedSourceMap.put(
-                        FileSystemUtilities.getCanonicalPath(currentResolvedSource),
-                        currentResolvedSource);
+                        FileSystemUtilities.getCanonicalPath(currentResolvedSource), currentResolvedSource);
             }
         }
 
@@ -304,8 +303,8 @@ public final class FileSystemUtilities {
             builder.append("|\n");
             builder.append("| " + standardDirectories.size() + " Standard Directories:\n");
             for (int i = 0; i < standardDirectories.size(); i++) {
-                builder.append("| [" + (i + 1) + "/" + standardDirectories.size() + "]: "
-                        + standardDirectories.get(i) + "\n");
+                builder.append(
+                        "| [" + (i + 1) + "/" + standardDirectories.size() + "]: " + standardDirectories.get(i) + "\n");
             }
 
             builder.append("|\n");
@@ -343,12 +342,13 @@ public final class FileSystemUtilities {
      * do not match the supplied Java Regular excludePatterns.
      */
     @SuppressWarnings("CheckStyle")
-    public static List<File> filterFiles(final File baseDir,
-                                         final List<String> sources,
-                                         final String standardDirectory,
-                                         final Log log,
-                                         final String fileTypeDescription,
-                                         final List<Filter<File>> excludeFilters) {
+    public static List<File> filterFiles(
+            final File baseDir,
+            final List<String> sources,
+            final String standardDirectory,
+            final Log log,
+            final String fileTypeDescription,
+            final List<Filter<File>> excludeFilters) {
 
         // Check sanity
         Validate.notNull(baseDir, "baseDir");
@@ -453,26 +453,24 @@ public final class FileSystemUtilities {
      * @return All files in (or files in subdirectories of directories provided in) the files List, provided that each
      * file is accepted by an ExclusionRegExpFileFilter.
      */
-    public static List<File> resolveRecursively(final List<File> files,
-                                                final List<Filter<File>> exclusionFilters,
-                                                final Log log) {
+    public static List<File> resolveRecursively(
+            final List<File> files, final List<Filter<File>> exclusionFilters, final Log log) {
 
         // Check sanity
         Validate.notNull(files, "files");
 
-        final List<Filter<File>> effectiveExclusions = exclusionFilters == null
-                ? new ArrayList<Filter<File>>()
-                : exclusionFilters;
+        final List<Filter<File>> effectiveExclusions =
+                exclusionFilters == null ? new ArrayList<Filter<File>>() : exclusionFilters;
 
         final List<File> toReturn = new ArrayList<File>();
 
         if (files.size() > 0) {
             for (File current : files) {
 
-                final boolean isAcceptedFile = EXISTING_FILE.accept(current)
-                        && Filters.noFilterMatches(current, effectiveExclusions);
-                final boolean isAcceptedDirectory = EXISTING_DIRECTORY.accept(current)
-                        && Filters.noFilterMatches(current, effectiveExclusions);
+                final boolean isAcceptedFile =
+                        EXISTING_FILE.accept(current) && Filters.noFilterMatches(current, effectiveExclusions);
+                final boolean isAcceptedDirectory =
+                        EXISTING_DIRECTORY.accept(current) && Filters.noFilterMatches(current, effectiveExclusions);
 
                 if (isAcceptedFile) {
                     toReturn.add(current);
@@ -513,8 +511,8 @@ public final class FileSystemUtilities {
         // Now, make the required directory, if it does not already exist as a directory.
         final boolean existsAsFile = aDirectory.exists() && aDirectory.isFile();
         if (existsAsFile) {
-            throw new MojoExecutionException("[" + getCanonicalPath(aDirectory) + "] exists and is a file. "
-                    + "Cannot make directory");
+            throw new MojoExecutionException(
+                    "[" + getCanonicalPath(aDirectory) + "] exists and is a file. " + "Cannot make directory");
         } else if (!aDirectory.exists() && !aDirectory.mkdirs()) {
             throw new MojoExecutionException("Could not create directory [" + getCanonicalPath(aDirectory) + "]");
         }
@@ -529,9 +527,7 @@ public final class FileSystemUtilities {
      * @param removeInitialFileSep If true, an initial {@code File#separator} is removed before returning.
      * @return The path relative to basedir, if it is situated below the basedir. Otherwise the supplied path.
      */
-    public static String relativize(final String path,
-                                    final File parentDir,
-                                    final boolean removeInitialFileSep) {
+    public static String relativize(final String path, final File parentDir, final boolean removeInitialFileSep) {
 
         // Check sanity
         Validate.notNull(path, "path");
@@ -572,9 +568,7 @@ public final class FileSystemUtilities {
      * least one Filter accepts them.
      */
     @SuppressWarnings("all")
-    public static List<File> listFiles(final File fileOrDir,
-                                       final List<Filter<File>> fileFilters,
-                                       final Log log) {
+    public static List<File> listFiles(final File fileOrDir, final List<Filter<File>> fileFilters, final Log log) {
         return listFiles(fileOrDir, fileFilters, false, log);
     }
 
@@ -594,10 +588,11 @@ public final class FileSystemUtilities {
      * least one Filter accepts them.
      */
     @SuppressWarnings("all")
-    public static List<File> listFiles(final File fileOrDir,
-                                       final List<Filter<File>> fileFilters,
-                                       final boolean excludeFilterOperation,
-                                       final Log log) {
+    public static List<File> listFiles(
+            final File fileOrDir,
+            final List<Filter<File>> fileFilters,
+            final boolean excludeFilterOperation,
+            final Log log) {
 
         // Check sanity
         Validate.notNull(log, "log");
@@ -630,11 +625,12 @@ public final class FileSystemUtilities {
     // Private helpers
     //
 
-    private static void checkAndAdd(final List<File> toPopulate,
-                                    final File current,
-                                    final List<Filter<File>> fileFilters,
-                                    final boolean excludeFilterOperation,
-                                    final Log log) {
+    private static void checkAndAdd(
+            final List<File> toPopulate,
+            final File current,
+            final List<Filter<File>> fileFilters,
+            final boolean excludeFilterOperation,
+            final Log log) {
 
         //
         // When no filters are supplied...
@@ -645,8 +641,8 @@ public final class FileSystemUtilities {
         final boolean addFile = excludeFilterOperation
                 ? noFilters || Filters.rejectAtLeastOnce(current, fileFilters)
                 : noFilters || Filters.matchAtLeastOnce(current, fileFilters);
-        final String logPrefix = (addFile ? "Accepted " : "Rejected ")
-                + (current.isDirectory() ? "directory" : "file") + " [";
+        final String logPrefix =
+                (addFile ? "Accepted " : "Rejected ") + (current.isDirectory() ? "directory" : "file") + " [";
 
         if (addFile) {
             toPopulate.add(current);
@@ -666,11 +662,12 @@ public final class FileSystemUtilities {
         }
     }
 
-    private static void recurseAndPopulate(final List<File> toPopulate,
-                                           final List<Filter<File>> fileFilters,
-                                           final File aDirectory,
-                                           final boolean excludeOperation,
-                                           final Log log) {
+    private static void recurseAndPopulate(
+            final List<File> toPopulate,
+            final List<Filter<File>> fileFilters,
+            final File aDirectory,
+            final boolean excludeOperation,
+            final Log log) {
 
         final List<File> files = listFiles(aDirectory, fileFilters, excludeOperation, log);
         for (File current : files) {

@@ -19,13 +19,13 @@ package org.codehaus.mojo.jaxb2.shared.filters.pattern;
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.codehaus.mojo.jaxb2.shared.filters.AbstractFilter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
+import org.codehaus.mojo.jaxb2.shared.Validate;
+import org.codehaus.mojo.jaxb2.shared.filters.AbstractFilter;
 
 /**
  * <p>AbstractFilter implementation containing a Java Pattern which should be used to determine if candidate T objects
@@ -78,8 +78,10 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
             // Assign internal state
             this.patternPrefix = patternPrefix;
         } else {
-            addDelayedLogMessage("warn", "Received null patternPrefix for configuring AbstractPatternFilter of type ["
-                    + getClass().getName() + "]. Ignoring and proceeding.");
+            addDelayedLogMessage(
+                    "warn",
+                    "Received null patternPrefix for configuring AbstractPatternFilter of type ["
+                            + getClass().getName() + "]. Ignoring and proceeding.");
         }
     }
 
@@ -105,8 +107,10 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
             this.patterns = new ArrayList<String>();
             this.patterns.addAll(patterns);
         } else {
-            addDelayedLogMessage("warn", "Received null patterns for configuring AbstractPatternFilter of type ["
-                    + getClass().getName() + "]. Ignoring and proceeding.");
+            addDelayedLogMessage(
+                    "warn",
+                    "Received null patterns for configuring AbstractPatternFilter of type ["
+                            + getClass().getName() + "]. Ignoring and proceeding.");
         }
     }
 
@@ -159,8 +163,8 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
         if (patterns == null && log.isWarnEnabled()) {
 
             // Log somewhat
-            log.warn("No Patterns configured for AbstractPatternFilter [" + getClass().getName() + "]. "
-                    + "This could imply a configuration problem.");
+            log.warn("No Patterns configured for AbstractPatternFilter ["
+                    + getClass().getName() + "]. " + "This could imply a configuration problem.");
 
         } else {
             // Complete internal state
@@ -212,8 +216,8 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
                 if (current.matcher(candidateString).matches()) {
 
                     if (log.isDebugEnabled()) {
-                        log.debug("CandidateString [" + candidateString + "] matched pattern ["
-                                + current.pattern() + "]");
+                        log.debug("CandidateString [" + candidateString + "] matched pattern [" + current.pattern()
+                                + "]");
                     }
 
                     // Adjust and return
@@ -276,20 +280,25 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
     public String toString() {
 
         final StringBuilder builder = new StringBuilder(super.toString());
-        builder.append(TOSTRING_INDENT + "Accept on match: [").append(acceptCandidateOnPatternMatch).append("]\n");
-        builder.append(TOSTRING_INDENT + "Initialized    : [").append(isInitialized()).append("]\n");
+        builder.append(TOSTRING_INDENT + "Accept on match: [")
+                .append(acceptCandidateOnPatternMatch)
+                .append("]\n");
+        builder.append(TOSTRING_INDENT + "Initialized    : [")
+                .append(isInitialized())
+                .append("]\n");
 
         final List<Pattern> effectivePatterns = isInitialized() ? regularExpressions : convert(patterns, patternPrefix);
-        final int numPatterns = effectivePatterns != null && effectivePatterns.size() > 0
-                ? effectivePatterns.size()
-                : 0;
+        final int numPatterns =
+                effectivePatterns != null && effectivePatterns.size() > 0 ? effectivePatterns.size() : 0;
         builder.append(TOSTRING_INDENT).append(numPatterns).append(" regularExpressions ");
 
         if (numPatterns > 0) {
             builder.append(":\n");
             for (int i = 0; i < effectivePatterns.size(); i++) {
                 final String prefix = TOSTRING_INDENT + " [" + (i + 1) + "/" + effectivePatterns.size() + "]: ";
-                builder.append(prefix).append(effectivePatterns.get(i).pattern()).append("\n");
+                builder.append(prefix)
+                        .append(effectivePatterns.get(i).pattern())
+                        .append("\n");
             }
         } else {
             builder.append("\n");

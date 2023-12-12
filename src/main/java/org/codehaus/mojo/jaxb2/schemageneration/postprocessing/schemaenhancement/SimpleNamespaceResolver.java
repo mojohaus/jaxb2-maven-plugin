@@ -19,16 +19,9 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancemen
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
-import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
-import org.codehaus.plexus.util.IOUtil;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -37,6 +30,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
+import org.codehaus.plexus.util.IOUtil;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * <p>Namespace resolver for XML documents, which relates XML Namespace Prefixes to XML Namespace URIs.
@@ -154,8 +155,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
         XsdGeneratorHelper.process(parsedDocument.getFirstChild(), true, new NamespaceAttributeNodeProcessor());
     }
 
-    private class NamespaceAttributeNodeProcessor
-            implements NodeProcessor {
+    private class NamespaceAttributeNodeProcessor implements NodeProcessor {
         /**
          * Defines if this visitor should process the provided node.
          *
@@ -195,9 +195,8 @@ public class SimpleNamespaceResolver implements NamespaceContext {
         public void process(final Node aNode) {
 
             // If we have no namespace, use the DEFAULT_NS as the prefix
-            final String cacheKey = XMLConstants.XMLNS_ATTRIBUTE.equals(aNode.getNodeName())
-                    ? DEFAULT_NS
-                    : aNode.getLocalName();
+            final String cacheKey =
+                    XMLConstants.XMLNS_ATTRIBUTE.equals(aNode.getNodeName()) ? DEFAULT_NS : aNode.getLocalName();
             final String nodeValue = aNode.getNodeValue();
 
             // Cache the namespace in both caches.
@@ -206,14 +205,12 @@ public class SimpleNamespaceResolver implements NamespaceContext {
 
             // Check sanity; we should not be overwriting values here.
             if (oldUriValue != null) {
-                throw new IllegalStateException(
-                        "Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue() + "] for prefix [" + cacheKey
-                                + "]");
+                throw new IllegalStateException("Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue()
+                        + "] for prefix [" + cacheKey + "]");
             }
             if (oldPrefixValue != null) {
-                throw new IllegalStateException(
-                        "Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey + "] for URI [" + aNode.getNodeValue()
-                                + "]");
+                throw new IllegalStateException("Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey
+                        + "] for URI [" + aNode.getNodeValue() + "]");
             }
         }
     }

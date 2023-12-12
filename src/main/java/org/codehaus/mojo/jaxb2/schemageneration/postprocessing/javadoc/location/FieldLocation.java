@@ -19,11 +19,10 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Comparable path structure to locate a particular field within compilation unit.
@@ -48,7 +47,8 @@ public class FieldLocation extends ClassLocation {
      * @param memberXmlName The name given as the {@link XmlElement#name()} or {@link XmlAttribute#name()} value of
      *                      an annotation placed on this Field, or {@code null} if none is provided.
      */
-    public FieldLocation(final String packageName,
+    public FieldLocation(
+            final String packageName,
             final String className,
             final String classXmlName,
             final String memberName,
@@ -97,9 +97,8 @@ public class FieldLocation extends ClassLocation {
     @Override
     public String toString() {
 
-        final String xmlOverriddenFrom = memberXmlName != null && !memberName.equals(memberXmlName)
-                ? " (from: " + memberName + ")"
-                : "";
+        final String xmlOverriddenFrom =
+                memberXmlName != null && !memberName.equals(memberXmlName) ? " (from: " + memberName + ")" : "";
 
         return super.toString() + "#" + getMemberName() + xmlOverriddenFrom;
     }

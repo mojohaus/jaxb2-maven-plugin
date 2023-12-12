@@ -45,7 +45,7 @@ public class NoAuthorJavaDocRenderer extends DefaultJavaDocRenderer {
     protected String renderJavaDocTag(final String name, final String value, final SortableLocation location) {
 
         // Don't render the author
-        if(AUTHOR_KEY.equalsIgnoreCase(name)) {
+        if (AUTHOR_KEY.equalsIgnoreCase(name)) {
             return "";
         }
 

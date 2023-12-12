@@ -19,14 +19,13 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Definition of a person with lastName and age, and optionally a firstName as well...
@@ -35,7 +34,9 @@ import jakarta.xml.bind.annotation.XmlType;
  * @since Some version.
  */
 @XmlRootElement
-@XmlType(namespace = SomewhatNamedPerson.NAMESPACE, propOrder = {"firstName", "lastName", "age"})
+@XmlType(
+        namespace = SomewhatNamedPerson.NAMESPACE,
+        propOrder = {"firstName", "lastName", "age"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SomewhatNamedPerson {
 
@@ -65,8 +66,7 @@ public class SomewhatNamedPerson {
     /**
      * JAXB-friendly constructor.
      */
-    public SomewhatNamedPerson() {
-    }
+    public SomewhatNamedPerson() {}
 
     /**
      * Creates a SomewhatNamedPerson wrapping the supplied data.

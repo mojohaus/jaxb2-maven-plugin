@@ -19,13 +19,13 @@ package org.codehaus.mojo.jaxb2.shared.environment.sysprops;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.environment.AbstractLogAwareFacet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * EnvironmentFacet which changes the value of a system property for the duration

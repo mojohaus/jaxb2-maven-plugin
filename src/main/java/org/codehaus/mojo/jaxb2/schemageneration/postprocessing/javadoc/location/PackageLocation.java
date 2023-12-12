@@ -68,8 +68,7 @@ public class PackageLocation implements SortableLocation {
         }
 
         // Delegate
-        return obj instanceof PackageLocation
-                && toString().equals(obj.toString());
+        return obj instanceof PackageLocation && toString().equals(obj.toString());
     }
 
     /**

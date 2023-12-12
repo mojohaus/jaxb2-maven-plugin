@@ -19,9 +19,6 @@ package org.codehaus.mojo.jaxb2.shared.environment.logging;
  * under the License.
  */
 
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.jaxb2.shared.Validate;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +27,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
+
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.mojo.jaxb2.shared.Validate;
 
 /**
  * Handler implementation which delegates its actual logging to an internal Maven log.
@@ -54,10 +54,8 @@ public class MavenLogHandler extends Handler {
      * @param acceptedLogRecordPrefixes A non-null list of prefixes holding LogRecord logger names for
      *                                  permitted/accepted LogRecords.
      */
-    public MavenLogHandler(final Log log,
-                           final String prefix,
-                           final String encoding,
-                           final String[] acceptedLogRecordPrefixes) {
+    public MavenLogHandler(
+            final Log log, final String prefix, final String encoding, final String[] acceptedLogRecordPrefixes) {
 
         // Check sanity
         Validate.notNull(log, "log");

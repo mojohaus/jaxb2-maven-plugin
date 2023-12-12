@@ -1,5 +1,29 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.SchemaOutputResolver;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
@@ -15,29 +39,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.SchemaOutputResolver;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -101,8 +102,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         try {
             jaxbContext.generateSchema(new SchemaOutputResolver() {
                 @Override
-                public Result createOutput(final String namespaceUri,
-                                           final String suggestedFileName)
+                public Result createOutput(final String namespaceUri, final String suggestedFileName)
                         throws IOException {
 
                     // As put in the XmlBinding JAXB implementation of Nazgul Core:
@@ -110,8 +110,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
                     // "The types should really be annotated with @XmlType(namespace = "... something ...")
                     // to avoid using the default ("") namespace".
                     if (namespaceUri.isEmpty()) {
-                        xsdGenerationWarnings.add("Got empty namespaceUri for suggestedFileName ["
-                                + suggestedFileName + "].");
+                        xsdGenerationWarnings.add(
+                                "Got empty namespaceUri for suggestedFileName [" + suggestedFileName + "].");
                     }
 
                     // Create the result Writer
@@ -138,7 +138,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
 
         // Store all generated XSDs
         for (Map.Entry<String, StringWriter> current : tmpSchemaMap.entrySet()) {
-            namespace2GeneratedSchemaMap.put(current.getKey(), current.getValue().toString());
+            namespace2GeneratedSchemaMap.put(
+                    current.getKey(), current.getValue().toString());
         }
 
         // Create XML Documents for all generated Schemas
@@ -252,7 +253,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         // name="firstName"
 
         final Node nameAttribute = aNode.getAttributes().getNamedItem("name");
-        if(nameAttribute != null) {
+        if (nameAttribute != null) {
 
             final String nodeName = nameAttribute.getNodeValue();
             log.info("Accepted node [" + aNode.getNodeName() + "] " + nodeName);
@@ -286,8 +287,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         try {
 
             // Will produce a NPE if the path was not directed to a file.
-            final InputStream resource = AbstractSourceCodeAwareNodeProcessingTest
-                    .class
+            final InputStream resource = AbstractSourceCodeAwareNodeProcessingTest.class
                     .getClassLoader()
                     .getResourceAsStream(path);
             final BufferedReader tmp = new BufferedReader(new InputStreamReader(resource));
@@ -312,8 +312,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
      * @throws org.xml.sax.SAXException If a SAXException was raised during parsing of the two Documents.
      * @throws IOException              If an I/O-related exception was raised while acquiring the data from the Readers.
      */
-    protected static Diff compareXmlIgnoringWhitespace(final String expected, final String actual) throws SAXException,
-            IOException {
+    protected static Diff compareXmlIgnoringWhitespace(final String expected, final String actual)
+            throws SAXException, IOException {
 
         // Check sanity
         Validate.notNull(expected, "Cannot handle null expected argument.");
@@ -344,7 +344,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
                             .replace("/", ".")
                             .replace(File.separator, ".");
 
-                    if (transmutedCanonicalPath.contains(currentClass.getPackage().getName())) {
+                    if (transmutedCanonicalPath.contains(
+                            currentClass.getPackage().getName())) {
                         toReturn.add(current);
                     }
                 }
