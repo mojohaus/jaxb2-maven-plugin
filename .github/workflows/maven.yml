@@ -21,25 +21,14 @@ on: [push, pull_request]
 
 jobs:
   build:
+    name: Verify
+    uses: apache/maven-gh-actions-shared/.github/workflows/maven-verify.yml@v3
+    with:
+      ff-goal: '-P run-its install'         # site use project version for reporting
+      verify-goal: '-P run-its install'     # should be the same as for first build
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        java: [8, 11, 17, 20]
-      fail-fast: false
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: 'temurin'
-          cache: 'maven'
-
-      - name: Build with Maven
-        run: mvn verify -e -V -P run-its
+  deploy:
+    name: Deploy
+    needs: build
+    uses: mojohaus/.github/.github/workflows/maven-deploy.yml@master
+    secrets: inherit
