@@ -344,6 +344,7 @@
       </plugin>
 
       <!-- Provides PlantUML integration into site deployments. -->
+      <!--
       <plugin>
         <groupId>com.github.jeluard</groupId>
         <artifactId>plantuml-maven-plugin</artifactId>
@@ -374,6 +375,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
     </plugins>
   </build>
 
