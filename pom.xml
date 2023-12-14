@@ -116,7 +116,7 @@
     <mojo.java.target>8</mojo.java.target>
 
     <!-- Plexus component versions -->
-    <plexus-compiler-api.version>2.14.0</plexus-compiler-api.version>
+    <plexus-compiler-api.version>2.14.1</plexus-compiler-api.version>
     <plexus-utils.version>4.0.0</plexus-utils.version>
     <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
