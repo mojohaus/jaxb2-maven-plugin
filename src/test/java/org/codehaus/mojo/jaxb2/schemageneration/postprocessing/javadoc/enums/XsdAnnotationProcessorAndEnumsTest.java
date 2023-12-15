@@ -7,6 +7,7 @@ import java.util.List;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
+import org.codehaus.mojo.jaxb2.PropertyResources;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.AbstractSourceCodeAwareNodeProcessingTest;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRenderer;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.NoAuthorJavaDocRenderer;
@@ -17,7 +18,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
-import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
