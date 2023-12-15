@@ -1,6 +1,7 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
+import org.codehaus.mojo.jaxb2.PropertyResources;
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocExtractor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SearchableDocumentation;
@@ -18,7 +20,6 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.w3c.dom.Document;
-import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -82,7 +83,7 @@ public abstract class AbstractJavadocExtractorTest {
         return extractor.process();
     }
 
-    protected Document createDocumentFrom(final String resource) {
+    protected Document createDocumentFrom(final String resource) throws IOException {
 
         // Check sanity
         Validate.notEmpty(resource, "resource");

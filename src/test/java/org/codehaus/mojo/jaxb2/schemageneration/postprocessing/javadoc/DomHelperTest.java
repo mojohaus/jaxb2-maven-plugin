@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.codehaus.mojo.jaxb2.PropertyResources;
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB

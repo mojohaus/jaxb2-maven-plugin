@@ -13,13 +13,13 @@ import java.util.TreeMap;
 
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.BufferingLog;
+import org.codehaus.mojo.jaxb2.PropertyResources;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -376,7 +376,7 @@ public class FileSystemUtilitiesTest {
 
         // Assemble
         final URL streamingDhURL =
-                PropertyResources.class.getProtectionDomain().getCodeSource().getLocation();
+                Test.class.getProtectionDomain().getCodeSource().getLocation();
         Assert.assertNotNull(streamingDhURL);
 
         // Act
