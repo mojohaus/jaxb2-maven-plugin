@@ -219,6 +219,14 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
      * {@inheritDoc}
      */
     @Override
+    protected void addGeneratedSourcesToProjectSourceRoot(String canonicalPathToOutputDirectory) {
+        getProject().addTestCompileSourceRoot(canonicalPathToOutputDirectory);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected List<URL> getSources() {
 
         final List<Filter<File>> excludeFilters = testSchemaSourceExcludeFilters == null
