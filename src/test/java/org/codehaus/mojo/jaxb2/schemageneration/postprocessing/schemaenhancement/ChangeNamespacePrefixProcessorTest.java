@@ -5,17 +5,18 @@ import java.util.List;
 
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.DebugNodeProcessor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
-public class ChangeNamespacePrefixProcessorTest {
+class ChangeNamespacePrefixProcessorTest {
     @Test
-    public void validateAcceptCriteria() {
+    void validateAcceptCriteria() {
         // Assemble
         final String oldNamespacePrefix = "oldNamespacePrefix";
         final String newNamespacePrefix = "newNamespacePrefix";
@@ -32,22 +33,22 @@ public class ChangeNamespacePrefixProcessorTest {
 
         // Assert
         final List<Node> acceptedNodes = debugNodeProcessor.getAcceptedNodes();
-        Assert.assertEquals(3, acceptedNodes.size());
+        assertEquals(3, acceptedNodes.size());
 
         // Note that the DebugNodeProcessor acquires the node *before* it is actually
         // processed - implying that the nodeName is not yet changed.
         Node namespaceDefinitionAttribute = acceptedNodes.get(0);
-        Assert.assertEquals("xmlns:" + oldNamespacePrefix, namespaceDefinitionAttribute.getNodeName());
-        Assert.assertEquals(namespaceURI, namespaceDefinitionAttribute.getNodeValue());
+        assertEquals("xmlns:" + oldNamespacePrefix, namespaceDefinitionAttribute.getNodeName());
+        assertEquals(namespaceURI, namespaceDefinitionAttribute.getNodeValue());
 
         Node elementReferenceAttribute = acceptedNodes.get(1);
-        Assert.assertEquals("ref", elementReferenceAttribute.getNodeName());
-        Assert.assertEquals(
+        assertEquals("ref", elementReferenceAttribute.getNodeName());
+        assertEquals(
                 newNamespacePrefix + ":aRequiredElementInAnotherNamespace", elementReferenceAttribute.getNodeValue());
 
         Node extensionAttribute = acceptedNodes.get(2);
-        Assert.assertEquals("base", extensionAttribute.getNodeName());
-        Assert.assertEquals(newNamespacePrefix + ":aBaseType", extensionAttribute.getNodeValue());
+        assertEquals("base", extensionAttribute.getNodeName());
+        assertEquals(newNamespacePrefix + ":aBaseType", extensionAttribute.getNodeValue());
     }
 
     //

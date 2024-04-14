@@ -11,16 +11,17 @@ import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.JavaVersion;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderBuilder;
 import org.codehaus.mojo.jaxb2.shared.environment.classloading.ThreadContextClassLoaderHolder;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class ThreadContextClassLoaderBuilderTest {
+class ThreadContextClassLoaderBuilderTest {
     // Shared state
     private ThreadContextClassLoaderHolder holder;
     private URL extraClassLoaderDirURL;
@@ -29,24 +30,24 @@ public class ThreadContextClassLoaderBuilderTest {
     private ClassLoader originalClassLoader;
     private String encoding = "UTF-8";
 
-    @Before
-    public void setupSharedState() {
+    @BeforeEach
+    void setupSharedState() {
 
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         final String extraPath = "testdata/shared/classloader";
         extraClassLoaderDirURL = getClass().getClassLoader().getResource(extraPath);
-        Assert.assertNotNull(extraClassLoaderDirURL);
+        assertNotNull(extraClassLoaderDirURL);
 
         extraClassLoaderDirFile = new File(extraClassLoaderDirURL.getPath());
-        Assert.assertTrue(extraClassLoaderDirFile.exists() && extraClassLoaderDirFile.isDirectory());
+        assertTrue(extraClassLoaderDirFile.exists() && extraClassLoaderDirFile.isDirectory());
 
         // Stash the original ClassLoader
         originalClassLoader = Thread.currentThread().getContextClassLoader();
     }
 
-    @After
-    public void teardownSharedState() {
+    @AfterEach
+    void teardownSharedState() {
         if (holder != null) {
             holder.restoreClassLoaderAndReleaseThread();
         } else {
@@ -55,8 +56,8 @@ public class ThreadContextClassLoaderBuilderTest {
     }
 
     @Test
-    @Ignore
-    public void validateAddingURLsToThreadContextClassLoader() throws Exception {
+    @Disabled
+    void validateAddingURLsToThreadContextClassLoader() throws Exception {
 
         // Assemble
         final int numExpectedResources = JavaVersion.isJdk8OrLower() ? 3 : 6;
@@ -95,11 +96,11 @@ public class ThreadContextClassLoaderBuilderTest {
          */
 
         // Assert
-        Assert.assertEquals(
-                "Expected [" + numExpectedResources + "] resources but got [" + resources.size() + "]: "
-                        + getNewLineSeparated(resources),
+        assertEquals(
                 numExpectedResources,
-                resources.size());
+                resources.size(),
+                "Expected [" + numExpectedResources + "] resources but got [" + resources.size() + "]: "
+                        + getNewLineSeparated(resources));
         // validateContains(resources, "target/classes");
         validateContains(resources, "target/test-classes");
         validateContains(resources, "target/test-classes/testdata/shared/classloader");
@@ -109,18 +110,18 @@ public class ThreadContextClassLoaderBuilderTest {
             if (current.getProtocol().equalsIgnoreCase("file")) {
 
                 final File aFile = new File(current.getPath());
-                Assert.assertTrue(aFile.exists() && aFile.isDirectory());
+                assertTrue(aFile.exists() && aFile.isDirectory());
 
             } else if (current.getProtocol().equalsIgnoreCase("jar")) {
 
                 // This happens in JDK 9
-                Assert.assertTrue(current.toString().contains("!/META-INF/versions/"));
+                assertTrue(current.toString().contains("!/META-INF/versions/"));
             }
         }
     }
 
     @Test
-    public void validateResourceAccessInAugmentedClassLoader() {
+    void validateResourceAccessInAugmentedClassLoader() {
 
         // Assemble
         holder = ThreadContextClassLoaderBuilder.createFor(originalClassLoader, log, encoding)
@@ -134,18 +135,18 @@ public class ThreadContextClassLoaderBuilderTest {
         final URL subResource = ctxClassLoader.getResource("subdirectory/SubdirectoryTestResource.txt");
 
         // Assert
-        Assert.assertNotNull(immediateResource);
-        Assert.assertNotNull(subResource);
+        assertNotNull(immediateResource);
+        assertNotNull(subResource);
 
         final File immediateFile = new File(immediateResource.getPath());
         final File subFile = new File(subResource.getPath());
 
-        Assert.assertTrue(immediateFile.exists() && immediateFile.isFile());
-        Assert.assertTrue(subFile.exists() && subFile.isFile());
+        assertTrue(immediateFile.exists() && immediateFile.isFile());
+        assertTrue(subFile.exists() && subFile.isFile());
     }
 
     @Test
-    public void validateLoadingResourcesInJars() {
+    void validateLoadingResourcesInJars() {
 
         // Assemble
         final File theJar = new File(extraClassLoaderDirFile, "jarSubDirectory/aJarWithResources.jar");
@@ -161,8 +162,8 @@ public class ThreadContextClassLoaderBuilderTest {
         final URL containedSubLevelResource = ctxClassLoader.getResource("internalSubDir/SubContainedResource.txt");
 
         // Assert
-        Assert.assertNotNull(containedTopLevelResource);
-        Assert.assertNotNull(containedSubLevelResource);
+        assertNotNull(containedTopLevelResource);
+        assertNotNull(containedSubLevelResource);
     }
 
     //
@@ -192,6 +193,6 @@ public class ThreadContextClassLoaderBuilderTest {
             }
         }
 
-        Assert.fail("Snippet [" + snippet + "] was not found within URL resources.");
+        fail("Snippet [" + snippet + "] was not found within URL resources.");
     }
 }

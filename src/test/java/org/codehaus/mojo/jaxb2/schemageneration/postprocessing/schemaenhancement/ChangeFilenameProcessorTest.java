@@ -7,16 +7,17 @@ import java.util.TreeMap;
 
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.DebugNodeProcessor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /** @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a> */
-public class ChangeFilenameProcessorTest {
+class ChangeFilenameProcessorTest {
 
     @Test
-    public void validateAcceptCriteria() {
+    void validateAcceptCriteria() {
 
         // Assemble
         final String oldFileName = "foo";
@@ -36,9 +37,9 @@ public class ChangeFilenameProcessorTest {
 
         // Assert
         final List<Node> acceptedNodes = debugNodeProcessor.getAcceptedNodes();
-        Assert.assertEquals(1, acceptedNodes.size());
-        Assert.assertEquals("schemaLocation", acceptedNodes.get(0).getNodeName());
-        Assert.assertEquals(newFileName, acceptedNodes.get(0).getNodeValue());
+        assertEquals(1, acceptedNodes.size());
+        assertEquals("schemaLocation", acceptedNodes.get(0).getNodeName());
+        assertEquals(newFileName, acceptedNodes.get(0).getNodeValue());
     }
 
     //

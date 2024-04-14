@@ -9,20 +9,21 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.location.FieldLocation;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.XmlNameAnnotatedClassWithFieldAccess;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class FieldLocationTest {
+class FieldLocationTest {
 
     private Class<XmlNameAnnotatedClassWithFieldAccess> theClass;
     private Map<String, Field> fieldName2MethodMap;
 
-    @Before
-    public void setupSharedState() {
+    @BeforeEach
+    void setupSharedState() {
 
         fieldName2MethodMap = new TreeMap<String, Field>();
 
@@ -35,7 +36,7 @@ public class FieldLocationTest {
     }
 
     @Test
-    public void validateFieldLocationWithXmlName() throws Exception {
+    void validateFieldLocationWithXmlName() throws Exception {
 
         // Assemble
         final String packageName = theClass.getPackage().getName();
@@ -64,9 +65,9 @@ public class FieldLocationTest {
                 packageName, theClass.getSimpleName(), classXmlName, stringField.getName(), stringFieldXmlName);
 
         // Assert
-        Assert.assertEquals(expectedIntegerFieldPath, integerFieldLocation.getPath());
-        Assert.assertEquals(expectedStringFieldPath, stringFieldLocation.getPath());
-        Assert.assertEquals(expectedIntegerFieldToString, integerFieldLocation.toString());
-        Assert.assertEquals(integerFieldXmlName, integerFieldLocation.getMemberName());
+        assertEquals(expectedIntegerFieldPath, integerFieldLocation.getPath());
+        assertEquals(expectedStringFieldPath, stringFieldLocation.getPath());
+        assertEquals(expectedIntegerFieldToString, integerFieldLocation.toString());
+        assertEquals(integerFieldXmlName, integerFieldLocation.getMemberName());
     }
 }

@@ -1,11 +1,12 @@
 package org.codehaus.mojo.jaxb2.shared.environment.sysprops;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class SystemPropertySaveEnvironmentFacetTest {
+class SystemPropertySaveEnvironmentFacetTest {
     private static final String PROPERTY_KEY_NOT_SAVED = "some.other.property";
     private static final String PROPERTY_KEY_SAVED = "http.proxyHost";
 
@@ -18,7 +19,7 @@ public class SystemPropertySaveEnvironmentFacetTest {
     }
 
     @Test
-    public void onRestoreAfterChangeOriginalOtherPropertyValueIsNotRestored() {
+    void onRestoreAfterChangeOriginalOtherPropertyValueIsNotRestored() {
         // Given:
         System.setProperty(PROPERTY_KEY_NOT_SAVED, "originalValue");
         final SystemPropertySaveEnvironmentFacet facet = createAndSetupFacet();
@@ -32,7 +33,7 @@ public class SystemPropertySaveEnvironmentFacetTest {
     }
 
     @Test
-    public void onRestoreAfterChangeOriginalSavedPropertyValueIsRestored() {
+    void onRestoreAfterChangeOriginalSavedPropertyValueIsRestored() {
         // Given:
         System.setProperty(PROPERTY_KEY_SAVED, "originalValue");
         final SystemPropertySaveEnvironmentFacet facet = createAndSetupFacet();
@@ -46,7 +47,7 @@ public class SystemPropertySaveEnvironmentFacetTest {
     }
 
     @Test
-    public void onRestoreAfterClearOriginalOtherPropertyValueIsNotRestored() {
+    void onRestoreAfterClearOriginalOtherPropertyValueIsNotRestored() {
         // Given:
         System.setProperty(PROPERTY_KEY_NOT_SAVED, "originalValue");
         final SystemPropertySaveEnvironmentFacet facet = createAndSetupFacet();
@@ -56,11 +57,11 @@ public class SystemPropertySaveEnvironmentFacetTest {
         facet.restore();
 
         // Then:
-        assertEquals(null, System.getProperty(PROPERTY_KEY_NOT_SAVED));
+        assertNull(System.getProperty(PROPERTY_KEY_NOT_SAVED));
     }
 
     @Test
-    public void onRestoreAfterClearOriginalSavedPropertyValueIsRestored() {
+    void onRestoreAfterClearOriginalSavedPropertyValueIsRestored() {
         // Given:
         System.setProperty(PROPERTY_KEY_SAVED, "originalValue");
         final SystemPropertySaveEnvironmentFacet facet = createAndSetupFacet();
@@ -74,7 +75,7 @@ public class SystemPropertySaveEnvironmentFacetTest {
     }
 
     @Test
-    public void onRestoreAfterSetOriginallyUnsetOtherPropertyIsNotCleared() {
+    void onRestoreAfterSetOriginallyUnsetOtherPropertyIsNotCleared() {
         // Given:
         System.clearProperty(PROPERTY_KEY_NOT_SAVED);
         final SystemPropertySaveEnvironmentFacet facet = createAndSetupFacet();
@@ -88,7 +89,7 @@ public class SystemPropertySaveEnvironmentFacetTest {
     }
 
     @Test
-    public void onRestoreAfterSetOriginallyUnsetSavedPropertyIsCleared() {
+    void onRestoreAfterSetOriginallyUnsetSavedPropertyIsCleared() {
         // Given:
         System.clearProperty(PROPERTY_KEY_SAVED);
         final SystemPropertySaveEnvironmentFacet facet = createAndSetupFacet();
@@ -98,6 +99,6 @@ public class SystemPropertySaveEnvironmentFacetTest {
         facet.restore();
 
         // Then:
-        assertEquals(null, System.getProperty(PROPERTY_KEY_SAVED));
+        assertNull(System.getProperty(PROPERTY_KEY_SAVED));
     }
 }

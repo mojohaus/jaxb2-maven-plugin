@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class PatternURLFilterTest extends AbstractPatternFilterTest {
+class PatternURLFilterTest extends AbstractPatternFilterTest {
 
     // Shared state
     private URL[] urlList;
@@ -27,7 +28,7 @@ public class PatternURLFilterTest extends AbstractPatternFilterTest {
         urlList = new URL[fileList.length];
 
         for (int i = 0; i < fileList.length; i++) {
-            Assert.assertTrue(FileSystemUtilities.EXISTING_FILE.accept(fileList[i]));
+            assertTrue(FileSystemUtilities.EXISTING_FILE.accept(fileList[i]));
             try {
                 urlList[i] = fileList[i].toURI().normalize().toURL();
             } catch (MalformedURLException e) {
@@ -36,18 +37,20 @@ public class PatternURLFilterTest extends AbstractPatternFilterTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void validateExceptionOnNotInitializingFilterBeforeUse() {
+    @Test
+    void validateExceptionOnNotInitializingFilterBeforeUse() {
+        assertThrows(IllegalStateException.class, () -> {
 
-        // Assemble
-        final PatternURLFilter unitUnderTest = new PatternURLFilter(null);
+            // Assemble
+            final PatternURLFilter unitUnderTest = new PatternURLFilter(null);
 
-        // Act & Assert
-        unitUnderTest.accept(urlList[0]);
+            // Act & Assert
+            unitUnderTest.accept(urlList[0]);
+        });
     }
 
     @Test
-    public void validateAcceptNothingOnNullPatterns() {
+    void validateAcceptNothingOnNullPatterns() {
 
         // Assemble
         final PatternURLFilter unitUnderTest = new PatternURLFilter(null);
@@ -59,12 +62,12 @@ public class PatternURLFilterTest extends AbstractPatternFilterTest {
 
         // Assert
         for (Map.Entry<String, Boolean> current : result.entrySet()) {
-            Assert.assertFalse(current.getValue());
+            assertFalse(current.getValue());
         }
     }
 
     @Test
-    public void validateExcludingMatchingURLs() {
+    void validateExcludingMatchingURLs() {
 
         // Assemble
         final String urlProtocol = "file";
@@ -81,9 +84,9 @@ public class PatternURLFilterTest extends AbstractPatternFilterTest {
         // Assert
         for (Map.Entry<String, Boolean> current : result.entrySet()) {
             if (current.getKey().endsWith("xml")) {
-                Assert.assertTrue(result.get(current.getKey()));
+                assertTrue(result.get(current.getKey()));
             } else {
-                Assert.assertFalse(result.get(current.getKey()));
+                assertFalse(result.get(current.getKey()));
             }
         }
     }

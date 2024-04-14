@@ -12,24 +12,25 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.JavaDocRe
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.NoAuthorJavaDocRenderer;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.SomewhatNamedPerson;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdAnnotationProcessor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareNodeProcessingTest {
+class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareNodeProcessingTest {
 
     // Shared state
     private JavaDocRenderer renderer = new NoAuthorJavaDocRenderer();
 
     @Test
-    public void validateGeneratedXmlForEnums() throws Exception {
+    void validateGeneratedXmlForEnums() throws Exception {
 
         // Assemble
         final String expected =
@@ -54,12 +55,12 @@ public class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareN
                 .ignoreWhitespace()
                 .ignoreComments()
                 .build();
-        Assert.assertFalse(diff.hasDifferences());
+        assertFalse(diff.hasDifferences());
         // XmlTestUtils.compareXmlIgnoringWhitespace( expected, out.toString() );
     }
 
     @Test
-    public void validateHandlingXmlElementWrapperDocumentation() throws Exception {
+    void validateHandlingXmlElementWrapperDocumentation() throws Exception {
 
         // Assmeble
         final Document document = namespace2DocumentMap.get(SomewhatNamedPerson.NAMESPACE);

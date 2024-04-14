@@ -31,14 +31,16 @@ import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -70,10 +72,10 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         // Setup the basic directories.
         basedir = getBasedir();
         testJavaDir = new File(basedir, "src/test/java");
-        Assert.assertTrue(testJavaDir.exists() && testJavaDir.isDirectory());
+        assertTrue(testJavaDir.exists() && testJavaDir.isDirectory());
     }
 
-    @Before
+    @BeforeEach
     public final void setupSharedState() throws Exception {
 
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
@@ -92,7 +94,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
 
         // Create the JAXBContext
         jaxbClasses = getJaxbAnnotatedClassesForJaxbContext();
-        Assert.assertNotNull("getJaxbAnnotatedClassesForJaxbContext() should not return a null List.", jaxbClasses);
+        assertNotNull(jaxbClasses, "getJaxbAnnotatedClassesForJaxbContext() should not return a null List.");
         final Class<?>[] classArray = jaxbClasses.toArray(new Class<?>[jaxbClasses.size()]);
         jaxbContext = JAXBContext.newInstance(classArray);
 
@@ -174,8 +176,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         }
 
         final File toReturn = new File(basedirPath);
-        Assert.assertNotNull("Could not find 'basedir'. Please set the system property 'basedir'.", toReturn);
-        Assert.assertTrue("'basedir' must be an existing directory. ", toReturn.exists() && toReturn.isDirectory());
+        assertNotNull(toReturn, "Could not find 'basedir'. Please set the system property 'basedir'.");
+        assertTrue(toReturn.exists() && toReturn.isDirectory(), "'basedir' must be an existing directory. ");
 
         // All done.
         return toReturn;
