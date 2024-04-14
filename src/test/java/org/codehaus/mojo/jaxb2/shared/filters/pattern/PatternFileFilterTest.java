@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -29,7 +31,7 @@ public class PatternFileFilterTest extends AbstractPatternFilterTest {
      */
 
     @Test
-    public void validateAcceptNothingOnNullPatterns() {
+    void validateAcceptNothingOnNullPatterns() {
 
         // Assemble
         final PatternFileFilter unitUnderTest = new PatternFileFilter(null, true);
@@ -40,12 +42,12 @@ public class PatternFileFilterTest extends AbstractPatternFilterTest {
 
         // Assert
         for (Map.Entry<String, Boolean> current : result.entrySet()) {
-            Assert.assertFalse(current.getValue());
+            assertFalse(current.getValue());
         }
     }
 
     @Test
-    public void validateAcceptAllOnNullPatternsForExcludeOperation() {
+    void validateAcceptAllOnNullPatternsForExcludeOperation() {
 
         // Assemble
         final PatternFileFilter unitUnderTest = new PatternFileFilter(false, null, null, FILENAME_CONVERTER, false);
@@ -56,12 +58,12 @@ public class PatternFileFilterTest extends AbstractPatternFilterTest {
 
         // Assert
         for (Map.Entry<String, Boolean> current : result.entrySet()) {
-            Assert.assertTrue(current.getValue());
+            assertTrue(current.getValue());
         }
     }
 
     @Test
-    public void validateExcludingMatchingFiles() {
+    void validateExcludingMatchingFiles() {
 
         // Assemble
         final List<String> txtFileSuffixExclusion = Arrays.asList("\\.txt");
@@ -72,12 +74,12 @@ public class PatternFileFilterTest extends AbstractPatternFilterTest {
         final Map<String, Boolean> result = applyFilterAndRetrieveResults(unitUnderTest, fileList, FILENAME_CONVERTER);
 
         // Assert
-        Assert.assertTrue(result.get("AnXmlFile.xml"));
-        Assert.assertFalse(result.get("TextFile.txt"));
+        assertTrue(result.get("AnXmlFile.xml"));
+        assertFalse(result.get("TextFile.txt"));
     }
 
     @Test
-    public void validateExcludingNoFilesOnNonMatchingPattern() {
+    void validateExcludingNoFilesOnNonMatchingPattern() {
 
         // Assemble
         final PatternFileFilter unitUnderTest = new PatternFileFilter(Arrays.asList("\\.nonexistent"), false);
@@ -87,12 +89,12 @@ public class PatternFileFilterTest extends AbstractPatternFilterTest {
         final Map<String, Boolean> result = applyFilterAndRetrieveResults(unitUnderTest, fileList, FILENAME_CONVERTER);
 
         // Assert
-        Assert.assertTrue(result.get("AnXmlFile.xml"));
-        Assert.assertTrue(result.get("TextFile.txt"));
+        assertTrue(result.get("AnXmlFile.xml"));
+        assertTrue(result.get("TextFile.txt"));
     }
 
     @Test
-    public void validatePatternMatchExclusion() {
+    void validatePatternMatchExclusion() {
 
         // Assemble
         final PatternFileFilter unitUnderTest = new PatternFileFilter(Arrays.asList("\\.*File\\..*"), false);
@@ -102,7 +104,7 @@ public class PatternFileFilterTest extends AbstractPatternFilterTest {
         final Map<String, Boolean> result = applyFilterAndRetrieveResults(unitUnderTest, fileList, FILENAME_CONVERTER);
 
         // Assert
-        Assert.assertFalse(result.get("AnXmlFile.xml"));
-        Assert.assertFalse(result.get("TextFile.txt"));
+        assertFalse(result.get("AnXmlFile.xml"));
+        assertFalse(result.get("TextFile.txt"));
     }
 }

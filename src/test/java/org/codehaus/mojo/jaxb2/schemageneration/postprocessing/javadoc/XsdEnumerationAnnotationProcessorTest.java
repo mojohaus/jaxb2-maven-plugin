@@ -6,21 +6,22 @@ import java.util.List;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums.AmericanCoin;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums.ExampleEnumHolder;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.enums.FoodPreference;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class XsdEnumerationAnnotationProcessorTest extends AbstractSourceCodeAwareNodeProcessingTest {
+class XsdEnumerationAnnotationProcessorTest extends AbstractSourceCodeAwareNodeProcessingTest {
 
     // Shared state
     private JavaDocRenderer renderer = new DefaultJavaDocRenderer();
 
     @Test
-    public void validateProcessingNodesInVanillaXSD() throws Exception {
+    void validateProcessingNodesInVanillaXSD() throws Exception {
 
         // Assemble
         final String path = "testdata/schemageneration/javadoc/enums/expectedTransformedExampleEnumHolder.xsd";
@@ -38,7 +39,7 @@ public class XsdEnumerationAnnotationProcessorTest extends AbstractSourceCodeAwa
         final String processed = printDocument(xsdGeneratedFromClassesInMethod);
         // System.out.println("Got: " + processed);
 
-        Assert.assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
+        assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
     }
 
     /**

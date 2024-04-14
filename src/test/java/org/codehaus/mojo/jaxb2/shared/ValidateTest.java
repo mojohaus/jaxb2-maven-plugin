@@ -1,15 +1,17 @@
 package org.codehaus.mojo.jaxb2.shared;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
-public class ValidateTest {
+class ValidateTest {
 
     @Test
-    public void validateErrorMessageOnSuppliedArgumentName() {
+    void validateErrorMessageOnSuppliedArgumentName() {
 
         // Assemble
         final String argumentName = "fooBar";
@@ -19,27 +21,27 @@ public class ValidateTest {
         try {
             Validate.notEmpty("", argumentName);
         } catch (IllegalArgumentException expected) {
-            Assert.assertEquals(expectedMsg, expected.getMessage());
+            assertEquals(expectedMsg, expected.getMessage());
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but got " + e);
+            fail("Expected IllegalArgumentException, but got " + e);
         }
     }
 
     @Test
-    public void validateErrorMessageOnNullArgumentName() {
+    void validateErrorMessageOnNullArgumentName() {
 
         // Act & Assert
         try {
             Validate.notEmpty("", null);
         } catch (IllegalArgumentException expected) {
-            Assert.assertEquals("Cannot handle empty argument.", expected.getMessage());
+            assertEquals("Cannot handle empty argument.", expected.getMessage());
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but got " + e);
+            fail("Expected IllegalArgumentException, but got " + e);
         }
     }
 
     @Test
-    public void validateErrorMessageOnNullArgument() {
+    void validateErrorMessageOnNullArgument() {
 
         // Assemble
         final String argumentName = "fooBar";
@@ -49,22 +51,22 @@ public class ValidateTest {
         try {
             Validate.notNull(null, argumentName);
         } catch (NullPointerException expected) {
-            Assert.assertEquals(expectedMsg, expected.getMessage());
+            assertEquals(expectedMsg, expected.getMessage());
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but got " + e);
+            fail("Expected IllegalArgumentException, but got " + e);
         }
     }
 
     @Test
-    public void validateErrorMessageOnNullArgumentWithNullName() {
+    void validateErrorMessageOnNullArgumentWithNullName() {
 
         // Act & Assert
         try {
             Validate.notNull(null, null);
         } catch (NullPointerException expected) {
-            Assert.assertEquals("Cannot handle null argument.", expected.getMessage());
+            assertEquals("Cannot handle null argument.", expected.getMessage());
         } catch (Exception e) {
-            Assert.fail("Expected IllegalArgumentException, but got " + e);
+            fail("Expected IllegalArgumentException, but got " + e);
         }
     }
 }

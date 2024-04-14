@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.SortedMap;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class T_AbstractPatternFilterTest {
+class T_AbstractPatternFilterTest {
 
     private static final StringConverter<String> UNITY_STRING_CONVERTER = new StringConverter<String>() {
         @Override
@@ -24,25 +25,27 @@ public class T_AbstractPatternFilterTest {
     // Shared state
     private BufferingLog log;
 
-    @Before
-    public void setupSharedState() {
+    @BeforeEach
+    void setupSharedState() {
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void validateExceptionOnNullStringConverter() {
+    @Test
+    void validateExceptionOnNullStringConverter() {
+        assertThrows(NullPointerException.class, () -> {
 
-        // Assemble
-        final boolean processNullValues = false;
-        final List<String> patterns = null;
-        final boolean acceptCandidateOnPatternMatch = true;
+            // Assemble
+            final boolean processNullValues = false;
+            final List<String> patterns = null;
+            final boolean acceptCandidateOnPatternMatch = true;
 
-        // Act & Assert
-        new DebugPatternFilter(processNullValues, patterns, null, acceptCandidateOnPatternMatch);
+            // Act & Assert
+            new DebugPatternFilter(processNullValues, patterns, null, acceptCandidateOnPatternMatch);
+        });
     }
 
     @Test
-    public void validateNoAcceptedResultsWhenProcessingMessagesOnNullFilters() {
+    void validateNoAcceptedResultsWhenProcessingMessagesOnNullFilters() {
 
         // Assemble
         final boolean processNullValues = false;
@@ -60,15 +63,15 @@ public class T_AbstractPatternFilterTest {
 
         // Assert
         final SortedMap<Integer, String[]> invocations = unitUnderTest.invocations;
-        Assert.assertEquals(2, invocations.size());
-        Assert.assertEquals("first", invocations.get(1)[0]);
-        Assert.assertEquals(false, Boolean.parseBoolean(invocations.get(1)[1]));
-        Assert.assertEquals("third", invocations.get(2)[0]);
-        Assert.assertEquals(false, Boolean.parseBoolean(invocations.get(2)[1]));
+        assertEquals(2, invocations.size());
+        assertEquals("first", invocations.get(1)[0]);
+        assertFalse(Boolean.parseBoolean(invocations.get(1)[1]));
+        assertEquals("third", invocations.get(2)[0]);
+        assertFalse(Boolean.parseBoolean(invocations.get(2)[1]));
     }
 
     @Test
-    public void validateAcceptingFilterMessages() {
+    void validateAcceptingFilterMessages() {
 
         // Assemble
         final boolean processNullValues = false;
@@ -86,10 +89,10 @@ public class T_AbstractPatternFilterTest {
 
         // Assert
         final SortedMap<Integer, String[]> invocations = unitUnderTest.invocations;
-        Assert.assertEquals(2, invocations.size());
-        Assert.assertEquals("first", invocations.get(1)[0]);
-        Assert.assertEquals(true, Boolean.parseBoolean(invocations.get(1)[1]));
-        Assert.assertEquals("third", invocations.get(2)[0]);
-        Assert.assertEquals(false, Boolean.parseBoolean(invocations.get(2)[1]));
+        assertEquals(2, invocations.size());
+        assertEquals("first", invocations.get(1)[0]);
+        assertTrue(Boolean.parseBoolean(invocations.get(1)[1]));
+        assertEquals("third", invocations.get(2)[0]);
+        assertFalse(Boolean.parseBoolean(invocations.get(2)[1]));
     }
 }

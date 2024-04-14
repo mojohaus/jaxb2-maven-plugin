@@ -20,15 +20,16 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class JavaDocExtractorTest {
+class JavaDocExtractorTest {
 
     // Shared state
     private File javaDocBasicDir;
@@ -37,33 +38,33 @@ public class JavaDocExtractorTest {
     private File javaDocXmlWrappersDir;
     private BufferingLog log;
 
-    @Before
-    public void setupSharedState() {
+    @BeforeEach
+    void setupSharedState() {
 
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         // Find the desired directory
         final URL dirURL = getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/basic");
         this.javaDocBasicDir = new File(dirURL.getPath());
-        Assert.assertTrue(javaDocBasicDir.exists() && javaDocBasicDir.isDirectory());
+        assertTrue(javaDocBasicDir.exists() && javaDocBasicDir.isDirectory());
 
         final URL annotatedDirURL =
                 getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/annotated");
         this.javaDocAnnotatedDir = new File(annotatedDirURL.getPath());
-        Assert.assertTrue(javaDocAnnotatedDir.exists() && javaDocAnnotatedDir.isDirectory());
+        assertTrue(javaDocAnnotatedDir.exists() && javaDocAnnotatedDir.isDirectory());
 
         final URL enumsDirURL = getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/enums");
         this.javaDocEnumsDir = new File(enumsDirURL.getPath());
-        Assert.assertTrue(javaDocEnumsDir.exists() && javaDocEnumsDir.isDirectory());
+        assertTrue(javaDocEnumsDir.exists() && javaDocEnumsDir.isDirectory());
 
         final URL wrappersDirURL =
                 getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/xmlwrappers");
         this.javaDocXmlWrappersDir = new File(wrappersDirURL.getPath());
-        Assert.assertTrue(javaDocXmlWrappersDir.exists() && javaDocXmlWrappersDir.isDirectory());
+        assertTrue(javaDocXmlWrappersDir.exists() && javaDocXmlWrappersDir.isDirectory());
     }
 
     @Test
-    public void validateLogStatementsDuringProcessing() {
+    void validateLogStatementsDuringProcessing() {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
@@ -86,21 +87,21 @@ public class JavaDocExtractorTest {
          * 004: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#accept(org.w3c.dom.Node)],
          * 005: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#process(org.w3c.dom.Node)]]
          */
-        Assert.assertEquals(6, keys.size());
-        Assert.assertEquals("001: (INFO) Processing [1] java sources.", keys.get(1));
-        Assert.assertEquals("002: (DEBUG) Added package-level JavaDoc for [basic]", keys.get(2));
-        Assert.assertEquals("003: (DEBUG) Added class-level JavaDoc for [basic.NodeProcessor]", keys.get(3));
-        Assert.assertEquals(
+        assertEquals(6, keys.size());
+        assertEquals("001: (INFO) Processing [1] java sources.", keys.get(1));
+        assertEquals("002: (DEBUG) Added package-level JavaDoc for [basic]", keys.get(2));
+        assertEquals("003: (DEBUG) Added class-level JavaDoc for [basic.NodeProcessor]", keys.get(3));
+        assertEquals(
                 "004: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#accept(org.w3c.dom.Node)]",
                 keys.get(4));
-        Assert.assertEquals(
+        assertEquals(
                 "005: (DEBUG) Added method-level JavaDoc for [basic.NodeProcessor#process(org.w3c.dom.Node)]",
                 keys.get(5));
     }
 
     @Test
-    @Ignore
-    public void validateExtractingXmlAnnotatedName() throws Exception {
+    @Disabled
+    void validateExtractingXmlAnnotatedName() throws Exception {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
@@ -119,26 +120,26 @@ public class JavaDocExtractorTest {
         final SortableLocation stringMethodLocation = result.getLocation(fieldAccessPrefix + "getStringField()");
         final SortableLocation integerMethodLocation = result.getLocation(fieldAccessPrefix + "getIntegerField()");
 
-        Assert.assertTrue(stringFieldLocation instanceof FieldLocation);
-        Assert.assertTrue(integerFieldLocation instanceof FieldLocation);
-        Assert.assertTrue(stringMethodLocation instanceof MethodLocation);
-        Assert.assertTrue(integerMethodLocation instanceof MethodLocation);
+        assertTrue(stringFieldLocation instanceof FieldLocation);
+        assertTrue(integerFieldLocation instanceof FieldLocation);
+        assertTrue(stringMethodLocation instanceof MethodLocation);
+        assertTrue(integerMethodLocation instanceof MethodLocation);
 
-        Assert.assertNull(stringMethodLocation.getAnnotationRenamedTo());
-        Assert.assertNull(integerMethodLocation.getAnnotationRenamedTo());
-        Assert.assertEquals("annotatedStringField", stringFieldLocation.getAnnotationRenamedTo());
-        Assert.assertEquals("annotatedIntegerField", integerFieldLocation.getAnnotationRenamedTo());
+        assertNull(stringMethodLocation.getAnnotationRenamedTo());
+        assertNull(integerMethodLocation.getAnnotationRenamedTo());
+        assertEquals("annotatedStringField", stringFieldLocation.getAnnotationRenamedTo());
+        assertEquals("annotatedIntegerField", integerFieldLocation.getAnnotationRenamedTo());
 
-        Assert.assertEquals(
+        assertEquals(
                 JavaDocData.NO_COMMENT,
                 result.getJavaDoc(stringMethodLocation.getPath()).getComment());
-        Assert.assertEquals(
+        assertEquals(
                 JavaDocData.NO_COMMENT,
                 result.getJavaDoc(integerMethodLocation.getPath()).getComment());
-        Assert.assertEquals(
+        assertEquals(
                 "This is a string field.",
                 result.getJavaDoc(stringFieldLocation.getPath()).getComment());
-        Assert.assertEquals(
+        assertEquals(
                 "This is an integer field.",
                 result.getJavaDoc(integerFieldLocation.getPath()).getComment());
 
@@ -150,33 +151,33 @@ public class JavaDocExtractorTest {
         final SortableLocation integerMethodLocation2 =
                 result.getLocation(methodAccessPrefix + "annotatedIntegerMethod()");
 
-        Assert.assertTrue(stringFieldLocation2 instanceof FieldLocation);
-        Assert.assertTrue(integerFieldLocation2 instanceof FieldLocation);
-        Assert.assertTrue(stringMethodLocation2 instanceof MethodLocation);
-        Assert.assertTrue(integerMethodLocation2 instanceof MethodLocation);
+        assertTrue(stringFieldLocation2 instanceof FieldLocation);
+        assertTrue(integerFieldLocation2 instanceof FieldLocation);
+        assertTrue(stringMethodLocation2 instanceof MethodLocation);
+        assertTrue(integerMethodLocation2 instanceof MethodLocation);
 
-        Assert.assertNull(stringFieldLocation2.getAnnotationRenamedTo());
-        Assert.assertNull(integerFieldLocation2.getAnnotationRenamedTo());
-        Assert.assertEquals("annotatedStringMethod", stringMethodLocation2.getAnnotationRenamedTo());
-        Assert.assertEquals("annotatedIntegerMethod", integerMethodLocation2.getAnnotationRenamedTo());
+        assertNull(stringFieldLocation2.getAnnotationRenamedTo());
+        assertNull(integerFieldLocation2.getAnnotationRenamedTo());
+        assertEquals("annotatedStringMethod", stringMethodLocation2.getAnnotationRenamedTo());
+        assertEquals("annotatedIntegerMethod", integerMethodLocation2.getAnnotationRenamedTo());
 
-        Assert.assertEquals(
+        assertEquals(
                 "Getter for the stringField.",
                 result.getJavaDoc(stringMethodLocation2.getPath()).getComment());
-        Assert.assertEquals(
+        assertEquals(
                 "Getter for the integerField.",
                 result.getJavaDoc(integerMethodLocation2.getPath()).getComment());
-        Assert.assertEquals(
+        assertEquals(
                 JavaDocData.NO_COMMENT,
                 result.getJavaDoc(stringFieldLocation2.getPath()).getComment());
-        Assert.assertEquals(
+        assertEquals(
                 JavaDocData.NO_COMMENT,
                 result.getJavaDoc(integerFieldLocation2.getPath()).getComment());
     }
 
     @Test
-    @Ignore
-    public void validateJavaDocsForXmlEnumsAreCorrectlyApplied() {
+    @Disabled
+    void validateJavaDocsForXmlEnumsAreCorrectlyApplied() {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
@@ -186,7 +187,7 @@ public class JavaDocExtractorTest {
         final MapWrapper mapWrapper = new MapWrapper(result);
 
         // Assert
-        Assert.assertEquals(21, mapWrapper.sortableLocations2JavaDocDataMap.size());
+        assertEquals(21, mapWrapper.sortableLocations2JavaDocDataMap.size());
 
         final List<String> paths = Arrays.asList(
                 "enums",
@@ -211,9 +212,9 @@ public class JavaDocExtractorTest {
                 "enums.FoodPreference#meatEater",
                 "enums.FoodPreference#milkDrinker");
         for (String current : paths) {
-            Assert.assertTrue(
-                    "Required path [" + current + "] not found.",
-                    mapWrapper.path2LocationMap.keySet().contains(current.trim()));
+            assertTrue(
+                    mapWrapper.path2LocationMap.keySet().contains(current.trim()),
+                    "Required path [" + current + "] not found.");
         }
 
         // Finally, validate that the injected XML document comments
@@ -240,8 +241,8 @@ public class JavaDocExtractorTest {
     }
 
     @Test
-    @Ignore
-    public void validateJavaDocsForXmlWrapperAnnotatedFieldsAndMethodsAreCorrectlyApplied() throws Exception {
+    @Disabled
+    void validateJavaDocsForXmlWrapperAnnotatedFieldsAndMethodsAreCorrectlyApplied() throws Exception {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
@@ -251,7 +252,7 @@ public class JavaDocExtractorTest {
         final MapWrapper mapWrapper = new MapWrapper(result);
 
         // Assert
-        Assert.assertEquals(11, mapWrapper.sortableLocations2JavaDocDataMap.size());
+        assertEquals(11, mapWrapper.sortableLocations2JavaDocDataMap.size());
 
         final String packagePrefix = "org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.wrappers";
         final List<String> paths = new ArrayList<String>();
@@ -271,9 +272,9 @@ public class JavaDocExtractorTest {
         }
 
         for (String current : paths) {
-            Assert.assertTrue(
-                    "Required path [" + current + "] not found.",
-                    mapWrapper.path2LocationMap.keySet().contains(current.trim()));
+            assertTrue(
+                    mapWrapper.path2LocationMap.keySet().contains(current.trim()),
+                    "Required path [" + current + "] not found.");
         }
 
         mapWrapper.validateJavaDocCommentText(
@@ -291,7 +292,7 @@ public class JavaDocExtractorTest {
     }
 
     @Test
-    public void validatePathsFromProcessing() {
+    void validatePathsFromProcessing() {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
@@ -302,18 +303,18 @@ public class JavaDocExtractorTest {
         // Assert
         final ArrayList<SortableLocation> sortableLocations =
                 new ArrayList<SortableLocation>(result.getAll().keySet());
-        Assert.assertEquals(4, sortableLocations.size());
+        assertEquals(4, sortableLocations.size());
 
         final List<String> paths = new ArrayList<String>(result.getPaths());
-        Assert.assertEquals(4, paths.size());
-        Assert.assertEquals("basic", paths.get(0));
-        Assert.assertEquals("basic.NodeProcessor", paths.get(1));
-        Assert.assertEquals("basic.NodeProcessor#accept(org.w3c.dom.Node)", paths.get(2));
-        Assert.assertEquals("basic.NodeProcessor#process(org.w3c.dom.Node)", paths.get(3));
+        assertEquals(4, paths.size());
+        assertEquals("basic", paths.get(0));
+        assertEquals("basic.NodeProcessor", paths.get(1));
+        assertEquals("basic.NodeProcessor#accept(org.w3c.dom.Node)", paths.get(2));
+        assertEquals("basic.NodeProcessor#process(org.w3c.dom.Node)", paths.get(3));
     }
 
     @Test
-    public void validateJavaDocDataFromProcessing() {
+    void validateJavaDocDataFromProcessing() {
 
         // Assemble
         final String basicPackagePath = "basic";
@@ -338,12 +339,12 @@ public class JavaDocExtractorTest {
         */
         final SortableLocation packageLocation = result.getLocation(basicPackagePath);
         final JavaDocData basicPackageJavaDoc = result.getJavaDoc(basicPackagePath);
-        Assert.assertTrue(packageLocation instanceof PackageLocation);
+        assertTrue(packageLocation instanceof PackageLocation);
 
         final PackageLocation castPackageLocation = (PackageLocation) packageLocation;
-        Assert.assertEquals("basic", castPackageLocation.getPackageName());
-        Assert.assertEquals(JavaDocData.NO_COMMENT, basicPackageJavaDoc.getComment());
-        Assert.assertEquals(0, basicPackageJavaDoc.getTag2ValueMap().size());
+        assertEquals("basic", castPackageLocation.getPackageName());
+        assertEquals(JavaDocData.NO_COMMENT, basicPackageJavaDoc.getComment());
+        assertEquals(0, basicPackageJavaDoc.getTag2ValueMap().size());
 
         /*
         +=================
@@ -355,18 +356,17 @@ public class JavaDocExtractorTest {
         */
         final SortableLocation classLocation = result.getLocation(nodeProcessorClassPath);
         final JavaDocData nodeProcessorClassJavaDoc = result.getJavaDoc(nodeProcessorClassPath);
-        Assert.assertTrue(classLocation instanceof ClassLocation);
+        assertTrue(classLocation instanceof ClassLocation);
 
         final ClassLocation castClassLocation = (ClassLocation) classLocation;
-        Assert.assertEquals("basic", castClassLocation.getPackageName());
-        Assert.assertEquals("NodeProcessor", castClassLocation.getClassName());
-        Assert.assertEquals(
-                "Processor/visitor pattern specification for DOM Nodes.", nodeProcessorClassJavaDoc.getComment());
+        assertEquals("basic", castClassLocation.getPackageName());
+        assertEquals("NodeProcessor", castClassLocation.getClassName());
+        assertEquals("Processor/visitor pattern specification for DOM Nodes.", nodeProcessorClassJavaDoc.getComment());
 
         final SortedMap<String, String> classTag2ValueMap = nodeProcessorClassJavaDoc.getTag2ValueMap();
-        Assert.assertEquals(2, classTag2ValueMap.size());
-        Assert.assertEquals("org.w3c.dom.Node", classTag2ValueMap.get("see"));
-        Assert.assertEquals(
+        assertEquals(2, classTag2ValueMap.size());
+        assertEquals("org.w3c.dom.Node", classTag2ValueMap.get("see"));
+        assertEquals(
                 "<a href=\"mailto:lj@jguru.se\">Lennart J&ouml;relid</a>, Mr. Foo", classTag2ValueMap.get("author"));
 
         /*
@@ -379,19 +379,19 @@ public class JavaDocExtractorTest {
         */
         final SortableLocation acceptMethodLocation = result.getLocation(acceptMethodPath);
         final JavaDocData acceptMethodClassJavaDoc = result.getJavaDoc(acceptMethodPath);
-        Assert.assertTrue(acceptMethodLocation instanceof MethodLocation);
+        assertTrue(acceptMethodLocation instanceof MethodLocation);
 
         final MethodLocation castMethodLocation = (MethodLocation) acceptMethodLocation;
-        Assert.assertEquals("basic", castMethodLocation.getPackageName());
-        Assert.assertEquals("NodeProcessor", castMethodLocation.getClassName());
-        Assert.assertEquals("(org.w3c.dom.Node)", castMethodLocation.getParametersAsString());
-        Assert.assertEquals(
+        assertEquals("basic", castMethodLocation.getPackageName());
+        assertEquals("NodeProcessor", castMethodLocation.getClassName());
+        assertEquals("(org.w3c.dom.Node)", castMethodLocation.getParametersAsString());
+        assertEquals(
                 "Defines if this visitor should process the provided node.", acceptMethodClassJavaDoc.getComment());
 
         final SortedMap<String, String> methodTag2ValueMap = acceptMethodClassJavaDoc.getTag2ValueMap();
-        Assert.assertEquals(2, methodTag2ValueMap.size());
-        Assert.assertEquals("aNode The DOM node to process.", methodTag2ValueMap.get("param"));
-        Assert.assertEquals(
+        assertEquals(2, methodTag2ValueMap.size());
+        assertEquals("aNode The DOM node to process.", methodTag2ValueMap.get("param"));
+        assertEquals(
                 "<code>true</code> if the provided Node should be processed by this NodeProcessor.",
                 methodTag2ValueMap.get("return"));
     }
@@ -440,7 +440,7 @@ public class JavaDocExtractorTest {
             final JavaDocData xmlWrapperJavaDocData = sortableLocations2JavaDocDataMap.get(sortableLocation);
 
             // All Done.
-            Assert.assertEquals(expected, xmlWrapperJavaDocData.getComment());
+            assertEquals(expected, xmlWrapperJavaDocData.getComment());
         }
     }
 
@@ -450,7 +450,7 @@ public class JavaDocExtractorTest {
         final JavaDocData xmlWrapperJavaDocData = wrapper.sortableLocations2JavaDocDataMap.get(sortableLocation);
 
         // All Done.
-        Assert.assertEquals(expected, xmlWrapperJavaDocData.getComment());
+        assertEquals(expected, xmlWrapperJavaDocData.getComment());
     }
 
     private SearchableDocumentation getSearchableDocumentationFor(
@@ -472,7 +472,7 @@ public class JavaDocExtractorTest {
 
         // Find all normal Files not being ".xsd" files below the supplied sourceDirs
         final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, excludeFilesMatching, log);
-        Assert.assertEquals(expectedNumberOfFiles, sourceFiles.size());
+        assertEquals(expectedNumberOfFiles, sourceFiles.size());
 
         // Add the found files as source files
         unitUnderTest.addSourceFiles(sourceFiles);

@@ -7,8 +7,9 @@ import java.util.TreeMap;
 
 import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -29,7 +30,7 @@ public abstract class AbstractPatternFilterTest {
         this("testdata/shared/filefilter/exclusion");
     }
 
-    @Before
+    @BeforeEach
     @SuppressWarnings("all")
     public void setupSharedState() {
 
@@ -37,11 +38,11 @@ public abstract class AbstractPatternFilterTest {
 
         final URL exclusionDirUrl = getClass().getClassLoader().getResource(defaultExclusionDirectory);
         exclusionDirectory = new File(exclusionDirUrl.getPath());
-        Assert.assertTrue(FileSystemUtilities.EXISTING_DIRECTORY.accept(exclusionDirectory));
+        assertTrue(FileSystemUtilities.EXISTING_DIRECTORY.accept(exclusionDirectory));
 
         fileList = exclusionDirectory.listFiles();
         for (File current : fileList) {
-            Assert.assertTrue(FileSystemUtilities.EXISTING_FILE.accept(current));
+            assertTrue(FileSystemUtilities.EXISTING_FILE.accept(current));
         }
 
         // Delegate

@@ -15,10 +15,12 @@ import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.w3c.dom.Document;
 import se.jguru.shared.algorithms.api.resources.PropertyResources;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -31,7 +33,7 @@ public abstract class AbstractJavadocExtractorTest {
     protected JavaDocExtractor extractor;
     protected List<Filter<File>> javaSourceExcludeFilter;
 
-    @Before
+    @BeforeEach
     public void setupSharedState() {
 
         sourceRootDirectories = new ArrayList<File>();
@@ -54,14 +56,14 @@ public abstract class AbstractJavadocExtractorTest {
 
         final String effectiveResourcePath = resourcePath.charAt(0) == '/' ? resourcePath : "/" + resourcePath;
         final URL resource = Thread.currentThread().getContextClassLoader().getResource(effectiveResourcePath);
-        Assert.assertNotNull("Effective resourcePath [" + resourcePath + "] could not be found.", resource);
+        assertNotNull(resource, "Effective resourcePath [" + resourcePath + "] could not be found.");
 
         final File toAdd = new File(resource.getPath());
         final boolean exists = toAdd.exists();
         final boolean isDirectory = toAdd.isDirectory();
 
-        Assert.assertTrue("Resource [" + toAdd.getAbsolutePath() + "] was nonexistent.", exists);
-        Assert.assertTrue("Resource [" + toAdd.getAbsolutePath() + "] was not a directory.", isDirectory);
+        assertTrue(exists, "Resource [" + toAdd.getAbsolutePath() + "] was nonexistent.");
+        assertTrue(isDirectory, "Resource [" + toAdd.getAbsolutePath() + "] was not a directory.");
 
         sourceRootDirectories.add(toAdd);
     }

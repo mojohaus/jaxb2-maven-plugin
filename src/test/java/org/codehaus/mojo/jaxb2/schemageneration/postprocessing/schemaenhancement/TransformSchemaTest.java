@@ -1,11 +1,13 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
-public class TransformSchemaTest {
+class TransformSchemaTest {
 
     // Shared state
     private static final String URI = "http://www.mithlond.se/foo/bar";
@@ -13,24 +15,30 @@ public class TransformSchemaTest {
     private static final String FILENAME = "mithlondBar";
     private static final TransformSchema unitUnderTest = new TransformSchema(URI, PREFIX, FILENAME);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateExceptionOnEmptyToFileArgument() {
+    @Test
+    void validateExceptionOnEmptyToFileArgument() {
+        assertThrows(IllegalArgumentException.class, () -> {
 
-        // Act & Assert
-        unitUnderTest.setToFile("");
+            // Act & Assert
+            unitUnderTest.setToFile("");
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateExceptionOnEmptyToPrefixArgument() {
+    @Test
+    void validateExceptionOnEmptyToPrefixArgument() {
+        assertThrows(IllegalArgumentException.class, () -> {
 
-        // Act & Assert
-        unitUnderTest.setToPrefix("");
+            // Act & Assert
+            unitUnderTest.setToPrefix("");
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateExceptionOnEmptyUriArgument() {
+    @Test
+    void validateExceptionOnEmptyUriArgument() {
+        assertThrows(IllegalArgumentException.class, () -> {
 
-        // Act & Assert
-        unitUnderTest.setUri("");
+            // Act & Assert
+            unitUnderTest.setUri("");
+        });
     }
 }

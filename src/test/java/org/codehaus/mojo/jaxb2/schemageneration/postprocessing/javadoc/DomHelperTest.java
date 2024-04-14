@@ -7,21 +7,23 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import se.jguru.shared.algorithms.api.resources.PropertyResources;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class DomHelperTest {
+class DomHelperTest {
 
     @Test
-    public void validateDomHelperAccessors() throws Exception {
+    void validateDomHelperAccessors() throws Exception {
 
         // Assemble
         final String xsd = PropertyResources.readFully("testdata/schemageneration/javadoc/enums/rawEnumSchema.xsd");
@@ -50,15 +52,15 @@ public class DomHelperTest {
         }
 
         // Assert
-        Assert.assertNotNull(xpath2ValueMap);
-        Assert.assertEquals(3, xpath2ValueMap.size());
+        assertNotNull(xpath2ValueMap);
+        assertEquals(3, xpath2ValueMap.size());
 
         final String prefix =
                 "#document/xs:schema/xs:simpleType[@name='foodPreference']/" + "xs:restriction/xs:enumeration[@value='";
 
-        Assert.assertEquals("LACTO_VEGETARIAN", xpath2ValueMap.get(prefix + "LACTO_VEGETARIAN']"));
-        Assert.assertEquals("NONE", xpath2ValueMap.get(prefix + "NONE']"));
-        Assert.assertEquals("VEGAN", xpath2ValueMap.get(prefix + "VEGAN']"));
+        assertEquals("LACTO_VEGETARIAN", xpath2ValueMap.get(prefix + "LACTO_VEGETARIAN']"));
+        assertEquals("NONE", xpath2ValueMap.get(prefix + "NONE']"));
+        assertEquals("VEGAN", xpath2ValueMap.get(prefix + "VEGAN']"));
     }
 
     //

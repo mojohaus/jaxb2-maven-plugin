@@ -12,16 +12,17 @@ import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.FileFilterAdapter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.io.File.separator;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class PackageFilterInclusionTest {
+class PackageFilterInclusionTest {
 
     // Shared state
     private File baseDirectory;
@@ -29,8 +30,8 @@ public class PackageFilterInclusionTest {
     private BufferingLog log;
     private String contextRoot;
 
-    @Before
-    public void setupSharedState() {
+    @BeforeEach
+    void setupSharedState() {
 
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
@@ -46,17 +47,17 @@ public class PackageFilterInclusionTest {
         } else {
             baseDirectory = new File(basedir);
         }
-        Assert.assertTrue(baseDirectory.exists() && baseDirectory.isDirectory());
+        assertTrue(baseDirectory.exists() && baseDirectory.isDirectory());
 
         // Find all source files under the src/main/java directory.
         srcMainJavaDir = new File(basedir, "src/main/java");
-        Assert.assertTrue(srcMainJavaDir.exists() && srcMainJavaDir.isDirectory());
+        assertTrue(srcMainJavaDir.exists() && srcMainJavaDir.isDirectory());
 
         contextRoot = FileSystemUtilities.relativize(srcMainJavaDir.getPath(), baseDirectory, true);
     }
 
     @Test
-    public void validateExcludingPackageInfoFiles() {
+    void validateExcludingPackageInfoFiles() {
 
         // Assemble
         final String rootPackagePath =
@@ -77,15 +78,15 @@ public class PackageFilterInclusionTest {
                     ? current.substring(baseDirectory.getPath().length() + 1)
                     : current;
 
-            Assert.assertTrue(
-                    "Path " + relativePath + " did not start with the root package path " + rootPackagePath,
-                    relativePath.startsWith(rootPackagePath));
-            Assert.assertTrue("Path " + current + " was a package-info.java file.", !current.contains("package-info"));
+            assertTrue(
+                    relativePath.startsWith(rootPackagePath),
+                    "Path " + relativePath + " did not start with the root package path " + rootPackagePath);
+            assertFalse(current.contains("package-info"), "Path " + current + " was a package-info.java file.");
         }
     }
 
     @Test
-    public void validateIncludingSubTrees() {
+    void validateIncludingSubTrees() {
 
         // Assemble
         final String locationPackageDirName = separator + "location" + separator;
@@ -105,11 +106,11 @@ public class PackageFilterInclusionTest {
         final SortedMap<String, File> path2FileMap = mapFiles(result);
 
         // Assert
-        Assert.assertTrue(result.size() > 1);
+        assertTrue(result.size() > 1);
         for (String current : path2FileMap.keySet()) {
-            Assert.assertTrue(
-                    "Path " + current + " contained disallowed pattern " + locationPackageDirName,
-                    current.contains(locationPackageDirName));
+            assertTrue(
+                    current.contains(locationPackageDirName),
+                    "Path " + current + " contained disallowed pattern " + locationPackageDirName);
         }
     }
 

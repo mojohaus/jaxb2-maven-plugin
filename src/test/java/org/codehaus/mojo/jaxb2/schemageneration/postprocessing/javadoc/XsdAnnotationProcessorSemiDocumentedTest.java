@@ -3,21 +3,22 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
  */
-public class XsdAnnotationProcessorSemiDocumentedTest extends AbstractSourceCodeAwareNodeProcessingTest {
+class XsdAnnotationProcessorSemiDocumentedTest extends AbstractSourceCodeAwareNodeProcessingTest {
 
     // Shared state
     private JavaDocRenderer renderer = new DefaultJavaDocRenderer();
 
     @Test
-    public void validateProcessingNodesInVanillaXSD() throws Exception {
+    void validateProcessingNodesInVanillaXSD() throws Exception {
 
         // Assemble
         final String path = "testdata/schemageneration/javadoc/expectedSemiDocumentedClass.xml";
@@ -34,7 +35,7 @@ public class XsdAnnotationProcessorSemiDocumentedTest extends AbstractSourceCode
         final String processed = printDocument(document);
         // System.out.println("Got: " + processed);
 
-        Assert.assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
+        assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
     }
 
     /**

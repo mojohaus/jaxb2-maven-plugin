@@ -2,56 +2,66 @@ package org.codehaus.mojo.jaxb2.shared.arguments;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  */
-public class ArgumentBuilderTest {
+class ArgumentBuilderTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateExceptionOnAddingAllWhitespaceFlag() {
+    @Test
+    void validateExceptionOnAddingAllWhitespaceFlag() {
+        assertThrows(IllegalArgumentException.class, () -> {
 
-        // Assemble
-        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+            // Assemble
+            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
 
-        // Act & Assert
-        unitUnderTest.withFlag(true, "  ");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void validateExceptionOnAddingFlagContainingWhitespace() {
-
-        // Assemble
-        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-        // Act & Assert
-        unitUnderTest.withFlag(true, "foo bar");
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void validateExceptionOnAddingNullFlag() {
-
-        // Assemble
-        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-        // Act & Assert
-        unitUnderTest.withFlag(true, null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void validateExceptionOnAddingNullNamedArgument() {
-
-        // Assemble
-        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-        // Act & Assert
-        unitUnderTest.withNamedArgument(null, "irrelevant");
+            // Act & Assert
+            unitUnderTest.withFlag(true, "  ");
+        });
     }
 
     @Test
-    public void validateArgumentOrder() {
+    void validateExceptionOnAddingFlagContainingWhitespace() {
+        assertThrows(IllegalArgumentException.class, () -> {
+
+            // Assemble
+            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+
+            // Act & Assert
+            unitUnderTest.withFlag(true, "foo bar");
+        });
+    }
+
+    @Test
+    void validateExceptionOnAddingNullFlag() {
+        assertThrows(NullPointerException.class, () -> {
+
+            // Assemble
+            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+
+            // Act & Assert
+            unitUnderTest.withFlag(true, null);
+        });
+    }
+
+    @Test
+    void validateExceptionOnAddingNullNamedArgument() {
+        assertThrows(NullPointerException.class, () -> {
+
+            // Assemble
+            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+
+            // Act & Assert
+            unitUnderTest.withNamedArgument(null, "irrelevant");
+        });
+    }
+
+    @Test
+    void validateArgumentOrder() {
 
         // Assemble
         final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
@@ -61,13 +71,13 @@ public class ArgumentBuilderTest {
                 unitUnderTest.withFlag(true, "flag1").withFlag(true, "-flag2").build();
 
         // Assert
-        Assert.assertEquals(2, result.length);
-        Assert.assertEquals("-flag1", result[0]);
-        Assert.assertEquals("-flag2", result[1]);
+        assertEquals(2, result.length);
+        assertEquals("-flag1", result[0]);
+        assertEquals("-flag2", result[1]);
     }
 
     @Test
-    public void validateMixedArguments() {
+    void validateMixedArguments() {
 
         // Assemble
         final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
@@ -81,14 +91,14 @@ public class ArgumentBuilderTest {
                 .build();
 
         // Assert
-        Assert.assertEquals(3, result.length);
-        Assert.assertEquals("-name1", result[0]);
-        Assert.assertEquals("value1", result[1]);
-        Assert.assertEquals("-flag2", result[2]);
+        assertEquals(3, result.length);
+        assertEquals("-name1", result[0]);
+        assertEquals("value1", result[1]);
+        assertEquals("-flag2", result[2]);
     }
 
     @Test
-    public void validatePrefixedArgument() {
+    void validatePrefixedArgument() {
 
         // Assemble
         final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
@@ -100,10 +110,10 @@ public class ArgumentBuilderTest {
                 .build();
 
         // Assert
-        Assert.assertEquals(4, result.length);
-        Assert.assertEquals("-Xplugin1", result[0]);
-        Assert.assertEquals("-Xplugin2", result[1]);
-        Assert.assertEquals("-Xplugin3", result[2]);
-        Assert.assertEquals("-Xplugin4", result[3]);
+        assertEquals(4, result.length);
+        assertEquals("-Xplugin1", result[0]);
+        assertEquals("-Xplugin2", result[1]);
+        assertEquals("-Xplugin3", result[2]);
+        assertEquals("-Xplugin4", result[3]);
     }
 }
