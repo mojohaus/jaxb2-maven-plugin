@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
-    <version>78</version>
+    <version>80</version>
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
@@ -107,10 +107,6 @@
   </issueManagement>
 
   <properties>
-    <!-- Define Maven and JDK versions-->
-    <mavenVersion>3.6.3</mavenVersion>
-    <mojo.java.target>8</mojo.java.target>
-
     <!-- Plexus component versions -->
     <plexus-compiler-api.version>2.15.0</plexus-compiler-api.version>
     <plexus-utils.version>4.0.0</plexus-utils.version>
@@ -124,7 +120,6 @@
 
     <!-- Test scope dependencies' versions -->
     <xmlunit.version>2.9.1</xmlunit.version>
-    <maven-plugin-plugin.version>3.12.0</maven-plugin-plugin.version>
     <project.build.outputTimestamp>2022-04-20T23:14:54Z</project.build.outputTimestamp>
   </properties>
 
@@ -189,7 +184,6 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>${mavenVersion}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -213,7 +207,6 @@
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>${maven-plugin-plugin.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -402,7 +395,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
-            <version>3.6.1</version>
             <configuration>
               <debug>true</debug>
               <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
@@ -445,44 +437,5 @@
       </build>
     </profile>
 
-    <profile>
-      <id>reporting</id>
-      <activation>
-        <property>
-          <name>skipReports</name>
-          <value>!true</value>
-        </property>
-      </activation>
-      <reporting>
-        <plugins>
-          <!-- Apache plugins in alphabetical order -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>${maven-checkstyle-plugin.version}</version>
-            <configuration>
-              <skip>true</skip>
-              <configLocation>config/maven_checks.xml</configLocation>
-              <headerLocation>config/maven-header.txt</headerLocation>
-            </configuration>
-          </plugin>
-        </plugins>
-      </reporting>
-    </profile>
-    <profile>
-      <id>java11+</id>
-      <activation>
-        <jdk>[11,)</jdk>
-      </activation>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
 </project>
