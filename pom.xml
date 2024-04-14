@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
-  <version>3.2.0</version>
+  <version>3.3.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>JAXB-2 Maven Plugin</name>
@@ -120,7 +120,7 @@
 
     <!-- Test scope dependencies' versions -->
     <xmlunit.version>2.9.1</xmlunit.version>
-    <project.build.outputTimestamp>2024-04-14T21:59:00Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-04-14T22:12:35Z</project.build.outputTimestamp>
   </properties>
 
   <dependencyManagement>
