@@ -1,36 +1,36 @@
 # What is the JAXB2 Maven Plugin?
 
-This plugin uses the Java API for XML Binding (JAXB), version 2+, to generate Java 
-classes from XML Schemas (and optionally binding files) and to create XML Schemas from 
-annotated Java classes. The plugin delegates most of its work to either of the 
+This plugin uses the Java API for XML Binding (JAXB), version 2+, to generate Java
+classes from XML Schemas (and optionally binding files) and to create XML Schemas from
+annotated Java classes. The plugin delegates most of its work to either of the
 two JDK-supplied tools XJC and Schemagen, through its 	
 [JAXB implementation dependencies](./dependencies.html).
 
-> **Note**: This documentation is released with and valid for its corresponding 
+> **Note**: This documentation is released with and valid for its corresponding
 > plugin version as indicated in the top right corner of each documentation page.
 > Care is taken to make the plugin valid for all 2.x versions of the plugin, but
 > the plugin configuration is *not backwards compatible with versions 1.x*.
 
 ### Upgrading from version 1.x
 
-The jaxb2-maven-plugin was completely reimplemented for version 2, which means that 
-some/most parameters work differently from the 1.x versions of the plugin. 
+The jaxb2-maven-plugin was completely reimplemented for version 2, which means that
+some/most parameters work differently from the 1.x versions of the plugin.
 The plugin's configuration is therefore not backwards compatible with the 1.x versions.
 
 The usage examples below provide guides to configuring the 2.x version of the plugin.
-In most cases, only the source properties (which can contain several paths in the 2.x version) 
-should need your attention unless you use a nonstandard project layout; most default settings 
+In most cases, only the source properties (which can contain several paths in the 2.x version)
+should need your attention unless you use a nonstandard project layout; most default settings
 from the 1.x versions of the plugin have been preserved. Another source of information can be
 found in the integration tests of the plugin itself.
 
 ## Goals Overview
 
-The jaxb2-maven-plugin has four main goals, listed below. 
+The jaxb2-maven-plugin has four main goals, listed below.
 Detailed information about each goal can be found on their respective documentation page.
 
 1. [jaxb2:schemagen](./schemagen-mojo.html) Creates XML Schema Definition (XSD) file(s)
    from annotated Java sources.
-2. [jaxb2:testSchemagen](./testSchemagen-mojo.html) Creates XML Schema Definition (XSD) 
+2. [jaxb2:testSchemagen](./testSchemagen-mojo.html) Creates XML Schema Definition (XSD)
    file(s) from annotated Java test sources.
 3. [jaxb2:xjc](./xjc-mojo.html) Generates Java sources from XML Schema(s).
 4. [jaxb2:testXjc](./testXjc-mojo.html) Generates Java test sources from XML Schema(s).
@@ -79,18 +79,18 @@ the answer to your question as part of an older thread. Hence, it is also worth 
 the [mail archive](./mail-lists.html).
 
 The jaxb2-maven-plugin is compatible with [m2e](http://eclipse.org/m2e/) and
-integrates with the Eclipse build, providing incremental build support in the IDE. 
+integrates with the Eclipse build, providing incremental build support in the IDE.
 This requires m2e v1.1 or later.
 
 ### Defects?
 
-If you feel like the plugin is missing a feature or has a defect, you can fill a feature 
-request or bug report in our [issue tracker](./issue-tracking.html). When creating a new 
-issue, please provide a comprehensive description of your concern, preferably along with 
-a patch. If you do not supply a patch for the problem, it is important that the 
-developers can reproduce your problem. For this reason, entire debug logs, POMs or most 
-preferably little demo projects attached to the issue are very much appreciated. 
-Contributors can check out the project from our 
-[source repository](./source-repository.html) and will find supplementary 
+If you feel like the plugin is missing a feature or has a defect, you can fill a feature
+request or bug report in our [issue tracker](./issue-tracking.html). When creating a new
+issue, please provide a comprehensive description of your concern, preferably along with
+a patch. If you do not supply a patch for the problem, it is important that the
+developers can reproduce your problem. For this reason, entire debug logs, POMs or most
+preferably little demo projects attached to the issue are very much appreciated.
+Contributors can check out the project from our
+[source repository](./source-repository.html) and will find supplementary
 information in the
 [guide to helping with Maven](http://maven.apache.org/guides/development/guide-helping.html).
