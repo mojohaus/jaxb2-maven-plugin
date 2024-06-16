@@ -243,6 +243,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      *
      * @since 3.2
      */
+    @Parameter(property = "xjc.plugins")
     protected List<String> plugins;
 
     /**
