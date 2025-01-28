@@ -30,13 +30,15 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -235,7 +237,7 @@ public final class XsdGeneratorHelper {
             for (File current : foundFiles) {
 
                 // Create an XSD document from the current File.
-                final Document generatedSchemaFileDocument = parseXmlToDocument(current);
+                final Document generatedSchemaFileDocument = parseXmlToDocument(current, encoding);
 
                 // Replace all namespace prefixes within the provided document.
                 process(generatedSchemaFileDocument.getFirstChild(), true, classProcessor);
@@ -303,7 +305,7 @@ public final class XsdGeneratorHelper {
 
                         // Get the Document of the current schema file.
                         if (generatedSchemaFileDocument == null) {
-                            generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile);
+                            generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile, encoding);
                         }
 
                         // Replace all namespace prefixes within the provided document.
@@ -335,14 +337,14 @@ public final class XsdGeneratorHelper {
      * @param configuredTransformSchemas The Schema instances read from the configuration of this plugin.
      * @param mavenLog                   The active Log.
      * @param schemaDirectory            The directory where all generated schema files reside.
-     * @param charsetName                The encoding / charset name.
+     * @param encoding                   The encoding / charset name.
      */
     public static void renameGeneratedSchemaFiles(
             final Map<String, SimpleNamespaceResolver> resolverMap,
             final List<TransformSchema> configuredTransformSchemas,
             final Log mavenLog,
             final File schemaDirectory,
-            final String charsetName) {
+            final String encoding) {
 
         // Create the map relating namespace URI to desired filenames.
         Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<String, String>();
@@ -355,7 +357,7 @@ public final class XsdGeneratorHelper {
         // Replace the schemaLocation values to correspond to the new filenames
         for (SimpleNamespaceResolver currentResolver : resolverMap.values()) {
             File generatedSchemaFile = new File(schemaDirectory, currentResolver.getSourceFilename());
-            Document generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile);
+            Document generatedSchemaFileDocument = parseXmlToDocument(generatedSchemaFile, encoding);
 
             // Replace all namespace prefixes within the provided document.
             process(
@@ -368,7 +370,7 @@ public final class XsdGeneratorHelper {
                 mavenLog.debug("Changed schemaLocation entries within [" + currentResolver.getSourceFilename() + "]. "
                         + "Result: [" + getHumanReadableXml(generatedSchemaFileDocument) + "]");
             }
-            savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile, charsetName);
+            savePrettyPrintedDocument(generatedSchemaFileDocument, generatedSchemaFile, encoding);
         }
 
         // Now, rename the actual files.
@@ -509,17 +511,20 @@ public final class XsdGeneratorHelper {
     /**
      * Creates a Document from parsing the XML within the provided xmlFile.
      *
-     * @param xmlFile The XML file to be parsed.
+     * @param xmlFile  The XML file to be parsed.
+     * @param encoding The encoding to use when reading the XML file.
      * @return The Document corresponding to the xmlFile.
      */
-    private static Document parseXmlToDocument(final File xmlFile) {
+    private static Document parseXmlToDocument(final File xmlFile, final String encoding) {
         Document result = null;
         Reader reader = null;
         try {
-            reader = new FileReader(xmlFile);
+            reader = new InputStreamReader(new FileInputStream(xmlFile), encoding);
             result = parseXmlStream(reader);
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             // This should never happen...
+        } catch (final UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("Could not read xml file using encoding [" + encoding + "]", e);
         } finally {
             IOUtil.close(reader);
         }
