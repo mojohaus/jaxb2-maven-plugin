@@ -119,7 +119,7 @@
     <asm.version>9.8</asm.version>
 
     <!-- Test scope dependencies' versions -->
-    <xmlunit.version>2.10.0</xmlunit.version>
+    <xmlunit.version>2.10.1</xmlunit.version>
     <project.build.outputTimestamp>2025-03-31T21:16:01Z</project.build.outputTimestamp>
   </properties>
 
