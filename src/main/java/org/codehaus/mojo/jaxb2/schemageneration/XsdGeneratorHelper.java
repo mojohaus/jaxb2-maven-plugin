@@ -468,6 +468,7 @@ public final class XsdGeneratorHelper {
             Transformer transformer = getFactory().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(new DOMSource(node), new StreamResult(toReturn));
         } catch (TransformerException e) {
             throw new IllegalStateException("Could not transform node [" + node.getNodeName() + "] to XML", e);
