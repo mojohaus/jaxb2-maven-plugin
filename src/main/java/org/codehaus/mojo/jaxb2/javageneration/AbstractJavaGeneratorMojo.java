@@ -81,15 +81,29 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * name of the generated episode File (or rely on the standard file name {@link #STANDARD_EPISODE_FILENAME}).</p>
      *
      * @since 2.0
-     * @deprecated
+     * @deprecated Use {@link #episode} instead
      */
     @Deprecated
     @Parameter(defaultValue = "true")
     protected boolean generateEpisode;
 
     /**
+     * <p>Enable or disable generation of episode file.</p>
+     * <p>If set to {@code true} (the default), an episode file will be generated during XJC compilation.
+     * The episode file allows other schemas that depend on this schema to be compiled later and rely on
+     * classes generated from this compilation.</p>
+     * <p>If set to {@code false}, no episode file will be generated.</p>
+     * <p>The generated episode file is a JAXB customization file (with vendor extensions), normally known
+     * as a <em>binding file</em> with the suffix <code>.xjb</code>.</p>
+     *
+     * @since 3.2.1
+     */
+    @Parameter(defaultValue = "true")
+    protected boolean episode;
+
+    /**
      * <p>Corresponding XJC parameter: {@code episode}.</p>
-     * <p>Generate an episode file with the supplied name from this XJC compilation, so that other schemas that rely
+     * <p>Specify the name of the episode file to generate from this XJC compilation, so that other schemas that rely
      * on this schema can be compiled later and rely on classes that are generated from this compilation.
      * The generated episode file is simply a JAXB customization file (but with vendor extensions), normally known
      * as a <em>binding file</em> with the suffix <code>.xjb</code>.</p>
@@ -487,7 +501,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
 
                 // Do we need to re-create the episode file's parent directory.
-                final boolean reCreateEpisodeFileParentDirectory = generateEpisode && clearOutputDir;
+                final boolean reCreateEpisodeFileParentDirectory = episode && clearOutputDir;
                 if (reCreateEpisodeFileParentDirectory) {
                     getEpisodeFile(episodeFileName);
                 }
@@ -637,7 +651,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("classpath", classPath);
 
         // We must add the -extension flag in order to generate the episode file.
-        if (!extension) {
+        if (episode && !extension) {
 
             if (getLog().isInfoEnabled()) {
                 getLog().info("Adding 'extension' flag to XJC arguments, to generate an episode "
@@ -645,10 +659,15 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                         + "'. (XJCs 'episode' argument requires that the 'extension' argument is provided).");
             }
         }
-        builder.withFlag(true, "extension");
+        if (episode) {
+            builder.withFlag(true, "extension");
+        }
 
-        final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
-        builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        // Generate episode file only if requested
+        if (episode) {
+            final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
+            builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        }
 
         if (catalog != null) {
             builder.withNamedArgument("catalog", FileSystemUtilities.getCanonicalPath(catalog));
