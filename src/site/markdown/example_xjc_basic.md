@@ -545,4 +545,103 @@ The generated source code will contain french comments:
         "zipCode"
     })
     @Generated(value = "com.sun.tools.xjc.Driver", date = "2015-07-12T08:33:24+02:00", comments = "JAXB RI v2.2.11")
+
+# Example 9: Using XJC Plugins
+
+XJC supports plugins that can extend the code generation process to add additional methods or annotations to the generated classes. Common use cases include generating `toString()`, `equals()`, and `hashCode()` methods.
+
+To use XJC plugins, you need to:
+
+1. Add the plugin JAR as a dependency to the jaxb2-maven-plugin
+2. Enable the plugin using the `plugins` configuration parameter
+
+## Example 9a: Using JAXB2 Basics Plugins
+
+The [JAXB2 Basics](https://github.com/highsource/jaxb2-basics) project provides several useful plugins including:
+- `XtoString` - generates `toString()` methods
+- `XequalsHashCode` - generates `equals()` and `hashCode()` methods  
+- `Xcopyable` - generates `copy()` methods
+- `Xsetters` - generates fluent setters
+- `Xvalue-constructor` - generates value constructors
+
+Here's how to use the toString plugin:
+
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+            <execution>
+                <id>xjc</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <packageName>com.example.myschema</packageName>
+            <plugins>
+                <plugin>toString</plugin>
+            </plugins>
+        </configuration>
+        <dependencies>
+            <dependency>
+                <groupId>org.jvnet.jaxb</groupId>
+                <artifactId>jaxb2-basics</artifactId>
+                <version>2.0.15</version>
+            </dependency>
+        </dependencies>
+    </plugin>
+
+**Note**: The plugin name in the `<plugins>` configuration does not include the 'X' prefix. So for the `-XtoString` XJC argument, you specify `<plugin>toString</plugin>`. The plugin automatically adds the 'X' prefix when constructing the XJC arguments.
+
+## Example 9b: Combining Multiple Plugins
+
+You can enable multiple plugins at once:
+
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+            <execution>
+                <id>xjc</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <packageName>com.example.myschema</packageName>
+            <plugins>
+                <plugin>toString</plugin>
+                <plugin>equalsHashCode</plugin>
+            </plugins>
+        </configuration>
+        <dependencies>
+            <dependency>
+                <groupId>org.jvnet.jaxb</groupId>
+                <artifactId>jaxb2-basics</artifactId>
+                <version>2.0.15</version>
+            </dependency>
+        </dependencies>
+    </plugin>
+
+This configuration will generate classes with both `toString()` and `equals()`/`hashCode()` methods.
+
+## Example 9c: Plugin-Specific Arguments
+
+Some plugins accept additional arguments. You can pass these using the `arguments` parameter:
+
+    <configuration>
+        <packageName>com.example.myschema</packageName>
+        <plugins>
+            <plugin>toString</plugin>
+        </plugins>
+        <arguments>
+            <argument>-XtoString-toStringStrategy=org.jvnet.jaxb2_commons.lang.JAXBToStringStrategy</argument>
+        </arguments>
+    </configuration>
+
+Refer to the documentation of your specific XJC plugin for available options and arguments.
     public class AddressType { .... }
