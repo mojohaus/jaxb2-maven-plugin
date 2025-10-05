@@ -595,6 +595,12 @@ Here's how to use the toString plugin:
 
 **Note**: The plugin name in the `<plugins>` configuration does not include the 'X' prefix. So for the `-XtoString` XJC argument, you specify `<plugin>toString</plugin>`. The plugin automatically adds the 'X' prefix when constructing the XJC arguments.
 
+**Important - Version Compatibility**: 
+- For JAXB 3.x (Jakarta XML Binding with `jakarta.*` namespace), use `org.jvnet.jaxb:jaxb2-basics:2.0.15` or later
+- For JAXB 2.x (Java XML Binding with `javax.*` namespace), use `org.jvnet.jaxb2_commons:jaxb2-basics:1.11.1`
+
+The jaxb2-maven-plugin version 3.x uses JAXB 3.x (Jakarta namespace) by default.
+
 ## Example 9b: Combining Multiple Plugins
 
 You can enable multiple plugins at once:
