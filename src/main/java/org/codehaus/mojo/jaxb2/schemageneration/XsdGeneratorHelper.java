@@ -294,7 +294,7 @@ public final class XsdGeneratorHelper {
                     final String oldPrefix =
                             currentResolver.getNamespaceURI2PrefixMap().get(currentUri);
 
-                    if (StringUtils.isNotEmpty(oldPrefix)) {
+                    if (StringUtils.isNotEmpty(oldPrefix) && !oldPrefix.equals(newPrefix)) {
                         // Can we perform the prefix substitution?
                         validatePrefixSubstitutionIsPossible(oldPrefix, newPrefix, currentResolver);
 

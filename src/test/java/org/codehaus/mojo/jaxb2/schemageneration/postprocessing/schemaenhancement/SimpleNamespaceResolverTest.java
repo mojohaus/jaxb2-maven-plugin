@@ -3,6 +3,7 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancemen
 import javax.xml.XMLConstants;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -157,5 +158,79 @@ public class SimpleNamespaceResolverTest {
         // Assert
         assertEquals(1, prefixesList.size());
         assertEquals("xs", prefixesList.get(0));
+    }
+
+    @Test
+    void validateTnsPrefixIsNotOverwritten() {
+        // Assemble: XML with two prefixes for the same URI, one is 'tns'
+        final String xmlStream =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + "<xs:schema version=\"1.0\"\n"
+                        + "           targetNamespace=\"http://some/namespace\"\n"
+                        + "           xmlns:tns=\"http://some/namespace\"\n"
+                        + "           xmlns:other=\"http://some/namespace\"\n"
+                        + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                        + "  <xs:element name=\"foo\" type=\"xs:string\"/>\n"
+                        + "</xs:schema>\n";
+        // Write to temp file
+        try {
+            File tempFile = File.createTempFile("test-schema", ".xsd");
+            tempFile.deleteOnExit();
+            Files.write(tempFile.toPath(), xmlStream.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+            // Act
+            SimpleNamespaceResolver resolver = new SimpleNamespaceResolver(tempFile);
+            Map<String, String> uri2Prefix = resolver.getNamespaceURI2PrefixMap();
+
+            // Assert: 'tns' should be the prefix for the URI, not 'other'
+            assertEquals("tns", uri2Prefix.get("http://some/namespace"));
+        } catch (Exception e) {
+            fail("Exception during test: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void validateExceptionThrownOnReplacedUri() throws Exception {
+        // Assemble: nested elements with the same prefix but different URIs
+        final String xmlStream = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema xmlns:foo=\"http://uri1/\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                + "  <xs:element name=\"bar\" type=\"xs:string\"/>\n"
+                + "  <xs:element name=\"baz\">\n"
+                + "    <xs:complexType>\n"
+                + "      <xs:sequence>\n"
+                + "        <xs:element name=\"qux\" type=\"xs:string\" xmlns:foo=\"http://uri2/\"/>\n"
+                + "      </xs:sequence>\n"
+                + "    </xs:complexType>\n"
+                + "  </xs:element>\n"
+                + "</xs:schema>\n";
+        File tempFile = File.createTempFile("test-schema-uri", ".xsd");
+        tempFile.deleteOnExit();
+        Files.write(tempFile.toPath(), xmlStream.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        // Act & Assert
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            new SimpleNamespaceResolver(tempFile);
+        });
+        assertTrue(ex.getMessage().contains("Replaced URI"));
+    }
+
+    @Test
+    void validateExceptionThrownOnReplacedPrefix() throws Exception {
+        // Assemble: two different prefixes for the same URI (not tns)
+        final String xmlStream =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + "<xs:schema version=\"1.0\"\n"
+                        + "           xmlns:foo=\"http://uri/\"\n"
+                        + "           xmlns:bar=\"http://uri/\"\n"
+                        + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                        + "  <xs:element name=\"baz\" type=\"xs:string\"/>\n"
+                        + "</xs:schema>\n";
+        File tempFile = File.createTempFile("test-schema-prefix", ".xsd");
+        tempFile.deleteOnExit();
+        Files.write(tempFile.toPath(), xmlStream.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        // Act & Assert
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            new SimpleNamespaceResolver(tempFile);
+        });
+        assertTrue(ex.getMessage().contains("Replaced prefix"));
     }
 }
