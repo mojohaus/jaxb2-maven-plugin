@@ -23,10 +23,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.codehaus.mojo.jaxb2.its</groupId>
-    <artifactId>schemagen-main</artifactId>
+    <artifactId>xjc-without-episode</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>Purpose: Ensure that XML Schema are generated from annotated Java files.</description>
+    <description>Purpose: Validate that episode file is not generated when episode=false.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,11 +61,12 @@
                 <version>@project.version@</version>
                 <executions>
                     <execution>
-                        <id>schemagen</id>
+                        <id>xjc</id>
                         <goals>
-                            <goal>schemagen</goal>
+                            <goal>xjc</goal>
                         </goals>
                         <configuration>
+                            <packageName>com.example.myschema</packageName>
                             <episode>false</episode>
                         </configuration>
                     </execution>
