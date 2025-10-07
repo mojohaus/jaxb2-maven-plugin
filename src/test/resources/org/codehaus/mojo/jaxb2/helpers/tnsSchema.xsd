@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://schemas.acme.com/student"
+           xmlns:tns="http://schemas.acme.com/student"
+           xmlns:base="http://schemas.acme.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="student" type="tns:studentType"/>
+
+    <xs:complexType name="studentType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="age" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
