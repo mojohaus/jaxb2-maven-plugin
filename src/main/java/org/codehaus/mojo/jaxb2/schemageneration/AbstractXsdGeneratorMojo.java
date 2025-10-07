@@ -178,15 +178,29 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
      * name of the generated episode File (or rely on the standard file name {@link #STANDARD_EPISODE_FILENAME}).</p>
      *
      * @since 2.0
-     * @deprecated
+     * @deprecated Use {@link #episode} instead
      */
     @Deprecated
     @Parameter(defaultValue = "true")
     protected boolean generateEpisode;
 
     /**
+     * <p>Enable or disable generation of episode file.</p>
+     * <p>If set to {@code true} (the default), an episode file will be generated during schema generation.
+     * The episode file allows other schemas that depend on this schema to be compiled later and rely on
+     * classes generated from this compilation.</p>
+     * <p>If set to {@code false}, no episode file will be generated.</p>
+     * <p>The generated episode file is a JAXB customization file (with vendor extensions), normally known
+     * as a <em>binding file</em> with the suffix <code>.xjb</code>.</p>
+     *
+     * @since 3.2.1
+     */
+    @Parameter(defaultValue = "true")
+    protected boolean episode;
+
+    /**
      * <p>Corresponding SchemaGen parameter: {@code episode}.</p>
-     * <p>Generate an episode file with the supplied name from this XSD generation, so that other schemas that rely
+     * <p>Specify the name of the episode file to generate from this XSD generation, so that other schemas that rely
      * on this schema can be compiled later and rely on classes that are generated from this compilation.
      * The generated episode file is simply a JAXB customization file (but with vendor extensions), normally known
      * as a <em>binding file</em> with the suffix <code>.xjb</code>.</p>
@@ -381,7 +395,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             environment.setup();
 
             // Compile the SchemaGen arguments
-            final File episodeFile = getEpisodeFile(episodeFileName);
+            final File episodeFile = episode ? getEpisodeFile(episodeFileName) : null;
             final List<URL> sources = getSources();
             final String[] schemaGenArguments =
                     getSchemaGenArguments(environment.getClassPathAsArgument(), episodeFile, sources);
@@ -391,14 +405,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
             FileSystemUtilities.createDirectory(getWorkDirectory(), clearOutputDir);
 
-            // Re-generate the episode file's parent directory.
-            getEpisodeFile(episodeFileName);
-            // Do we need to re-create the episode file's parent directory?
-            /*final boolean reCreateEpisodeFileParentDirectory = generateEpisode && clearOutputDir;
-            if (reCreateEpisodeFileParentDirectory) {
-
+            // Re-generate the episode file's parent directory if episode generation is enabled.
+            if (episode) {
+                getEpisodeFile(episodeFileName);
             }
-            */
 
             try {
 
@@ -602,9 +612,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("d", getWorkDirectory().getAbsolutePath());
         builder.withNamedArgument("classpath", classPath);
 
-        // From 2.4: Always generate an episode file.
-        //
-        builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        // Generate episode file only if requested
+        if (episodeFile != null) {
+            builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        }
 
         try {
 
