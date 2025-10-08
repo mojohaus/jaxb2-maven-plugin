@@ -466,7 +466,7 @@ public final class XsdGeneratorHelper {
 
         try {
             Transformer transformer = getFactory().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.INDENT, "no");
             transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
             transformer.transform(new DOMSource(node), new StreamResult(toReturn));
         } catch (TransformerException e) {
