@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
-  <version>3.3.1-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>JAXB-2 Maven Plugin</name>
@@ -98,7 +98,7 @@
   <scm>
     <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
     <developerConnection>${project.scm.connection}</developerConnection>
-    <tag>jaxb2-maven-plugin-3.2.0</tag>
+    <tag>HEAD</tag>
     <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
   </scm>
   <issueManagement>
@@ -113,7 +113,7 @@
     <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
     <!-- JAXB tooling versions -->
-    <jaxb.version>3.0.2</jaxb.version>
+    <jaxb.version>4.0.6</jaxb.version>
     <stax-ex.version>2.1.0</stax-ex.version>
     <qdox.version>2.2.0</qdox.version>
     <asm.version>9.9</asm.version>
