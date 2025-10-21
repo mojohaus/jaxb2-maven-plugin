@@ -1,8 +1,19 @@
 _extends: .github
 # mojo-parent uses a single version number, no semantic versioning
-version-template: '$MAJOR'
-name-template: '$NEXT_MAJOR_VERSION'
+name-template: '$RESOLVED_VERSION'
 tag-template: 'mojo-parent-$NEXT_MAJOR_VERSION'
+version-resolver:
+  major:
+    labels:
+      - major
+  minor:
+    labels:
+      - minor
+      - enhancement
+  patch:
+    labels:
+      - patch
+  default: patch
 template: |
   ## Changes
 
