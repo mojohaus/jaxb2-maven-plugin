@@ -573,8 +573,6 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 // Refresh the BuildContext
                 getBuildContext().refresh(targetXsdDirectory);
             }
-        } catch (MojoExecutionException e) {
-            throw e;
         } catch (NoSchemasException e) {
             if (failOnNoSchemas) {
                 throw new MojoExecutionException("", e);
