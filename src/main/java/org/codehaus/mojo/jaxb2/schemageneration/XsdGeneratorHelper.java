@@ -502,7 +502,8 @@ public final class XsdGeneratorHelper {
             final String oldPrefix, final String newPrefix, final SimpleNamespaceResolver currentResolver)
             throws MojoExecutionException {
         // Make certain the newPrefix does not exist already.
-        if (currentResolver.getNamespaceURI2PrefixMap().containsValue(newPrefix)) {
+        if (!newPrefix.equals(oldPrefix)
+                && currentResolver.getNamespaceURI2PrefixMap().containsValue(newPrefix)) {
             throw new MojoExecutionException(MISCONFIG + "Namespace prefix [" + newPrefix + "] is already in use."
                     + " Cannot replace namespace prefix [" + oldPrefix + "] with [" + newPrefix + "] in file ["
                     + currentResolver.getSourceFilename() + "].");

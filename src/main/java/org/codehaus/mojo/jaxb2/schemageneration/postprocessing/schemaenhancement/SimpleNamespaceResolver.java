@@ -208,7 +208,9 @@ public class SimpleNamespaceResolver implements NamespaceContext {
                 throw new IllegalStateException("Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue()
                         + "] for prefix [" + cacheKey + "]");
             }
-            if (oldPrefixValue != null) {
+            // If old prefix has changed, throw exception. The "tns" prefix may be overridden by a specific namespace in
+            // @XmlSchema(xmlns=...), and is therefore ignored here
+            if (oldPrefixValue != null && !oldPrefixValue.equals(cacheKey) && !cacheKey.equals("tns")) {
                 throw new IllegalStateException("Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey
                         + "] for URI [" + aNode.getNodeValue() + "]");
             }

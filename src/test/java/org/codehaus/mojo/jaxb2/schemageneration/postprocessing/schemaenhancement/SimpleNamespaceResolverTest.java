@@ -158,4 +158,25 @@ public class SimpleNamespaceResolverTest {
         assertEquals(1, prefixesList.size());
         assertEquals("xs", prefixesList.get(0));
     }
+
+    @Test
+    void validateCollectingSchemaInfoWithTnsPrefix() {
+        // Assemble
+        final String schemaFile = "tnsSchema.xsd";
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
+
+        // Act
+        final Map<String, String> namespaceURI2PrefixMap = unitUnderTest.getNamespaceURI2PrefixMap();
+
+        // Assert
+        assertEquals(schemaFile, unitUnderTest.getSourceFilename());
+        assertEquals("http://schemas.acme.com/student", unitUnderTest.getLocalNamespaceURI());
+
+        // Verify that tns prefix is correctly handled (should be overridden without error)
+        assertEquals(3, namespaceURI2PrefixMap.size());
+        assertEquals("xs", namespaceURI2PrefixMap.get(XMLConstants.W3C_XML_SCHEMA_NS_URI));
+        assertEquals("base", namespaceURI2PrefixMap.get("http://schemas.acme.com"));
+        assertEquals("tns", namespaceURI2PrefixMap.get("http://schemas.acme.com/student"));
+    }
 }
