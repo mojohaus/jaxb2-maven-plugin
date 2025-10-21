@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>jaxb2-maven-plugin</artifactId>
-  <version>4.0.0</version>
+  <version>4.0.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>JAXB-2 Maven Plugin</name>
@@ -98,7 +98,7 @@
   <scm>
     <connection>scm:git:https://github.com/mojohaus/jaxb2-maven-plugin.git</connection>
     <developerConnection>${project.scm.connection}</developerConnection>
-    <tag>4.0.0</tag>
+    <tag>HEAD</tag>
     <url>https://github.com/mojohaus/jaxb2-maven-plugin.git</url>
   </scm>
   <issueManagement>
@@ -123,7 +123,7 @@
 
     <!-- Test scope dependencies' versions -->
     <xmlunit.version>2.10.4</xmlunit.version>
-    <project.build.outputTimestamp>2025-10-21T05:17:21Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-10-21T05:18:33Z</project.build.outputTimestamp>
   </properties>
 
   <dependencyManagement>
