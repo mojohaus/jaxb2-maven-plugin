@@ -107,6 +107,9 @@
   </issueManagement>
 
   <properties>
+    <!-- jaxb 4 is 11 minimum -->
+    <mojo.java.target>11</mojo.java.target>
+
     <!-- Plexus component versions -->
     <plexus-compiler-api.version>2.15.0</plexus-compiler-api.version>
     <plexus-utils.version>4.0.2</plexus-utils.version>
