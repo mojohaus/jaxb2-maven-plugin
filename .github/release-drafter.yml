@@ -1,7 +1,7 @@
 _extends: .github
 # mojo-parent uses a single version number, no semantic versioning
 name-template: '$RESOLVED_VERSION'
-tag-template: 'mojo-parent-$NEXT_MAJOR_VERSION'
+tag-template: 'jaxb2-maven-plugin-$RESOLVED_VERSION'
 version-resolver:
   major:
     labels:
