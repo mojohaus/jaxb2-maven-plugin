@@ -349,6 +349,28 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     protected boolean externalEntityProcessing;
 
     /**
+     * <p>Defines the access permissions for external schemas and DTDs. This setting controls the
+     * <code>javax.xml.accessExternalSchema</code> and <code>javax.xml.accessExternalDTD</code> system properties
+     * during XJC execution.</p>
+     * <p>By default, this is set to <code>"file,http,https"</code> to allow common schema access patterns while
+     * maintaining reasonable security. This helps prevent namespace prefix binding errors that can occur when
+     * JAXB/XJC processes XSD/XJB files with external schema references.</p>
+     * <p>Valid values include:</p>
+     * <ul>
+     *   <li><code>"file,http,https"</code> - Allow file, HTTP, and HTTPS access (default, recommended)</li>
+     *   <li><code>"all"</code> - Allow all protocols (less secure, use with caution)</li>
+     *   <li><code>""</code> (empty string) - Deny all external access (most secure, may cause errors)</li>
+     *   <li>Custom comma-separated list of protocols</li>
+     * </ul>
+     * <p>If you encounter "Prefix '' is already bound to ''" errors, ensure this is set to at least
+     * <code>"file,http,https"</code> (the default value).</p>
+     *
+     * @since 4.0.1
+     */
+    @Parameter(defaultValue = "file,http,https")
+    protected String accessExternalSchema;
+
+    /**
      * <p>Java generation is required if any of the file products is outdated/stale.</p>
      * {@inheritDoc}
      */
@@ -472,18 +494,21 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                     }
                 }
 
-                // Fix for "Prefix '' is already bound to ''" error
-                // This error can occur when JAXB/XJC processes XSD/XJB files with namespace declarations
-                // Setting javax.xml.accessExternalSchema to "all" allows the parser to access external schemas
-                // without triggering namespace prefix binding conflicts
-                final List<SystemPropertyChangeEnvironmentFacet> xmlAccessProps =
-                        SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
-                                .addOrChange("javax.xml.accessExternalSchema", "all")
-                                .addOrChange("javax.xml.accessExternalDTD", "all")
-                                .build();
+                // Configure XML access properties to prevent namespace prefix binding errors.
+                // The "Prefix '' is already bound to ''" error can occur when JAXB/XJC processes
+                // XSD/XJB files and the SAX parser encounters namespace declaration issues.
+                // Setting these properties allows the parser to access external schemas properly.
+                // Default value is "file,http,https" which balances security and functionality.
+                if (accessExternalSchema != null && !accessExternalSchema.isEmpty()) {
+                    final List<SystemPropertyChangeEnvironmentFacet> xmlAccessProps =
+                            SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
+                                    .addOrChange("javax.xml.accessExternalSchema", accessExternalSchema)
+                                    .addOrChange("javax.xml.accessExternalDTD", accessExternalSchema)
+                                    .build();
 
-                for (SystemPropertyChangeEnvironmentFacet current : xmlAccessProps) {
-                    environment.add(current);
+                    for (SystemPropertyChangeEnvironmentFacet current : xmlAccessProps) {
+                        environment.add(current);
+                    }
                 }
 
                 // XJC overwrites proxy properties if so inclined, so we use this facet to save them
