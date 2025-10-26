@@ -472,6 +472,20 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                     }
                 }
 
+                // Fix for "Prefix '' is already bound to ''" error
+                // This error can occur when JAXB/XJC processes XSD/XJB files with namespace declarations
+                // Setting javax.xml.accessExternalSchema to "all" allows the parser to access external schemas
+                // without triggering namespace prefix binding conflicts
+                final List<SystemPropertyChangeEnvironmentFacet> xmlAccessProps =
+                        SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
+                                .addOrChange("javax.xml.accessExternalSchema", "all")
+                                .addOrChange("javax.xml.accessExternalDTD", "all")
+                                .build();
+
+                for (SystemPropertyChangeEnvironmentFacet current : xmlAccessProps) {
+                    environment.add(current);
+                }
+
                 // XJC overwrites proxy properties if so inclined, so we use this facet to save them
                 for (String key : PROXY_PROPERTY_KEYS) {
                     environment.add(new SystemPropertySaveEnvironmentFacet(key, getLog()));
