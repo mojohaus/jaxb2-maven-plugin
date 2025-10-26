@@ -648,17 +648,20 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("d", getOutputDirectory().getAbsolutePath());
         builder.withNamedArgument("classpath", classPath);
 
-        // We must add the -extension flag in order to generate the episode file.
-        if (episode && !extension) {
-
-            if (getLog().isInfoEnabled()) {
-                getLog().info("Adding 'extension' flag to XJC arguments, to generate an episode "
-                        + "file named '" + (episodeFileName == null ? STANDARD_EPISODE_FILENAME : episodeFileName)
-                        + "'. (XJCs 'episode' argument requires that the 'extension' argument is provided).");
-            }
-        }
+        // Handle extension flag
+        // If episode generation is enabled, we need the -extension flag
+        // Otherwise, respect the user's extension setting
         if (episode) {
+            if (!extension) {
+                if (getLog().isInfoEnabled()) {
+                    getLog().info("Adding 'extension' flag to XJC arguments, to generate an episode "
+                            + "file named '" + (episodeFileName == null ? STANDARD_EPISODE_FILENAME : episodeFileName)
+                            + "'. (XJCs 'episode' argument requires that the 'extension' argument is provided).");
+                }
+            }
             builder.withFlag(true, "extension");
+        } else {
+            builder.withFlag(extension, "extension");
         }
 
         // Generate episode file only if requested
