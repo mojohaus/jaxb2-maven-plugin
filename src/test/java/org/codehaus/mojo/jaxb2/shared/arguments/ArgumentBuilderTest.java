@@ -14,50 +14,38 @@ class ArgumentBuilderTest {
 
     @Test
     void validateExceptionOnAddingAllWhitespaceFlag() {
-        assertThrows(IllegalArgumentException.class, () -> {
-
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(IllegalArgumentException.class, () ->
 
             // Act & Assert
-            unitUnderTest.withFlag(true, "  ");
-        });
+            unitUnderTest.withFlag(true, "  "));
     }
 
     @Test
     void validateExceptionOnAddingFlagContainingWhitespace() {
-        assertThrows(IllegalArgumentException.class, () -> {
-
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(IllegalArgumentException.class, () ->
 
             // Act & Assert
-            unitUnderTest.withFlag(true, "foo bar");
-        });
+            unitUnderTest.withFlag(true, "foo bar"));
     }
 
     @Test
     void validateExceptionOnAddingNullFlag() {
-        assertThrows(NullPointerException.class, () -> {
-
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(NullPointerException.class, () ->
 
             // Act & Assert
-            unitUnderTest.withFlag(true, null);
-        });
+            unitUnderTest.withFlag(true, null));
     }
 
     @Test
     void validateExceptionOnAddingNullNamedArgument() {
-        assertThrows(NullPointerException.class, () -> {
-
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(NullPointerException.class, () ->
 
             // Act & Assert
-            unitUnderTest.withNamedArgument(null, "irrelevant");
-        });
+            unitUnderTest.withNamedArgument(null, "irrelevant"));
     }
 
     @Test

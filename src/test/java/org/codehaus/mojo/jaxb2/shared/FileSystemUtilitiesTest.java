@@ -93,15 +93,12 @@ class FileSystemUtilitiesTest {
 
     @Test
     void validateExceptionOnGettingExistingFileWithRelativePathAndNullBasedir() {
-        assertThrows(NullPointerException.class, () -> {
-
-            // Assemble
-            final String relativePath = "testdata/shared/filesystemutilities/TestFile2.txt";
-            final File incorrectNullBaseDir = null;
+        final String relativePath = "testdata/shared/filesystemutilities/TestFile2.txt";
+        final File incorrectNullBaseDir = null;
+        assertThrows(NullPointerException.class, () ->
 
             // Act & Assert
-            FileSystemUtilities.getExistingFile(relativePath, incorrectNullBaseDir);
-        });
+            FileSystemUtilities.getExistingFile(relativePath, incorrectNullBaseDir));
     }
 
     @Test
@@ -130,14 +127,11 @@ class FileSystemUtilitiesTest {
 
     @Test
     void validateExceptionOnNullFileListWhenResolvingFilesAndRemovingExclusions() {
-        assertThrows(NullPointerException.class, () -> {
-
-            // Assemble
-            final List<File> incorrectNullFileList = null;
+        final List<File> incorrectNullFileList = null;
+        assertThrows(NullPointerException.class, () ->
 
             // Act & Assert
-            FileSystemUtilities.resolveRecursively(incorrectNullFileList, null, log);
-        });
+            FileSystemUtilities.resolveRecursively(incorrectNullFileList, null, log));
     }
 
     @Test
@@ -313,7 +307,7 @@ class FileSystemUtilitiesTest {
 
         assertEquals("Blah!", logBuffer.get(keys.get(0)).getMessage());
         assertNull(logBuffer.get(keys.get(1)));
-        assertTrue(logBuffer.get(keys.get(2)) instanceof IllegalArgumentException);
+        assertInstanceOf(IllegalArgumentException.class, logBuffer.get(keys.get(2)));
     }
 
     @Test

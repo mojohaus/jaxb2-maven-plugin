@@ -120,10 +120,10 @@ class JavaDocExtractorTest {
         final SortableLocation stringMethodLocation = result.getLocation(fieldAccessPrefix + "getStringField()");
         final SortableLocation integerMethodLocation = result.getLocation(fieldAccessPrefix + "getIntegerField()");
 
-        assertTrue(stringFieldLocation instanceof FieldLocation);
-        assertTrue(integerFieldLocation instanceof FieldLocation);
-        assertTrue(stringMethodLocation instanceof MethodLocation);
-        assertTrue(integerMethodLocation instanceof MethodLocation);
+        assertInstanceOf(FieldLocation.class, stringFieldLocation);
+        assertInstanceOf(FieldLocation.class, integerFieldLocation);
+        assertInstanceOf(MethodLocation.class, stringMethodLocation);
+        assertInstanceOf(MethodLocation.class, integerMethodLocation);
 
         assertNull(stringMethodLocation.getAnnotationRenamedTo());
         assertNull(integerMethodLocation.getAnnotationRenamedTo());
@@ -151,10 +151,10 @@ class JavaDocExtractorTest {
         final SortableLocation integerMethodLocation2 =
                 result.getLocation(methodAccessPrefix + "annotatedIntegerMethod()");
 
-        assertTrue(stringFieldLocation2 instanceof FieldLocation);
-        assertTrue(integerFieldLocation2 instanceof FieldLocation);
-        assertTrue(stringMethodLocation2 instanceof MethodLocation);
-        assertTrue(integerMethodLocation2 instanceof MethodLocation);
+        assertInstanceOf(FieldLocation.class, stringFieldLocation2);
+        assertInstanceOf(FieldLocation.class, integerFieldLocation2);
+        assertInstanceOf(MethodLocation.class, stringMethodLocation2);
+        assertInstanceOf(MethodLocation.class, integerMethodLocation2);
 
         assertNull(stringFieldLocation2.getAnnotationRenamedTo());
         assertNull(integerFieldLocation2.getAnnotationRenamedTo());
@@ -339,7 +339,7 @@ class JavaDocExtractorTest {
         */
         final SortableLocation packageLocation = result.getLocation(basicPackagePath);
         final JavaDocData basicPackageJavaDoc = result.getJavaDoc(basicPackagePath);
-        assertTrue(packageLocation instanceof PackageLocation);
+        assertInstanceOf(PackageLocation.class, packageLocation);
 
         final PackageLocation castPackageLocation = (PackageLocation) packageLocation;
         assertEquals("basic", castPackageLocation.getPackageName());
@@ -356,7 +356,7 @@ class JavaDocExtractorTest {
         */
         final SortableLocation classLocation = result.getLocation(nodeProcessorClassPath);
         final JavaDocData nodeProcessorClassJavaDoc = result.getJavaDoc(nodeProcessorClassPath);
-        assertTrue(classLocation instanceof ClassLocation);
+        assertInstanceOf(ClassLocation.class, classLocation);
 
         final ClassLocation castClassLocation = (ClassLocation) classLocation;
         assertEquals("basic", castClassLocation.getPackageName());
@@ -379,7 +379,7 @@ class JavaDocExtractorTest {
         */
         final SortableLocation acceptMethodLocation = result.getLocation(acceptMethodPath);
         final JavaDocData acceptMethodClassJavaDoc = result.getJavaDoc(acceptMethodPath);
-        assertTrue(acceptMethodLocation instanceof MethodLocation);
+        assertInstanceOf(MethodLocation.class, acceptMethodLocation);
 
         final MethodLocation castMethodLocation = (MethodLocation) acceptMethodLocation;
         assertEquals("basic", castMethodLocation.getPackageName());

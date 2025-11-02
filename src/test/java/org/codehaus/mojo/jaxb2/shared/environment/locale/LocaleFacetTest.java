@@ -29,7 +29,7 @@ class LocaleFacetTest {
     }
 
     @Test
-    void validateLocaleParsing() throws MojoExecutionException {
+    void validateLocaleParsing() throws Exception {
 
         // Assemble
         final String frenchLocaleString = "fr";
@@ -46,7 +46,7 @@ class LocaleFacetTest {
     }
 
     @Test
-    void validateOptimalLocaleFindingIgnoringScripts() throws MojoExecutionException {
+    void validateOptimalLocaleFindingIgnoringScripts() throws Exception {
 
         // Assemble
         final SortedMap<String, Locale> lang2Locale = new TreeMap<String, Locale>();
@@ -72,16 +72,15 @@ class LocaleFacetTest {
     }
 
     @Test
-    void validateExceptionOnIncorrectLocaleString() throws MojoExecutionException {
-        assertThrows(MojoExecutionException.class, () -> {
+    void validateExceptionOnIncorrectLocaleString() throws Exception {
+        assertThrows(MojoExecutionException.class, () ->
 
             // Act & Assert
-            LocaleFacet.createFor("not,a,properly,formatted,locale_string", log);
-        });
+            LocaleFacet.createFor("not,a,properly,formatted,locale_string", log));
     }
 
     @Test
-    void validateNoExceptionOnUnknownLocaleString() throws MojoExecutionException {
+    void validateNoExceptionOnUnknownLocaleString() throws Exception {
 
         // Act & Assert
         LocaleFacet.createFor("thisIsAnUnknownLocale", log);

@@ -17,28 +17,25 @@ class TransformSchemaTest {
 
     @Test
     void validateExceptionOnEmptyToFileArgument() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () ->
 
             // Act & Assert
-            unitUnderTest.setToFile("");
-        });
+            unitUnderTest.setToFile(""));
     }
 
     @Test
     void validateExceptionOnEmptyToPrefixArgument() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () ->
 
             // Act & Assert
-            unitUnderTest.setToPrefix("");
-        });
+            unitUnderTest.setToPrefix(""));
     }
 
     @Test
     void validateExceptionOnEmptyUriArgument() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () ->
 
             // Act & Assert
-            unitUnderTest.setUri("");
-        });
+            unitUnderTest.setUri(""));
     }
 }
