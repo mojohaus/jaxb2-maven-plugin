@@ -63,7 +63,7 @@ public class XjcLogAdapter extends XJCListener {
      * {@inheritDoc}
      */
     @Override
-    public void message(String msg) {
+    public void message(final String msg) {
         if (log.isDebugEnabled()) {
             log.debug(msg);
         }
