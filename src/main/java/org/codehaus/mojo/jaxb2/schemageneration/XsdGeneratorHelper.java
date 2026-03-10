@@ -522,7 +522,7 @@ public final class XsdGeneratorHelper {
         } catch (final UnsupportedEncodingException e) {
             throw new IllegalArgumentException("Could not read xml file using encoding [" + encoding + "]", e);
         } catch (final IOException e) {
-            // This should never happen...
+            throw new IllegalArgumentException("This should never happen...", e);
         }
 
         return result;

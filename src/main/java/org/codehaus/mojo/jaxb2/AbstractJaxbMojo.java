@@ -649,7 +649,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         if (objectOrNull == null) {
             getLog().error("Found null '" + objectName
-                    + "', implying that Maven @Component injection was not done properly.");
+                    + "', implying that Maven @Inject injection was not done properly.");
         }
 
         return objectOrNull;

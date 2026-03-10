@@ -23,6 +23,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -70,8 +71,10 @@ public class SimpleNamespaceResolver implements NamespaceContext {
 
         try (Reader reader = new FileReader(xmlFile)) {
             initialize(reader);
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("File [" + xmlFile + "] could not be found.");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("This should never happen...", e);
         }
     }
 
