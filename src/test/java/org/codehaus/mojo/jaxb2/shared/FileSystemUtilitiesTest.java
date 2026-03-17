@@ -432,10 +432,11 @@ class FileSystemUtilitiesTest {
         final String path = "/project/backend/foobar/my-schema.xsd";
         final SortedMap<String, String> parentDir2Expected = new TreeMap<>();
         parentDir2Expected.put("/", "project/backend/foobar/my-schema.xsd");
-        parentDir2Expected.put("", "project/backend/foobar/my-schema.xsd");
         parentDir2Expected.put("/project", "backend/foobar/my-schema.xsd");
-        parentDir2Expected.put("/not/a/path", "project/backend/foobar/my-schema.xsd");
         parentDir2Expected.put("/project/", "backend/foobar/my-schema.xsd");
+        // When path is NOT under parentDir, the absolute path must be preserved (GitHub #313)
+        parentDir2Expected.put("", "/project/backend/foobar/my-schema.xsd");
+        parentDir2Expected.put("/not/a/path", "/project/backend/foobar/my-schema.xsd");
 
         // Act & Assert
         for (Map.Entry<String, String> current : parentDir2Expected.entrySet()) {
