@@ -131,7 +131,6 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
     // Internal state
     private static final int SCHEMAGEN_INCORRECT_OPTIONS = -1;
-    private static final int SCHEMAGEN_COMPLETED_OK = 0;
     private static final int SCHEMAGEN_JAXB_ERRORS = 1;
 
     /**
@@ -350,7 +349,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             //
             final ClassRealm localRealm = (ClassRealm) getClass().getClassLoader();
             for (String current : SYSTEM_TOOLS_CLASSLOADER_PACKAGES) {
-                localRealm.importFrom(ToolProvider.getSystemToolClassLoader(), current);
+                localRealm.importFrom((ClassLoader) null, current);
             }
 
             // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.

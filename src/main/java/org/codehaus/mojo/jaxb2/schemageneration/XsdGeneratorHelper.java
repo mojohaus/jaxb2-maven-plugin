@@ -31,7 +31,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -60,7 +59,6 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -519,16 +517,12 @@ public final class XsdGeneratorHelper {
      */
     private static Document parseXmlToDocument(final File xmlFile, final String encoding) {
         Document result = null;
-        Reader reader = null;
-        try {
-            reader = new InputStreamReader(new FileInputStream(xmlFile), encoding);
+        try (Reader reader = new InputStreamReader(new FileInputStream(xmlFile), encoding)) {
             result = parseXmlStream(reader);
-        } catch (final FileNotFoundException e) {
-            // This should never happen...
         } catch (final UnsupportedEncodingException e) {
             throw new IllegalArgumentException("Could not read xml file using encoding [" + encoding + "]", e);
-        } finally {
-            IOUtil.close(reader);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException("This should never happen...", e);
         }
 
         return result;
@@ -536,14 +530,10 @@ public final class XsdGeneratorHelper {
 
     private static void savePrettyPrintedDocument(
             final Document toSave, final File targetFile, final String charsetName) {
-        Writer out = null;
-        try {
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), charsetName));
+        try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), charsetName))) {
             out.write(getHumanReadableXml(toSave.getFirstChild()));
         } catch (IOException e) {
             throw new IllegalStateException("Could not write to file [" + targetFile.getAbsolutePath() + "]", e);
-        } finally {
-            IOUtil.close(out);
         }
     }
 

@@ -19,6 +19,8 @@ package org.codehaus.mojo.jaxb2;
  * under the License.
  */
 
+import javax.inject.Inject;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -42,7 +44,6 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
@@ -173,7 +174,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * The Plexus BuildContext is used to identify files or directories modified since last build,
      * implying functionality used to define if java generation must be performed again.
      */
-    @Component
+    @Inject
     private BuildContext buildContext;
 
     /**
@@ -648,7 +649,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
         if (objectOrNull == null) {
             getLog().error("Found null '" + objectName
-                    + "', implying that Maven @Component injection was not done properly.");
+                    + "', implying that Maven @Inject injection was not done properly.");
         }
 
         return objectOrNull;

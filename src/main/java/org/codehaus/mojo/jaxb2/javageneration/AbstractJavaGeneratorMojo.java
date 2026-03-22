@@ -266,6 +266,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * @since 2.0
      * @deprecated This should be removed in the 2.0+ release, as all arguments should be handled by other parameters.
      */
+    @Deprecated
     @Parameter(property = "xjc.arguments")
     protected List<String> arguments;
 

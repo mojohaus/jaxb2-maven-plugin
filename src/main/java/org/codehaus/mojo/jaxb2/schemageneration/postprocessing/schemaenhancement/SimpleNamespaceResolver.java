@@ -25,6 +25,7 @@ import javax.xml.namespace.NamespaceContext;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +34,6 @@ import java.util.Map;
 
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
-import org.codehaus.plexus.util.IOUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,14 +69,12 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     public SimpleNamespaceResolver(final File xmlFile) {
         this.sourceFilename = xmlFile.getName();
 
-        Reader reader = null;
-        try {
-            reader = new FileReader(xmlFile);
+        try (Reader reader = new FileReader(xmlFile)) {
             initialize(reader);
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("File [" + xmlFile + "] could not be found.");
-        } finally {
-            IOUtil.close(reader);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("This should never happen...", e);
         }
     }
 
