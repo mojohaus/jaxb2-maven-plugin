@@ -73,6 +73,7 @@ local.properties
 .loadpath
 .project
 .classpath
+.factorypath
 
 # External tool builders
 .externalToolBuilders/
