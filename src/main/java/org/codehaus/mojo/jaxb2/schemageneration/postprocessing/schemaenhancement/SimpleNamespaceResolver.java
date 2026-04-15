@@ -198,27 +198,43 @@ public class SimpleNamespaceResolver implements NamespaceContext {
             final String nodeValue = aNode.getNodeValue();
 
             // Cache the namespace in both caches.
-            // "tns" must not be replaced here
-            String oldPrefix = uri2Prefix.get(nodeValue);
-            if (oldPrefix == null || !oldPrefix.equals("tns")) {
-                final String oldUriValue = prefix2Uri.put(cacheKey, nodeValue);
-                final String oldPrefixValue = uri2Prefix.put(nodeValue, cacheKey);
+            // The "tns" prefix is special: once "tns" is the canonical prefix for a URI,
+            // no other prefix should replace it. Conversely, "tns" is allowed to replace
+            // a previously seen non-"tns" prefix for the same URI.
+            final String oldPrefix = uri2Prefix.get(nodeValue);
 
-                // Check sanity; we should not be overwriting values here.
-                if (oldUriValue != null) {
-                    throw new IllegalStateException("Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue()
-                            + "] for prefix [" + cacheKey + "]");
-                }
-                // If old prefix has changed, throw exception. The "tns" prefix may be overridden by a specific
-                // namespace in @XmlSchema(xmlns=...), and is therefore ignored here
-                if (oldPrefixValue != null
-                        && !oldPrefixValue.equals(cacheKey)
-                        && !oldPrefixValue.equals("tns")
-                        && !cacheKey.equals("tns")) {
-                    throw new IllegalStateException("Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey
-                            + "] for URI [" + aNode.getNodeValue() + "]");
-                }
+            if (oldPrefix != null && oldPrefix.equals("tns")) {
+                // "tns" already owns this URI — skip the new (non-tns) prefix entirely.
+                // Do not add it to prefix2Uri to keep both maps consistent.
+                return;
             }
+
+            // Validate before mutating: ensure we are not overwriting an existing
+            // mapping for a different URI under the same prefix key.
+            final String existingUri = prefix2Uri.get(cacheKey);
+            if (existingUri != null && !existingUri.equals(nodeValue)) {
+                throw new IllegalStateException(
+                        "Replaced URI [" + existingUri + "] with [" + nodeValue + "] for prefix [" + cacheKey + "]");
+            }
+
+            // Validate that we are not overwriting a non-tns prefix with another non-tns
+            // prefix for the same URI (genuine conflict).
+            if (oldPrefix != null
+                    && !oldPrefix.equals(cacheKey)
+                    && !cacheKey.equals("tns")) {
+                throw new IllegalStateException(
+                        "Replaced prefix [" + oldPrefix + "] with [" + cacheKey + "] for URI [" + nodeValue + "]");
+            }
+
+            // If "tns" is overriding a previously seen prefix, remove the stale
+            // entry from prefix2Uri to keep both maps consistent.
+            if (oldPrefix != null && !oldPrefix.equals(cacheKey)) {
+                prefix2Uri.remove(oldPrefix);
+            }
+
+            // Now safe to mutate both maps.
+            prefix2Uri.put(cacheKey, nodeValue);
+            uri2Prefix.put(nodeValue, cacheKey);
         }
     }
 }

@@ -106,11 +106,13 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
     }
 
     /**
-     * Discovers if the provided attribute is a namespace reference to the default namespace, on the form
-     * <code>&lt;xs:element ref="anElementInTheDefaultNamespace"/&gt;</code>
+     * Discovers if the provided attribute is an unprefixed element reference, on the form
+     * <code>&lt;xs:element ref="aRequiredElementInTheTargetNamespace"/&gt;</code>.
+     * This is used as a workaround for schema generated with unprefixed {@code ref} values, so they can be
+     * treated as target-namespace references when rewriting the {@code tns} prefix.
      *
      * @param attribute the attribute to test.
-     * @return <code>true</code> if the provided attribute is named "ref" and has no namespace prefix, in which case it belongs to the default namespace.
+     * @return <code>true</code> if the provided attribute is named "ref" and its value has no namespace prefix.
      */
     private boolean isElementReferenceWithoutPrefix(final Attr attribute) {
         return REFERENCE_ATTRIBUTE_NAME.equals(attribute.getName())
