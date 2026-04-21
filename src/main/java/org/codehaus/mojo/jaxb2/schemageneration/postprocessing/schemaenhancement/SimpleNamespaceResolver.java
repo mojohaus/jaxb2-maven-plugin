@@ -219,9 +219,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
 
             // Validate that we are not overwriting a non-tns prefix with another non-tns
             // prefix for the same URI (genuine conflict).
-            if (oldPrefix != null
-                    && !oldPrefix.equals(cacheKey)
-                    && !cacheKey.equals("tns")) {
+            if (oldPrefix != null && !oldPrefix.equals(cacheKey) && !cacheKey.equals("tns")) {
                 throw new IllegalStateException(
                         "Replaced prefix [" + oldPrefix + "] with [" + cacheKey + "] for URI [" + nodeValue + "]");
             }
