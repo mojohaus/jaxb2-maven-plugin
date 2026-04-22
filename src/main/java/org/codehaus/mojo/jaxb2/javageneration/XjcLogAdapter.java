@@ -63,6 +63,16 @@ public class XjcLogAdapter extends XJCListener {
      * {@inheritDoc}
      */
     @Override
+    public void message(final String msg) {
+        if (log.isDebugEnabled()) {
+            log.debug(msg);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void error(final SAXParseException exception) {
         log.error(getLocation(exception), exception);
     }
