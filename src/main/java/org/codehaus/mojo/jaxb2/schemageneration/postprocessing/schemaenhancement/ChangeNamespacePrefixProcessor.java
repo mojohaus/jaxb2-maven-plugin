@@ -94,6 +94,7 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
 
             if (isNamespaceDefinition(attribute)
                     || isElementReference(attribute)
+                    || isElementReferenceWithoutPrefix(attribute)
                     || isTypeAttributeWithPrefix(attribute)
                     || isExtension(attribute)) {
                 return true;
@@ -105,6 +106,20 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
     }
 
     /**
+     * Discovers if the provided attribute is an unprefixed element reference, on the form
+     * <code>&lt;xs:element ref="aRequiredElementInTheTargetNamespace"/&gt;</code>.
+     * This is used as a workaround for schema generated with unprefixed {@code ref} values, so they can be
+     * treated as target-namespace references when rewriting the {@code tns} prefix.
+     *
+     * @param attribute the attribute to test.
+     * @return <code>true</code> if the provided attribute is named "ref" and its value has no namespace prefix.
+     */
+    private boolean isElementReferenceWithoutPrefix(final Attr attribute) {
+        return REFERENCE_ATTRIBUTE_NAME.equals(attribute.getName())
+                && !attribute.getValue().contains(":");
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void process(final Node aNode) {
@@ -113,6 +128,14 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
 
             final Attr attribute = (Attr) aNode;
             final Element parentElement = attribute.getOwnerElement();
+
+            if (isElementReferenceWithoutPrefix(attribute) && oldPrefix.equals("tns")) {
+                // For some reason schemagen does not generate the default namespace prefix for references to
+                // simpletypes, such as enum types => we want to add the default namespace prefix to those nodes in
+                // order to get xjc-compatible XSD:s
+                attribute.setValue(newPrefix + ":" + attribute.getValue());
+                return;
+            }
 
             if (isNamespaceDefinition(attribute)) {
 
