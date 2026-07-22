@@ -116,7 +116,7 @@
     <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
     <!-- JAXB tooling versions -->
-    <jaxb.version>4.0.6</jaxb.version>
+    <jaxb.version>4.0.9</jaxb.version>
     <stax-ex.version>2.1.0</stax-ex.version>
     <qdox.version>2.2.0</qdox.version>
     <asm.version>9.10.1</asm.version>
