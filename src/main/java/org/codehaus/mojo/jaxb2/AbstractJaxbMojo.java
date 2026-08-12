@@ -121,7 +121,11 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     private static final List<String> RELEVANT_GROUPIDS = Arrays.asList("com.sun.xml.bind", "jakarta.xml.bind");
     private static final String OWN_ARTIFACT_ID = "jaxb2-maven-plugin";
     private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
-    private static final String[] STANDARD_EXCLUDE_SUFFIXES = {"README.*", "\\.xml", "\\.txt"};
+    // The patterns are matched against the full path of each candidate file, prefixed with
+    // PatternFileFilter.PATTERN_LETTER_DIGIT_PUNCT. Since \p{Punct} includes the file separators, the README
+    // pattern has to be anchored to the last path segment; otherwise it also matches every file below a
+    // directory whose name happens to contain "readme".
+    private static final String[] STANDARD_EXCLUDE_SUFFIXES = {"[/\\\\]README[^/\\\\]*", "\\.xml", "\\.txt"};
     private static final String[] STANDARD_PRELOADED_CLASSES = {
         "com.sun.tools.xjc.addon.episode.package-info",
         "com.sun.tools.xjc.reader.xmlschema.bindinfo.package-info",
