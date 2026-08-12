@@ -116,7 +116,10 @@ public class SimpleNamespaceResolver implements NamespaceContext {
             throw new IllegalArgumentException("Cannot acquire prefixes for null namespaceURI.");
         }
 
-        return Collections.singletonList(uri2Prefix.get(namespaceURI)).iterator();
+        final Set<String> prefixes = uri2Prefixes.get(namespaceURI);
+        return prefixes == null
+                ? Collections.<String>emptyList().iterator()
+                : Collections.unmodifiableSet(prefixes).iterator();
     }
 
     /**

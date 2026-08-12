@@ -4,6 +4,7 @@ import javax.xml.XMLConstants;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -220,6 +221,25 @@ public class SimpleNamespaceResolverTest {
         assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("tns"));
         assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("base"));
         assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("extra"));
+
+        // ... and getPrefixes reports every one of them, not only the canonical prefix.
+        final List<String> prefixes = new ArrayList<String>();
+        for (Iterator<String> it = unitUnderTest.getPrefixes(STUDENT_NAMESPACE); it.hasNext(); ) {
+            prefixes.add(it.next());
+        }
+        assertEquals(3, prefixes.size());
+        assertTrue(prefixes.containsAll(Arrays.asList("tns", "base", "extra")), "Got prefixes: " + prefixes);
+    }
+
+    @Test
+    void validatePrefixesIteratorIsEmptyForUndeclaredNamespace() {
+        // Assemble
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + "tnsAliasFirstSchema.xsd"));
+
+        // Act & Assert
+        assertFalse(
+                unitUnderTest.getPrefixes("http://schemas.acme.com/undeclared").hasNext());
     }
 
     @Test
