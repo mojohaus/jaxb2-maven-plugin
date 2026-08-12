@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           xmlns:foo="http://schemas.acme.com/student"
+           xmlns:bar="http://schemas.acme.com/student"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Two non-"tns" prefixes bound to the same URI; there is no canonical prefix to prefer. -->
+
+    <xs:element name="student" type="foo:studentType"/>
+</xs:schema>

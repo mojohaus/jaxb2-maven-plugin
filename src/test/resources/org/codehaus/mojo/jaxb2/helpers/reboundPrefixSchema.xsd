@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           xmlns:foo="http://schemas.acme.com/student"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- The "foo" prefix is rebound to a different URI on a nested element. -->
+
+    <xs:complexType name="studentType">
+        <xs:sequence>
+            <xs:element name="tutor" type="foo:tutorType" xmlns:foo="http://schemas.acme.com/teacher"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

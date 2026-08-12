@@ -30,7 +30,10 @@ import java.io.Reader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.mojo.jaxb2.schemageneration.XsdGeneratorHelper;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
@@ -52,6 +55,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     // Constants
     private static final String DEFAULT_NS = "DEFAULT";
     private static final String TARGET_NAMESPACE = "targetNamespace";
+    private static final String TARGET_NAMESPACE_PREFIX = "tns";
     private static final String SCHEMA = "schema";
 
     // Internal state
@@ -59,6 +63,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     private String localNamespaceURI;
     private Map<String, String> prefix2Uri = new HashMap<String, String>();
     private Map<String, String> uri2Prefix = new HashMap<String, String>();
+    private Map<String, Set<String>> uri2Prefixes = new LinkedHashMap<String, Set<String>>();
 
     /**
      * Creates a new SimpleNamespaceResolver which collects namespace data
@@ -151,6 +156,41 @@ public class SimpleNamespaceResolver implements NamespaceContext {
 
         // Process the DOM model.
         XsdGeneratorHelper.process(parsedDocument.getFirstChild(), true, new NamespaceAttributeNodeProcessor());
+
+        // Reduce each URI to its canonical prefix, which can only be decided once every prefix bound to
+        // that URI is known. Attributes are not necessarily visited in the order they are declared, so
+        // deciding this while collecting would make the outcome depend on the order of the DOM traversal.
+        for (Map.Entry<String, Set<String>> current : uri2Prefixes.entrySet()) {
+            uri2Prefix.put(current.getKey(), getCanonicalPrefix(current.getKey(), current.getValue()));
+        }
+    }
+
+    /**
+     * Selects the prefix representing the supplied namespace URI, out of all prefixes bound to it within the
+     * source file. The "tns" prefix wins whenever it is present, since a prefix supplied through
+     * <code>@XmlSchema(xmlns=...)</code> is emitted in addition to it rather than instead of it.
+     *
+     * @param namespaceUri The namespace URI for which to select a prefix.
+     * @param prefixes     All prefixes bound to the namespaceUri, in the order they were found.
+     * @return The single prefix representing the namespaceUri.
+     * @throws IllegalStateException if several prefixes are bound to the namespaceUri and none of them is "tns",
+     *                               in which case there is no ground to prefer one over another.
+     */
+    private static String getCanonicalPrefix(final String namespaceUri, final Set<String> prefixes) {
+
+        if (prefixes.contains(TARGET_NAMESPACE_PREFIX)) {
+            return TARGET_NAMESPACE_PREFIX;
+        }
+
+        final Iterator<String> it = prefixes.iterator();
+        final String firstPrefix = it.next();
+
+        if (it.hasNext()) {
+            throw new IllegalStateException(
+                    "Replaced prefix [" + firstPrefix + "] with [" + it.next() + "] for URI [" + namespaceUri + "]");
+        }
+
+        return firstPrefix;
     }
 
     private class NamespaceAttributeNodeProcessor implements NodeProcessor {
@@ -197,21 +237,20 @@ public class SimpleNamespaceResolver implements NamespaceContext {
                     XMLConstants.XMLNS_ATTRIBUTE.equals(aNode.getNodeName()) ? DEFAULT_NS : aNode.getLocalName();
             final String nodeValue = aNode.getNodeValue();
 
-            // Cache the namespace in both caches.
-            final String oldUriValue = prefix2Uri.put(cacheKey, nodeValue);
-            final String oldPrefixValue = uri2Prefix.put(nodeValue, cacheKey);
+            // A prefix binds to exactly one URI. Rebinding it to another one is a genuine conflict,
+            // whereas repeating the binding it already has is a no-op rather than a replacement.
+            final String boundUri = prefix2Uri.get(cacheKey);
+            if (boundUri != null && !boundUri.equals(nodeValue)) {
+                throw new IllegalStateException(
+                        "Replaced URI [" + boundUri + "] with [" + nodeValue + "] for prefix [" + cacheKey + "]");
+            }
+            prefix2Uri.put(cacheKey, nodeValue);
 
-            // Check sanity; we should not be overwriting values here.
-            if (oldUriValue != null) {
-                throw new IllegalStateException("Replaced URI [" + oldUriValue + "] with [" + aNode.getNodeValue()
-                        + "] for prefix [" + cacheKey + "]");
-            }
-            // If old prefix has changed, throw exception. The "tns" prefix may be overridden by a specific namespace in
-            // @XmlSchema(xmlns=...), and is therefore ignored here
-            if (oldPrefixValue != null && !oldPrefixValue.equals(cacheKey) && !cacheKey.equals("tns")) {
-                throw new IllegalStateException("Replaced prefix [" + oldPrefixValue + "] with [" + cacheKey
-                        + "] for URI [" + aNode.getNodeValue() + "]");
-            }
+            // A URI, on the other hand, may be bound to several prefixes. Collect them all; which one
+            // represents the URI is decided in getCanonicalPrefix once the whole file has been read.
+            uri2Prefixes
+                    .computeIfAbsent(nodeValue, key -> new LinkedHashSet<String>())
+                    .add(cacheKey);
         }
     }
 }

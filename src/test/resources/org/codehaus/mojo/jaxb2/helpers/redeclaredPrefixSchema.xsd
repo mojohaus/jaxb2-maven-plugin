@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+           targetNamespace="http://schemas.acme.com/student"
+           xmlns:tns="http://schemas.acme.com/student"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- The "tns" prefix is redundantly redeclared, bound to the same URI, on a nested element. -->
+
+    <xs:complexType name="studentType">
+        <xs:sequence>
+            <xs:element name="tutor" type="tns:tutorType" xmlns:tns="http://schemas.acme.com/student"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

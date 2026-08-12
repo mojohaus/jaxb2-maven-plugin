@@ -20,6 +20,8 @@ public class SimpleNamespaceResolverTest {
 
     public static final String SCHEMA_DIR = "/org/codehaus/mojo/jaxb2/helpers/";
 
+    private static final String STUDENT_NAMESPACE = "http://schemas.acme.com/student";
+
     private File getSchemaFile(String resource) {
         return FileUtils.toFile(this.getClass().getResource(resource));
     }
@@ -178,5 +180,85 @@ public class SimpleNamespaceResolverTest {
         assertEquals("xs", namespaceURI2PrefixMap.get(XMLConstants.W3C_XML_SCHEMA_NS_URI));
         assertEquals("base", namespaceURI2PrefixMap.get("http://schemas.acme.com"));
         assertEquals("tns", namespaceURI2PrefixMap.get("http://schemas.acme.com/student"));
+    }
+
+    @Test
+    void validateTnsIsCanonicalPrefixWhenDeclaredBeforeItsAliases() {
+        // Assemble
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + "tnsAliasFirstSchema.xsd"));
+
+        // Act
+        final Map<String, String> namespaceURI2PrefixMap = unitUnderTest.getNamespaceURI2PrefixMap();
+
+        // Assert
+        assertEquals("tns", namespaceURI2PrefixMap.get(STUDENT_NAMESPACE));
+    }
+
+    @Test
+    void validateTnsIsCanonicalPrefixWhenDeclaredAfterItsAliases() {
+        // Assemble
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + "tnsAliasLastSchema.xsd"));
+
+        // Act
+        final Map<String, String> namespaceURI2PrefixMap = unitUnderTest.getNamespaceURI2PrefixMap();
+
+        // Assert
+        assertEquals("tns", namespaceURI2PrefixMap.get(STUDENT_NAMESPACE));
+    }
+
+    @Test
+    void validateAliasedPrefixesRemainResolvable() {
+        // Assemble
+        final SimpleNamespaceResolver unitUnderTest =
+                new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + "tnsAliasFirstSchema.xsd"));
+
+        // Act & Assert
+        // Prefix-to-URI is a many-to-one relation: every prefix the document declares must resolve,
+        // even though only one of them is the canonical prefix for the URI.
+        assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("tns"));
+        assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("base"));
+        assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("extra"));
+    }
+
+    @Test
+    void validateRedundantlyRedeclaredPrefixIsAccepted() {
+        // Assemble
+        final File schemaFile = getSchemaFile(SCHEMA_DIR + "redeclaredPrefixSchema.xsd");
+
+        // Act
+        final SimpleNamespaceResolver unitUnderTest = new SimpleNamespaceResolver(schemaFile);
+
+        // Assert
+        // Rebinding a prefix to the URI it is already bound to changes nothing, and is not a conflict.
+        assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("tns"));
+        assertEquals("tns", unitUnderTest.getNamespaceURI2PrefixMap().get(STUDENT_NAMESPACE));
+    }
+
+    @Test
+    void validateExceptionThrownOnCompetingPrefixesForTheSameUri() {
+        // Assemble
+        final File schemaFile = getSchemaFile(SCHEMA_DIR + "conflictingPrefixSchema.xsd");
+
+        // Act & Assert
+        final IllegalStateException exception =
+                assertThrows(IllegalStateException.class, () -> new SimpleNamespaceResolver(schemaFile));
+        assertTrue(
+                exception.getMessage().contains("Replaced prefix"),
+                "Expected a 'Replaced prefix' message, but got: " + exception.getMessage());
+    }
+
+    @Test
+    void validateExceptionThrownOnPrefixReboundToAnotherUri() {
+        // Assemble
+        final File schemaFile = getSchemaFile(SCHEMA_DIR + "reboundPrefixSchema.xsd");
+
+        // Act & Assert
+        final IllegalStateException exception =
+                assertThrows(IllegalStateException.class, () -> new SimpleNamespaceResolver(schemaFile));
+        assertTrue(
+                exception.getMessage().contains("Replaced URI"),
+                "Expected a 'Replaced URI' message, but got: " + exception.getMessage());
     }
 }
