@@ -178,13 +178,13 @@ The following settings are used by default.
    JAXB-annotated files, to be included within the Xml Schema Compilation operation. 
    By default, files matching some Java Regexp patterns are excluded from the JXC compilation. 
    The default exclude patterns are  
-   `"README.*", "\.xml", "\.txt", "\\.xjb", "\\.xsd", "\\.properties"` as documented on the 
+   `"[/\\]README[^/\\]*", "\.xml", "\.txt", "\\.xjb", "\\.xsd", "\\.properties"` as documented on the 
    `SchemaGenerationMojo.STANDARD_SOURCE_EXCLUDE_FILTERS` property.
 2. The standard test source folders (i.e. `getProject().getTestCompileSourceRoots()`) are expected to contain 
    JAXB-annotated files, to be included within the test-scope Xml Schema Compilation operation. 
    By default, files matching some Java Regexp patterns are excluded from the JXC compilation. 
    The default exclude patterns are  
-   `"README.*", "\.xml", "\.txt", "\\.xjb", "\\.xsd", "\\.properties"` as documented on the 
+   `"[/\\]README[^/\\]*", "\.xml", "\.txt", "\\.xjb", "\\.xsd", "\\.properties"` as documented on the 
    `TestSchemaGenerationMojo.STANDARD_TEST_SOURCE_EXCLUDE_FILTERS` property.             
 
 The standard behavior can be overridden by the following elements:
@@ -438,7 +438,7 @@ removing all files identified by the two PatternFileFilters:
         |        Processes nulls: [false]
         |        Accept on match: [true]
         |        3 regularExpressions ...
-        |         [0/3]: (\p{javaLetterOrDigit}|\p{Punct})+README.*
+        |         [0/3]: (\p{javaLetterOrDigit}|\p{Punct})+[/\\]README[^/\\]*
         |         [1/3]: (\p{javaLetterOrDigit}|\p{Punct})+\.xml
         |         [2/3]: (\p{javaLetterOrDigit}|\p{Punct})+\.txt
         | [2/2]: Filter [PatternFileFilter]
