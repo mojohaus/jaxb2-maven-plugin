@@ -636,7 +636,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("classpath", classPath);
 
         // We must add the -extension flag in order to generate the episode file.
-        if (!extension) {
+        if (!extension && generateEpisode) {
 
             if (getLog().isInfoEnabled()) {
                 getLog().info("Adding 'extension' flag to XJC arguments, to generate an episode "
@@ -646,8 +646,14 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         }
         builder.withFlag(true, "extension");
 
-        final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
-        builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        // Only ask XJC for an episode file when one was actually requested. The episode file's parent
+        // directory is re-created after the output directory has been cleared, and only when
+        // generateEpisode is set, so handing XJC the argument regardless leaves it writing into a
+        // directory that is no longer there.
+        if (generateEpisode) {
+            final File episodeFile = getEpisodeFile(episodeFileNameOrNull);
+            builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        }
 
         if (catalog != null) {
             builder.withNamedArgument("catalog", FileSystemUtilities.getCanonicalPath(catalog));
