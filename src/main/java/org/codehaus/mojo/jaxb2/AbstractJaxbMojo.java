@@ -92,7 +92,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      *     <code>
      *         // The standard exclude filters contain simple, exclude pattern filters.
      *         final List&lt;Filter&lt;File&gt;&gt; tmp = new ArrayList&lt;Filter&lt;File&gt;&gt;();
-     *         tmp.add(new PatternFileFilter(Arrays.asList({"README.*", "\\.xml", "\\.txt"}), true));
+     *         tmp.add(new PatternFileFilter(Arrays.asList({"[/\\\\]README[^/\\\\]*", "\\.xml", "\\.txt"}), true));
      *         tmp.add(new FileFilterAdapter(new FileFilter() {
      *
      *             &#64;Override

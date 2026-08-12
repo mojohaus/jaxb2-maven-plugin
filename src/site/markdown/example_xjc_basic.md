@@ -40,19 +40,19 @@ Unless overridden by the configuration, the following settings are used by defau
 1. The `src/main/xsd` directory (including subdirectories) is expected to contain compile-scope XSD files, as 
    documented within the `XjcMojo.STANDARD_SOURCE_DIRECTORY` property. By default, files matching some 
    Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
-   `"README.*", "\.xml", "\.txt", "\.java", "\.scala", "\.mdo"`. 
+   `"[/\\]README[^/\\]*", "\.xml", "\.txt", "\.java", "\.scala", "\.mdo"`. 
 2. The `src/test/xsd` directory (including subdirectories) is expected to contain test-scope XSD files, as 
    documented within the `TestXjcMojo.STANDARD_TEST_SOURCE_DIRECTORY` property. By default, files matching some 
    Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
-   `"README.*", "\.xml", "\.txt", "\.java", "\.scala", "\.mdo"`.   
+   `"[/\\]README[^/\\]*", "\.xml", "\.txt", "\.java", "\.scala", "\.mdo"`.   
 3. The `src/main/xjb` directory (including subdirectories) is expected to contain compile-scope XJB files, as 
    documented within the `XjcMojo.STANDARD_XJB_DIRECTORY` property. By default, files matching some 
    Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
-   `"README.*", "\\.xml", "\\.txt", "\\.xsd"`.
+   `"[/\\]README[^/\\]*", "\\.xml", "\\.txt", "\\.xsd"`.
 4. The `src/test/xjb` directory (including subdirectories) is expected to contain test-scope XJB files, as 
    documented within the `TestXjcMojo.STANDARD_TEST_XJB_DIRECTORY` property. By default, files matching some 
    Java Regexp patterns are excluded from the XJC compilation. The default exclude patterns are 
-   `"README.*", "\\.xml", "\\.txt", "\\.xsd"`.          
+   `"[/\\]README[^/\\]*", "\\.xml", "\\.txt", "\\.xsd"`.          
 
 The standard behavior can be overridden by the following elements:
 
@@ -450,7 +450,7 @@ removing all files identified by the two PatternFileFilters:
         |        Processes nulls: [false]
         |        Accept on match: [true]
         |        3 regularExpressions ...
-        |         [0/3]: (\p{javaLetterOrDigit}|\p{Punct})+README.*
+        |         [0/3]: (\p{javaLetterOrDigit}|\p{Punct})+[/\\]README[^/\\]*
         |         [1/3]: (\p{javaLetterOrDigit}|\p{Punct})+\.xml
         |         [2/3]: (\p{javaLetterOrDigit}|\p{Punct})+\.txt
         | [2/2]: Filter [PatternFileFilter]
