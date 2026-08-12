@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -49,6 +50,76 @@ class ChangeNamespacePrefixProcessorTest {
         Node extensionAttribute = acceptedNodes.get(2);
         assertEquals("base", extensionAttribute.getNodeName());
         assertEquals(newNamespacePrefix + ":aBaseType", extensionAttribute.getNodeValue());
+    }
+
+    @Test
+    void validateElementReferenceWithoutPrefixIsPrefixedForTns() {
+        // Assemble
+        final String oldNamespacePrefix = "tns";
+        final String newNamespacePrefix = "newTns";
+        final String xmlStream =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + "<xs:schema version=\"1.0\"\n"
+                        + "           targetNamespace=\"http://some/namespace\"\n"
+                        + "           xmlns:tns=\"http://some/namespace\"\n"
+                        + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                        + "  <xs:element name=\"enumElement\" type=\"xs:string\"/>\n"
+                        + "  <xs:element ref=\"EnumType\" />\n"
+                        + // ref without prefix
+                        "</xs:schema>\n";
+
+        final ChangeNamespacePrefixProcessor unitUnderTest =
+                new ChangeNamespacePrefixProcessor(oldNamespacePrefix, newNamespacePrefix);
+        final DebugNodeProcessor debugNodeProcessor = new DebugNodeProcessor(unitUnderTest);
+
+        // Act
+        final Document document = XsdGeneratorHelper.parseXmlStream(new StringReader(xmlStream));
+        XsdGeneratorHelper.process(document.getFirstChild(), true, debugNodeProcessor);
+
+        // Assert
+        // Find the ref attribute and check its value
+        boolean found = false;
+        for (Node node : debugNodeProcessor.getAcceptedNodes()) {
+            if ("ref".equals(node.getNodeName())) {
+                found = true;
+                assertEquals(newNamespacePrefix + ":EnumType", node.getNodeValue());
+            }
+        }
+        assertTrue(found, "Should have found a ref attribute without prefix");
+    }
+
+    @Test
+    void validateElementReferenceWithoutPrefixIsNotPrefixedForNonTns() {
+        // Assemble
+        final String oldNamespacePrefix = "foo";
+        final String newNamespacePrefix = "bar";
+        final String xmlStream =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + "<xs:schema version=\"1.0\"\n"
+                        + "           targetNamespace=\"http://some/namespace\"\n"
+                        + "           xmlns:foo=\"http://some/namespace\"\n"
+                        + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                        + "  <xs:element name=\"enumElement\" type=\"xs:string\"/>\n"
+                        + "  <xs:element ref=\"EnumType\" />\n"
+                        + // ref without prefix
+                        "</xs:schema>\n";
+
+        final ChangeNamespacePrefixProcessor unitUnderTest =
+                new ChangeNamespacePrefixProcessor(oldNamespacePrefix, newNamespacePrefix);
+        final DebugNodeProcessor debugNodeProcessor = new DebugNodeProcessor(unitUnderTest);
+
+        // Act
+        final Document document = XsdGeneratorHelper.parseXmlStream(new StringReader(xmlStream));
+        XsdGeneratorHelper.process(document.getFirstChild(), true, debugNodeProcessor);
+
+        // Assert
+        // Find the ref attribute and check its value remains unchanged
+        boolean found = false;
+        for (Node node : debugNodeProcessor.getAcceptedNodes()) {
+            if ("ref".equals(node.getNodeName())) {
+                found = true;
+                assertEquals("EnumType", node.getNodeValue());
+            }
+        }
+        assertTrue(found, "Should have found a ref attribute without prefix");
     }
 
     //
