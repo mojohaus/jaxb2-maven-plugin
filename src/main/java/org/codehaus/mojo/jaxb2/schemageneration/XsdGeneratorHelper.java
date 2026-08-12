@@ -292,7 +292,9 @@ public final class XsdGeneratorHelper {
                     final String oldPrefix =
                             currentResolver.getNamespaceURI2PrefixMap().get(currentUri);
 
-                    if (StringUtils.isNotEmpty(oldPrefix)) {
+                    // Substituting a prefix onto itself would remove the namespace declaration, since the
+                    // ChangeNamespacePrefixProcessor writes the new xmlns attribute before removing the old one.
+                    if (StringUtils.isNotEmpty(oldPrefix) && !oldPrefix.equals(newPrefix)) {
                         // Can we perform the prefix substitution?
                         validatePrefixSubstitutionIsPossible(oldPrefix, newPrefix, currentResolver);
 
