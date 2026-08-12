@@ -1,5 +1,6 @@
 package org.codehaus.mojo.jaxb2.schemageneration.postprocessing;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -9,6 +10,8 @@ import java.io.File;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +42,9 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -221,6 +226,54 @@ class XsdGeneratorHelperTest {
         diff.overrideElementQualifier(new ElementNameAndAttributeQualifier());
 
         XMLAssert.assertXMLEqual(processedDocument, expectedDocument);
+    }
+
+    @Test
+    void validateNamespaceDeclarationRetainedWhenToPrefixEqualsCurrentPrefix(@TempDir final File schemaDirectory)
+            throws Exception {
+
+        // Assemble
+        final String namespaceUri = "http://some/namespace";
+        final String schemaXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema version=\"1.0\" targetNamespace=\"" + namespaceUri + "\"\n"
+                + "           xmlns:tns=\"" + namespaceUri + "\"\n"
+                + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                + "  <xs:complexType name=\"aType\">\n"
+                + "    <xs:sequence>\n"
+                + "      <xs:element name=\"aChild\" type=\"tns:anotherType\"/>\n"
+                + "    </xs:sequence>\n"
+                + "  </xs:complexType>\n"
+                + "</xs:schema>\n";
+
+        final File schemaFile = new File(schemaDirectory, "schema1.xsd");
+        Files.write(schemaFile.toPath(), schemaXml.getBytes(StandardCharsets.UTF_8));
+
+        final Map<String, SimpleNamespaceResolver> resolverMap =
+                Collections.singletonMap(schemaFile.getName(), new SimpleNamespaceResolver(schemaFile));
+
+        // The configured toPrefix is identical to the prefix already used within the generated schema.
+        final List<TransformSchema> transformSchemas =
+                Collections.singletonList(new TransformSchema(namespaceUri, "tns", null));
+
+        // Act
+        XsdGeneratorHelper.replaceNamespacePrefixes(
+                resolverMap, transformSchemas, new BufferingLog(), schemaDirectory, "UTF-8");
+
+        // Assert
+        final String processedXml = new String(Files.readAllBytes(schemaFile.toPath()), StandardCharsets.UTF_8);
+        final Element schemaElement = XsdGeneratorHelper.parseXmlStream(new StringReader(processedXml))
+                .getDocumentElement();
+
+        assertEquals(
+                namespaceUri,
+                schemaElement.lookupNamespaceURI("tns"),
+                "The xmlns:tns declaration must survive a substitution onto the identical prefix. Got: "
+                        + processedXml);
+
+        final Element typedElement = (Element) schemaElement
+                .getElementsByTagNameNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element")
+                .item(0);
+        assertEquals("tns:anotherType", typedElement.getAttribute("type"));
     }
 
     @Test
