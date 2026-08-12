@@ -29,11 +29,15 @@ because nobody could reproduce them.
 
 Build and test locally with:
 
-    mvn verify
+```bash
+mvn verify
+```
 
 That runs the unit tests. The integration tests under `src/it` are run by the `run-its` profile, as CI does:
 
-    mvn -P run-its verify
+```bash
+mvn -P run-its verify
+```
 
 ## Releasing
 
