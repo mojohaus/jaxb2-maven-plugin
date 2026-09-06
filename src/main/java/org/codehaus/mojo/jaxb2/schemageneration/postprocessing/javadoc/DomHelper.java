@@ -230,7 +230,7 @@ public final class DomHelper {
                     final String effectiveClassName = current.getAnnotationRenamedTo() == null
                             ? current.getClassName()
                             : current.getAnnotationRenamedTo();
-                    if (effectiveClassName.equalsIgnoreCase(nodeClassName)) {
+                    if (matchesClassName(effectiveClassName, nodeClassName)) {
                         return current;
                     }
                 }
@@ -239,6 +239,36 @@ public final class DomHelper {
 
         // Nothing found
         return null;
+    }
+
+    /**
+     * Checks if a Java class name matches a schema type name, taking into account
+     * JAXB's standard Java identifier to XML type name mapping (e.g. converting
+     * "DummyRequest_v1" to "dummyRequestV1").
+     *
+     * @param javaClassName  The Java class name or effective annotated XML type name.
+     * @param schemaTypeName The XML schema type name from the DOM node.
+     * @return {@code true} if the names match, {@code false} otherwise.
+     */
+    public static boolean matchesClassName(final String javaClassName, final String schemaTypeName) {
+        if (javaClassName == null || schemaTypeName == null) {
+            return false;
+        }
+        if (javaClassName.equalsIgnoreCase(schemaTypeName)) {
+            return true;
+        }
+        // JAXB maps Java class identifiers to XML type names via NameConverter.standard.toVariableName(className),
+        // which removes underscores and camelCases words (e.g. "DummyRequest_v1" becomes "dummyRequestV1").
+        try {
+            if (org.glassfish.jaxb.core.api.impl.NameConverter.standard
+                    .toVariableName(javaClassName)
+                    .equalsIgnoreCase(schemaTypeName)) {
+                return true;
+            }
+        } catch (Throwable ignored) {
+            // Fallback if NameConverter is not accessible
+        }
+        return javaClassName.replace("_", "").equalsIgnoreCase(schemaTypeName.replace("_", ""));
     }
 
     /**
@@ -351,7 +381,7 @@ public final class DomHelper {
                             ? DomHelper.getValueAttribute(aNode)
                             : DomHelper.getNameAttribute(aNode);
                     if (fieldName.equalsIgnoreCase(attributeValue)
-                            && className.equalsIgnoreCase(DomHelper.getNameAttribute(containingClassNode))) {
+                            && matchesClassName(className, DomHelper.getNameAttribute(containingClassNode))) {
                         toReturn = (T) current;
                     }
                 } catch (Exception e) {
