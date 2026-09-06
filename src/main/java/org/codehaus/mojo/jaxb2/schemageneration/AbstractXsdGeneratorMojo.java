@@ -393,8 +393,16 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             // Compile the SchemaGen arguments
             final File episodeFile = getEpisodeFile(episodeFileName);
             final List<URL> sources = getSources();
+
+            File tempEpisodeFile = null;
+            File episodeFileToPass = episodeFile;
+            if (generateEpisode && episodeFile.getAbsolutePath().contains(" ")) {
+                tempEpisodeFile = createSafeTempEpisodeFile();
+                episodeFileToPass = tempEpisodeFile;
+            }
+
             final String[] schemaGenArguments =
-                    getSchemaGenArguments(environment.getClassPathAsArgument(), episodeFile, sources);
+                    getSchemaGenArguments(environment.getClassPathAsArgument(), episodeFileToPass, sources);
 
             // Ensure that the outputDirectory and workDirectory exists.
             // Clear them if configured to do so.
@@ -418,6 +426,12 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 // Fire the SchemaGenerator
                 final int result = SchemaGenerator.run(
                         schemaGenArguments, Thread.currentThread().getContextClassLoader());
+
+                if (tempEpisodeFile != null && tempEpisodeFile.exists()) {
+                    FileSystemUtilities.createDirectory(episodeFile.getParentFile(), false);
+                    FileUtils.copyFile(tempEpisodeFile, episodeFile);
+                    tempEpisodeFile.delete();
+                }
 
                 if (SCHEMAGEN_INCORRECT_OPTIONS == result) {
                     printSchemaGenCommandAndThrowException(
@@ -477,8 +491,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                         final List<File> fileSources = new ArrayList<File>();
                         for (URL current : sources) {
                             if ("file".equalsIgnoreCase(current.getProtocol())) {
-                                final File toAdd = new File(current.getPath());
-                                if (toAdd.exists()) {
+                                final File toAdd = FileSystemUtilities.getFileFor(current, getEncoding(true));
+                                if (toAdd != null && toAdd.exists()) {
                                     fileSources.add(toAdd);
                                 } else {
                                     if (getLog().isWarnEnabled()) {
@@ -619,9 +633,9 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         builder.withNamedArgument("d", getWorkDirectory().getAbsolutePath());
         builder.withNamedArgument("classpath", classPath);
 
-        // From 2.4: Always generate an episode file.
-        //
-        builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        if (generateEpisode && episodeFile != null) {
+            builder.withNamedArgument("episode", FileSystemUtilities.getCanonicalPath(episodeFile));
+        }
 
         try {
 
@@ -931,6 +945,41 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             throw new MojoExecutionException(msg, cause);
         } else {
             throw new MojoExecutionException(msg);
+        }
+    }
+
+    private File createSafeTempEpisodeFile() throws MojoExecutionException {
+        try {
+            final File tempFile = File.createTempFile("episode_", ".xjb");
+            if (!tempFile.getAbsolutePath().contains(" ")) {
+                tempFile.deleteOnExit();
+                return tempFile;
+            }
+            // If default temp directory contains spaces (e.g. username on Windows),
+            // attempt to use system temp directories without spaces
+            for (String fallbackPath : Arrays.asList(
+                    System.getenv("SystemDrive") != null
+                            ? System.getenv("SystemDrive") + File.separator + "Temp"
+                            : null,
+                    File.separator + "tmp",
+                    System.getProperty("user.home"))) {
+                if (fallbackPath != null) {
+                    final File fallbackDir = new File(fallbackPath);
+                    if (!fallbackDir.getAbsolutePath().contains(" ")
+                            && (fallbackDir.isDirectory() || fallbackDir.mkdirs())) {
+                        final File fallbackFile = File.createTempFile("episode_", ".xjb", fallbackDir);
+                        if (!fallbackFile.getAbsolutePath().contains(" ")) {
+                            fallbackFile.deleteOnExit();
+                            tempFile.delete();
+                            return fallbackFile;
+                        }
+                        fallbackFile.delete();
+                    }
+                }
+            }
+            return tempFile;
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not create temporary episode file", e);
         }
     }
 }

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
@@ -202,8 +203,12 @@ public final class FileSystemUtilities {
         File toReturn = null;
         if ("file".equalsIgnoreCase(protocol)) {
             try {
-                final String decodedPath = URLDecoder.decode(anURL.getPath(), encoding);
-                toReturn = new File(decodedPath);
+                try {
+                    toReturn = new File(anURL.toURI());
+                } catch (URISyntaxException | IllegalArgumentException e) {
+                    final String decodedPath = URLDecoder.decode(anURL.getPath(), encoding);
+                    toReturn = new File(decodedPath);
+                }
             } catch (Exception e) {
                 throw new IllegalArgumentException("Could not get the File for [" + anURL + "]", e);
             }
