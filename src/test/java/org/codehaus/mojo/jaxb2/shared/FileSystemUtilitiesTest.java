@@ -426,6 +426,41 @@ class FileSystemUtilitiesTest {
     }
 
     @Test
+    void validateGettingFileForUrlWithSpaces() {
+
+        // Assemble
+        final String resourcePath = "testdata/shared/urlhandling/file with spaces.txt";
+        final URL resource = getClass().getClassLoader().getResource(resourcePath);
+        assertNotNull(resource);
+
+        // Act
+        final File file = FileSystemUtilities.getFileFor(resource, "UTF-8");
+
+        // Assert
+        assertNotNull(file);
+        assertTrue(file.exists());
+        assertTrue(file.isFile());
+        assertEquals("file with spaces.txt", file.getName());
+    }
+
+    @Test
+    void validateGettingFileForUrlWithPlusCharacter() throws Exception {
+
+        // Assemble
+        final File tempFile = File.createTempFile("file+with+plus", ".txt");
+        tempFile.deleteOnExit();
+        final URL fileUrl = tempFile.toURI().toURL();
+
+        // Act
+        final File resolvedFile = FileSystemUtilities.getFileFor(fileUrl, "UTF-8");
+
+        // Assert
+        assertNotNull(resolvedFile);
+        assertTrue(resolvedFile.exists());
+        assertEquals(tempFile.getCanonicalPath(), resolvedFile.getCanonicalPath());
+    }
+
+    @Test
     void validateRelativizingPaths() throws Exception {
 
         // Assemble

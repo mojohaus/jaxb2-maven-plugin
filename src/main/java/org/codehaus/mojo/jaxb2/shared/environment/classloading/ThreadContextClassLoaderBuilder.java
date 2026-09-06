@@ -330,7 +330,12 @@ public final class ThreadContextClassLoaderBuilder {
         URL toReturn = anURL;
         if ("file".equalsIgnoreCase(anURL.getProtocol())) {
 
-            final File theFile = new File(anURL.getPath());
+            File theFile;
+            try {
+                theFile = new File(anURL.toURI());
+            } catch (Exception e) {
+                theFile = new File(anURL.getPath());
+            }
             if (theFile.isDirectory()) {
                 try {
 
