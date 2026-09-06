@@ -280,6 +280,16 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     private boolean enableIntrospection;
 
     /**
+     * <p>Corresponding XJC parameter: {@code -XautoNameResolution}.</p>
+     * <p>By default, the XJC binding compiler fails when name collisions occur.
+     * Use this option to enable automatic name conflict resolution.</p>
+     *
+     * @since 4.1.1
+     */
+    @Parameter(property = "xjc.autoNameResolution", defaultValue = "false")
+    protected boolean autoNameResolution;
+
+    /**
      * <p>Corresponding XJC parameter: {@code p}.</p>
      * <p>The package under which the source files will be generated. Quoting the XJC documentation:
      * "Specifying a target package via this command-line option overrides any binding customization for package
@@ -604,7 +614,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     // Private helpers
     //
 
-    private String[] getXjcArguments(final String classPath, final String episodeFileNameOrNull)
+    protected String[] getXjcArguments(final String classPath, final String episodeFileNameOrNull)
             throws MojoExecutionException, NoSchemasException {
 
         final ArgumentBuilder builder = new ArgumentBuilder();
@@ -620,10 +630,11 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         builder.withFlag(readOnly, "readOnly");
         builder.withFlag(noGeneratedHeaderComments, "no-header");
         builder.withFlag(addGeneratedAnnotation, "mark-generated");
+        builder.withFlag(autoNameResolution, "XautoNameResolution");
 
         // Add all arguments on the form '-argumentName argumentValue'
         // (i.e. in 2 separate elements of the returned String[])
-        builder.withNamedArgument("httpproxy", getProxyString(settings.getActiveProxy()));
+        builder.withNamedArgument("httpproxy", getProxyString(settings == null ? null : settings.getActiveProxy()));
         builder.withNamedArgument("encoding", getEncoding(true));
         builder.withNamedArgument("p", packageName);
         builder.withNamedArgument("target", target);
