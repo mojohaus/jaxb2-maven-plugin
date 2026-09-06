@@ -222,6 +222,17 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     protected boolean createJavaDocAnnotations;
 
     /**
+     * <p>If {@code true}, post-processing qualifies any unprefixed {@code <xs:element ref="..."/>} references
+     * with the prefix of the schema's target namespace. This fixes a schemagen bug where element references to
+     * elements within the target namespace are emitted without a prefix in schemas that declare no default
+     * namespace, causing downstream tools (such as XJC) to reject the schema.</p>
+     *
+     * @since 4.1.1
+     */
+    @Parameter(defaultValue = "true", property = "jaxb2.qualifyUnprefixedReferences")
+    protected boolean qualifyUnprefixedReferences = true;
+
+    /**
      * <p>A renderer used to create XML annotation text from JavaDoc comments found within the source code.
      * Unless another implementation is provided, the standard JavaDocRenderer used is
      * {@linkplain org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.DefaultJavaDocRenderer}.</p>
@@ -442,11 +453,13 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 //
                 // 1. [XsdAnnotationProcessor]:            Inject JavaDoc annotations for Classes.
                 // 2. [XsdEnumerationAnnotationProcessor]: Inject JavaDoc annotations for Enums.
-                // 3. [ChangeNamespacePrefixProcessor]:    Change namespace prefixes within XSDs.
-                // 4. [ChangeFilenameProcessor]:           Change the fileNames of XSDs.
+                // 3. [QualifyTargetNamespaceReferencesProcessor]: Qualify unprefixed element references.
+                // 4. [ChangeNamespacePrefixProcessor]:    Change namespace prefixes within XSDs.
+                // 5. [ChangeFilenameProcessor]:           Change the fileNames of XSDs.
                 //
 
-                final boolean performPostProcessing = createJavaDocAnnotations || transformSchemas != null;
+                final boolean performPostProcessing =
+                        createJavaDocAnnotations || qualifyUnprefixedReferences || transformSchemas != null;
                 if (performPostProcessing) {
 
                     // Map the XML Namespaces to their respective XML URIs (and reverse)
@@ -490,6 +503,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                         if (getLog().isDebugEnabled()) {
                             getLog().info("XSD post-processing: " + numProcessedFiles + " files processed.");
                         }
+                    }
+
+                    if (qualifyUnprefixedReferences) {
+                        XsdGeneratorHelper.qualifyUnprefixedElementReferences(
+                                resolverMap, getLog(), getOutputDirectory(), getEncoding(false));
                     }
 
                     if (transformSchemas != null) {

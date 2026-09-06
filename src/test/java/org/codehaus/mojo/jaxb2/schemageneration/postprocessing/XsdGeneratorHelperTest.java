@@ -277,6 +277,87 @@ class XsdGeneratorHelperTest {
     }
 
     @Test
+    void validateQualifyingUnprefixedElementReferences(@TempDir final File schemaDirectory) throws Exception {
+        // Assemble
+        final String namespaceUri = "http://schemas.acme.com/vehicles";
+        final String schemaXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema version=\"1.0\" targetNamespace=\"" + namespaceUri + "\"\n"
+                + "           xmlns:tns=\"" + namespaceUri + "\"\n"
+                + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                + "  <xs:element name=\"CarType\" type=\"tns:CarType\"/>\n"
+                + "  <xs:complexType name=\"Car\">\n"
+                + "    <xs:sequence>\n"
+                + "      <xs:element ref=\"CarType\"/>\n"
+                + "    </xs:sequence>\n"
+                + "  </xs:complexType>\n"
+                + "</xs:schema>\n";
+
+        final File schemaFile = new File(schemaDirectory, "schema1.xsd");
+        Files.write(schemaFile.toPath(), schemaXml.getBytes(StandardCharsets.UTF_8));
+
+        final Map<String, SimpleNamespaceResolver> resolverMap =
+                Collections.singletonMap(schemaFile.getName(), new SimpleNamespaceResolver(schemaFile));
+
+        // Act
+        XsdGeneratorHelper.qualifyUnprefixedElementReferences(
+                resolverMap, new BufferingLog(), schemaDirectory, "UTF-8");
+
+        // Assert
+        final String processedXml = new String(Files.readAllBytes(schemaFile.toPath()), StandardCharsets.UTF_8);
+        final Element schemaElement = XsdGeneratorHelper.parseXmlStream(new StringReader(processedXml))
+                .getDocumentElement();
+
+        final Element elementWithRef = (Element) schemaElement
+                .getElementsByTagNameNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element")
+                .item(1);
+        assertEquals("tns:CarType", elementWithRef.getAttribute("ref"));
+    }
+
+    @Test
+    void validateQualifyingAndTransformingPrefixesTogether(@TempDir final File schemaDirectory) throws Exception {
+        // Assemble
+        final String namespaceUri = "http://schemas.acme.com/vehicles";
+        final String schemaXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema version=\"1.0\" targetNamespace=\"" + namespaceUri + "\"\n"
+                + "           xmlns:tns=\"" + namespaceUri + "\"\n"
+                + "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
+                + "  <xs:element name=\"CarType\" type=\"tns:CarType\"/>\n"
+                + "  <xs:complexType name=\"Car\">\n"
+                + "    <xs:sequence>\n"
+                + "      <xs:element ref=\"CarType\"/>\n"
+                + "    </xs:sequence>\n"
+                + "  </xs:complexType>\n"
+                + "</xs:schema>\n";
+
+        final File schemaFile = new File(schemaDirectory, "schema1.xsd");
+        Files.write(schemaFile.toPath(), schemaXml.getBytes(StandardCharsets.UTF_8));
+
+        final Map<String, SimpleNamespaceResolver> resolverMap =
+                Collections.singletonMap(schemaFile.getName(), new SimpleNamespaceResolver(schemaFile));
+
+        final List<TransformSchema> transformSchemas =
+                Collections.singletonList(new TransformSchema(namespaceUri, "vh", null));
+
+        // Act: 1. Qualify unprefixed element refs
+        XsdGeneratorHelper.qualifyUnprefixedElementReferences(
+                resolverMap, new BufferingLog(), schemaDirectory, "UTF-8");
+
+        // Act: 2. Replace namespace prefixes
+        XsdGeneratorHelper.replaceNamespacePrefixes(
+                resolverMap, transformSchemas, new BufferingLog(), schemaDirectory, "UTF-8");
+
+        // Assert
+        final String processedXml = new String(Files.readAllBytes(schemaFile.toPath()), StandardCharsets.UTF_8);
+        final Element schemaElement = XsdGeneratorHelper.parseXmlStream(new StringReader(processedXml))
+                .getDocumentElement();
+
+        final Element elementWithRef = (Element) schemaElement
+                .getElementsByTagNameNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element")
+                .item(1);
+        assertEquals("vh:CarType", elementWithRef.getAttribute("ref"));
+    }
+
+    @Test
     void validateProcessingXSDsWithEnumerations() throws Exception {
 
         // Assemble

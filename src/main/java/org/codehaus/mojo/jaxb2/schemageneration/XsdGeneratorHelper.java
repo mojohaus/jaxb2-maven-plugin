@@ -54,6 +54,7 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdAnnota
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.XsdEnumerationAnnotationProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeFilenameProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.ChangeNamespacePrefixProcessor;
+import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.QualifyTargetNamespaceReferencesProcessor;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.SimpleNamespaceResolver;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
@@ -61,6 +62,7 @@ import org.codehaus.mojo.jaxb2.shared.Validate;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -254,6 +256,58 @@ public final class XsdGeneratorHelper {
 
         // All done.
         return processedXSDs;
+    }
+
+    /**
+     * Qualifies any unprefixed {@code <xs:element ref="..."/>} references within generated schema files
+     * with the prefix of the schema's target namespace. This fixes an issue where schemagen generates
+     * element references without a namespace prefix for schemas that do not declare a default namespace.
+     *
+     * @param resolverMap     The map relating generated schema file name to SimpleNamespaceResolver instances.
+     * @param mavenLog        The active Log.
+     * @param schemaDirectory The directory where all generated schema files reside.
+     * @param encoding        The encoding / charset name.
+     */
+    public static void qualifyUnprefixedElementReferences(
+            final Map<String, SimpleNamespaceResolver> resolverMap,
+            final Log mavenLog,
+            final File schemaDirectory,
+            final String encoding) {
+
+        for (SimpleNamespaceResolver currentResolver : resolverMap.values()) {
+            final String targetNamespaceUri = currentResolver.getLocalNamespaceURI();
+            if (StringUtils.isEmpty(targetNamespaceUri)) {
+                continue;
+            }
+
+            final String targetNamespacePrefix =
+                    currentResolver.getNamespaceURI2PrefixMap().get(targetNamespaceUri);
+            if (StringUtils.isEmpty(targetNamespacePrefix)) {
+                continue;
+            }
+
+            final File generatedSchemaFile = new File(schemaDirectory, currentResolver.getSourceFilename());
+            final Document document = parseXmlToDocument(generatedSchemaFile, encoding);
+            final Element schemaElement = document.getDocumentElement();
+            final boolean hasDefaultNamespace = schemaElement != null
+                    && (schemaElement.hasAttribute("xmlns")
+                            || StringUtils.isNotEmpty(schemaElement.getAttribute("xmlns")));
+
+            if (!hasDefaultNamespace) {
+                final QualifyTargetNamespaceReferencesProcessor processor =
+                        new QualifyTargetNamespaceReferencesProcessor(targetNamespacePrefix, false);
+                process(document.getFirstChild(), true, processor);
+
+                if (processor.getModifiedCount() > 0) {
+                    if (mavenLog.isDebugEnabled()) {
+                        mavenLog.debug("Qualifying " + processor.getModifiedCount()
+                                + " unprefixed element reference(s) in [" + generatedSchemaFile.getName()
+                                + "] with prefix [" + targetNamespacePrefix + "].");
+                    }
+                    savePrettyPrintedDocument(document, generatedSchemaFile, encoding);
+                }
+            }
+        }
     }
 
     /**
