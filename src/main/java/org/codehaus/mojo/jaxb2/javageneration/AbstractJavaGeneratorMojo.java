@@ -680,7 +680,12 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
             //         current.getAbsolutePath(), getProject().getBasedir());
 
             // Each XJB must be given as a separate argument.
-            builder.withPreCompiledArguments(Arrays.asList("-b", current.getAbsolutePath()));
+            // If the path contains non-ASCII characters, pass it as a percent-encoded ASCII URI
+            // to avoid URI syntax errors in Xerces/XJC when resolving schemas.
+            final String path = current.getAbsolutePath();
+            final String arg =
+                    FileSystemUtilities.containsNonAscii(path) ? current.toURI().toASCIIString() : path;
+            builder.withPreCompiledArguments(Arrays.asList("-b", arg));
         }
 
         final List<URL> sourceXSDs = getSources();
@@ -698,7 +703,15 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 // Shorten the argument if possible.
                 if ("file".equalsIgnoreCase(current.getProtocol())) {
                     try {
-                        unwrappedSourceXSDs.add(new File(current.toURI()).getPath());
+                        final String path = new File(current.toURI()).getPath();
+                        // If the path contains non-ASCII characters, pass it as a percent-encoded ASCII URI.
+                        // Passing a raw filesystem path with non-ASCII characters causes Xerces' internal URI
+                        // parser to reject the base URI and fail to resolve relative includes/imports.
+                        if (FileSystemUtilities.containsNonAscii(path)) {
+                            unwrappedSourceXSDs.add(current.toURI().toASCIIString());
+                        } else {
+                            unwrappedSourceXSDs.add(path);
+                        }
                     } catch (final URISyntaxException e) {
                         throw new MojoExecutionException(e.getMessage(), e);
                     }
