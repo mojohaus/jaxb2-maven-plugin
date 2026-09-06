@@ -450,6 +450,22 @@ class FileSystemUtilitiesTest {
         }
     }
 
+    @Test
+    void validateContainsNonAscii() {
+        assertFalse(FileSystemUtilities.containsNonAscii(null));
+        assertFalse(FileSystemUtilities.containsNonAscii(""));
+        assertFalse(FileSystemUtilities.containsNonAscii("ascii-only-string"));
+        assertFalse(FileSystemUtilities.containsNonAscii("/Users/test/projects/src/main/xsd/schema.xsd"));
+        assertFalse(FileSystemUtilities.containsNonAscii(
+                "path with spaces and special chars: !#$%&'()*+,-./:;<=>?@[]^_`{|}~"));
+
+        assertTrue(FileSystemUtilities.containsNonAscii("æøå"));
+        assertTrue(FileSystemUtilities.containsNonAscii(
+                "/Users/blabla/æøå/src/main/resources/mets/submissionDescription.xsd"));
+        assertTrue(FileSystemUtilities.containsNonAscii("C:\\Users\\café\\schema.xsd"));
+        assertTrue(FileSystemUtilities.containsNonAscii("日本語/schema.xsd"));
+    }
+
     //
     // Private helpers
     //

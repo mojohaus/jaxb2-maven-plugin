@@ -558,6 +558,24 @@ public final class FileSystemUtilities {
     }
 
     /**
+     * Checks if the supplied string contains any non-ASCII characters (i.e. character code &gt; 127).
+     *
+     * @param text The string to check.
+     * @return {@code true} if the string contains non-ASCII characters, {@code false} otherwise.
+     */
+    public static boolean containsNonAscii(final String text) {
+        if (text == null) {
+            return false;
+        }
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * If the supplied fileOrDir is a File, it is added to the returned List if any of the filters Match.
      * If the supplied fileOrDir is a Directory, it is listed and any of the files immediately within the fileOrDir
      * directory are returned within the resulting List provided that they match any of the supplied filters.
