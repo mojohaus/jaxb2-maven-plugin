@@ -493,6 +493,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
                 // Ensure that the outputDirectory exists and is cleared before compiling arguments
                 // so that episode file calculation operates on a clean directory.
+                validateOutputDirectory(getOutputDirectory(), clearOutputDir, "outputDirectory");
                 FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
 
                 // Compile the XJC arguments

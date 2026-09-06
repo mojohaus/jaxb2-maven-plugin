@@ -301,6 +301,36 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         return getInjectedObject(project, "project");
     }
 
+    void setProject(final MavenProject project) {
+        this.project = project;
+    }
+
+    /**
+     * Validates that the specified directory is safe to clear.
+     * Prevents accidentally clearing the project basedir or any of its parent directories.
+     *
+     * @param directory    The directory to validate.
+     * @param clearDir     Whether the directory is scheduled to be cleared.
+     * @param propertyName The name of the property/parameter being validated (e.g. "outputDirectory").
+     * @throws MojoExecutionException if clearing the directory would delete the project basedir or a parent.
+     */
+    protected void validateOutputDirectory(final File directory, final boolean clearDir, final String propertyName)
+            throws MojoExecutionException {
+        if (clearDir
+                && directory != null
+                && getProject() != null
+                && getProject().getBasedir() != null) {
+            final Path dirPath = directory.toPath().toAbsolutePath().normalize();
+            final Path basedirPath =
+                    getProject().getBasedir().toPath().toAbsolutePath().normalize();
+            if (basedirPath.startsWith(dirPath)) {
+                throw new MojoExecutionException("Cowardly refusing to clear " + propertyName + " ["
+                        + dirPath + "] as it is equal to or a parent of project basedir ["
+                        + basedirPath + "]. Check your plugin configuration.");
+            }
+        }
+    }
+
     /**
      * @return The active MojoExecution.
      */

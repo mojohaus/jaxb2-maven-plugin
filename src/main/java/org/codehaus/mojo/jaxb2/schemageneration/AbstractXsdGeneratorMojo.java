@@ -392,6 +392,8 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
             // Ensure that the outputDirectory and workDirectory exist and are cleared
             // before compiling arguments so that episode file calculation operates on a clean directory.
+            validateOutputDirectory(getOutputDirectory(), clearOutputDir, "outputDirectory");
+            validateOutputDirectory(getWorkDirectory(), clearOutputDir, "workDirectory");
             FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
             FileSystemUtilities.createDirectory(getWorkDirectory(), clearOutputDir);
 
