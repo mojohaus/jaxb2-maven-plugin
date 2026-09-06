@@ -19,9 +19,16 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
  * under the License.
  */
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -103,6 +110,11 @@ public class JavaDocExtractor {
     /**
      * Adds the supplied sourceCodeFiles for processing by this JavaDocExtractor.
      *
+     * <p>JDK 23+ Markdown documentation comments (lines starting with {@code ///}) are pre-processed
+     * into standard {@code /** ... *&#47;} Javadoc format before being passed to QDox, which does not
+     * natively support the {@code ///} syntax. This allows {@code createJavaDocAnnotations} to work
+     * with both traditional and Markdown-style documentation.</p>
+     *
      * @param sourceCodeFiles The non-null List of source code files to add.
      * @return This JavaDocExtractor, for call chaining.
      * @throws IllegalArgumentException If any of the given sourceCodeFiles could not be read properly.
@@ -112,10 +124,23 @@ public class JavaDocExtractor {
         // Check sanity
         Validate.notNull(sourceCodeFiles, "addSourceFiles");
 
-        // Add the files.
+        // Determine the charset for reading files: use the builder's configured encoding if present,
+        // fall back to UTF-8 as required by the JDK 23 /// Markdown spec (JEP 467).
+        final Charset charset = StandardCharsets.UTF_8;
+
+        // Add the files, pre-processing any JDK 23+ Markdown /// documentation comments.
         for (File current : sourceCodeFiles) {
             try {
-                builder.addSource(current);
+                final String source = new String(Files.readAllBytes(current.toPath()), charset);
+
+                // Only pay the conversion cost when /// comments are actually present.
+                // For files using only traditional /** */ Javadoc, delegate directly to QDox to avoid
+                // unnecessary string copying and line-splitting overhead.
+                if (source.contains("///")) {
+                    builder.addSource(new StringReader(convertMarkdownCommentsToJavadoc(source)));
+                } else {
+                    builder.addSource(current);
+                }
             } catch (IOException e) {
                 throw new IllegalArgumentException(
                         "Could not add file [" + FileSystemUtilities.getCanonicalPath(current) + "]", e);
@@ -129,6 +154,10 @@ public class JavaDocExtractor {
     /**
      * Adds the supplied sourceCodeFiles for processing by this JavaDocExtractor.
      *
+     * <p>JDK 23+ Markdown documentation comments (lines starting with {@code ///}) are pre-processed
+     * into standard {@code /** ... *&#47;} Javadoc format before being passed to QDox, which does not
+     * natively support the {@code ///} syntax.</p>
+     *
      * @param sourceCodeURLs The non-null List of source code URLs to add.
      * @return This JavaDocExtractor, for call chaining.
      * @throws IllegalArgumentException If any of the given sourceCodeURLs could not be read properly.
@@ -138,10 +167,26 @@ public class JavaDocExtractor {
         // Check sanity
         Validate.notNull(sourceCodeURLs, "sourceCodeURLs");
 
-        // Add the URLs
+        // Add the URLs, pre-processing any JDK 23+ Markdown /// documentation comments.
         for (URL current : sourceCodeURLs) {
             try {
-                builder.addSource(current);
+                // Read the source content from the URL. Use UTF-8 as required by JEP 467.
+                final StringBuilder sb = new StringBuilder();
+                try (BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(current.openStream(), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line).append('\n');
+                    }
+                }
+                final String source = sb.toString();
+
+                // Only pay the conversion cost when /// comments are actually present.
+                if (source.contains("///")) {
+                    builder.addSource(new StringReader(convertMarkdownCommentsToJavadoc(source)));
+                } else {
+                    builder.addSource(current);
+                }
             } catch (IOException e) {
                 throw new IllegalArgumentException("Could not add URL [" + current.toString() + "]", e);
             }
@@ -149,6 +194,115 @@ public class JavaDocExtractor {
 
         // All done
         return this;
+    }
+
+    /**
+     * Converts JDK 23+ Markdown documentation comments ({@code ///}) to standard Javadoc
+     * ({@code /** ... *&#47;}) format so that QDox can parse them.
+     *
+     * <p>JEP 467 defines Markdown documentation comments as consecutive lines where each line
+     * begins with optional whitespace followed by {@code ///}. A group of consecutive {@code ///}
+     * lines is treated as a single documentation comment. Blank {@code ///} lines (i.e., just
+     * {@code ///} with no following content) produce an empty comment line, analogous to an empty
+     * line in traditional Javadoc.</p>
+     *
+     * <p>Algorithm:</p>
+     * <ol>
+     *   <li>Scan each line to detect runs of consecutive {@code ///} lines.</li>
+     *   <li>Replace the leading {@code ///} on the first line with {@code /**} and strip the {@code ///}
+     *       prefix from subsequent lines (replacing it with {@code  *}), then close the block with
+     *       {@code  *&#47;} after the last {@code ///} line in the run.</li>
+     *   <li>Non-{@code ///} lines pass through unchanged.</li>
+     * </ol>
+     *
+     * @param source The Java source code text to transform. Must not be null.
+     * @return The transformed source text with all {@code ///} comment runs replaced by Javadoc blocks.
+     */
+    static String convertMarkdownCommentsToJavadoc(final String source) {
+
+        // Split preserving original line endings so the reconstructed source compiles cleanly.
+        final String[] lines = source.split("\n", -1);
+        final List<String> result = new ArrayList<>(lines.length + 16);
+
+        // Accumulate a run of consecutive /// lines; flush to a /** ... */ block when the run ends.
+        final List<String> markdownRun = new ArrayList<>();
+
+        for (final String line : lines) {
+
+            // Detect a Markdown documentation comment line: optional whitespace then "///".
+            // We use trimmed detection but preserve the leading whitespace for the converted output.
+            final String trimmed = line.stripLeading();
+            if (trimmed.startsWith("///")) {
+
+                // Record the leading indentation of the first line in this run; all subsequent
+                // lines in the run use the same indent to produce well-aligned Javadoc.
+                final String indent = line.substring(0, line.length() - trimmed.length());
+
+                // Strip the "///" prefix and the optional single space that follows it
+                // (JEP 467 specifies that one leading space is consumed, matching Javadoc's "* " convention).
+                final String content =
+                        trimmed.length() > 3 && trimmed.charAt(3) == ' ' ? trimmed.substring(4) : trimmed.substring(3);
+
+                // Encode the indent and content; defer actual output until the run ends.
+                markdownRun.add(indent + content);
+
+            } else {
+
+                // Non-/// line: flush any accumulated Markdown run first.
+                if (!markdownRun.isEmpty()) {
+                    flushMarkdownRun(markdownRun, result);
+                    markdownRun.clear();
+                }
+
+                result.add(line);
+            }
+        }
+
+        // Flush any trailing Markdown run at end of file.
+        if (!markdownRun.isEmpty()) {
+            flushMarkdownRun(markdownRun, result);
+        }
+
+        return String.join("\n", result);
+    }
+
+    /**
+     * Converts the accumulated run of Markdown {@code ///} comment lines into a {@code /** ... *&#47;}
+     * Javadoc block and appends it to {@code output}.
+     *
+     * <p>Example: a run with entries {@code ["Controls foo.", "", "Defaults to false."]} and
+     * indent {@code "    "} becomes:</p>
+     * <pre>
+     *     /**
+     *      * Controls foo.
+     *      *
+     *      * Defaults to false.
+     *      *&#47;
+     * </pre>
+     *
+     * @param run    Non-empty list of {@code "indent + content"} strings from consecutive {@code ///} lines.
+     * @param output The target list to append converted Javadoc lines to.
+     */
+    private static void flushMarkdownRun(final List<String> run, final List<String> output) {
+
+        // Derive indent from the first line: everything before the first non-whitespace character.
+        // (All lines in a run share the same indent by construction in convertMarkdownCommentsToJavadoc.)
+        final String firstLine = run.get(0);
+        final String indent = firstLine.substring(
+                0, firstLine.length() - firstLine.stripLeading().length());
+
+        // Opening delimiter.
+        output.add(indent + "/**");
+
+        // Body: one " * <content>" line per run entry.
+        for (final String entry : run) {
+            // Entry is "indent + content"; strip the common indent prefix to get just the content.
+            final String content = entry.substring(Math.min(indent.length(), entry.length()));
+            output.add(indent + " * " + content);
+        }
+
+        // Closing delimiter.
+        output.add(indent + " */");
     }
 
     /**

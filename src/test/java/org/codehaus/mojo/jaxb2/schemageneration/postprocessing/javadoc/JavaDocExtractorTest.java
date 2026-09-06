@@ -39,6 +39,8 @@ class JavaDocExtractorTest {
     private File javaDocAnnotatedDir;
     private File javaDocEnumsDir;
     private File javaDocXmlWrappersDir;
+    // Directory holding Java sources with JDK 23 Markdown /// documentation comments (issue #404).
+    private File javaDocMarkdownDir;
     private BufferingLog log;
 
     @BeforeEach
@@ -64,6 +66,12 @@ class JavaDocExtractorTest {
                 getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/xmlwrappers");
         this.javaDocXmlWrappersDir = new File(wrappersDirURL.getPath());
         assertTrue(javaDocXmlWrappersDir.exists() && javaDocXmlWrappersDir.isDirectory());
+
+        // Set up the directory with JDK 23 Markdown /// documentation comments.
+        final URL markdownDirURL =
+                getClass().getClassLoader().getResource("testdata/schemageneration/javadoc/markdown");
+        this.javaDocMarkdownDir = new File(markdownDirURL.getPath());
+        assertTrue(javaDocMarkdownDir.exists() && javaDocMarkdownDir.isDirectory());
     }
 
     @Test
@@ -608,5 +616,196 @@ class JavaDocExtractorTest {
         // Launch the JavaDocExtractor and find
         // the resulting SearchableDocumentation.
         return unitUnderTest.process();
+    }
+
+    // ========================================================================================
+    // Tests for JDK 23 Markdown /// documentation comment support (issue #404)
+    // ========================================================================================
+
+    /**
+     * Verifies that a single-line Markdown /// comment is converted to a one-line Javadoc block.
+     *
+     * <p>Input:  {@code "    /// Controls whether the feature is enabled."}</p>
+     * <p>Expected output is a {@code /** ... *&#47;} block with the same content.</p>
+     */
+    @Test
+    void convertMarkdownComments_singleLine() {
+
+        // Assemble: a class with a single /// line above a field
+        final String source = "public class Foo {\n"
+                + "    /// Controls whether the feature is enabled.\n"
+                + "    private boolean enabled;\n"
+                + "}\n";
+
+        // Act
+        final String converted = JavaDocExtractor.convertMarkdownCommentsToJavadoc(source);
+
+        // Assert: the /// line must become a proper /** ... */ block
+        assertTrue(converted.contains("/**"), "Expected opening Javadoc delimiter '/**'");
+        assertTrue(
+                converted.contains("* Controls whether the feature is enabled."),
+                "Expected comment body line with ' * <content>'");
+        assertTrue(converted.contains("*/"), "Expected closing Javadoc delimiter '*/'");
+        // The /// marker itself must not appear in the output
+        assertFalse(converted.contains("///"), "Unexpected '///' in converted output");
+    }
+
+    /**
+     * Verifies that multi-line consecutive Markdown /// comments are merged into a single Javadoc block.
+     *
+     * <p>JEP 467 specifies that consecutive {@code ///} lines form one documentation comment,
+     * analogous to how consecutive lines inside a {@code /** ... *&#47;} block form one comment.</p>
+     */
+    @Test
+    void convertMarkdownComments_multiLine() {
+
+        // Assemble: three consecutive /// lines
+        final String source = "public class Foo {\n"
+                + "    /// First line.\n"
+                + "    ///\n"
+                + "    /// Third line after blank.\n"
+                + "    private int count;\n"
+                + "}\n";
+
+        // Act
+        final String converted = JavaDocExtractor.convertMarkdownCommentsToJavadoc(source);
+
+        // Assert: all three lines are inside one /** ... */ block
+        assertTrue(converted.contains("/**"), "Expected opening Javadoc delimiter '/**'");
+        assertTrue(converted.contains("* First line."), "Expected first content line");
+        // The blank /// becomes a blank body line " * "
+        assertTrue(converted.contains("* Third line after blank."), "Expected third content line");
+        assertTrue(converted.contains("*/"), "Expected closing Javadoc delimiter '*/'");
+        assertFalse(converted.contains("///"), "Unexpected '///' in converted output");
+        // Verify only one Javadoc opening — three /// lines produce a single /** block
+        assertEquals(
+                1,
+                countOccurrences(converted, "/**"),
+                "Three consecutive /// lines should produce exactly one /** block");
+    }
+
+    /**
+     * Verifies that two separate groups of /// lines each produce their own Javadoc block.
+     *
+     * <p>When /// comment runs are separated by non-/// lines they form independent doc comments,
+     * just as separate {@code /** ... *&#47;} blocks do in traditional Javadoc.</p>
+     */
+    @Test
+    void convertMarkdownComments_separateGroups() {
+
+        // Assemble: two independent comment groups separated by a field declaration
+        final String source = "public class Foo {\n"
+                + "    /// First field comment.\n"
+                + "    private boolean enabled;\n"
+                + "\n"
+                + "    /// Second field comment.\n"
+                + "    private String name;\n"
+                + "}\n";
+
+        // Act
+        final String converted = JavaDocExtractor.convertMarkdownCommentsToJavadoc(source);
+
+        // Assert: two separate /** ... */ blocks
+        assertEquals(
+                2,
+                countOccurrences(converted, "/**"),
+                "Two separate /// groups should each become their own /** block");
+        assertTrue(converted.contains("* First field comment."), "Expected first comment body");
+        assertTrue(converted.contains("* Second field comment."), "Expected second comment body");
+        assertFalse(converted.contains("///"), "Unexpected '///' in converted output");
+    }
+
+    /**
+     * Verifies that files without any /// comment lines are returned unmodified.
+     *
+     * <p>This is a fast path — the implementation short-circuits on {@code !source.contains("///")}
+     * so files using only traditional Javadoc are never passed through the conversion logic.</p>
+     */
+    @Test
+    void convertMarkdownComments_noMarkdownLines_returnsUnchanged() {
+
+        // Assemble: a file with only traditional Javadoc
+        final String source = "/**\n" + " * Traditional Javadoc.\n" + " */\n" + "public class Foo {}\n";
+
+        // Act
+        final String converted = JavaDocExtractor.convertMarkdownCommentsToJavadoc(source);
+
+        // Assert: source is returned unchanged when no /// markers are present
+        assertEquals(source, converted, "Source without /// lines must be returned unchanged");
+    }
+
+    /**
+     * Integration test: verifies that {@link JavaDocExtractor} correctly extracts documentation
+     * from a Java source file that uses JDK 23 Markdown {@code ///} documentation comments.
+     *
+     * <p>The test data file {@code MarkdownDocBean.java} in the {@code markdown} test resource
+     * directory uses {@code ///} comments on the class and three fields. After processing, the
+     * extractor must expose JavaDocData for each documented element.</p>
+     */
+    @Test
+    void extractJavaDocFromMarkdownComments() {
+
+        // Assemble
+        final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
+        unitUnderTest.setEncoding("UTF-8");
+
+        final List<File> sourceDirs = Arrays.<File>asList(javaDocMarkdownDir);
+        final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
+
+        // Act
+        unitUnderTest.addSourceFiles(sourceFiles);
+        final SearchableDocumentation result = unitUnderTest.process();
+
+        // Assert: the class-level comment must be captured
+        final SortedMap<SortableLocation, JavaDocData> allDocs = result.getAll();
+        assertFalse(allDocs.isEmpty(), "Expected at least one documented element");
+
+        // Find class-level documentation for markdown.MarkdownDocBean
+        boolean foundClassDoc = false;
+        boolean foundEnabledFieldDoc = false;
+        boolean foundNameFieldDoc = false;
+        boolean foundMaxRetriesFieldDoc = false;
+
+        for (Map.Entry<SortableLocation, JavaDocData> entry : allDocs.entrySet()) {
+            final String text = entry.getValue().getComment();
+            if (text == null) {
+                continue;
+            }
+            if (text.contains("A simple configuration bean")) {
+                foundClassDoc = true;
+            }
+            if (text.contains("Controls whether the feature is enabled")) {
+                foundEnabledFieldDoc = true;
+            }
+            if (text.contains("The display name shown to the user")) {
+                foundNameFieldDoc = true;
+            }
+            if (text.contains("The maximum retry count")) {
+                foundMaxRetriesFieldDoc = true;
+            }
+        }
+
+        assertTrue(foundClassDoc, "Expected class-level Markdown /// comment to be extracted as JavaDoc");
+        assertTrue(foundEnabledFieldDoc, "Expected 'enabled' field Markdown /// comment to be extracted as JavaDoc");
+        assertTrue(foundNameFieldDoc, "Expected 'name' field Markdown /// comment to be extracted as JavaDoc");
+        assertTrue(
+                foundMaxRetriesFieldDoc, "Expected 'maxRetries' field Markdown /// comment to be extracted as JavaDoc");
+    }
+
+    /**
+     * Counts the number of non-overlapping occurrences of {@code needle} in {@code haystack}.
+     *
+     * @param haystack the string to search in
+     * @param needle   the substring to count
+     * @return the number of occurrences
+     */
+    private static int countOccurrences(final String haystack, final String needle) {
+        int count = 0;
+        int index = 0;
+        while ((index = haystack.indexOf(needle, index)) != -1) {
+            count++;
+            index += needle.length();
+        }
+        return count;
     }
 }
