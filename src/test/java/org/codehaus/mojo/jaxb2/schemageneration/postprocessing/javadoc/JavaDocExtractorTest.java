@@ -2,6 +2,8 @@ package org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +25,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -394,6 +397,131 @@ class JavaDocExtractorTest {
         assertEquals(
                 "<code>true</code> if the provided Node should be processed by this NodeProcessor.",
                 methodTag2ValueMap.get("return"));
+    }
+
+    @Test
+    void validateXmlTypeConstantName(@TempDir File tempDir) throws Exception {
+        // Assemble
+        final String javaCode = "package com.example;\n"
+                + "import jakarta.xml.bind.annotation.XmlType;\n"
+                + "/**\n"
+                + " * Class documentation.\n"
+                + " */\n"
+                + "@XmlType(name = MyAnnotatedClass.CUSTOM_NAME)\n"
+                + "public class MyAnnotatedClass {\n"
+                + "    public static final String CUSTOM_NAME = \"MyCustomXmlType\";\n"
+                + "}\n";
+        File javaFile = new File(tempDir, "MyAnnotatedClass.java");
+        Files.write(javaFile.toPath(), javaCode.getBytes(StandardCharsets.UTF_8));
+
+        JavaDocExtractor extractor = new JavaDocExtractor(log);
+        extractor.setEncoding("UTF-8");
+        extractor.addSourceFiles(Collections.singletonList(javaFile));
+
+        // Act
+        SearchableDocumentation result = extractor.process();
+
+        // Assert
+        ClassLocation loc = result.getLocation("com.example.MyCustomXmlType");
+        assertNotNull(loc);
+        assertEquals("MyCustomXmlType", loc.getClassName());
+        assertEquals("MyCustomXmlType", loc.getAnnotationRenamedTo());
+    }
+
+    @Test
+    void validateXmlTypeConstantFromExternalClass(@TempDir File tempDir) throws Exception {
+        // Assemble
+        final String constCode = "package com.example;\n"
+                + "public class Constants {\n"
+                + "    public static final String EXTERNAL_NAME = \"ExternalXmlType\";\n"
+                + "}\n";
+        final String classCode = "package com.example;\n"
+                + "import jakarta.xml.bind.annotation.XmlType;\n"
+                + "/**\n"
+                + " * Class documentation.\n"
+                + " */\n"
+                + "@XmlType(name = Constants.EXTERNAL_NAME)\n"
+                + "public class MyClass {\n"
+                + "}\n";
+        File constFile = new File(tempDir, "Constants.java");
+        File classFile = new File(tempDir, "MyClass.java");
+        Files.write(constFile.toPath(), constCode.getBytes(StandardCharsets.UTF_8));
+        Files.write(classFile.toPath(), classCode.getBytes(StandardCharsets.UTF_8));
+
+        JavaDocExtractor extractor = new JavaDocExtractor(log);
+        extractor.setEncoding("UTF-8");
+        extractor.addSourceFiles(Arrays.asList(constFile, classFile));
+
+        // Act
+        SearchableDocumentation result = extractor.process();
+
+        // Assert
+        ClassLocation loc = result.getLocation("com.example.ExternalXmlType");
+        assertNotNull(loc);
+        assertEquals("ExternalXmlType", loc.getClassName());
+        assertEquals("ExternalXmlType", loc.getAnnotationRenamedTo());
+    }
+
+    @Test
+    void validateXmlElementAndAttributeConstantName(@TempDir File tempDir) throws Exception {
+        // Assemble
+        final String javaCode = "package com.example;\n"
+                + "import jakarta.xml.bind.annotation.XmlType;\n"
+                + "import jakarta.xml.bind.annotation.XmlElement;\n"
+                + "import jakarta.xml.bind.annotation.XmlAttribute;\n"
+                + "@XmlType\n"
+                + "public class MyElementClass {\n"
+                + "    public static final String ELEM_NAME = \"customElement\";\n"
+                + "    public static final String ATTR_NAME = \"customAttribute\";\n"
+                + "    @XmlElement(name = ELEM_NAME)\n"
+                + "    private String aField;\n"
+                + "    @XmlAttribute(name = ATTR_NAME)\n"
+                + "    private int anAttr;\n"
+                + "}\n";
+        File javaFile = new File(tempDir, "MyElementClass.java");
+        Files.write(javaFile.toPath(), javaCode.getBytes(StandardCharsets.UTF_8));
+
+        JavaDocExtractor extractor = new JavaDocExtractor(log);
+        extractor.setEncoding("UTF-8");
+        extractor.addSourceFiles(Collections.singletonList(javaFile));
+
+        // Act
+        SearchableDocumentation result = extractor.process();
+
+        // Assert
+        FieldLocation elemLoc = result.getLocation("com.example.MyElementClass#customElement");
+        assertNotNull(elemLoc, "Should find field by customElement name");
+        assertEquals("customElement", elemLoc.getAnnotationRenamedTo());
+
+        FieldLocation attrLoc = result.getLocation("com.example.MyElementClass#customAttribute");
+        assertNotNull(attrLoc, "Should find field by customAttribute name");
+        assertEquals("customAttribute", attrLoc.getAnnotationRenamedTo());
+    }
+
+    @Test
+    void validateConcatenatedConstantName(@TempDir File tempDir) throws Exception {
+        // Assemble
+        final String javaCode = "package com.example;\n"
+                + "import jakarta.xml.bind.annotation.XmlType;\n"
+                + "@XmlType(name = \"Prefix_\" + MyConcatClass.SUFFIX)\n"
+                + "public class MyConcatClass {\n"
+                + "    public static final String SUFFIX = \"CustomSuffix\";\n"
+                + "}\n";
+        File javaFile = new File(tempDir, "MyConcatClass.java");
+        Files.write(javaFile.toPath(), javaCode.getBytes(StandardCharsets.UTF_8));
+
+        JavaDocExtractor extractor = new JavaDocExtractor(log);
+        extractor.setEncoding("UTF-8");
+        extractor.addSourceFiles(Collections.singletonList(javaFile));
+
+        // Act
+        SearchableDocumentation result = extractor.process();
+
+        // Assert
+        ClassLocation loc = result.getLocation("com.example.Prefix_CustomSuffix");
+        assertNotNull(loc);
+        assertEquals("Prefix_CustomSuffix", loc.getClassName());
+        assertEquals("Prefix_CustomSuffix", loc.getAnnotationRenamedTo());
     }
 
     //
