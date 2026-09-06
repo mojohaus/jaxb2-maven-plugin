@@ -515,7 +515,13 @@ public final class XsdGeneratorHelper {
      * @param node The Node whose children should be converted to a String.
      * @return a pretty-printed XML-formatted string.
      */
-    protected static String getHumanReadableXml(final Node node) {
+    public static String getHumanReadableXml(final Node node) {
+        if (node == null) {
+            return "";
+        }
+
+        stripWhitespace(node);
+
         StringWriter toReturn = new StringWriter();
 
         try {
@@ -529,6 +535,30 @@ public final class XsdGeneratorHelper {
         }
 
         return toReturn.toString();
+    }
+
+    /**
+     * Recursively removes whitespace-only text nodes from the DOM tree.
+     * On JDK 9+, the XSLT transformer preserves existing whitespace text nodes while adding its
+     * own indentation when INDENT is enabled, which leads to accumulating blank lines between elements.
+     *
+     * @param node The DOM node to strip whitespace from.
+     */
+    private static void stripWhitespace(final Node node) {
+        if (node == null) {
+            return;
+        }
+
+        final NodeList children = node.getChildNodes();
+        for (int i = children.getLength() - 1; i >= 0; i--) {
+            final Node child = children.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE
+                    && child.getNodeValue().trim().isEmpty()) {
+                node.removeChild(child);
+            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
+                stripWhitespace(child);
+            }
+        }
     }
 
     //
