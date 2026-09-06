@@ -505,6 +505,57 @@ class XsdGeneratorHelperTest {
         assertEquals("xs", schema3NamespaceURI2PrefixMap.get("http://www.w3.org/2001/XMLSchema"));
     }
 
+    @Test
+    void validatePrettyPrintingDoesNotIntroduceEmptyLines() {
+        // Assemble
+        final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" version=\"1.0\">\n"
+                + "  <xs:element name=\"foo\" type=\"xs:string\"/>\n"
+                + "  <xs:complexType name=\"bar\">\n"
+                + "    <xs:sequence>\n"
+                + "      <xs:element name=\"baz\" type=\"xs:string\"/>\n"
+                + "    </xs:sequence>\n"
+                + "  </xs:complexType>\n"
+                + "</xs:schema>\n";
+
+        final Document document = XsdGeneratorHelper.parseXmlStream(new StringReader(xml));
+
+        // Act
+        final String prettyXml = XsdGeneratorHelper.getHumanReadableXml(document.getFirstChild());
+
+        // Assert: no empty/blank lines between elements
+        final String[] lines = prettyXml.split("\\R");
+        for (int i = 0; i < lines.length; i++) {
+            assertTrue(
+                    !lines[i].trim().isEmpty(),
+                    "Line " + i + " should not be blank, but was: [" + lines[i] + "] in XML:\n" + prettyXml);
+        }
+    }
+
+    @Test
+    void validateRepeatedPrettyPrintingDoesNotAccumulateEmptyLines() {
+        // Assemble
+        final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" version=\"1.0\">\n"
+                + "  <xs:element name=\"foo\" type=\"xs:string\"/>\n"
+                + "  <xs:complexType name=\"bar\">\n"
+                + "    <xs:sequence>\n"
+                + "      <xs:element name=\"baz\" type=\"xs:string\"/>\n"
+                + "    </xs:sequence>\n"
+                + "  </xs:complexType>\n"
+                + "</xs:schema>\n";
+
+        final Document firstDoc = XsdGeneratorHelper.parseXmlStream(new StringReader(xml));
+        final String firstPassXml = XsdGeneratorHelper.getHumanReadableXml(firstDoc.getFirstChild());
+
+        // Act: second pass (parse the pretty-printed XML and pretty-print again)
+        final Document secondDoc = XsdGeneratorHelper.parseXmlStream(new StringReader(firstPassXml));
+        final String secondPassXml = XsdGeneratorHelper.getHumanReadableXml(secondDoc.getFirstChild());
+
+        // Assert
+        assertEquals(firstPassXml, secondPassXml, "Pretty-printing should be idempotent and not add blank lines.");
+    }
+
     //
     // Private helpers
     //
