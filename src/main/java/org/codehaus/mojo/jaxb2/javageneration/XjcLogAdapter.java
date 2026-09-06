@@ -74,7 +74,7 @@ public class XjcLogAdapter extends XJCListener {
      */
     @Override
     public void error(final SAXParseException exception) {
-        log.error(getLocation(exception), exception);
+        log.error(formatMessage(exception), exception);
     }
 
     /**
@@ -82,7 +82,7 @@ public class XjcLogAdapter extends XJCListener {
      */
     @Override
     public void fatalError(final SAXParseException exception) {
-        log.error(getLocation(exception), exception);
+        log.error(formatMessage(exception), exception);
     }
 
     /**
@@ -90,7 +90,12 @@ public class XjcLogAdapter extends XJCListener {
      */
     @Override
     public void warning(final SAXParseException exception) {
-        log.warn(getLocation(exception), exception);
+        final String message = formatMessage(exception);
+        if (log.isDebugEnabled()) {
+            log.warn(message, exception);
+        } else {
+            log.warn(message);
+        }
     }
 
     /**
@@ -98,16 +103,28 @@ public class XjcLogAdapter extends XJCListener {
      */
     @Override
     public void info(final SAXParseException exception) {
-        log.info(getLocation(exception), exception);
+        final String message = formatMessage(exception);
+        if (log.isDebugEnabled()) {
+            log.info(message, exception);
+        } else {
+            log.info(message);
+        }
     }
 
     //
     // Private helpers
     //
 
-    private String getLocation(final SAXParseException e) {
+    private String formatMessage(final SAXParseException e) {
+        final String location = getLocation(e);
+        return (location == null ? "" : location) + e.getMessage();
+    }
 
+    private String getLocation(final SAXParseException e) {
         final String exceptionId = e.getPublicId() == null ? e.getSystemId() : e.getPublicId();
-        return exceptionId + " [" + e.getLineNumber() + "," + e.getColumnNumber() + "] ";
+        if (exceptionId == null && e.getLineNumber() <= 0 && e.getColumnNumber() <= 0) {
+            return null;
+        }
+        return (exceptionId == null ? "" : exceptionId) + " [" + e.getLineNumber() + "," + e.getColumnNumber() + "] ";
     }
 }
