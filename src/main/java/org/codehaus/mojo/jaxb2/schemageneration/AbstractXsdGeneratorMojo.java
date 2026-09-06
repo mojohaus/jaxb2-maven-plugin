@@ -280,6 +280,15 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     @Override
     protected boolean isReGenerationRequired() {
 
+        final File outputDir = getOutputDirectory();
+        if (!FileSystemUtilities.containsFiles(outputDir)) {
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Output directory [" + FileSystemUtilities.getCanonicalPath(outputDir)
+                        + "] does not exist or contains no files. XML Schema (re-)generation required.");
+            }
+            return true;
+        }
+
         //
         // Use the stale flag method to identify if we should re-generate the XSDs from the sources.
         // Basically, we should re-generate the XSDs if:
