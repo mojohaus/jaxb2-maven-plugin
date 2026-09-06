@@ -19,6 +19,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -499,6 +500,33 @@ class FileSystemUtilitiesTest {
                 "/Users/blabla/æøå/src/main/resources/mets/submissionDescription.xsd"));
         assertTrue(FileSystemUtilities.containsNonAscii("C:\\Users\\café\\schema.xsd"));
         assertTrue(FileSystemUtilities.containsNonAscii("日本語/schema.xsd"));
+    }
+
+    @Test
+    void validateContainsFiles(@TempDir final File tempDir) throws Exception {
+
+        // Null and non-existent
+        assertFalse(FileSystemUtilities.containsFiles(null));
+        assertFalse(FileSystemUtilities.containsFiles(new File(tempDir, "does-not-exist")));
+
+        // Empty directory
+        final File emptyDir = new File(tempDir, "empty");
+        assertTrue(emptyDir.mkdir());
+        assertFalse(FileSystemUtilities.containsFiles(emptyDir));
+
+        // Directory with only empty subdirectory
+        final File subDir = new File(emptyDir, "subdir");
+        assertTrue(subDir.mkdir());
+        assertFalse(FileSystemUtilities.containsFiles(emptyDir));
+
+        // Regular file itself is not a directory with files
+        final File aFile = new File(subDir, "test.txt");
+        assertTrue(aFile.createNewFile());
+        assertFalse(FileSystemUtilities.containsFiles(aFile));
+
+        // Directory containing nested file
+        assertTrue(FileSystemUtilities.containsFiles(emptyDir));
+        assertTrue(FileSystemUtilities.containsFiles(subDir));
     }
 
     //

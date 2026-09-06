@@ -366,6 +366,15 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
     @Override
     protected boolean isReGenerationRequired() {
 
+        final File outputDir = getOutputDirectory();
+        if (!FileSystemUtilities.containsFiles(outputDir)) {
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Output directory [" + FileSystemUtilities.getCanonicalPath(outputDir)
+                        + "] does not exist or contains no files. JAXB (re-)generation required.");
+            }
+            return true;
+        }
+
         //
         // Use the stale flag method to identify if we should re-generate the java source code from the supplied
         // Xml Schema. Basically, we should regenerate the JAXB code if:

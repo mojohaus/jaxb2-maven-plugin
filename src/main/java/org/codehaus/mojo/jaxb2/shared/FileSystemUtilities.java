@@ -524,6 +524,28 @@ public final class FileSystemUtilities {
     }
 
     /**
+     * Checks if the supplied directory exists and contains at least one regular file (recursively).
+     *
+     * @param directory The directory to check.
+     * @return {@code true} if the directory exists and contains at least one file, {@code false} otherwise.
+     */
+    public static boolean containsFiles(final File directory) {
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return false;
+        }
+        final File[] files = directory.listFiles();
+        if (files == null || files.length == 0) {
+            return false;
+        }
+        for (File current : files) {
+            if (current.isFile() || (current.isDirectory() && containsFiles(current))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * If the supplied path refers to a file or directory below the supplied basedir, the returned
      * path is identical to the part below the basedir.
      *
