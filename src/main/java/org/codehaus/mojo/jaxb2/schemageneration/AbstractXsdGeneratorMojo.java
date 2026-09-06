@@ -390,25 +390,16 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             // Setup the environment.
             environment.setup();
 
+            // Ensure that the outputDirectory and workDirectory exist and are cleared
+            // before compiling arguments so that episode file calculation operates on a clean directory.
+            FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
+            FileSystemUtilities.createDirectory(getWorkDirectory(), clearOutputDir);
+
             // Compile the SchemaGen arguments
             final File episodeFile = getEpisodeFile(episodeFileName);
             final List<URL> sources = getSources();
             final String[] schemaGenArguments =
                     getSchemaGenArguments(environment.getClassPathAsArgument(), episodeFile, sources);
-
-            // Ensure that the outputDirectory and workDirectory exists.
-            // Clear them if configured to do so.
-            FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
-            FileSystemUtilities.createDirectory(getWorkDirectory(), clearOutputDir);
-
-            // Re-generate the episode file's parent directory.
-            getEpisodeFile(episodeFileName);
-            // Do we need to re-create the episode file's parent directory?
-            /*final boolean reCreateEpisodeFileParentDirectory = generateEpisode && clearOutputDir;
-            if (reCreateEpisodeFileParentDirectory) {
-
-            }
-            */
 
             try {
 

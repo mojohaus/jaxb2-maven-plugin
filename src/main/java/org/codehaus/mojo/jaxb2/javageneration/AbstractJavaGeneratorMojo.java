@@ -481,17 +481,12 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                 // Setup the environment.
                 environment.setup();
 
-                // Compile the XJC arguments
-                final String[] xjcArguments = getXjcArguments(environment.getClassPathAsArgument(), episodeFileName);
-
-                // Ensure that the outputDirectory exists, but only clear it if does not already
+                // Ensure that the outputDirectory exists and is cleared before compiling arguments
+                // so that episode file calculation operates on a clean directory.
                 FileSystemUtilities.createDirectory(getOutputDirectory(), clearOutputDir);
 
-                // Do we need to re-create the episode file's parent directory.
-                final boolean reCreateEpisodeFileParentDirectory = generateEpisode && clearOutputDir;
-                if (reCreateEpisodeFileParentDirectory) {
-                    getEpisodeFile(episodeFileName);
-                }
+                // Compile the XJC arguments
+                final String[] xjcArguments = getXjcArguments(environment.getClassPathAsArgument(), episodeFileName);
 
                 // Check the system properties.
                 logSystemPropertiesAndBasedir();
