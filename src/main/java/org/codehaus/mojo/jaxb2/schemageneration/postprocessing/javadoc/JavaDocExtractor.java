@@ -38,6 +38,9 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
+import com.thoughtworks.qdox.model.expression.BinaryOperator;
+import com.thoughtworks.qdox.model.expression.FieldRef;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
@@ -179,8 +182,8 @@ public class JavaDocExtractor {
 
                 // Add the class-level JavaDoc
                 final String simpleClassName = currentClass.getName();
-                final String classXmlName =
-                        getAnnotationAttributeValueFrom(XmlType.class, "name", currentClass.getAnnotations());
+                final String classXmlName = getAnnotationAttributeValueFrom(
+                        XmlType.class, "name", currentClass.getAnnotations(), currentClass);
 
                 final ClassLocation classLocation = new ClassLocation(packageName, simpleClassName, classXmlName);
                 addEntry(dataHolder, classLocation, currentClass);
@@ -220,7 +223,7 @@ public class JavaDocExtractor {
                         // ==> annotatedXmlName == "integerSet"
                         //
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElementWrapper.class, "name", currentFieldAnnotations);
+                                XmlElementWrapper.class, "name", currentFieldAnnotations, currentClass);
 
                         if (annotatedXmlName == null || annotatedXmlName.equals(DEFAULT_VALUE)) {
                             annotatedXmlName = currentField.getName();
@@ -229,17 +232,17 @@ public class JavaDocExtractor {
 
                     // Find the XML name if provided within an annotation.
                     if (annotatedXmlName == null) {
-                        annotatedXmlName =
-                                getAnnotationAttributeValueFrom(XmlElement.class, "name", currentFieldAnnotations);
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlElement.class, "name", currentFieldAnnotations, currentClass);
                     }
 
                     if (annotatedXmlName == null) {
-                        annotatedXmlName =
-                                getAnnotationAttributeValueFrom(XmlAttribute.class, "name", currentFieldAnnotations);
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlAttribute.class, "name", currentFieldAnnotations, currentClass);
                     }
                     if (annotatedXmlName == null) {
-                        annotatedXmlName =
-                                getAnnotationAttributeValueFrom(XmlEnumValue.class, "value", currentFieldAnnotations);
+                        annotatedXmlName = getAnnotationAttributeValueFrom(
+                                XmlEnumValue.class, "value", currentFieldAnnotations, currentClass);
                     }
 
                     // Add the field-level JavaDoc
@@ -284,7 +287,7 @@ public class JavaDocExtractor {
                         // ==> annotatedXmlName == "getIntegerSet"
                         //
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElementWrapper.class, "name", currentMethodAnnotations);
+                                XmlElementWrapper.class, "name", currentMethodAnnotations, currentClass);
 
                         if (annotatedXmlName == null || annotatedXmlName.equals(DEFAULT_VALUE)) {
                             annotatedXmlName = currentMethod.getName();
@@ -294,12 +297,12 @@ public class JavaDocExtractor {
                     // Find the XML name if provided within an annotation.
                     if (annotatedXmlName == null) {
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlElement.class, "name", currentMethod.getAnnotations());
+                                XmlElement.class, "name", currentMethod.getAnnotations(), currentClass);
                     }
 
                     if (annotatedXmlName == null) {
                         annotatedXmlName = getAnnotationAttributeValueFrom(
-                                XmlAttribute.class, "name", currentMethod.getAnnotations());
+                                XmlAttribute.class, "name", currentMethod.getAnnotations(), currentClass);
                     }
 
                     // Add the method-level JavaDoc
@@ -335,8 +338,11 @@ public class JavaDocExtractor {
      * List, or {@code null} if none was found.
      * @since 2.2
      */
-    private static String getAnnotationAttributeValueFrom(
-            final Class<?> annotationType, final String attributeName, final List<JavaAnnotation> annotations) {
+    private String getAnnotationAttributeValueFrom(
+            final Class<?> annotationType,
+            final String attributeName,
+            final List<JavaAnnotation> annotations,
+            final JavaClass currentClass) {
 
         // QDox uses the fully qualified class name of the annotation for comparison.
         // Extract it.
@@ -356,15 +362,21 @@ public class JavaDocExtractor {
 
             if (annotation != null) {
 
-                final Object nameValue = annotation.getNamedParameter(attributeName);
+                final AnnotationValue propertyValue = annotation.getProperty(attributeName);
+                if (propertyValue != null) {
+                    toReturn = resolveAnnotationValue(propertyValue, currentClass, this.builder, 0);
+                }
 
-                if (nameValue != null && nameValue instanceof String) {
+                if (toReturn == null) {
+                    final Object nameValue = annotation.getNamedParameter(attributeName);
 
-                    toReturn = ((String) nameValue).trim();
+                    if (nameValue instanceof String) {
+                        toReturn = ((String) nameValue).trim();
 
-                    // Remove initial and trailing " chars, if present.
-                    if (toReturn.startsWith("\"") && toReturn.endsWith("\"")) {
-                        toReturn = (((String) nameValue).trim()).substring(1, toReturn.length() - 1);
+                        // Remove initial and trailing " chars, if present.
+                        if (toReturn.startsWith("\"") && toReturn.endsWith("\"") && toReturn.length() >= 2) {
+                            toReturn = toReturn.substring(1, toReturn.length() - 1);
+                        }
                     }
                 }
             }
@@ -372,6 +384,162 @@ public class JavaDocExtractor {
 
         // All Done.
         return toReturn;
+    }
+
+    private static String resolveAnnotationValue(
+            final AnnotationValue val,
+            final JavaClass currentClass,
+            final JavaProjectBuilder builder,
+            final int depth) {
+
+        if (val == null || depth > 5) {
+            return null;
+        }
+
+        if (val instanceof FieldRef) {
+            final FieldRef fr = (FieldRef) val;
+            final int partCount = fr.getPartCount();
+            if (partCount == 0) {
+                return null;
+            }
+
+            final String fieldName = fr.getNamePart(partCount - 1);
+            JavaClass targetClass = null;
+
+            if (partCount == 1) {
+                targetClass = currentClass;
+                if (targetClass != null
+                        && targetClass.getFieldByName(fieldName) == null
+                        && currentClass.getSource() != null
+                        && builder != null) {
+                    for (String imp : currentClass.getSource().getImports()) {
+                        if (imp.endsWith("." + fieldName)) {
+                            final String className = imp.substring(0, imp.length() - fieldName.length() - 1);
+                            final JavaClass c = builder.getClassByName(className);
+                            if (c != null && c.getFieldByName(fieldName) != null) {
+                                targetClass = c;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                final StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < partCount - 1; i++) {
+                    if (sb.length() > 0) {
+                        sb.append(".");
+                    }
+                    sb.append(fr.getNamePart(i));
+                }
+                final String className = sb.toString();
+
+                if (currentClass != null
+                        && (className.equals(currentClass.getName())
+                                || className.equals(currentClass.getFullyQualifiedName()))) {
+                    targetClass = currentClass;
+                } else if (currentClass != null) {
+                    final JavaClass nested = currentClass.getNestedClassByName(className);
+                    if (nested != null && nested.getFieldByName(fieldName) != null) {
+                        targetClass = nested;
+                    }
+                    if (targetClass == null && currentClass.getSource() != null && builder != null) {
+                        for (String imp : currentClass.getSource().getImports()) {
+                            if (imp.equals(className) || imp.endsWith("." + className)) {
+                                final JavaClass c = builder.getClassByName(imp);
+                                if (c != null && c.getFieldByName(fieldName) != null) {
+                                    targetClass = c;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (targetClass == null && currentClass.getPackage() != null && builder != null) {
+                        final String fqcn = currentClass.getPackage().getName() + "." + className;
+                        final JavaClass c = builder.getClassByName(fqcn);
+                        if (c != null && c.getFieldByName(fieldName) != null) {
+                            targetClass = c;
+                        }
+                    }
+                    if (targetClass == null && builder != null) {
+                        final JavaClass c = builder.getClassByName(className);
+                        if (c != null && c.getFieldByName(fieldName) != null) {
+                            targetClass = c;
+                        }
+                    }
+                }
+            }
+
+            if (targetClass != null) {
+                final JavaField f = targetClass.getFieldByName(fieldName);
+                if (f != null) {
+                    final String init = f.getInitializationExpression();
+                    if (init != null) {
+                        final String parsed = parseStringExpression(init);
+                        if (parsed != null) {
+                            return parsed;
+                        }
+                        // Chained constant in the same class
+                        final JavaField chained = targetClass.getFieldByName(init.trim());
+                        if (chained != null) {
+                            final String chainedInit = chained.getInitializationExpression();
+                            if (chainedInit != null) {
+                                return parseStringExpression(chainedInit);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        } else if (val instanceof BinaryOperator) {
+            final BinaryOperator bin = (BinaryOperator) val;
+            final String left = resolveAnnotationValue(bin.getLeft(), currentClass, builder, depth + 1);
+            final String right = resolveAnnotationValue(bin.getRight(), currentClass, builder, depth + 1);
+            if (left != null && right != null) {
+                return left + right;
+            }
+            return null;
+        } else {
+            final Object paramVal = val.getParameterValue();
+            if (paramVal != null) {
+                final String s = paramVal.toString().trim();
+                if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2) {
+                    return s.substring(1, s.length() - 1);
+                }
+                return s;
+            }
+            return null;
+        }
+    }
+
+    private static String parseStringExpression(String expr) {
+        if (expr == null) {
+            return null;
+        }
+        expr = expr.trim();
+        if (expr.startsWith("\"")
+                && expr.endsWith("\"")
+                && expr.length() >= 2
+                && expr.indexOf('"', 1) == expr.length() - 1) {
+            return expr.substring(1, expr.length() - 1);
+        }
+        if (expr.contains("+") && expr.contains("\"")) {
+            final String[] parts = expr.split("\\+");
+            final StringBuilder sb = new StringBuilder();
+            for (String part : parts) {
+                final String trimmed = part.trim();
+                if (trimmed.startsWith("\"") && trimmed.endsWith("\"") && trimmed.length() >= 2) {
+                    sb.append(trimmed.substring(1, trimmed.length() - 1));
+                } else {
+                    return null;
+                }
+            }
+            return sb.toString();
+        }
+        if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() >= 2) {
+            return expr.substring(1, expr.length() - 1);
+        }
+        return null;
     }
 
     private static boolean hasAnnotation(final Class<?> annotationType, final List<JavaAnnotation> annotations) {
