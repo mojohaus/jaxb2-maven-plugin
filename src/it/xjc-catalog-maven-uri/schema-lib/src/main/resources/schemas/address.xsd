@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/address"
+           xmlns:tns="http://example.com/address"
+           elementFormDefault="qualified">
+
+    <!-- Shared address type — packaged inside the schema-lib JAR at schemas/address.xsd.
+         Consumers reference this file via a maven: catalog URI so they do not need to
+         copy or unpack it; the jaxb2-maven-plugin resolves the maven: URI to a jar: URL. -->
+
+    <xs:complexType name="AddressType">
+        <xs:sequence>
+            <xs:element name="street"   type="xs:string"/>
+            <xs:element name="city"     type="xs:string"/>
+            <xs:element name="country"  type="xs:string"/>
+            <xs:element name="postCode" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Address" type="tns:AddressType"/>
+
+</xs:schema>

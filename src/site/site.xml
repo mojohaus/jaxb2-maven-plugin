@@ -30,6 +30,7 @@ under the License.
         <menu name="Examples">
             <item name="XJC: Usage" href="example_xjc_basic.html"/>
             <item name="XJC: Dependency Episodes" href="example_xjc_episodes.html"/>
+            <item name="XJC: Catalogs &amp; Dependency XSDs" href="example_xjc_catalogs.html"/>
             <item name="Schemagen: Usage" href="example_schemagen_basic.html"/>
             <item name="Schemagen: Post-processing" href="example_schemagen_postprocessing.html"/>
         </menu>
