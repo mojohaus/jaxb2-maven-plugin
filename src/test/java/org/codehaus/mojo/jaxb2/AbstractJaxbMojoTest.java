@@ -111,11 +111,14 @@ class AbstractJaxbMojoTest {
     }
 
     @Test
-    void validateRefusesToClearRoot() {
-        final File root = new File("/");
-        final MojoExecutionException ex = assertThrows(
-                MojoExecutionException.class, () -> mojo.validateOutputDirectory(root, true, "outputDirectory"));
-        assertTrue(ex.getMessage().contains("Cowardly refusing to clear outputDirectory"));
+    void validateRefusesToClearGrandParentOfBasedir() {
+        final File grandParentDir = project.getBasedir().getParentFile().getParentFile();
+        if (grandParentDir != null) {
+            final MojoExecutionException ex = assertThrows(
+                    MojoExecutionException.class,
+                    () -> mojo.validateOutputDirectory(grandParentDir, true, "outputDirectory"));
+            assertTrue(ex.getMessage().contains("Cowardly refusing to clear outputDirectory"));
+        }
     }
 
     @Test
