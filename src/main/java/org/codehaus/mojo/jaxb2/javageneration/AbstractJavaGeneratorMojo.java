@@ -423,8 +423,25 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                         stale = true;
                     }
                 } finally {
+                    // Always release the connection to avoid holding open file handles.
+                    // On Windows with JDK 21+, FileURLConnection keeps the file locked unless
+                    // the InputStream is explicitly closed. HttpURLConnection uses disconnect();
+                    // for all other protocols (including file://) we close the input stream if
+                    // one was opened, which causes FileURLConnection to release the handle.
                     if (sourceXsdConnection instanceof HttpURLConnection) {
                         ((HttpURLConnection) sourceXsdConnection).disconnect();
+                    } else {
+                        // For file:// and other non-HTTP protocols, close the input stream to
+                        // release any OS-level file lock held by FileURLConnection on Windows.
+                        try {
+                            final java.io.InputStream is = sourceXsdConnection.getInputStream();
+                            if (is != null) {
+                                is.close();
+                            }
+                        } catch (Exception ignored) {
+                            // If we cannot obtain or close the stream, there is nothing more we
+                            // can do; the stale check has already been performed above.
+                        }
                     }
                 }
             }
