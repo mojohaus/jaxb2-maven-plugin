@@ -20,6 +20,7 @@ package org.codehaus.mojo.jaxb2.schemageneration;
  */
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -139,7 +140,7 @@ class AbstractXsdGeneratorMojoTest {
         final File sourceFile = new File(tempDir, "Source.java");
         assertTrue(sourceFile.createNewFile());
         sourceFile.setLastModified(1000L);
-        mojo.setSources(Collections.singletonList(sourceFile.toURI().toURL()));
+        mojo.setSources(Collections.singletonList(createFileUrl(sourceFile)));
 
         final File staleFile = mojo.getStaleFlagFile();
         assertTrue(staleFile.createNewFile());
@@ -152,5 +153,10 @@ class AbstractXsdGeneratorMojoTest {
         assertTrue(generatedXsd.delete());
         assertTrue(outDir.delete());
         assertTrue(mojo.isReGenerationRequired());
+    }
+
+    private static URL createFileUrl(final File file) throws MalformedURLException {
+        // Use file:/// URL format to avoid FileURLConnection locking the file on Windows JDK 21+
+        return new URL("file", null, file.getAbsolutePath().replace(File.separatorChar, '/'));
     }
 }
