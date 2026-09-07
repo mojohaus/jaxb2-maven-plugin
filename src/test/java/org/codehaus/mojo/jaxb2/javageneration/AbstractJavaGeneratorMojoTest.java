@@ -200,7 +200,6 @@ class AbstractJavaGeneratorMojoTest {
     }
 
     private static URL createFileUrl(final File file) throws MalformedURLException {
-        // Use file:/// URL format to avoid FileURLConnection locking the file on Windows JDK 21+
-        return new URL("file", null, file.getAbsolutePath().replace(File.separatorChar, '/'));
+        return file.toPath().toUri().toURL();
     }
 }
