@@ -50,7 +50,7 @@ class EpisodeFileTest {
         }
 
         @Override
-        protected boolean isReGenerationRequired() {
+        protected boolean isReGenerationRequired() throws MojoExecutionException {
             return false;
         }
 

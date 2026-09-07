@@ -415,7 +415,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
      * @return {@code true} to indicate that this AbstractJaxbMojo should be run since its generated files were
      * either stale or not present, and {@code false} otherwise.
      */
-    protected abstract boolean isReGenerationRequired();
+    protected abstract boolean isReGenerationRequired() throws MojoExecutionException;
 
     /**
      * <p>Implement this method to perform this Mojo's execution.

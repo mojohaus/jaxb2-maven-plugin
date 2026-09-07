@@ -107,7 +107,7 @@ class AbstractXsdGeneratorMojoTest {
     }
 
     @Test
-    void validateReGenerationRequiredWhenOutputDirDoesNotExist(@TempDir final File tempDir) {
+    void validateReGenerationRequiredWhenOutputDirDoesNotExist(@TempDir final File tempDir) throws Exception {
         mojo.setOutputDirectory(new File(tempDir, "does-not-exist"));
         mojo.setStaleFileDirectory(tempDir);
 
@@ -115,7 +115,7 @@ class AbstractXsdGeneratorMojoTest {
     }
 
     @Test
-    void validateReGenerationRequiredWhenOutputDirIsEmpty(@TempDir final File tempDir) {
+    void validateReGenerationRequiredWhenOutputDirIsEmpty(@TempDir final File tempDir) throws Exception {
         final File emptyOutDir = new File(tempDir, "emptyOutput");
         assertTrue(emptyOutDir.mkdirs());
         mojo.setOutputDirectory(emptyOutDir);
