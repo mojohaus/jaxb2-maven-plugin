@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:b="http://www.example.org/b"
+           xmlns:a="http://www.example.org/a"
+           targetNamespace="http://www.example.org/b"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://www.example.org/a" schemaLocation="../../../../schema-a/src/main/xsd/a.xsd"/>
+
+    <xs:element name="B" type="b:BType"/>
+
+    <xs:complexType name="BType">
+        <xs:sequence>
+            <xs:element name="wrapped" type="a:AType"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -364,7 +364,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      * {@inheritDoc}
      */
     @Override
-    protected boolean isReGenerationRequired() {
+    protected boolean isReGenerationRequired() throws MojoExecutionException {
 
         final File outputDir = getOutputDirectory();
         if (!FileSystemUtilities.containsFiles(outputDir)) {
@@ -635,7 +635,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      *
      * @return A non-null List holding binding files.
      */
-    protected abstract List<File> getSourceXJBs();
+    protected abstract List<File> getSourceXJBs() throws MojoExecutionException;
 
     //
     // Private helpers

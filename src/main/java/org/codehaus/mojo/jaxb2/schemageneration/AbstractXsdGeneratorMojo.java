@@ -278,7 +278,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
      * {@inheritDoc}
      */
     @Override
-    protected boolean isReGenerationRequired() {
+    protected boolean isReGenerationRequired() throws MojoExecutionException {
 
         final File outputDir = getOutputDirectory();
         if (!FileSystemUtilities.containsFiles(outputDir)) {
