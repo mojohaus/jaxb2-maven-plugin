@@ -649,4 +649,39 @@ public class XjcMojo extends AbstractJavaGeneratorMojo {
     protected void addResource(final Resource resource) {
         getProject().addResource(resource);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>If the supplied catalog file contains {@code maven:groupId:artifactId:type:classifier!/path}
+     * URIs, this override resolves each of them to a {@code jar:file://} URL pointing into the
+     * corresponding artifact in the local Maven repository, then writes a pre-processed copy of the
+     * catalog to {@code ${project.build.directory}/jaxb2/resolved-<name>} and returns that file
+     * to XJC.</p>
+     *
+     * <p>If the catalog contains no {@code maven:} URIs the original file is returned unchanged.</p>
+     *
+     * <p>This allows users to reference XSD files packaged inside dependency JARs from a catalog:</p>
+     * <pre>
+     * REWRITE_SYSTEM "http://example.com/common.xsd"
+     *     "maven:com.example:shared-schemas:jar:!/schemas/common.xsd"
+     * </pre>
+     *
+     * @see MavenUriCatalogResolver
+     * @since 4.1.1
+     */
+    @Override
+    protected File resolveCatalog(final File catalogFile) throws MojoExecutionException {
+        final MavenUriCatalogResolver resolver = new MavenUriCatalogResolver(
+                repositorySystem, repositorySystemSession, remoteProjectRepositories, getLog());
+        // Provide the project's resolved dependency artifacts so the resolver can look up versions.
+        resolver.setProjectArtifacts(getProject().getArtifacts());
+
+        // The resolved catalog lands in the jaxb2 build directory so it is reproducible and never
+        // pollutes the source tree. Preserving the original file extension is required because XJC
+        // and OASIS catalog parsers use the extension (.xml vs .cat) to select the parser format.
+        final File resolvedCatalog =
+                new File(getProject().getBuild().getDirectory(), "jaxb2/resolved-" + catalogFile.getName());
+        return resolver.resolve(catalogFile, resolvedCatalog);
+    }
 }

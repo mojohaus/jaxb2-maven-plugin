@@ -637,6 +637,24 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
      */
     protected abstract List<File> getSourceXJBs() throws MojoExecutionException;
 
+    /**
+     * Optionally pre-processes the supplied catalog {@link File} before it is passed to XJC.
+     *
+     * <p>The default implementation returns {@code catalogFile} unchanged. Subclasses (such as
+     * {@code XjcMojo}) can override this method to resolve {@code maven:} URIs in the catalog to
+     * concrete {@code jar:file://} URLs, allowing XJC to consume XSD resources packaged inside
+     * Maven dependency JARs without manual unpacking.</p>
+     *
+     * @param catalogFile the catalog file as configured by the user; never {@code null}
+     * @return the catalog file to pass to XJC — either {@code catalogFile} as-is, or a rewritten
+     *         copy written to the build directory
+     * @throws MojoExecutionException if catalog pre-processing fails
+     */
+    protected File resolveCatalog(final File catalogFile) throws MojoExecutionException {
+        // Default: no pre-processing. Subclasses may override to resolve maven: URIs.
+        return catalogFile;
+    }
+
     //
     // Private helpers
     //
@@ -689,7 +707,10 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
         }
 
         if (catalog != null) {
-            builder.withNamedArgument("catalog", FileSystemUtilities.getCanonicalPath(catalog));
+            // Allow subclasses (e.g. XjcMojo) to pre-process the catalog before handing it to XJC.
+            // The default implementation returns the file unchanged; XjcMojo resolves maven: URIs.
+            final File effectiveCatalog = resolveCatalog(catalog);
+            builder.withNamedArgument("catalog", FileSystemUtilities.getCanonicalPath(effectiveCatalog));
         }
 
         if (plugins != null) {

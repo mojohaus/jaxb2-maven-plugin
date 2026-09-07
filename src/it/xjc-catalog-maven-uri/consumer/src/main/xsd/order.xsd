@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:addr="http://example.com/address"
+           targetNamespace="http://example.com/order"
+           xmlns:tns="http://example.com/order"
+           elementFormDefault="qualified">
+
+    <!-- Consumer XSD that imports the shared address.xsd from the schema-lib dependency JAR.
+         The xs:import systemId uses the public URL "http://example.com/address.xsd" which is
+         rewritten to the maven: URI in the catalog file, resolved by the jaxb2-maven-plugin
+         to a jar:file:// URL pointing into the schema-lib artifact. -->
+    <xs:import namespace="http://example.com/address"
+               schemaLocation="http://example.com/address.xsd"/>
+
+    <xs:complexType name="OrderType">
+        <xs:sequence>
+            <xs:element name="orderId"          type="xs:string"/>
+            <xs:element name="shippingAddress"  type="addr:AddressType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Order" type="tns:OrderType"/>
+
+</xs:schema>
