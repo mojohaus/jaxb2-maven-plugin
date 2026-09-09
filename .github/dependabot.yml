@@ -10,6 +10,12 @@ updates:
         versions: [">= 10.0"]
       - dependency-name: "se.jguru.shared.algorithms.api:jguru-shared-algorithms-api"
         versions: [">= 0.13.0"]
+      # Maven Resolver 2.x targets Maven 4
+      - dependency-name: "org.apache.maven.resolver:*"
+        versions: [">= 2.0"]
+      # SLF4J 2.x requires SLF4JServiceProvider, incompatible with Maven 3 runtime
+      - dependency-name: "org.slf4j:*"
+        versions: [">= 2.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
