@@ -3,7 +3,11 @@ updates:
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    groups:
+      maven:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     ignore:
       # Checkstyle >=10 requires Java 11+
       - dependency-name: "com.puppycrawl.tools:checkstyle"
@@ -19,4 +23,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns: ["*"]
