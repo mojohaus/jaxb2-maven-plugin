@@ -92,7 +92,7 @@
   </contributors>
 
   <prerequisites>
-    <maven>${mavenVersion}</maven>
+    <maven>3.9.0</maven>
   </prerequisites>
 
   <scm>
@@ -109,6 +109,8 @@
   <properties>
     <!-- run the ITs in parallel -->
     <invoker.parallelThreads>1C</invoker.parallelThreads>
+    <mavenVersion>3.9.16</mavenVersion>
+    <minimalMavenBuildVersion>3.9.0</minimalMavenBuildVersion>
     <!-- jaxb 4 is 11 minimum -->
     <mojo.java.target>11</mojo.java.target>
 
