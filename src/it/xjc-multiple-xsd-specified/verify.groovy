@@ -1,46 +1,11 @@
-import java.io.*;
-import java.util.*;
-import java.util.jar.*;
+File jaxbDir = new File( basedir, "target/generated-sources/jaxb" )
+assert jaxbDir.isDirectory() : "Could not find directory for JAXB generated sources: " + jaxbDir
 
-try
+for ( String name in ["AType", "BType", "CType"] )
 {
-    File jaxbDir = new File( basedir, "target/generated-sources/jaxb" );
-    if ( !jaxbDir.exists() || !jaxbDir.isDirectory() )
-    {
-        System.err.println( "Could not find directory for JAXB generated sources: " + jaxbDir );
-        return false;
-    }
-    
-    File file;
-    file = new File( jaxbDir, "com/example/myschema/AType.java" );
-    if ( !file.exists() || file.isDirectory() )
-    {
-        System.err.println( "Could not find file: " + file );
-        return false;
-    }
-    file = new File( jaxbDir, "com/example/myschema/BType.java" );
-    if ( !file.exists() || file.isDirectory() )
-    {
-        System.err.println( "Could not find file: " + file );
-        return false;
-    }
-    file = new File( jaxbDir, "com/example/myschema/CType.java" );
-    if ( !file.exists() || file.isDirectory() )
-    {
-        System.err.println( "Could not find file: " + file );
-        return false;
-    }
-    file = new File( jaxbDir, "com/example/myschema/DType.java" );
-    if ( file.exists() )
-    {
-        System.err.println( "File '" + file + "' found, which shouldn't exist" );
-        return false;
-    }
-}
-catch( Throwable t )
-{
-    t.printStackTrace();
-    return false;
+    File file = new File( jaxbDir, "com/example/myschema/" + name + ".java" )
+    assert file.isFile() : "Could not find file: " + file
 }
 
-return true;
+File dType = new File( jaxbDir, "com/example/myschema/DType.java" )
+assert !dType.exists() : "File '" + dType + "' found, which shouldn't exist"
