@@ -108,7 +108,7 @@
 
   <properties>
     <!-- run the ITs in parallel -->
-    <invoker.parallelThreads>0.75C</invoker.parallelThreads>
+    <invoker.parallelThreads>1C</invoker.parallelThreads>
     <!-- jaxb 4 is 11 minimum -->
     <mojo.java.target>11</mojo.java.target>
 
