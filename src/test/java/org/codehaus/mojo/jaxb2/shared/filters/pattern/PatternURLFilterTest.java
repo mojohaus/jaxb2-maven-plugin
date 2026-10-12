@@ -39,14 +39,13 @@ class PatternURLFilterTest extends AbstractPatternFilterTest {
 
     @Test
     void validateExceptionOnNotInitializingFilterBeforeUse() {
-        assertThrows(IllegalStateException.class, () -> {
+        final PatternURLFilter unitUnderTest = new PatternURLFilter(null);
+        assertThrows(
+                IllegalStateException.class,
+                () ->
 
-            // Assemble
-            final PatternURLFilter unitUnderTest = new PatternURLFilter(null);
-
-            // Act & Assert
-            unitUnderTest.accept(urlList[0]);
-        });
+                        // Act & Assert
+                        unitUnderTest.accept(urlList[0]));
     }
 
     @Test

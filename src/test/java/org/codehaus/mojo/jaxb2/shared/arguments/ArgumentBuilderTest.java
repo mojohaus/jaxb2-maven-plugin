@@ -14,50 +14,46 @@ class ArgumentBuilderTest {
 
     @Test
     void validateExceptionOnAddingAllWhitespaceFlag() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
 
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-            // Act & Assert
-            unitUnderTest.withFlag(true, "  ");
-        });
+                        // Act & Assert
+                        unitUnderTest.withFlag(true, "  "));
     }
 
     @Test
     void validateExceptionOnAddingFlagContainingWhitespace() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
 
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-            // Act & Assert
-            unitUnderTest.withFlag(true, "foo bar");
-        });
+                        // Act & Assert
+                        unitUnderTest.withFlag(true, "foo bar"));
     }
 
     @Test
     void validateExceptionOnAddingNullFlag() {
-        assertThrows(NullPointerException.class, () -> {
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(
+                NullPointerException.class,
+                () ->
 
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-            // Act & Assert
-            unitUnderTest.withFlag(true, null);
-        });
+                        // Act & Assert
+                        unitUnderTest.withFlag(true, null));
     }
 
     @Test
     void validateExceptionOnAddingNullNamedArgument() {
-        assertThrows(NullPointerException.class, () -> {
+        final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
+        assertThrows(
+                NullPointerException.class,
+                () ->
 
-            // Assemble
-            final ArgumentBuilder unitUnderTest = new ArgumentBuilder();
-
-            // Act & Assert
-            unitUnderTest.withNamedArgument(null, "irrelevant");
-        });
+                        // Act & Assert
+                        unitUnderTest.withNamedArgument(null, "irrelevant"));
     }
 
     @Test

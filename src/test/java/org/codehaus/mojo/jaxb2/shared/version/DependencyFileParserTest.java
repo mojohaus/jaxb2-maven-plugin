@@ -148,15 +148,14 @@ class DependencyFileParserTest {
 
     @Test
     void validateExceptionOnAttemptingToParseIncorrectlyFormedPropertiesFile() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        final String resourcePath = "testdata/shared/not_a_dependency.properties";
+        final URL incorrectResource =
+                Thread.currentThread().getContextClassLoader().getResource(resourcePath);
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
 
-            // Assemble
-            final String resourcePath = "testdata/shared/not_a_dependency.properties";
-            final URL incorrectResource =
-                    Thread.currentThread().getContextClassLoader().getResource(resourcePath);
-
-            // Act & Assert
-            DependsFileParser.getVersionMap(incorrectResource);
-        });
+                        // Act & Assert
+                        DependsFileParser.getVersionMap(incorrectResource));
     }
 }

@@ -20,7 +20,6 @@ package org.codehaus.mojo.jaxb2.javageneration;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -199,8 +198,7 @@ class MavenUriCatalogResolverTest {
     // ==================================================================================
 
     @Test
-    void resolve_returnsOriginalCatalogWhenNoMavenUrisPresent(@TempDir final Path tempDir)
-            throws IOException, MojoExecutionException {
+    void resolve_returnsOriginalCatalogWhenNoMavenUrisPresent(@TempDir final Path tempDir) throws Exception {
         final File originalCatalog = tempDir.resolve("catalog.xml").toFile();
         final File resolvedCatalog = tempDir.resolve("catalog-resolved.cat").toFile();
 
@@ -219,7 +217,7 @@ class MavenUriCatalogResolverTest {
     }
 
     @Test
-    void resolve_replacesMavenUrisWithJarUrls(@TempDir final Path tempDir) throws IOException, MojoExecutionException {
+    void resolve_replacesMavenUrisWithJarUrls(@TempDir final Path tempDir) throws Exception {
         final File dummyJar = tempDir.resolve("my-lib-1.0.jar").toFile();
         Files.write(dummyJar.toPath(), "PK dummy zip".getBytes(StandardCharsets.UTF_8));
 
@@ -252,7 +250,7 @@ class MavenUriCatalogResolverTest {
     }
 
     @Test
-    void resolve_throwsExceptionWhenDependencyNotFound(@TempDir final Path tempDir) throws IOException {
+    void resolve_throwsExceptionWhenDependencyNotFound(@TempDir final Path tempDir) throws Exception {
         final File originalCatalog = tempDir.resolve("catalog.cat").toFile();
         final File resolvedCatalog = tempDir.resolve("catalog-resolved.cat").toFile();
 
