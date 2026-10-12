@@ -39,18 +39,13 @@ import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.ElementNameAndAttributeQualifier;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
@@ -84,39 +79,33 @@ class XsdGeneratorHelperTest {
     }
 
     @Test
-    void validateExceptionThrownOnDuplicateURIs() throws MojoExecutionException {
-        assertThrows(MojoExecutionException.class, () -> {
+    void validateExceptionThrownOnDuplicateURIs() throws Exception {
+        final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
+        final TransformSchema transformSchema2 = new TransformSchema("foo", "bar", "bar");
+        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        transformSchemas.add(transformSchema1);
+        transformSchemas.add(transformSchema2);
+        assertThrows(
+                MojoExecutionException.class,
+                () ->
 
-            // Assemble
-            final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
-            final TransformSchema transformSchema2 = new TransformSchema("foo", "bar", "bar");
-
-            final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
-            transformSchemas.add(transformSchema1);
-            transformSchemas.add(transformSchema2);
-
-            // Act & Assert
-            XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas);
-            fail("Two schemas with same URIs should yield a MojoExecutionException.");
-        });
+                        // Act & Assert
+                        XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas));
     }
 
     @Test
-    void validateExceptionThrownOnDuplicatePrefixes() throws MojoExecutionException {
-        assertThrows(MojoExecutionException.class, () -> {
+    void validateExceptionThrownOnDuplicatePrefixes() throws Exception {
+        final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
+        final TransformSchema transformSchema2 = new TransformSchema("bar", "foo", "bar");
+        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        transformSchemas.add(transformSchema1);
+        transformSchemas.add(transformSchema2);
+        assertThrows(
+                MojoExecutionException.class,
+                () ->
 
-            // Assemble
-            final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
-            final TransformSchema transformSchema2 = new TransformSchema("bar", "foo", "bar");
-
-            final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
-            transformSchemas.add(transformSchema1);
-            transformSchemas.add(transformSchema2);
-
-            // Act & Assert
-            XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas);
-            fail("Two schemas with same Prefixes should yield a MojoExecutionException.");
-        });
+                        // Act & Assert
+                        XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas));
     }
 
     @Test
@@ -130,7 +119,7 @@ class XsdGeneratorHelperTest {
         transformSchemas.add(transformSchema2);
 
         // Act & Assert
-        Assertions.assertDoesNotThrow(
+        assertDoesNotThrow(
                 () -> XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas),
                 "Two schemas with null Prefix should not yield a MojoExecutionException.");
     }
@@ -160,50 +149,42 @@ class XsdGeneratorHelperTest {
     }
 
     @Test
-    void validateExceptionThrownOnOnlyUriGiven() throws MojoExecutionException {
-        assertThrows(MojoExecutionException.class, () -> {
-            // Assemble
-            final TransformSchema transformSchema1 = new TransformSchema("foo", null, "");
+    void validateExceptionThrownOnOnlyUriGiven() throws Exception {
+        final TransformSchema transformSchema1 = new TransformSchema("foo", null, "");
+        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        transformSchemas.add(transformSchema1);
+        assertThrows(
+                MojoExecutionException.class,
+                () ->
 
-            final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
-            transformSchemas.add(transformSchema1);
-
-            // Act & Assert
-            XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas);
-            fail("A schema definition with no prefix or file should yield a MojoExecutionException.");
-        });
+                        // Act & Assert
+                        XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas));
     }
 
     @Test
-    void validateExceptionThrownOnNullUri() throws MojoExecutionException {
-        assertThrows(MojoExecutionException.class, () -> {
+    void validateExceptionThrownOnNullUri() throws Exception {
+        final TransformSchema transformSchema1 = new TransformSchema(null, "foo", "bar");
+        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        transformSchemas.add(transformSchema1);
+        assertThrows(
+                MojoExecutionException.class,
+                () ->
 
-            // Assemble
-            final TransformSchema transformSchema1 = new TransformSchema(null, "foo", "bar");
-
-            final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
-            transformSchemas.add(transformSchema1);
-
-            // Act & Assert
-            XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas);
-            fail("A schema definition with null URI should yield a MojoExecutionException.");
-        });
+                        // Act & Assert
+                        XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas));
     }
 
     @Test
-    void validateExceptionThrownOnEmptyUri() throws MojoExecutionException {
-        assertThrows(MojoExecutionException.class, () -> {
+    void validateExceptionThrownOnEmptyUri() throws Exception {
+        final TransformSchema transformSchema1 = new TransformSchema("", "foo", "bar");
+        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        transformSchemas.add(transformSchema1);
+        assertThrows(
+                MojoExecutionException.class,
+                () ->
 
-            // Assemble
-            final TransformSchema transformSchema1 = new TransformSchema("", "foo", "bar");
-
-            final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
-            transformSchemas.add(transformSchema1);
-
-            // Act & Assert
-            XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas);
-            fail("A schema definition with empty URI should yield a MojoExecutionException.");
-        });
+                        // Act & Assert
+                        XsdGeneratorHelper.validateSchemasInPluginConfiguration(transformSchemas));
     }
 
     @Test
@@ -463,7 +444,7 @@ class XsdGeneratorHelperTest {
     }
 
     @Test
-    void validateAcquiringFilenameToResolverMap() throws MojoExecutionException {
+    void validateAcquiringFilenameToResolverMap() throws Exception {
 
         // Assemble
         final String[] expectedFilenames = {"schema1.xsd", "schema2.xsd", "schema3.xsd"};
@@ -526,8 +507,8 @@ class XsdGeneratorHelperTest {
         // Assert: no empty/blank lines between elements
         final String[] lines = prettyXml.split("\\R");
         for (int i = 0; i < lines.length; i++) {
-            assertTrue(
-                    !lines[i].trim().isEmpty(),
+            assertFalse(
+                    lines[i].trim().isEmpty(),
                     "Line " + i + " should not be blank, but was: [" + lines[i] + "] in XML:\n" + prettyXml);
         }
     }

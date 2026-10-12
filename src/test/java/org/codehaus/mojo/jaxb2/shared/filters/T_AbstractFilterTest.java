@@ -23,14 +23,13 @@ class T_AbstractFilterTest {
 
     @Test
     void validateExceptionOnNotInitializingFilterBeforeFirstCall() {
-        assertThrows(IllegalStateException.class, () -> {
+        final DebugFilter unitUnderTest = new DebugFilter(false);
+        assertThrows(
+                IllegalStateException.class,
+                () ->
 
-            // Assemble
-            final DebugFilter unitUnderTest = new DebugFilter(false);
-
-            // Act & Assert
-            unitUnderTest.accept("foobar!");
-        });
+                        // Act & Assert
+                        unitUnderTest.accept("foobar!"));
     }
 
     @Test

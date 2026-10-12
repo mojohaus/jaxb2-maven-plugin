@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class XjcNonAsciiPathTest {
 
     @Test
-    void testLinkedSchemaAndBindingInNonAsciiPath(@TempDir Path tempDir) throws Exception {
+    void linkedSchemaAndBindingInNonAsciiPath(@TempDir Path tempDir) throws Exception {
         // Given
         final Path nonAsciiDir = tempDir.resolve("proj with spaces and æøå test");
         Files.createDirectories(nonAsciiDir);

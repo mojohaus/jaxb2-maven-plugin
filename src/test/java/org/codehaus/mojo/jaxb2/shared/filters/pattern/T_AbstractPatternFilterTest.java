@@ -32,12 +32,10 @@ class T_AbstractPatternFilterTest {
 
     @Test
     void validateExceptionOnNullStringConverter() {
+        final boolean processNullValues = false;
+        final List<String> patterns = null;
+        final boolean acceptCandidateOnPatternMatch = true;
         assertThrows(NullPointerException.class, () -> {
-
-            // Assemble
-            final boolean processNullValues = false;
-            final List<String> patterns = null;
-            final boolean acceptCandidateOnPatternMatch = true;
 
             // Act & Assert
             new DebugPatternFilter(processNullValues, patterns, null, acceptCandidateOnPatternMatch);

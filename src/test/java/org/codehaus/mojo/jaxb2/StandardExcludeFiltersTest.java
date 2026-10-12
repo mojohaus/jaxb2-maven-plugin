@@ -46,14 +46,14 @@ class StandardExcludeFiltersTest {
     }
 
     @Test
-    void validateReadmeFilesAreExcluded() throws IOException {
+    void validateReadmeFilesAreExcluded() throws Exception {
         assertTrue(isExcluded("src/main/xsd/README.txt"));
         assertTrue(isExcluded("src/main/xsd/README"));
         assertTrue(isExcluded("src/main/xsd/readme.md"));
     }
 
     @Test
-    void validateReadmeInDirectoryNameDoesNotExcludeSchemas() throws IOException {
+    void validateReadmeInDirectoryNameDoesNotExcludeSchemas() throws Exception {
         // A branch or workspace directory containing "readme" must not hide the schemas below it.
         assertFalse(isExcluded("my-readme-branch/src/main/xsd/schema.xsd"));
         assertFalse(isExcluded("readme/schema.xsd"));
@@ -61,12 +61,12 @@ class StandardExcludeFiltersTest {
     }
 
     @Test
-    void validateReadmeSubstringInFileNameDoesNotExcludeSchemas() throws IOException {
+    void validateReadmeSubstringInFileNameDoesNotExcludeSchemas() throws Exception {
         assertFalse(isExcluded("src/main/xsd/my-readme-schema.xsd"));
     }
 
     @Test
-    void validateXmlAndTxtSuffixesAreStillExcluded() throws IOException {
+    void validateXmlAndTxtSuffixesAreStillExcluded() throws Exception {
         assertTrue(isExcluded("src/main/xsd/binding.xml"));
         assertTrue(isExcluded("src/main/xsd/notes.txt"));
         assertFalse(isExcluded("src/main/xsd/schema.xsd"));

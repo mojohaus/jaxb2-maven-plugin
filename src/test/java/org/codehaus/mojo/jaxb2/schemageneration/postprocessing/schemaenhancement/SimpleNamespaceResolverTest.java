@@ -74,14 +74,11 @@ public class SimpleNamespaceResolverTest {
 
     @Test
     void validateExceptionOnEmptyRelativePathToXmlFile() {
+        final String incorrectEmpty = "";
         assertThrows(IllegalArgumentException.class, () -> {
-            // Assemble
-            final String incorrectEmpty = "";
 
             // Act & Assert
             new SimpleNamespaceResolver(getSchemaFile(incorrectEmpty));
-            fail("Creating a SimpleNamespaceResolver with empty argument "
-                    + "should yield an IllegalArgumentException.");
         });
     }
 
