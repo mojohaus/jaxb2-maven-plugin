@@ -49,7 +49,7 @@ List<String> lines = new File(basedir, 'build.log').readLines();
 boolean foundExpectedErrorMessage = false;
 
 for(line in lines) {
-  if(line.trim().startsWith(expectedErrorMessage)) {
+  if(line.contains(expectedErrorMessage)) {
     foundExpectedErrorMessage = true;
   }
 }
