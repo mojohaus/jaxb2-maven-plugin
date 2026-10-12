@@ -39,6 +39,8 @@ That runs the unit tests. The integration tests under `src/it` are run by the `r
 mvn -P run-its verify
 ```
 
+Conventions for contributors and agents are in [AGENTS.md](AGENTS.md).
+
 ## Releasing
 
 The plugin follows the standard MojoHaus process, described in
