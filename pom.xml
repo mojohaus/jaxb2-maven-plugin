@@ -110,6 +110,7 @@
     <!-- run the ITs in parallel -->
     <invoker.parallelThreads>1C</invoker.parallelThreads>
     <mavenVersion>3.9.16</mavenVersion>
+    <resolverVersion>1.9.27</resolverVersion>
     <minimalMavenBuildVersion>3.9.0</minimalMavenBuildVersion>
     <!-- jaxb 4 is 11 minimum -->
     <mojo.java.target>11</mojo.java.target>
@@ -230,8 +231,26 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-settings</artifactId>
+      <version>${mavenVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-api</artifactId>
+      <version>${resolverVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
       <scope>provided</scope>
     </dependency>
 
