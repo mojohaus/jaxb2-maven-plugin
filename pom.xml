@@ -115,12 +115,12 @@
     <mojo.java.target>11</mojo.java.target>
 
     <!-- Plexus component versions -->
-    <plexus-compiler-api.version>2.17.1</plexus-compiler-api.version>
     <plexus-utils.version>4.1.0</plexus-utils.version>
     <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
     <!-- JAXB tooling versions -->
     <jaxb.version>4.0.9</jaxb.version>
+    <jakarta.xml.bind-api.version>4.0.5</jakarta.xml.bind-api.version>
     <stax-ex.version>2.1.0</stax-ex.version>
     <qdox.version>2.2.0</qdox.version>
     <asm.version>9.11</asm.version>
@@ -148,6 +148,16 @@
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-jxc</artifactId>
         <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-core</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>${jakarta.xml.bind-api.version}</version>
       </dependency>
 
       <dependency>
@@ -178,6 +188,14 @@
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-jxc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
     </dependency>
 
     <!-- QDox, used for JavaDoc processing -->
@@ -220,11 +238,6 @@
     <!-- Plexus components dependencies -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-compiler-api</artifactId>
-      <version>${plexus-compiler-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
       <version>${plexus-utils.version}</version>
     </dependency>
@@ -235,15 +248,9 @@
     </dependency>
     <dependency>
       <groupId>org.xmlunit</groupId>
-      <artifactId>xmlunit-matchers</artifactId>
+      <artifactId>xmlunit-core</artifactId>
       <version>${xmlunit.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xmlunit</groupId>
