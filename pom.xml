@@ -109,7 +109,7 @@
   <properties>
     <!-- run the ITs in parallel -->
     <invoker.parallelThreads>1C</invoker.parallelThreads>
-    <mavenVersion>3.9.16</mavenVersion>
+    <mavenVersion>3.10.0</mavenVersion>
     <resolverVersion>1.9.27</resolverVersion>
     <minimalMavenBuildVersion>3.9.0</minimalMavenBuildVersion>
     <!-- jaxb 4 is 11 minimum -->
@@ -124,7 +124,7 @@
     <jakarta.xml.bind-api.version>4.0.5</jakarta.xml.bind-api.version>
     <stax-ex.version>2.1.0</stax-ex.version>
     <qdox.version>2.2.0</qdox.version>
-    <asm.version>9.11</asm.version>
+    <asm.version>9.11.1</asm.version>
 
     <!-- Test scope dependencies' versions -->
     <xmlunit.version>2.14.0</xmlunit.version>
