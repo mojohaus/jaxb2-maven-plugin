@@ -18,6 +18,8 @@ updates:
         versions: [">= 3.10.0"]
       - dependency-name: "org.apache.maven:maven-plugin-api"
         versions: [">= 3.10.0"]
+      - dependency-name: "org.apache.maven:maven-settings"
+        versions: [">= 3.10.0"]
       # Checkstyle >=10 requires Java 11+
       - dependency-name: "com.puppycrawl.tools:checkstyle"
         versions: [">= 10.0"]
