@@ -475,6 +475,12 @@
                   <goal>install</goal>
                   <goal>run</goal>
                 </goals>
+                <configuration>
+                  <extraArtifacts>
+                    <!-- the build-helper version the mjaxb-71 fixture pins: resolved by the main build, so CI caches it -->
+                    <extraArtifact>org.codehaus.mojo:build-helper-maven-plugin:1.9.1:maven-plugin</extraArtifact>
+                  </extraArtifacts>
+                </configuration>
               </execution>
             </executions>
           </plugin>
