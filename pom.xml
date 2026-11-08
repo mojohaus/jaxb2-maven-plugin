@@ -438,6 +438,8 @@
               <postBuildHookScript>verify</postBuildHookScript>
               <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
               <properties>
+                <!-- the compiler release every fixture used to pin in its own pluginManagement -->
+                <maven.compiler.release>11</maven.compiler.release>
                 <!-- reuse the prefix file the main build cached instead of fetching it again in every fork -->
                 <aether.remoteRepositoryFilter.prefixes.basedir>${settings.localRepository}/.meta</aether.remoteRepositoryFilter.prefixes.basedir>
               </properties>
