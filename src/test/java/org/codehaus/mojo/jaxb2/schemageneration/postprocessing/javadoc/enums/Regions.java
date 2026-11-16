@@ -30,8 +30,8 @@ public class Regions {
     private Set<Municipality> municipalities;
 
     public Regions() {
-        this.counties = new TreeSet<County>();
-        this.municipalities = new TreeSet<Municipality>();
+        this.counties = new TreeSet<>();
+        this.municipalities = new TreeSet<>();
     }
 
     public Set<County> getCounties() {

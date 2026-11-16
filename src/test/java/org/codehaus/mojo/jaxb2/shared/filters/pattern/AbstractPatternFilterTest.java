@@ -56,7 +56,7 @@ public abstract class AbstractPatternFilterTest {
     protected <T> Map<String, Boolean> applyFilterAndRetrieveResults(
             final AbstractPatternFilter<T> unitUnderTest, final T[] candidates, final StringConverter<T> converter) {
 
-        Map<String, Boolean> toReturn = new TreeMap<String, Boolean>();
+        Map<String, Boolean> toReturn = new TreeMap<>();
 
         for (T current : candidates) {
             toReturn.put(converter.convert(current), unitUnderTest.accept(current));

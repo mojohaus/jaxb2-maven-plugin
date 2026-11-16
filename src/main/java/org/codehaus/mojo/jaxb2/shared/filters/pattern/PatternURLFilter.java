@@ -35,7 +35,7 @@ public class PatternURLFilter extends AbstractPatternFilter<URL> {
      * algorithm {@code toConvert.toURI().normalize().toURL().toString();}
      */
     @SuppressWarnings("all")
-    public static final StringConverter<URL> NORMALIZED_URL_CONVERTER = new StringConverter<URL>() {
+    public static final StringConverter<URL> NORMALIZED_URL_CONVERTER = new StringConverter<>() {
 
         /**
          * {@inheritDoc}

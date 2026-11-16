@@ -184,9 +184,9 @@ public final class MavenUriCatalogResolver {
             final String groupId = m.group(1);
             final String artifactId = m.group(2);
             // group(3) = type segment (may be null or empty → default to "jar")
-            final String type = (m.group(3) == null || m.group(3).isEmpty()) ? "jar" : m.group(3);
+            final String type = m.group(3) == null || m.group(3).isEmpty() ? "jar" : m.group(3);
             // group(4) = classifier segment (may be null or empty → no classifier)
-            final String classifier = (m.group(4) == null || m.group(4).isEmpty()) ? "" : m.group(4);
+            final String classifier = m.group(4) == null || m.group(4).isEmpty() ? "" : m.group(4);
             // group(5) = path-in-jar (always starts with /)
             final String pathInJar = m.group(5);
 
@@ -325,11 +325,19 @@ public final class MavenUriCatalogResolver {
         }
 
         for (final org.apache.maven.artifact.Artifact a : projectArtifacts) {
-            if (!groupId.equals(a.getGroupId())) continue;
-            if (!artifactId.equals(a.getArtifactId())) continue;
-            if (!type.equals(a.getType())) continue;
+            if (!groupId.equals(a.getGroupId())) {
+                continue;
+            }
+            if (!artifactId.equals(a.getArtifactId())) {
+                continue;
+            }
+            if (!type.equals(a.getType())) {
+                continue;
+            }
             final String aClassifier = a.getClassifier() == null ? "" : a.getClassifier();
-            if (!classifier.equals(aClassifier)) continue;
+            if (!classifier.equals(aClassifier)) {
+                continue;
+            }
 
             return a;
         }

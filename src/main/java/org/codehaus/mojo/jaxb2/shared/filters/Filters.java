@@ -152,7 +152,7 @@ public final class Filters {
      */
     public static List<FileFilter> adapt(final List<Filter<File>> toAdapt) {
 
-        final List<FileFilter> toReturn = new ArrayList<FileFilter>();
+        final List<FileFilter> toReturn = new ArrayList<>();
         if (toAdapt != null) {
             for (Filter<File> current : toAdapt) {
                 toReturn.add(adapt(current));

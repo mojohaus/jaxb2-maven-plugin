@@ -44,7 +44,7 @@ public class BufferingLog implements Log {
         Validate.notNull(minLevel, "minLevel");
 
         // Assign internal state
-        logBuffer = new TreeMap<String, Throwable>();
+        logBuffer = new TreeMap<>();
         this.minLevel = minLevel;
     }
 
@@ -71,7 +71,7 @@ public class BufferingLog implements Log {
 
         final SortedMap<String, Throwable> toReturn = logBuffer;
         synchronized (lock) {
-            this.logBuffer = new TreeMap<String, Throwable>();
+            this.logBuffer = new TreeMap<>();
         }
 
         return toReturn;
@@ -97,8 +97,10 @@ public class BufferingLog implements Log {
 
             final Throwable error = current.getValue();
             if (error != null) {
-                builder.append(
-                        " [" + error.getMessage() + "]: " + error.getClass().getSimpleName());
+                builder.append(" [")
+                        .append(error.getMessage())
+                        .append("]: ")
+                        .append(error.getClass().getSimpleName());
             }
         }
 

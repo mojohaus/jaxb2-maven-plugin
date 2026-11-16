@@ -25,7 +25,7 @@ class FieldLocationTest {
     @BeforeEach
     void setupSharedState() {
 
-        fieldName2MethodMap = new TreeMap<String, Field>();
+        fieldName2MethodMap = new TreeMap<>();
 
         theClass = XmlNameAnnotatedClassWithFieldAccess.class;
         for (Field current : theClass.getDeclaredFields()) {

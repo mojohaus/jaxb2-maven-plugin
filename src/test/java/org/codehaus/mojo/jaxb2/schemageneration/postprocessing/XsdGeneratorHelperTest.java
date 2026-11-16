@@ -82,7 +82,7 @@ class XsdGeneratorHelperTest {
     void validateExceptionThrownOnDuplicateURIs() throws Exception {
         final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
         final TransformSchema transformSchema2 = new TransformSchema("foo", "bar", "bar");
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         transformSchemas.add(transformSchema2);
         assertThrows(
@@ -97,7 +97,7 @@ class XsdGeneratorHelperTest {
     void validateExceptionThrownOnDuplicatePrefixes() throws Exception {
         final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo");
         final TransformSchema transformSchema2 = new TransformSchema("bar", "foo", "bar");
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         transformSchemas.add(transformSchema2);
         assertThrows(
@@ -114,7 +114,7 @@ class XsdGeneratorHelperTest {
         final TransformSchema transformSchema1 = new TransformSchema("foo", null, "foo");
         final TransformSchema transformSchema2 = new TransformSchema("bar", null, "bar");
 
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         transformSchemas.add(transformSchema2);
 
@@ -131,7 +131,7 @@ class XsdGeneratorHelperTest {
         final TransformSchema transformSchema1 = new TransformSchema("foo", "foo", "foo.xsd");
         final TransformSchema transformSchema2 = new TransformSchema("bar", "bar", "foo.xsd");
 
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         transformSchemas.add(transformSchema2);
 
@@ -151,7 +151,7 @@ class XsdGeneratorHelperTest {
     @Test
     void validateExceptionThrownOnOnlyUriGiven() throws Exception {
         final TransformSchema transformSchema1 = new TransformSchema("foo", null, "");
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         assertThrows(
                 MojoExecutionException.class,
@@ -164,7 +164,7 @@ class XsdGeneratorHelperTest {
     @Test
     void validateExceptionThrownOnNullUri() throws Exception {
         final TransformSchema transformSchema1 = new TransformSchema(null, "foo", "bar");
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         assertThrows(
                 MojoExecutionException.class,
@@ -177,7 +177,7 @@ class XsdGeneratorHelperTest {
     @Test
     void validateExceptionThrownOnEmptyUri() throws Exception {
         final TransformSchema transformSchema1 = new TransformSchema("", "foo", "bar");
-        final List<TransformSchema> transformSchemas = new ArrayList<TransformSchema>();
+        final List<TransformSchema> transformSchemas = new ArrayList<>();
         transformSchemas.add(transformSchema1);
         assertThrows(
                 MojoExecutionException.class,
@@ -353,7 +353,7 @@ class XsdGeneratorHelperTest {
         final File parentDir = new File(parentPathURL.getPath());
         assertTrue(parentDir.exists() && parentDir.isDirectory());
 
-        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<>();
         excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
         Filters.initialize(log, excludeFilesMatching);
 
@@ -361,7 +361,7 @@ class XsdGeneratorHelperTest {
                 parentDir, null, parentDir.getAbsolutePath(), log, "allJavaFiles", excludeFilesMatching);
         assertEquals(3, allSourceFiles.size());
 
-        final List<URL> urls = new ArrayList<URL>();
+        final List<URL> urls = new ArrayList<>();
         for (File current : allSourceFiles) {
             try {
                 urls.add(current.toURI().toURL());
@@ -411,7 +411,7 @@ class XsdGeneratorHelperTest {
         final File parentDir = new File(parentPathURL.getPath());
         assertTrue(parentDir.exists() && parentDir.isDirectory());
 
-        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<>();
         excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
         Filters.initialize(log, excludeFilesMatching);
 
@@ -419,7 +419,7 @@ class XsdGeneratorHelperTest {
                 parentDir, null, parentDir.getAbsolutePath(), log, "allJavaFiles", excludeFilesMatching);
         assertEquals(2, allSourceFiles.size());
 
-        final List<URL> urls = new ArrayList<URL>();
+        final List<URL> urls = new ArrayList<>();
         for (File current : allSourceFiles) {
             try {
                 urls.add(current.toURI().toURL());

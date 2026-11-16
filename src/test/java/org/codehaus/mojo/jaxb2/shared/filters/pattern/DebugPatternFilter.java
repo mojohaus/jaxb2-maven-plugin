@@ -11,7 +11,7 @@ public class DebugPatternFilter extends AbstractPatternFilter<String> {
 
     // Shared state
     private final Object lock = new Object();
-    public SortedMap<Integer, String[]> invocations = new TreeMap<Integer, String[]>();
+    public SortedMap<Integer, String[]> invocations = new TreeMap<>();
 
     public DebugPatternFilter(final List<String> patterns, final boolean acceptCandidateOnPatternMatch) {
         super();
@@ -47,7 +47,7 @@ public class DebugPatternFilter extends AbstractPatternFilter<String> {
         synchronized (lock) {
             final String[] resultStruct = new String[2];
             resultStruct[0] = candidate;
-            resultStruct[1] = "" + result;
+            resultStruct[1] = String.valueOf(result);
 
             invocations.put(1 + invocations.size(), resultStruct);
         }

@@ -49,7 +49,7 @@ class LocaleFacetTest {
     void validateOptimalLocaleFindingIgnoringScripts() throws Exception {
 
         // Assemble
-        final SortedMap<String, Locale> lang2Locale = new TreeMap<String, Locale>();
+        final SortedMap<String, Locale> lang2Locale = new TreeMap<>();
         for (Locale current : Locale.getAvailableLocales()) {
             lang2Locale.put(current.toLanguageTag(), current);
         }

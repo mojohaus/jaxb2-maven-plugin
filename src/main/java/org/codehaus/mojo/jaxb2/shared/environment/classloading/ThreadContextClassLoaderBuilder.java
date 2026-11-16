@@ -97,7 +97,7 @@ public final class ThreadContextClassLoaderBuilder {
     private ThreadContextClassLoaderBuilder(final ClassLoader classLoader, final Log aLog, final String encoding) {
         log = aLog;
         originalClassLoader = classLoader;
-        urlList = new ArrayList<URL>();
+        urlList = new ArrayList<>();
         this.encoding = encoding;
     }
 

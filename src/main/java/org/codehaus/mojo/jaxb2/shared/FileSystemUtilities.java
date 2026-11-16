@@ -270,7 +270,7 @@ public final class FileSystemUtilities {
             final String fileTypeDescription,
             final List<Filter<File>> excludePatterns) {
 
-        final SortedMap<String, File> pathToResolvedSourceMap = new TreeMap<String, File>();
+        final SortedMap<String, File> pathToResolvedSourceMap = new TreeMap<>();
 
         for (String current : standardDirectories) {
             for (File currentResolvedSource : FileSystemUtilities.filterFiles(
@@ -287,7 +287,7 @@ public final class FileSystemUtilities {
             }
         }
 
-        final List<URL> toReturn = new ArrayList<URL>();
+        final List<URL> toReturn = new ArrayList<>();
 
         // Extract the URLs for all resolved Java sources.
         for (Map.Entry<String, File> current : pathToResolvedSourceMap.entrySet()) {
@@ -297,28 +297,49 @@ public final class FileSystemUtilities {
         if (log.isDebugEnabled()) {
 
             final StringBuilder builder = new StringBuilder();
-            builder.append("\n+=================== [Filtered " + fileTypeDescription + "]\n");
+            builder.append("\n+=================== [Filtered ")
+                    .append(fileTypeDescription)
+                    .append("]\n");
 
             builder.append("|\n");
-            builder.append("| " + excludePatterns.size() + " Exclude patterns:\n");
+            builder.append("| ").append(excludePatterns.size()).append(" Exclude patterns:\n");
             for (int i = 0; i < excludePatterns.size(); i++) {
-                builder.append("| [" + (i + 1) + "/" + excludePatterns.size() + "]: " + excludePatterns.get(i) + "\n");
+                builder.append("| [")
+                        .append(i + 1)
+                        .append("/")
+                        .append(excludePatterns.size())
+                        .append("]: ")
+                        .append(excludePatterns.get(i))
+                        .append("\n");
             }
 
             builder.append("|\n");
-            builder.append("| " + standardDirectories.size() + " Standard Directories:\n");
+            builder.append("| ").append(standardDirectories.size()).append(" Standard Directories:\n");
             for (int i = 0; i < standardDirectories.size(); i++) {
-                builder.append(
-                        "| [" + (i + 1) + "/" + standardDirectories.size() + "]: " + standardDirectories.get(i) + "\n");
+                builder.append("| [")
+                        .append(i + 1)
+                        .append("/")
+                        .append(standardDirectories.size())
+                        .append("]: ")
+                        .append(standardDirectories.get(i))
+                        .append("\n");
             }
 
             builder.append("|\n");
-            builder.append("| " + toReturn.size() + " Results:\n");
+            builder.append("| ").append(toReturn.size()).append(" Results:\n");
             for (int i = 0; i < toReturn.size(); i++) {
-                builder.append("| [" + (i + 1) + "/" + toReturn.size() + "]: " + toReturn.get(i) + "\n");
+                builder.append("| [")
+                        .append(i + 1)
+                        .append("/")
+                        .append(toReturn.size())
+                        .append("]: ")
+                        .append(toReturn.get(i))
+                        .append("\n");
             }
             builder.append("|\n");
-            builder.append("+=================== [End Filtered " + fileTypeDescription + "]\n\n");
+            builder.append("+=================== [End Filtered ")
+                    .append(fileTypeDescription)
+                    .append("]\n\n");
 
             // Log all.
             log.debug(builder.toString().replace("\n", AbstractJaxbMojo.NEWLINE));
@@ -364,7 +385,7 @@ public final class FileSystemUtilities {
         // No sources provided? Fallback to the standard (which should be a relative path).
         List<String> effectiveSources = sources;
         if (sources == null || sources.isEmpty()) {
-            effectiveSources = new ArrayList<String>();
+            effectiveSources = new ArrayList<>();
 
             final File tmp = new File(standardDirectory);
             final File rootDirectory = tmp.isAbsolute() ? tmp : new File(baseDir, standardDirectory);
@@ -372,7 +393,7 @@ public final class FileSystemUtilities {
         }
 
         // First, remove the non-existent sources.
-        List<File> existingSources = new ArrayList<File>();
+        List<File> existingSources = new ArrayList<>();
         for (String current : effectiveSources) {
 
             final File existingFile = FileSystemUtilities.getExistingFile(current, baseDir);
@@ -391,7 +412,7 @@ public final class FileSystemUtilities {
             }
         }
 
-        if (log.isDebugEnabled() && existingSources.size() > 0) {
+        if (log.isDebugEnabled() && !existingSources.isEmpty()) {
 
             final int size = existingSources.size();
 
@@ -423,9 +444,9 @@ public final class FileSystemUtilities {
         // Check sanity
         Validate.notNull(files, "files");
 
-        final List<File> toReturn = new ArrayList<File>();
+        final List<File> toReturn = new ArrayList<>();
 
-        if (files.size() > 0) {
+        if (!files.isEmpty()) {
             for (File current : files) {
 
                 final boolean isAcceptedFile = EXISTING_FILE.accept(current) && acceptFilter.accept(current);
@@ -467,9 +488,9 @@ public final class FileSystemUtilities {
         final List<Filter<File>> effectiveExclusions =
                 exclusionFilters == null ? new ArrayList<Filter<File>>() : exclusionFilters;
 
-        final List<File> toReturn = new ArrayList<File>();
+        final List<File> toReturn = new ArrayList<>();
 
-        if (files.size() > 0) {
+        if (!files.isEmpty()) {
             for (File current : files) {
 
                 final boolean isAcceptedFile =
@@ -644,7 +665,7 @@ public final class FileSystemUtilities {
         // Check sanity
         Validate.notNull(log, "log");
         Validate.notNull(fileFilters, "fileFilters");
-        final List<File> toReturn = new ArrayList<File>();
+        final List<File> toReturn = new ArrayList<>();
 
         if (EXISTING_FILE.accept(fileOrDir)) {
             checkAndAdd(toReturn, fileOrDir, fileFilters, excludeFilterOperation, log);

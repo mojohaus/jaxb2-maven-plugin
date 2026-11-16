@@ -501,7 +501,8 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
                     final List<SystemPropertyChangeEnvironmentFacet> sysPropChanges =
                             SystemPropertyChangeEnvironmentFacet.getBuilder(getLog())
-                                    .addOrChange("enableExternalEntityProcessing", "" + externalEntityProcessing)
+                                    .addOrChange(
+                                            "enableExternalEntityProcessing", String.valueOf(externalEntityProcessing))
                                     .build();
 
                     for (SystemPropertyChangeEnvironmentFacet current : sysPropChanges) {
@@ -538,7 +539,9 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                     final List<URL> sourceXSDs = getSources();
                     for (int i = 0; i < sourceXSDs.size(); i++) {
                         errorMsgBuilder
-                                .append("| " + i + ": ")
+                                .append("| ")
+                                .append(i)
+                                .append(": ")
                                 .append(sourceXSDs.get(i).toString())
                                 .append("\n");
                     }
@@ -745,7 +748,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
         } else {
 
-            final List<String> unwrappedSourceXSDs = new ArrayList<String>();
+            final List<String> unwrappedSourceXSDs = new ArrayList<>();
             for (URL current : sourceXSDs) {
 
                 // Shorten the argument if possible.

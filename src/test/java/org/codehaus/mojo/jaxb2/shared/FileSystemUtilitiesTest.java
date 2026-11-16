@@ -194,7 +194,7 @@ class FileSystemUtilitiesTest {
         final URL fileFilterDirUrl = getClass().getClassLoader().getResource("testdata/shared/filefilter");
         final File fileFilterDir = new File(fileFilterDirUrl.getPath());
 
-        final List<File> fileList = new ArrayList<File>();
+        final List<File> fileList = new ArrayList<>();
         fileList.add(fsUtilitiesDirectory);
         fileList.add(fileFilterDir);
 
@@ -215,7 +215,7 @@ class FileSystemUtilitiesTest {
         final URL fileFilterDirUrl = getClass().getClassLoader().getResource("testdata/shared/standard/exclusions");
         final File fileFilterDir = new File(fileFilterDirUrl.getPath());
 
-        final List<File> fileList = new ArrayList<File>();
+        final List<File> fileList = new ArrayList<>();
         fileList.add(fileFilterDir);
 
         final List<Filter<File>> standardExcludeFilters = AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS;
@@ -241,7 +241,7 @@ class FileSystemUtilitiesTest {
         final File fileFilterDir = new File(fileFilterDirUrl.getPath());
         final File depsPropertiesFile = new File(fileFilterDir.getParentFile(), "deps1.properties");
 
-        final List<File> fileList = new ArrayList<File>();
+        final List<File> fileList = new ArrayList<>();
         fileList.add(fsUtilitiesDirectory);
         fileList.add(fileFilterDir);
         fileList.add(depsPropertiesFile);
@@ -302,7 +302,7 @@ class FileSystemUtilitiesTest {
 
         // Assert
         final SortedMap<String, Throwable> logBuffer = log.getLogBuffer();
-        final List<String> keys = new ArrayList<String>(logBuffer.keySet());
+        final List<String> keys = new ArrayList<>(logBuffer.keySet());
 
         assertEquals(3, keys.size());
 
@@ -534,7 +534,7 @@ class FileSystemUtilitiesTest {
     private List<String> getRelativeCanonicalPaths(final List<File> fileList, final File cutoff) {
 
         final String cutoffPath = FileSystemUtilities.getCanonicalPath(cutoff).replace(File.separator, "/");
-        final List<String> toReturn = new ArrayList<String>();
+        final List<String> toReturn = new ArrayList<>();
 
         for (File current : fileList) {
 

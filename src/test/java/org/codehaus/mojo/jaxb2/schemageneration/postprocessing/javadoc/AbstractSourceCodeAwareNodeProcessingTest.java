@@ -81,10 +81,10 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
 
         // Create internal state for the generated structures.
-        namespace2SystemIdMap = new TreeMap<String, String>();
-        xsdGenerationWarnings = new ArrayList<String>();
-        namespace2DocumentMap = new TreeMap<String, Document>();
-        namespace2GeneratedSchemaMap = new TreeMap<String, String>();
+        namespace2SystemIdMap = new TreeMap<>();
+        xsdGenerationWarnings = new ArrayList<>();
+        namespace2DocumentMap = new TreeMap<>();
+        namespace2GeneratedSchemaMap = new TreeMap<>();
 
         // Pre-populate the namespace2SystemIdMap
         namespace2SystemIdMap.put(SomewhatNamedPerson.NAMESPACE, "somewhatNamedPerson.xsd");
@@ -99,7 +99,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         jaxbContext = JAXBContext.newInstance(classArray);
 
         // Generate the vanilla XSD from JAXB
-        final SortedMap<String, StringWriter> tmpSchemaMap = new TreeMap<String, StringWriter>();
+        final SortedMap<String, StringWriter> tmpSchemaMap = new TreeMap<>();
 
         try {
             jaxbContext.generateSchema(new SchemaOutputResolver() {
@@ -332,9 +332,9 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
 
     private List<File> resolveSourceFiles() {
 
-        final List<File> sourceDirs = Arrays.<File>asList(new File(basedir, "src/main/java"), testJavaDir);
+        final List<File> sourceDirs = Arrays.asList(new File(basedir, "src/main/java"), testJavaDir);
         final List<File> candidates = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
-        final List<File> toReturn = new ArrayList<File>();
+        final List<File> toReturn = new ArrayList<>();
 
         for (File current : candidates) {
             for (Class<?> currentClass : jaxbClasses) {

@@ -121,7 +121,7 @@ public final class XsdGeneratorHelper {
     public static Map<String, SimpleNamespaceResolver> getFileNameToResolverMap(final File outputDirectory)
             throws MojoExecutionException {
 
-        final Map<String, SimpleNamespaceResolver> toReturn = new TreeMap<String, SimpleNamespaceResolver>();
+        final Map<String, SimpleNamespaceResolver> toReturn = new TreeMap<>();
 
         // Each generated schema file should be written to the output directory.
         // Each generated schema file should have a unique targetNamespace.
@@ -153,9 +153,9 @@ public final class XsdGeneratorHelper {
     public static void validateSchemasInPluginConfiguration(final List<TransformSchema> configuredTransformSchemas)
             throws MojoExecutionException {
 
-        final List<String> uris = new ArrayList<String>();
-        final List<String> prefixes = new ArrayList<String>();
-        final List<String> fileNames = new ArrayList<String>();
+        final List<String> uris = new ArrayList<>();
+        final List<String> prefixes = new ArrayList<>();
+        final List<String> fileNames = new ArrayList<>();
 
         for (int i = 0; i < configuredTransformSchemas.size(); i++) {
             final TransformSchema current = configuredTransformSchemas.get(i);
@@ -184,7 +184,7 @@ public final class XsdGeneratorHelper {
             uris.add(currentURI);
 
             // Validate that all given prefixes are unique.
-            if (prefixes.contains(currentPrefix) && !(currentPrefix == null)) {
+            if (prefixes.contains(currentPrefix) && currentPrefix != null) {
                 throw new MojoExecutionException(
                         getDuplicationErrorMessage("prefix", currentPrefix, prefixes.indexOf(currentPrefix), i));
             }
@@ -224,10 +224,10 @@ public final class XsdGeneratorHelper {
         Validate.notNull(renderer, "renderer");
 
         int processedXSDs = 0;
-        final List<File> foundFiles = new ArrayList<File>();
+        final List<File> foundFiles = new ArrayList<>();
         addRecursively(foundFiles, RECURSIVE_XSD_FILTER, outputDir);
 
-        if (foundFiles.size() > 0) {
+        if (!foundFiles.isEmpty()) {
 
             // Create the processors.
             final XsdAnnotationProcessor classProcessor = new XsdAnnotationProcessor(docs, renderer);
@@ -401,7 +401,7 @@ public final class XsdGeneratorHelper {
             final String encoding) {
 
         // Create the map relating namespace URI to desired filenames.
-        Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<String, String>();
+        Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<>();
         for (TransformSchema current : configuredTransformSchemas) {
             if (StringUtils.isNotEmpty(current.getToFile())) {
                 namespaceUriToDesiredFilenameMap.put(current.getUri(), current.getToFile());
@@ -441,7 +441,7 @@ public final class XsdGeneratorHelper {
 
             if (StringUtils.isNotEmpty(newFilename)) {
                 File renamedFile = FileUtils.resolveFile(schemaDirectory, newFilename);
-                String renameResult = (originalFile.renameTo(renamedFile) ? "Success " : "Failure ");
+                String renameResult = originalFile.renameTo(renamedFile) ? "Success " : "Failure ";
 
                 if (mavenLog.isDebugEnabled()) {
                     String suffix = "renaming [" + originalFile.getAbsolutePath() + "] to [" + renamedFile + "]";

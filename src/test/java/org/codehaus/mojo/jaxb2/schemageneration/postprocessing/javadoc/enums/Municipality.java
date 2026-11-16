@@ -705,7 +705,7 @@ public enum Municipality implements Serializable {
         Validate.notNull(county, "Cannot handle null 'county' argument.");
 
         // Find all Municipalities within the supplied county.
-        final SortedSet<Municipality> toReturn = new TreeSet<Municipality>();
+        final SortedSet<Municipality> toReturn = new TreeSet<>();
         for (Municipality current : values()) {
             if (current.getCounty() == county) {
                 toReturn.add(current);

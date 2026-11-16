@@ -314,7 +314,7 @@ public class JavaDocExtractor {
     public SearchableDocumentation process() {
 
         // Start processing.
-        final SortedMap<SortableLocation, JavaDocData> dataHolder = new TreeMap<SortableLocation, JavaDocData>();
+        final SortedMap<SortableLocation, JavaDocData> dataHolder = new TreeMap<>();
         final Collection<JavaSource> sources = builder.getSources();
 
         if (log.isInfoEnabled()) {
@@ -771,7 +771,7 @@ public class JavaDocExtractor {
             // Create internal state
             this.valueMap = valueMap;
 
-            keyMap = new TreeMap<String, SortableLocation>();
+            keyMap = new TreeMap<>();
             for (Map.Entry<SortableLocation, JavaDocData> current : valueMap.entrySet()) {
 
                 final SortableLocation key = current.getKey();
@@ -798,7 +798,7 @@ public class JavaDocExtractor {
 
             // All done.
             final SortableLocation location = getLocation(path);
-            return (location == null) ? null : valueMap.get(location);
+            return location == null ? null : valueMap.get(location);
         }
 
         /**
@@ -835,7 +835,7 @@ public class JavaDocExtractor {
             Validate.notNull(type, "type");
 
             // Filter the valueMap.
-            final SortedMap<T, JavaDocData> toReturn = new TreeMap<T, JavaDocData>();
+            final SortedMap<T, JavaDocData> toReturn = new TreeMap<>();
             for (Map.Entry<? extends SortableLocation, JavaDocData> current : valueMap.entrySet()) {
                 if (type == current.getKey().getClass()) {
                     toReturn.put((T) current.getKey(), current.getValue());

@@ -43,6 +43,6 @@ class XsdAnnotationProcessorSemiDocumentedTest extends AbstractSourceCodeAwareNo
      */
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
-        return Arrays.<Class<?>>asList(SemiDocumentedClass.class);
+        return Arrays.asList(SemiDocumentedClass.class);
     }
 }

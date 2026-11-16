@@ -61,9 +61,9 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     // Internal state
     private String sourceFilename;
     private String localNamespaceURI;
-    private Map<String, String> prefix2Uri = new HashMap<String, String>();
-    private Map<String, String> uri2Prefix = new HashMap<String, String>();
-    private Map<String, Set<String>> uri2Prefixes = new LinkedHashMap<String, Set<String>>();
+    private Map<String, String> prefix2Uri = new HashMap<>();
+    private Map<String, String> uri2Prefix = new HashMap<>();
+    private Map<String, Set<String>> uri2Prefixes = new LinkedHashMap<>();
 
     /**
      * Creates a new SimpleNamespaceResolver which collects namespace data

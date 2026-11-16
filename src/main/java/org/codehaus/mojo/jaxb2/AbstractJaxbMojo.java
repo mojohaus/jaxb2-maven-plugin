@@ -138,7 +138,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     static {
 
         // The standard exclude filters contain simple, exclude pattern filters.
-        final List<Filter<File>> tmp = new ArrayList<Filter<File>>();
+        final List<Filter<File>> tmp = new ArrayList<>();
         tmp.add(new PatternFileFilter(Arrays.asList(STANDARD_EXCLUDE_SUFFIXES), true));
         tmp.add(new FileFilterAdapter(new FileFilter() {
             @Override
@@ -468,8 +468,8 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
         final StringBuilder builder = new StringBuilder();
         builder.append("\n+=================== [Incorrect Plugin Configuration Detected]\n");
         builder.append("|\n");
-        builder.append("| Property : " + propertyName + "\n");
-        builder.append("| Problem  : " + description + "\n");
+        builder.append("| Property : ").append(propertyName).append("\n");
+        builder.append("| Problem  : ").append(description).append("\n");
         builder.append("|\n");
         builder.append("+=================== [End Incorrect Plugin Configuration Detected]\n\n");
         getLog().warn(builder.toString().replace("\n", NEWLINE));
@@ -645,10 +645,18 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
 
             builder.append("|\n");
             builder.append("| Plugin's own information\n");
-            builder.append("|     GroupId    : " + versionMap.get(DependsFileParser.OWN_GROUPID_KEY) + "\n");
-            builder.append("|     ArtifactID : " + versionMap.get(DependsFileParser.OWN_ARTIFACTID_KEY) + "\n");
-            builder.append("|     Version    : " + versionMap.get(DependsFileParser.OWN_VERSION_KEY) + "\n");
-            builder.append("|     Buildtime  : " + versionMap.get(DependsFileParser.BUILDTIME_KEY) + "\n");
+            builder.append("|     GroupId    : ")
+                    .append(versionMap.get(DependsFileParser.OWN_GROUPID_KEY))
+                    .append("\n");
+            builder.append("|     ArtifactID : ")
+                    .append(versionMap.get(DependsFileParser.OWN_ARTIFACTID_KEY))
+                    .append("\n");
+            builder.append("|     Version    : ")
+                    .append(versionMap.get(DependsFileParser.OWN_VERSION_KEY))
+                    .append("\n");
+            builder.append("|     Buildtime  : ")
+                    .append(versionMap.get(DependsFileParser.BUILDTIME_KEY))
+                    .append("\n");
             builder.append("|\n");
             builder.append("| Plugin's JAXB-related dependencies\n");
             builder.append("|\n");
@@ -663,12 +671,26 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
                     if (key.startsWith(currentRelevantGroupId)) {
 
                         final DependencyInfo di = current.getValue();
-                        builder.append("|   " + (++dependencyIndex) + ") [" + di.getArtifactId() + "]\n");
-                        builder.append("|     GroupId    : " + di.getGroupId() + "\n");
-                        builder.append("|     ArtifactID : " + di.getArtifactId() + "\n");
-                        builder.append("|     Version    : " + di.getVersion() + "\n");
-                        builder.append("|     Scope      : " + di.getScope() + "\n");
-                        builder.append("|     Type       : " + di.getType() + "\n");
+                        builder.append("|   ")
+                                .append(++dependencyIndex)
+                                .append(") [")
+                                .append(di.getArtifactId())
+                                .append("]\n");
+                        builder.append("|     GroupId    : ")
+                                .append(di.getGroupId())
+                                .append("\n");
+                        builder.append("|     ArtifactID : ")
+                                .append(di.getArtifactId())
+                                .append("\n");
+                        builder.append("|     Version    : ")
+                                .append(di.getVersion())
+                                .append("\n");
+                        builder.append("|     Scope      : ")
+                                .append(di.getScope())
+                                .append("\n");
+                        builder.append("|     Type       : ")
+                                .append(di.getType())
+                                .append("\n");
                         builder.append("|\n");
                     }
                 }
@@ -727,15 +749,19 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
             builder.append("|\n");
 
             // Sort the system properties
-            final SortedMap<String, Object> props = new TreeMap<String, Object>();
+            final SortedMap<String, Object> props = new TreeMap<>();
             props.put(
                     "basedir", FileSystemUtilities.getCanonicalPath(getProject().getBasedir()));
 
             for (Map.Entry<Object, Object> current : System.getProperties().entrySet()) {
-                props.put("" + current.getKey(), current.getValue());
+                props.put(String.valueOf(current.getKey()), current.getValue());
             }
             for (Map.Entry<String, Object> current : props.entrySet()) {
-                builder.append("| [" + current.getKey() + "]: " + current.getValue() + "\n");
+                builder.append("| [")
+                        .append(current.getKey())
+                        .append("]: ")
+                        .append(current.getValue())
+                        .append("\n");
             }
 
             builder.append("|\n");

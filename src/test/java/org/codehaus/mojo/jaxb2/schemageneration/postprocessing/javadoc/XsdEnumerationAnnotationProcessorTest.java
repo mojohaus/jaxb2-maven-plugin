@@ -47,6 +47,6 @@ class XsdEnumerationAnnotationProcessorTest extends AbstractSourceCodeAwareNodeP
      */
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
-        return Arrays.<Class<?>>asList(ExampleEnumHolder.class, AmericanCoin.class, FoodPreference.class);
+        return Arrays.asList(ExampleEnumHolder.class, AmericanCoin.class, FoodPreference.class);
     }
 }

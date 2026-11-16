@@ -52,6 +52,6 @@ class XsdAnnotationProcessorWithUnderscoreTest extends AbstractSourceCodeAwareNo
 
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
-        return Collections.<Class<?>>singletonList(DummyRequest_v1.class);
+        return Collections.singletonList(DummyRequest_v1.class);
     }
 }

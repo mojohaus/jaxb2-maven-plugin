@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PatternFileFilterTest extends AbstractPatternFilterTest {
 
     // Shared state
-    public static final StringConverter<File> FILENAME_CONVERTER = new StringConverter<File>() {
+    public static final StringConverter<File> FILENAME_CONVERTER = new StringConverter<>() {
         @Override
         public String convert(final File toConvert) {
             return toConvert.getName();

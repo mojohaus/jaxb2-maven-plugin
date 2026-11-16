@@ -99,7 +99,7 @@ class PackageFilterInclusionTest {
         includeFilter.initialize(log);
 
         final List<File> allSourceFiles = FileSystemUtilities.resolveRecursively(
-                Collections.singletonList(srcMainJavaDir), new ArrayList<Filter<File>>(), log);
+                Collections.singletonList(srcMainJavaDir), new ArrayList<>(), log);
 
         // Act
         final List<File> result = FileSystemUtilities.filterFiles(allSourceFiles, includeFilter, log);
@@ -120,7 +120,7 @@ class PackageFilterInclusionTest {
 
     private SortedMap<String, File> mapFiles(final List<File> files) {
 
-        final SortedMap<String, File> toReturn = new TreeMap<String, File>();
+        final SortedMap<String, File> toReturn = new TreeMap<>();
         for (File current : files) {
             toReturn.put(current.getPath(), current);
         }

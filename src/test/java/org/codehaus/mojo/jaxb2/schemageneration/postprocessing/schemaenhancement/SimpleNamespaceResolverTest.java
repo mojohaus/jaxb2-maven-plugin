@@ -149,7 +149,7 @@ public class SimpleNamespaceResolverTest {
                 new SimpleNamespaceResolver(getSchemaFile(SCHEMA_DIR + schemaFile));
 
         // Act
-        List<String> prefixesList = new ArrayList<String>();
+        List<String> prefixesList = new ArrayList<>();
         for (Iterator<String> it = unitUnderTest.getPrefixes(XMLConstants.W3C_XML_SCHEMA_NS_URI); it.hasNext(); ) {
             prefixesList.add(it.next());
         }
@@ -220,7 +220,7 @@ public class SimpleNamespaceResolverTest {
         assertEquals(STUDENT_NAMESPACE, unitUnderTest.getNamespaceURI("extra"));
 
         // ... and getPrefixes reports every one of them, not only the canonical prefix.
-        final List<String> prefixes = new ArrayList<String>();
+        final List<String> prefixes = new ArrayList<>();
         for (Iterator<String> it = unitUnderTest.getPrefixes(STUDENT_NAMESPACE); it.hasNext(); ) {
             prefixes.add(it.next());
         }

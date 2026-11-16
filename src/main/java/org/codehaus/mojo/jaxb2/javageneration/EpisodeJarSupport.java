@@ -198,9 +198,7 @@ public final class EpisodeJarSupport {
 
     private static List<String> listEntryNames(final File jarFile) throws MojoExecutionException {
         try (JarFile theJar = new JarFile(jarFile)) {
-            final List<String> entryNames =
-                    theJar.stream().map(JarEntry::getName).collect(java.util.stream.Collectors.toList());
-            return entryNames;
+            return theJar.stream().map(JarEntry::getName).collect(java.util.stream.Collectors.toList());
         } catch (IOException e) {
             throw new MojoExecutionException("Could not read artifact JAR [" + jarFile.getAbsolutePath() + "].", e);
         }

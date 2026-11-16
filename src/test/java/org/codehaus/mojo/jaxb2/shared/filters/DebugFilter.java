@@ -10,7 +10,7 @@ public class DebugFilter extends AbstractFilter<String> {
 
     // Shared state
     private final Object lock = new Object();
-    public SortedMap<Integer, String> invocations = new TreeMap<Integer, String>();
+    public SortedMap<Integer, String> invocations = new TreeMap<>();
 
     public DebugFilter(final boolean processNullValues) {
         super();
