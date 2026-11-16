@@ -71,6 +71,7 @@ public class ChangeFilenameProcessor implements NodeProcessor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept(final Node aNode) {
         return aNode instanceof Attr && isSchemaLocationAttributeForKnownNamespaceUri((Attr) aNode);
     }
@@ -78,6 +79,7 @@ public class ChangeFilenameProcessor implements NodeProcessor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void process(final Node aNode) {
 
         // Only attributes are permitted here.

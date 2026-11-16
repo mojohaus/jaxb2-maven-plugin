@@ -126,6 +126,7 @@ public final class XsdGeneratorHelper {
         // Each generated schema file should be written to the output directory.
         // Each generated schema file should have a unique targetNamespace.
         File[] generatedSchemaFiles = outputDirectory.listFiles(new FileFilter() {
+            @Override
             public boolean accept(File pathname) {
                 return pathname.getName().startsWith("schema")
                         && pathname.getName().endsWith(".xsd");

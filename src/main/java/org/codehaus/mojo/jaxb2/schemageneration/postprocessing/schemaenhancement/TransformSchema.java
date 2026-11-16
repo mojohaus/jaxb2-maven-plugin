@@ -195,6 +195,7 @@ public class TransformSchema {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return "[ uri: " + uri + " --> prefix: " + toPrefix + ", file: " + toFile + " ]";
     }
