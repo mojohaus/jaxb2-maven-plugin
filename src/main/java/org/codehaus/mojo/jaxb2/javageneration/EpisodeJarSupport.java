@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -120,7 +119,7 @@ public final class EpisodeJarSupport {
             return null;
         }
         if (candidates.size() > 1) {
-            Collections.sort(candidates);
+            candidates.sort(null);
             throw new MojoExecutionException("Multiple JAXB episode resources found in artifact " + coordinate
                     + ": " + candidates + ". Configure <resourcePath> within the <episode> element to select "
                     + "one explicitly.");

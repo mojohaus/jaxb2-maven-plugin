@@ -5,7 +5,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -546,7 +545,7 @@ class FileSystemUtilitiesTest {
 
             toReturn.add(canPath.substring(cutoffPath.length()));
         }
-        Collections.sort(toReturn);
+        toReturn.sort(null);
 
         return toReturn;
     }
