@@ -458,7 +458,7 @@ class XsdGeneratorHelperTest {
         // Assert
         assertEquals(3, fileNameToResolverMap.size());
         for (String current : expectedFilenames) {
-            assertTrue(fileNameToResolverMap.keySet().contains(current));
+            assertTrue(fileNameToResolverMap.containsKey(current));
         }
 
         SimpleNamespaceResolver schema1Resolver = fileNameToResolverMap.get("schema1.xsd");

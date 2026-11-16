@@ -919,7 +919,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
         // Sort the source paths and place them first in the argument array
         final ArrayList<String> toReturn = new ArrayList<>(className2SourcePath.values());
-        Collections.sort(toReturn);
+        toReturn.sort(null);
 
         // All Done.
         return toReturn;
