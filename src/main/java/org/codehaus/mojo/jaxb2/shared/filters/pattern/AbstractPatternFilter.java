@@ -56,7 +56,7 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
         super();
 
         // Assign internal state
-        converter = new ToStringConverter<T>();
+        converter = new ToStringConverter<>();
         acceptCandidateOnPatternMatch = true;
     }
 
@@ -104,7 +104,7 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
         if (patterns != null) {
 
             // Assign internal state
-            this.patterns = new ArrayList<String>();
+            this.patterns = new ArrayList<>();
             this.patterns.addAll(patterns);
         } else {
             addDelayedLogMessage(
@@ -258,13 +258,13 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
         // Check sanity
         List<String> effectivePatternStrings = patternStrings;
         if (patternStrings == null) {
-            effectivePatternStrings = new ArrayList<String>();
+            effectivePatternStrings = new ArrayList<>();
             effectivePatternStrings.add(".*");
         }
         final String effectivePrepend = prepend == null ? "" : prepend;
 
         // Convert
-        final List<Pattern> toReturn = new ArrayList<Pattern>();
+        final List<Pattern> toReturn = new ArrayList<>();
         for (String current : effectivePatternStrings) {
             toReturn.add(Pattern.compile(effectivePrepend + current, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
         }
@@ -289,7 +289,7 @@ public abstract class AbstractPatternFilter<T> extends AbstractFilter<T> {
 
         final List<Pattern> effectivePatterns = isInitialized() ? regularExpressions : convert(patterns, patternPrefix);
         final int numPatterns =
-                effectivePatterns != null && effectivePatterns.size() > 0 ? effectivePatterns.size() : 0;
+                effectivePatterns != null && !effectivePatterns.isEmpty() ? effectivePatterns.size() : 0;
         builder.append(TOSTRING_INDENT).append(numPatterns).append(" regularExpressions ");
 
         if (numPatterns > 0) {

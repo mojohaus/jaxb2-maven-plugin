@@ -168,7 +168,7 @@ public final class DomHelper {
      */
     public static String getXPathFor(final Node aNode) {
 
-        List<String> nodeNameList = new ArrayList<String>();
+        List<String> nodeNameList = new ArrayList<>();
 
         for (Node current = aNode; current != null; current = current.getParentNode()) {
 

@@ -79,7 +79,7 @@ class JavaDocExtractorTest {
 
         // Assemble
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        final List<File> sourceDirs = Arrays.<File>asList(javaDocBasicDir);
+        final List<File> sourceDirs = Arrays.asList(javaDocBasicDir);
         final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
 
         // Act
@@ -88,7 +88,7 @@ class JavaDocExtractorTest {
 
         // Assert
         final SortedMap<String, Throwable> logBuffer = log.getLogBuffer();
-        final List<String> keys = new ArrayList<String>(logBuffer.keySet());
+        final List<String> keys = new ArrayList<>(logBuffer.keySet());
 
         /*
          * 000: (DEBUG) Accepted file [/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/test-classes/testdata/schemageneration/javadoc/basic/NodeProcessor.java],
@@ -266,7 +266,7 @@ class JavaDocExtractorTest {
         assertEquals(11, mapWrapper.sortableLocations2JavaDocDataMap.size());
 
         final String packagePrefix = "org.codehaus.mojo.jaxb2.schemageneration.postprocessing.javadoc.wrappers";
-        final List<String> paths = new ArrayList<String>();
+        final List<String> paths = new ArrayList<>();
         for (String current : Arrays.asList(
                 "",
                 ".ExampleXmlWrapperUsingFieldAccess",
@@ -313,10 +313,10 @@ class JavaDocExtractorTest {
 
         // Assert
         final ArrayList<SortableLocation> sortableLocations =
-                new ArrayList<SortableLocation>(result.getAll().keySet());
+                new ArrayList<>(result.getAll().keySet());
         assertEquals(4, sortableLocations.size());
 
-        final List<String> paths = new ArrayList<String>(result.getPaths());
+        final List<String> paths = new ArrayList<>(result.getPaths());
         assertEquals(4, paths.size());
         assertEquals("basic", paths.get(0));
         assertEquals("basic.NodeProcessor", paths.get(1));
@@ -334,7 +334,7 @@ class JavaDocExtractorTest {
         final String processMethodPath = "basic.NodeProcessor#process(org.w3c.dom.Node)";
 
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
-        final List<File> sourceDirs = Collections.<File>singletonList(javaDocBasicDir);
+        final List<File> sourceDirs = Collections.singletonList(javaDocBasicDir);
         final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
 
         // Act
@@ -556,7 +556,7 @@ class JavaDocExtractorTest {
 
             // Assign state
             this.sortableLocations2JavaDocDataMap = searchableDocumentation.getAll();
-            this.path2LocationMap = new TreeMap<String, SortableLocation>();
+            this.path2LocationMap = new TreeMap<>();
 
             for (Map.Entry<SortableLocation, JavaDocData> current : sortableLocations2JavaDocDataMap.entrySet()) {
                 path2LocationMap.put(current.getKey().getPath(), current.getKey());
@@ -598,11 +598,11 @@ class JavaDocExtractorTest {
         unitUnderTest.setEncoding("UTF-8");
 
         // Convert the supplied directory Files to a List
-        final List<File> sourceDirs = new ArrayList<File>();
+        final List<File> sourceDirs = new ArrayList<>();
         Collections.addAll(sourceDirs, sourceFileDirectories);
 
         // Exclude any ".xsd" files found within the source directory files given
-        final List<Filter<File>> excludeFilesMatching = new ArrayList<Filter<File>>();
+        final List<Filter<File>> excludeFilesMatching = new ArrayList<>();
         excludeFilesMatching.add(new PatternFileFilter(Collections.singletonList("\\.xsd")));
         Filters.initialize(log, excludeFilesMatching);
 
@@ -749,7 +749,7 @@ class JavaDocExtractorTest {
         final JavaDocExtractor unitUnderTest = new JavaDocExtractor(log);
         unitUnderTest.setEncoding("UTF-8");
 
-        final List<File> sourceDirs = Arrays.<File>asList(javaDocMarkdownDir);
+        final List<File> sourceDirs = Arrays.asList(javaDocMarkdownDir);
         final List<File> sourceFiles = FileSystemUtilities.resolveRecursively(sourceDirs, null, log);
 
         // Act

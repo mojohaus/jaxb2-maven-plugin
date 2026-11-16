@@ -55,7 +55,7 @@ public class JavaDocData {
 
         // Assign internal state
         this.comment = comment == null ? NO_COMMENT : comment;
-        this.tag2ValueMap = new TreeMap<String, String>();
+        this.tag2ValueMap = new TreeMap<>();
 
         // Parse, and assign internal state
         for (DocletTag current : tags) {

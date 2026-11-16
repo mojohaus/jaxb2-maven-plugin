@@ -87,7 +87,7 @@ class XsdAnnotationProcessorAndEnumsTest extends AbstractSourceCodeAwareNodeProc
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
 
-        final List<Class<?>> toReturn = new ArrayList<Class<?>>();
+        final List<Class<?>> toReturn = new ArrayList<>();
         for (Class<?> current : Arrays.asList(FoodPreference.class, ExampleEnumHolder.class, AmericanCoin.class)) {
             toReturn.add(current);
         }

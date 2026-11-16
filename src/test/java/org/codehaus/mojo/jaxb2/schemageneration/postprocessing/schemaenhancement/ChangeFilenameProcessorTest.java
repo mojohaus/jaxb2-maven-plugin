@@ -25,7 +25,7 @@ class ChangeFilenameProcessorTest {
         final String xmlStream = getXmlDocumentSample(oldFileName);
         final String namespaceToBeRelocated = "http://another/namespace";
 
-        final Map<String, String> namespaceUriToNewFilenameMap = new TreeMap<String, String>();
+        final Map<String, String> namespaceUriToNewFilenameMap = new TreeMap<>();
         namespaceUriToNewFilenameMap.put(namespaceToBeRelocated, newFileName);
 
         final ChangeFilenameProcessor unitUnderTest = new ChangeFilenameProcessor(namespaceUriToNewFilenameMap);

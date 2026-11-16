@@ -81,7 +81,7 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     public static final List<Filter<File>> STANDARD_SOURCE_EXCLUDE_FILTERS;
 
     static {
-        final List<Filter<File>> srcTemp = new ArrayList<Filter<File>>();
+        final List<Filter<File>> srcTemp = new ArrayList<>();
         srcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         srcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
         STANDARD_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(srcTemp);
@@ -212,7 +212,7 @@ public class SchemaGenerationMojo extends AbstractXsdGeneratorMojo {
         // All Done.
         return FileSystemUtilities.filterFiles(
                 getProject().getBasedir(),
-                (sources == null) ? defaultSources : sources,
+                sources == null ? defaultSources : sources,
                 defaultSources,
                 getLog(),
                 "sources",

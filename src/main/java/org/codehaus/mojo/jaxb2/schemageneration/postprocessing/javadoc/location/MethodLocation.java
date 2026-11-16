@@ -74,7 +74,7 @@ public class MethodLocation extends FieldLocation {
         Validate.notNull(parameters, "parameters");
 
         // Stringify the parameter types
-        if (parameters.size() > 0) {
+        if (!parameters.isEmpty()) {
             final StringBuilder builder = new StringBuilder();
 
             for (JavaParameter current : parameters) {

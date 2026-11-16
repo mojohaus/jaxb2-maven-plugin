@@ -45,7 +45,7 @@ class FiltersTest {
         final BufferingLog log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
         final List<Filter<File>> excludeFilters = PatternFileFilter.createExcludeFilterList(log, "txt");
         final List<Filter<File>> includeFilters = PatternFileFilter.createIncludeFilterList(log, "txt");
-        final List<Filter<File>> noFilters = new ArrayList<Filter<File>>();
+        final List<Filter<File>> noFilters = new ArrayList<>();
 
         // Act & Assert
         assertFalse(Filters.matchAtLeastOnce(anXmlFile, noFilters));
@@ -65,7 +65,7 @@ class FiltersTest {
         final BufferingLog log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
         final List<Filter<File>> excludeFilters = PatternFileFilter.createExcludeFilterList(log, "txt");
         final List<Filter<File>> includeFilters = PatternFileFilter.createIncludeFilterList(log, "txt");
-        final List<Filter<File>> noFilters = new ArrayList<Filter<File>>();
+        final List<Filter<File>> noFilters = new ArrayList<>();
 
         // Act & Assert
         assertTrue(Filters.noFilterMatches(anXmlFile, noFilters));
@@ -85,7 +85,7 @@ class FiltersTest {
         final BufferingLog log = new BufferingLog(BufferingLog.LogLevel.DEBUG);
         final List<Filter<File>> excludeFilters = PatternFileFilter.createExcludeFilterList(log, "txt");
         final List<Filter<File>> includeFilters = PatternFileFilter.createIncludeFilterList(log, "txt");
-        final List<Filter<File>> noFilters = new ArrayList<Filter<File>>();
+        final List<Filter<File>> noFilters = new ArrayList<>();
 
         // Act & Assert
         assertFalse(Filters.rejectAtLeastOnce(anXmlFile, noFilters));

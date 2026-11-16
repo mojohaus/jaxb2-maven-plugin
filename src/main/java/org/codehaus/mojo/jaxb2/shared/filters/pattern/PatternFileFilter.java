@@ -59,7 +59,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
     /**
      * Converter returning the canonical and absolute path for a File.
      */
-    public static final StringConverter<File> FILE_PATH_CONVERTER = new StringConverter<File>() {
+    public static final StringConverter<File> FILE_PATH_CONVERTER = new StringConverter<>() {
         @Override
         public String convert(final File toConvert) {
             return FileSystemUtilities.getCanonicalPath(toConvert.getAbsoluteFile());
@@ -136,7 +136,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
      * the supplied PatternStrings (i.e. an include-mode filter)</p>
      */
     public PatternFileFilter() {
-        this(false, PATTERN_LETTER_DIGIT_PUNCT, new ArrayList<String>(), FILE_PATH_CONVERTER, true);
+        this(false, PATTERN_LETTER_DIGIT_PUNCT, new ArrayList<>(), FILE_PATH_CONVERTER, true);
     }
 
     /**
@@ -179,7 +179,7 @@ public class PatternFileFilter extends AbstractPatternFilter<File> implements Fi
         Validate.notNull(log, "log");
 
         // Convert and return.
-        final List<Filter<File>> toReturn = new ArrayList<Filter<File>>();
+        final List<Filter<File>> toReturn = new ArrayList<>();
         final List<String> patternStrings = Arrays.asList(patterns);
         toReturn.add(new PatternFileFilter(patternStrings, includeOperation));
 

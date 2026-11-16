@@ -19,8 +19,8 @@ public class ExampleXmlWapperUsingJavaBeanAccessors implements Serializable {
 
     public ExampleXmlWapperUsingJavaBeanAccessors() {
 
-        this.strings = new ArrayList<String>();
-        this.integerSet = new TreeSet<Integer>();
+        this.strings = new ArrayList<>();
+        this.integerSet = new TreeSet<>();
     }
 
     /**

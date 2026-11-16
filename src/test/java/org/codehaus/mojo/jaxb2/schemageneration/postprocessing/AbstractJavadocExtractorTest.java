@@ -37,11 +37,11 @@ public abstract class AbstractJavadocExtractorTest {
     @BeforeEach
     public void setupSharedState() {
 
-        sourceRootDirectories = new ArrayList<File>();
+        sourceRootDirectories = new ArrayList<>();
         log = new BufferingLog();
         extractor = new JavaDocExtractor(log);
 
-        javaSourceExcludeFilter = new ArrayList<Filter<File>>();
+        javaSourceExcludeFilter = new ArrayList<>();
         javaSourceExcludeFilter.add(new PatternFileFilter(Collections.singletonList("\\.java"), false));
     }
 

@@ -41,8 +41,8 @@ public class ExampleXmlWrapper implements Serializable {
 
     public ExampleXmlWrapper() {
 
-        this.strings = new ArrayList<String>();
-        this.integerSet = new TreeSet<Integer>();
+        this.strings = new ArrayList<>();
+        this.integerSet = new TreeSet<>();
     }
 
     public List<String> getStrings() {

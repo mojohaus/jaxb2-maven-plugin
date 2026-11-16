@@ -69,7 +69,7 @@ public class ToolExecutionEnvironment extends AbstractLogAwareFacet {
         this.builder = builder;
         this.loggingHandlerEnvironmentFacet = loggingHandlerFacet;
         this.localeFacet = localeFacet;
-        extraFacets = new ArrayList<EnvironmentFacet>();
+        extraFacets = new ArrayList<>();
     }
 
     /**

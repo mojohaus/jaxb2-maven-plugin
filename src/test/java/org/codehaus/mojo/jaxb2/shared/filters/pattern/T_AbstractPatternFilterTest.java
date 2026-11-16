@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class T_AbstractPatternFilterTest {
 
-    private static final StringConverter<String> UNITY_STRING_CONVERTER = new StringConverter<String>() {
+    private static final StringConverter<String> UNITY_STRING_CONVERTER = new StringConverter<>() {
         @Override
         public String convert(final String toConvert) {
             return toConvert;

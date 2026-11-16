@@ -42,8 +42,8 @@ public class ExampleEnumHolder implements Serializable {
 
     public ExampleEnumHolder() {
 
-        this.coins = new ArrayList<AmericanCoin>();
-        this.foodPreferences = new TreeSet<FoodPreference>();
+        this.coins = new ArrayList<>();
+        this.foodPreferences = new TreeSet<>();
     }
 
     public List<AmericanCoin> getCoins() {

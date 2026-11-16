@@ -44,6 +44,6 @@ class XsdAnnotationProcessorTest extends AbstractSourceCodeAwareNodeProcessingTe
      */
     @Override
     protected List<Class<?>> getJaxbAnnotatedClassesForJaxbContext() {
-        return Arrays.<Class<?>>asList(SomewhatNamedPerson.class, ExampleXmlWrapper.class);
+        return Arrays.asList(SomewhatNamedPerson.class, ExampleXmlWrapper.class);
     }
 }

@@ -120,12 +120,12 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             Arrays.asList("com.sun.source.util", "com.sun.source.tree");
 
     static {
-        final List<Filter<File>> schemagenTmp = new ArrayList<Filter<File>>();
+        final List<Filter<File>> schemagenTmp = new ArrayList<>();
         schemagenTmp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         schemagenTmp.add(new PatternFileFilter(Arrays.asList("\\.java", "\\.scala", "\\.mdo"), false));
         STANDARD_BYTECODE_EXCLUDE_FILTERS = Collections.unmodifiableList(schemagenTmp);
 
-        CLASS_INCLUDE_FILTERS = new ArrayList<Filter<File>>();
+        CLASS_INCLUDE_FILTERS = new ArrayList<>();
         CLASS_INCLUDE_FILTERS.add(new PatternFileFilter(Arrays.asList("\\.class"), true));
     }
 
@@ -505,7 +505,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                         }
 
                         // Resolve the sources
-                        final List<File> fileSources = new ArrayList<File>();
+                        final List<File> fileSources = new ArrayList<>();
                         for (URL current : sources) {
                             if ("file".equalsIgnoreCase(current.getProtocol())) {
                                 final File toAdd = FileSystemUtilities.getFileFor(current, getEncoding(true));
@@ -576,10 +576,16 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
                 //
                 StringBuilder rootCauseBuilder = new StringBuilder();
                 rootCauseBuilder.append("\n");
-                rootCauseBuilder.append("[Exception]: " + current.getClass().getName() + "\n");
-                rootCauseBuilder.append("[Message]: " + current.getMessage() + "\n");
+                rootCauseBuilder
+                        .append("[Exception]: ")
+                        .append(current.getClass().getName())
+                        .append("\n");
+                rootCauseBuilder
+                        .append("[Message]: ")
+                        .append(current.getMessage())
+                        .append("\n");
                 for (StackTraceElement el : current.getStackTrace()) {
-                    rootCauseBuilder.append("         " + el.toString()).append("\n");
+                    rootCauseBuilder.append("         ").append(el.toString()).append("\n");
                 }
                 getLog().error(rootCauseBuilder.toString().replaceAll("[\r\n]+", "\n"));
 
@@ -714,7 +720,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     private List<String> getSchemaGeneratorSourceFiles(final List<URL> sources)
             throws IOException, MojoExecutionException {
 
-        final SortedMap<String, String> className2SourcePath = new TreeMap<String, String>();
+        final SortedMap<String, String> className2SourcePath = new TreeMap<>();
         final File baseDir = getProject().getBasedir();
         final File userDir = new File(System.getProperty("user.dir"));
         final String encoding = getEncoding(true);
@@ -912,7 +918,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
         }
 
         // Sort the source paths and place them first in the argument array
-        final ArrayList<String> toReturn = new ArrayList<String>(className2SourcePath.values());
+        final ArrayList<String> toReturn = new ArrayList<>(className2SourcePath.values());
         Collections.sort(toReturn);
 
         // All Done.
@@ -928,8 +934,10 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             throws MojoExecutionException {
 
         final StringBuilder errorMsgBuilder = new StringBuilder();
-        errorMsgBuilder.append(
-                "\n+=================== [SchemaGenerator Error '" + (result == -1 ? "<unknown>" : result) + "']\n");
+        errorMsgBuilder
+                .append("\n+=================== [SchemaGenerator Error '")
+                .append(result == -1 ? "<unknown>" : result)
+                .append("']\n");
         errorMsgBuilder.append("|\n");
         errorMsgBuilder.append("| SchemaGen did not complete its operation correctly.\n");
         errorMsgBuilder.append("|\n");
@@ -943,13 +951,15 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             builder.append(current).append(" ");
         }
 
-        errorMsgBuilder.append("| " + builder.toString() + "\n");
+        errorMsgBuilder.append("| ").append(builder.toString()).append("\n");
         errorMsgBuilder.append("|\n");
         errorMsgBuilder.append("| The following source files should be processed by schemagen:\n");
 
         for (int i = 0; i < sources.size(); i++) {
             errorMsgBuilder
-                    .append("| " + i + ": ")
+                    .append("| ")
+                    .append(i)
+                    .append(": ")
                     .append(sources.get(i).toString())
                     .append("\n");
         }

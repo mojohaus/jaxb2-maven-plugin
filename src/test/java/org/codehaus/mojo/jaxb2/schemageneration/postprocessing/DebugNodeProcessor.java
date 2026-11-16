@@ -12,7 +12,7 @@ public class DebugNodeProcessor implements NodeProcessor {
 
     // Internal state
     private NodeProcessor delegate;
-    private List<Node> acceptedNodes = new ArrayList<Node>();
+    private List<Node> acceptedNodes = new ArrayList<>();
 
     /**
      * Creates a new DebugNodeProcessor, delegating all calls to the provided NodeProcessor.

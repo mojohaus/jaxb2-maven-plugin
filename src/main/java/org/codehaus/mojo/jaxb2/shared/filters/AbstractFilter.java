@@ -62,7 +62,7 @@ public abstract class AbstractFilter<T> implements Filter<T> {
     protected AbstractFilter() {
 
         // Assign internal state
-        delayedLogMessages = new ArrayList<DelayedLogMessage>();
+        delayedLogMessages = new ArrayList<>();
         setProcessNullValues(false);
     }
 
@@ -112,7 +112,7 @@ public abstract class AbstractFilter<T> implements Filter<T> {
         // Assign internal state
         this.log = log;
 
-        if (delayedLogMessages.size() > 0) {
+        if (!delayedLogMessages.isEmpty()) {
             for (DelayedLogMessage current : delayedLogMessages) {
                 if (current.logLevel.equalsIgnoreCase("warn") && log.isWarnEnabled()) {
                     log.warn(current.message);

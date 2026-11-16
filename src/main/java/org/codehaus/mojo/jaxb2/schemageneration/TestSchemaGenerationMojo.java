@@ -81,7 +81,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
     public static final List<Filter<File>> STANDARD_TEST_SOURCE_EXCLUDE_FILTERS;
 
     static {
-        final List<Filter<File>> testSrcTemp = new ArrayList<Filter<File>>();
+        final List<Filter<File>> testSrcTemp = new ArrayList<>();
         testSrcTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         testSrcTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb", "\\.xsd", "\\.properties"), true));
         STANDARD_TEST_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(testSrcTemp);
@@ -188,7 +188,7 @@ public class TestSchemaGenerationMojo extends AbstractXsdGeneratorMojo {
         try {
             return FileSystemUtilities.filterFiles(
                     getProject().getBasedir(),
-                    (testSources == null) ? defaultTestSources : testSources,
+                    testSources == null ? defaultTestSources : testSources,
                     defaultTestSources,
                     getLog(),
                     "test-compiled bytecode",

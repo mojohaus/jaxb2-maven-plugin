@@ -166,7 +166,7 @@ public final class SystemPropertyChangeEnvironmentFacet extends AbstractLogAware
     /**
      * Builder class intended to simplify creating SystemPropertyChange EnvironmentFacets.
      */
-    public static class SystemPropertyChangesBuilder {
+    public static final class SystemPropertyChangesBuilder {
 
         // Internal state
         private List<SystemPropertyChangeEnvironmentFacet> toReturn;
@@ -178,7 +178,7 @@ public final class SystemPropertyChangeEnvironmentFacet extends AbstractLogAware
             Validate.notNull(mavenLog, "mavenLog");
 
             // Assign internal state
-            this.toReturn = new ArrayList<SystemPropertyChangeEnvironmentFacet>();
+            this.toReturn = new ArrayList<>();
             this.mavenLog = mavenLog;
         }
 

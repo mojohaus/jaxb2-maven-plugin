@@ -38,7 +38,7 @@ class DomHelperTest {
         final Element restrictionElement = getChildOf(simpleTypeElement, "restriction", null);
 
         // Act
-        final List<Element> enumElements = new ArrayList<Element>();
+        final List<Element> enumElements = new ArrayList<>();
         final NodeList childNodes = restrictionElement.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
 
@@ -49,7 +49,7 @@ class DomHelperTest {
             }
         }
 
-        final Map<String, String> xpath2ValueMap = new TreeMap<String, String>();
+        final Map<String, String> xpath2ValueMap = new TreeMap<>();
         for (Element current : enumElements) {
             final String currentXPath = DomHelper.getXPathFor(current);
             xpath2ValueMap.put(currentXPath, DomHelper.getValueAttribute(current));

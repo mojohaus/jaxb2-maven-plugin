@@ -36,7 +36,7 @@ public final class ArgumentBuilder {
     private final Object lock = new Object();
     private static final int NOT_FOUND = -1;
     private static final char DASH = '-';
-    private List<String> arguments = new ArrayList<String>();
+    private List<String> arguments = new ArrayList<>();
 
     /**
      * <p>Retrieves all arguments as a string array, usable by a method accepting a String[] for argument.

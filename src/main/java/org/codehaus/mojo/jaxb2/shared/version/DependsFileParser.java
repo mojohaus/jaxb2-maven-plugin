@@ -148,7 +148,7 @@ public final class DependsFileParser {
         // Check sanity
         Validate.notNull(anURL, "anURL");
 
-        final SortedMap<String, String> toReturn = new TreeMap<String, String>();
+        final SortedMap<String, String> toReturn = new TreeMap<>();
 
         try {
             final BufferedReader in = new BufferedReader(new InputStreamReader(anURL.openStream()));
@@ -198,7 +198,7 @@ public final class DependsFileParser {
         // Check sanity
         Validate.notNull(versionMap, "anURL");
 
-        final SortedMap<String, DependencyInfo> toReturn = new TreeMap<String, DependencyInfo>();
+        final SortedMap<String, DependencyInfo> toReturn = new TreeMap<>();
 
         // First, only find the version lines.
         for (Map.Entry<String, String> current : versionMap.entrySet()) {

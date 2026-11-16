@@ -113,12 +113,12 @@ public class TestXjcMojo extends AbstractJavaGeneratorMojo {
     public static final List<Filter<File>> STANDARD_TEST_XJB_EXCLUDE_FILTERS;
 
     static {
-        final List<Filter<File>> xjbTemp = new ArrayList<Filter<File>>();
+        final List<Filter<File>> xjbTemp = new ArrayList<>();
         xjbTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         xjbTemp.add(new PatternFileFilter(Arrays.asList("\\.xsd"), true));
         STANDARD_TEST_XJB_EXCLUDE_FILTERS = Collections.unmodifiableList(xjbTemp);
 
-        final List<Filter<File>> xsdTemp = new ArrayList<Filter<File>>();
+        final List<Filter<File>> xsdTemp = new ArrayList<>();
         xsdTemp.addAll(AbstractJaxbMojo.STANDARD_EXCLUDE_FILTERS);
         xsdTemp.add(new PatternFileFilter(Arrays.asList("\\.xjb"), true));
         STANDARD_TEST_SOURCE_EXCLUDE_FILTERS = Collections.unmodifiableList(xsdTemp);

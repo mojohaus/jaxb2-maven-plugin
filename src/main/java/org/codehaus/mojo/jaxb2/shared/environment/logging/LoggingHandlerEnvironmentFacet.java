@@ -76,7 +76,7 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
         Validate.notNull(loggerNamePrefixes, "loggerNamePrefixes");
 
         // Assign internal state
-        this.originalHandlers = new ArrayList<Handler>();
+        this.originalHandlers = new ArrayList<>();
         this.logPrefix = logPrefix;
         rootLogger = Logger.getLogger("");
         originalRootLoggerLevel = rootLogger.getLevel();
