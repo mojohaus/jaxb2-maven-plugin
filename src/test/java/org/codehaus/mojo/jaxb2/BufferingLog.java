@@ -111,6 +111,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void debug(CharSequence content, Throwable error) {
         addLogEntry(LogLevel.DEBUG, content, error);
     }
@@ -118,6 +119,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void debug(CharSequence content) {
         debug(content, null);
     }
@@ -125,6 +127,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void debug(Throwable error) {
         debug("", error);
     }
@@ -132,6 +135,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void info(CharSequence content, Throwable error) {
         addLogEntry(LogLevel.INFO, content, error);
     }
@@ -139,6 +143,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void info(CharSequence content) {
         info(content, null);
     }
@@ -146,6 +151,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void info(Throwable error) {
         info("", error);
     }
@@ -153,6 +159,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void warn(CharSequence content, Throwable error) {
         addLogEntry(LogLevel.WARN, content, error);
     }
@@ -160,6 +167,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void warn(CharSequence content) {
         warn(content, null);
     }
@@ -167,6 +175,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void warn(Throwable error) {
         warn("", error);
     }
@@ -174,6 +183,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void error(final CharSequence content, final Throwable error) {
         addLogEntry(LogLevel.ERROR, content, error);
     }
@@ -181,6 +191,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void error(CharSequence content) {
         error(content, null);
     }
@@ -188,6 +199,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void error(final Throwable error) {
         error("", error);
     }
@@ -195,6 +207,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isDebugEnabled() {
         return isLogEnabledFor(LogLevel.DEBUG);
     }
@@ -202,6 +215,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isInfoEnabled() {
         return isLogEnabledFor(LogLevel.INFO);
     }
@@ -209,6 +223,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isWarnEnabled() {
         return isLogEnabledFor(LogLevel.WARN);
     }
@@ -216,6 +231,7 @@ public class BufferingLog implements Log {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isErrorEnabled() {
         return isLogEnabledFor(LogLevel.ERROR);
     }

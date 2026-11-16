@@ -78,7 +78,7 @@ public abstract class AbstractJaxbMojo extends AbstractMojo {
     /**
      * Platform-independent newline control string.
      */
-    public static final String NEWLINE = System.getProperty("line.separator");
+    public static final String NEWLINE = System.lineSeparator();
 
     /**
      * Pattern matching strings containing whitespace (or consisting only of whitespace).

@@ -86,6 +86,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getNamespaceURI(final String prefix) {
         if (prefix == null) {
             // Be compliant with the JAXB contract for NamespaceResolver.
@@ -98,6 +99,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getPrefix(final String namespaceURI) {
         if (namespaceURI == null) {
             // Be compliant with the JAXB contract for NamespaceResolver.
@@ -110,6 +112,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Iterator<String> getPrefixes(final String namespaceURI) {
         if (namespaceURI == null) {
             // Be compliant with the JAXB contract for NamespaceResolver.
@@ -203,6 +206,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
          * @param aNode The DOM node to process.
          * @return <code>true</code> if the provided Node should be processed by this NodeProcessor.
          */
+        @Override
         public boolean accept(final Node aNode) {
 
             // Correct namespace?
@@ -233,6 +237,7 @@ public class SimpleNamespaceResolver implements NamespaceContext {
          *
          * @param aNode The DOM Node to process.
          */
+        @Override
         public void process(final Node aNode) {
 
             // If we have no namespace, use the DEFAULT_NS as the prefix

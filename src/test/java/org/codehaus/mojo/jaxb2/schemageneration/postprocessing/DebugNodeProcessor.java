@@ -27,6 +27,7 @@ public class DebugNodeProcessor implements NodeProcessor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept(Node aNode) {
         final boolean accepted = delegate.accept(aNode);
         if (accepted) {
@@ -39,6 +40,7 @@ public class DebugNodeProcessor implements NodeProcessor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void process(Node aNode) {
         delegate.process(aNode);
     }

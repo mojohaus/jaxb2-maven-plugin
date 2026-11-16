@@ -80,6 +80,7 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept(final Node aNode) {
 
         if (oldPrefix.equals(aNode.getPrefix())) {
@@ -107,6 +108,7 @@ public class ChangeNamespacePrefixProcessor implements NodeProcessor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void process(final Node aNode) {
 
         if (aNode instanceof Attr) {

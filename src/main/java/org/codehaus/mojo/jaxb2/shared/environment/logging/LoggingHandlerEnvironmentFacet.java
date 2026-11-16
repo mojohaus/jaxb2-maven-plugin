@@ -111,6 +111,7 @@ public class LoggingHandlerEnvironmentFacet extends AbstractLogAwareFacet {
     /**
      * Restores the original root Logger state, including Level and Handlers.
      */
+    @Override
     public void restore() {
 
         if (!restored) {
