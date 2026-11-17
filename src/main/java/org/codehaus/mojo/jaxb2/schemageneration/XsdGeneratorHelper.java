@@ -165,13 +165,13 @@ public final class XsdGeneratorHelper {
             final String currentFile = current.getToFile();
 
             // We cannot work with a null or empty uri
-            if (currentURI == null || currentURI.isEmpty()) {
+            if (StringUtils.isEmpty(currentURI)) {
                 throw new MojoExecutionException(MISCONFIG + "Null or empty property 'uri' found in "
                         + "plugin configuration for schema element at index [" + i + "]: " + current);
             }
 
             // No point in having *only* a namespace.
-            if ((currentPrefix == null || currentPrefix.isEmpty()) && (currentFile == null || currentFile.isEmpty())) {
+            if (StringUtils.isEmpty(currentPrefix) && StringUtils.isEmpty(currentFile)) {
                 throw new MojoExecutionException(MISCONFIG + "Null or empty properties 'prefix' "
                         + "and 'file' found within plugin configuration for schema element at index ["
                         + i + "]: " + current);
@@ -277,13 +277,13 @@ public final class XsdGeneratorHelper {
 
         for (SimpleNamespaceResolver currentResolver : resolverMap.values()) {
             final String targetNamespaceUri = currentResolver.getLocalNamespaceURI();
-            if (targetNamespaceUri == null || targetNamespaceUri.isEmpty()) {
+            if (StringUtils.isEmpty(targetNamespaceUri)) {
                 continue;
             }
 
             final String targetNamespacePrefix =
                     currentResolver.getNamespaceURI2PrefixMap().get(targetNamespaceUri);
-            if (targetNamespacePrefix == null || targetNamespacePrefix.isEmpty()) {
+            if (StringUtils.isEmpty(targetNamespacePrefix)) {
                 continue;
             }
 
@@ -342,14 +342,14 @@ public final class XsdGeneratorHelper {
                 final String newPrefix = currentTransformSchema.getToPrefix();
                 final String currentUri = currentTransformSchema.getUri();
 
-                if (newPrefix != null && !newPrefix.isEmpty()) {
+                if (StringUtils.isNotEmpty(newPrefix)) {
                     // Find the old/current prefix of the namespace for the current schema uri.
                     final String oldPrefix =
                             currentResolver.getNamespaceURI2PrefixMap().get(currentUri);
 
                     // Substituting a prefix onto itself would remove the namespace declaration, since the
                     // ChangeNamespacePrefixProcessor writes the new xmlns attribute before removing the old one.
-                    if ((oldPrefix != null && !oldPrefix.isEmpty()) && !oldPrefix.equals(newPrefix)) {
+                    if (StringUtils.isNotEmpty(oldPrefix) && !oldPrefix.equals(newPrefix)) {
                         // Can we perform the prefix substitution?
                         validatePrefixSubstitutionIsPossible(oldPrefix, newPrefix, currentResolver);
 
@@ -404,7 +404,7 @@ public final class XsdGeneratorHelper {
         // Create the map relating namespace URI to desired filenames.
         Map<String, String> namespaceUriToDesiredFilenameMap = new TreeMap<>();
         for (TransformSchema current : configuredTransformSchemas) {
-            if (current.getToFile() != null && !current.getToFile().isEmpty()) {
+            if (StringUtils.isNotEmpty(current.getToFile())) {
                 namespaceUriToDesiredFilenameMap.put(current.getUri(), current.getToFile());
             }
         }
@@ -432,7 +432,7 @@ public final class XsdGeneratorHelper {
         for (SimpleNamespaceResolver currentResolver : resolverMap.values()) {
             final String localNamespaceURI = currentResolver.getLocalNamespaceURI();
 
-            if (localNamespaceURI == null || localNamespaceURI.isEmpty()) {
+            if (StringUtils.isEmpty(localNamespaceURI)) {
                 mavenLog.warn("SimpleNamespaceResolver contained no localNamespaceURI; aborting rename.");
                 continue;
             }
@@ -440,7 +440,7 @@ public final class XsdGeneratorHelper {
             final String newFilename = namespaceUriToDesiredFilenameMap.get(localNamespaceURI);
             final File originalFile = new File(schemaDirectory, currentResolver.getSourceFilename());
 
-            if (newFilename != null && !newFilename.isEmpty()) {
+            if (StringUtils.isNotEmpty(newFilename)) {
                 File renamedFile = FileUtils.resolveFile(schemaDirectory, newFilename);
                 String renameResult = originalFile.renameTo(renamedFile) ? "Success " : "Failure ";
 
