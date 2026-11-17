@@ -26,8 +26,12 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -528,7 +532,7 @@ public final class FileSystemUtilities {
         // Clean an existing directory?
         if (cleanBeforeCreate) {
             try {
-                FileUtils.deleteDirectory(aDirectory);
+                FileSystemUtilities.deleteDirectory(aDirectory.toPath());
             } catch (IOException e) {
                 throw new MojoExecutionException("Could not clean directory [" + getCanonicalPath(aDirectory) + "]", e);
             }
@@ -746,6 +750,46 @@ public final class FileSystemUtilities {
             if (EXISTING_DIRECTORY.accept(current)) {
                 recurseAndPopulate(toPopulate, fileFilters, current, excludeOperation, log);
             }
+        }
+    }
+
+    static void deleteDirectory(final Path directory) throws IOException {
+        if (!Files.exists(directory)) {
+            return;
+        }
+        final IOException[] failure = new IOException[1];
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                try {
+                    Files.delete(file);
+                } catch (IOException e) {
+                    failure[0] = e;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                failure[0] = exc;
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                if (exc != null) {
+                    failure[0] = exc;
+                }
+                try {
+                    Files.delete(dir);
+                } catch (IOException e) {
+                    failure[0] = e;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        if (failure[0] != null) {
+            throw failure[0];
         }
     }
 }
