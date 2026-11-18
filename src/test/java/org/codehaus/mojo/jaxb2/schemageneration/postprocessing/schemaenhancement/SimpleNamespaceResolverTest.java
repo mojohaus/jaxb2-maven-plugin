@@ -89,16 +89,7 @@ public class SimpleNamespaceResolverTest {
         final File nonExistent = new File(nonExistentPath);
 
         // Act & Assert
-        try {
-            new SimpleNamespaceResolver(nonExistent);
-            fail("Creating a SimpleNamespaceResolver connected to a nonexistent file "
-                    + "should yield an IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected
-        } catch (Exception e) {
-            fail("Expected IllegalArgumentException, but received ["
-                    + e.getClass().getName() + "]");
-        }
+        assertThrows(IllegalArgumentException.class, () -> new SimpleNamespaceResolver(nonExistent));
     }
 
     @Test
@@ -110,35 +101,9 @@ public class SimpleNamespaceResolverTest {
         final String incorrectNull = null;
 
         // Act & Assert
-        try {
-            unitUnderTest.getPrefix(incorrectNull);
-            fail("Running getPrefix with a null argument should yield an IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected
-        } catch (Exception e) {
-            fail("Expected IllegalArgumentException, but received ["
-                    + e.getClass().getName() + "]");
-        }
-
-        try {
-            unitUnderTest.getNamespaceURI(incorrectNull);
-            fail("Running getNamespaceURI with a null argument should yield an IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected
-        } catch (Exception e) {
-            fail("Expected IllegalArgumentException, but received ["
-                    + e.getClass().getName() + "]");
-        }
-
-        try {
-            unitUnderTest.getPrefixes(incorrectNull);
-            fail("Running getPrefixes with a null argument should yield an IllegalArgumentException.");
-        } catch (IllegalArgumentException e) {
-            // Expected
-        } catch (Exception e) {
-            fail("Expected IllegalArgumentException, but received ["
-                    + e.getClass().getName() + "]");
-        }
+        assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getPrefix(incorrectNull));
+        assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getNamespaceURI(incorrectNull));
+        assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getPrefixes(incorrectNull));
     }
 
     @Test
