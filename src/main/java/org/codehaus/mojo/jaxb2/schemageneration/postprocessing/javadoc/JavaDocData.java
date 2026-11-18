@@ -110,7 +110,7 @@ public class JavaDocData {
         toReturn.append("\n+=================\n");
         toReturn.append("| Comment: ").append(comment).append("\n");
 
-        if (tag2ValueMap.size() == 0) {
+        if (tag2ValueMap.isEmpty()) {
             toReturn.append("| No JavaDoc tags.\n");
         } else {
 

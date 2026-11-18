@@ -437,9 +437,6 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
             try {
 
-                // Check the system properties.
-                // logSystemPropertiesAndBasedir();
-
                 // Fire the SchemaGenerator
                 final int result = SchemaGenerator.run(
                         schemaGenArguments, Thread.currentThread().getContextClassLoader());
