@@ -58,8 +58,7 @@ The XJC and Schemagen tools are not taken from the JDK; they come in as the `jax
 
 ## Continuous integration
 
-- `.github/workflows/maven.yml` calls the shared `maven-verify.yml@v5` workflow from
-  `apache/maven-gh-actions-shared`, with `-P run-its install` as the build goal.
+- `.github/workflows/maven.yml` calls the MojoHaus `maven-verify.yml` workflow in `mojohaus/.github`. It uses `-P run-its install` as the build goal.
 - Branches pushed to this repository build under the `push` event.
 
 ## Dependencies
@@ -71,6 +70,6 @@ The XJC and Schemagen tools are not taken from the JDK; they come in as the `jax
 ## Pull requests
 
 - Squash and rebase merges are enabled; merge commits are not. Release Drafter, through the shared
-  `apache/maven-gh-actions-shared` workflow, builds the release notes from pull request titles
+  MojoHaus `release-drafter.yml` workflow in `mojohaus/.github`, builds the release notes from pull request titles
   and labels, so the title should describe the change for a user.
 
