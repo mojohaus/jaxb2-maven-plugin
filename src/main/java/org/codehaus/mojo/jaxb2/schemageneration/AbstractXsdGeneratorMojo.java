@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,7 +63,6 @@ import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironm
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.util.FileUtils;
 
 /**
  * <p>Abstract superclass for Mojos that generate XSD files from annotated Java Sources.
@@ -443,7 +444,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
                 if (tempEpisodeFile != null && tempEpisodeFile.exists()) {
                     FileSystemUtilities.createDirectory(episodeFile.getParentFile(), false);
-                    FileUtils.copyFile(tempEpisodeFile, episodeFile);
+                    Files.copy(
+                            tempEpisodeFile.toPath(),
+                            episodeFile.toPath(),
+                            StandardCopyOption.REPLACE_EXISTING,
+                            StandardCopyOption.COPY_ATTRIBUTES);
                     tempEpisodeFile.delete();
                 }
 
@@ -473,7 +478,11 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 
                     // Copy the file to the same relative structure within the output directory.
                     FileSystemUtilities.createDirectory(target.getParentFile(), false);
-                    FileUtils.copyFile(current, target);
+                    Files.copy(
+                            current.toPath(),
+                            target.toPath(),
+                            StandardCopyOption.REPLACE_EXISTING,
+                            StandardCopyOption.COPY_ATTRIBUTES);
                 }
 
                 //

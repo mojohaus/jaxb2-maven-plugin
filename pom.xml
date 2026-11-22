@@ -116,7 +116,6 @@
     <mojo.java.target>11</mojo.java.target>
 
     <!-- Plexus component versions -->
-    <plexus-utils.version>4.2.0</plexus-utils.version>
     <plexus-build-api.version>0.0.7</plexus-build-api.version>
 
     <!-- JAXB tooling versions -->
@@ -255,11 +254,6 @@
     </dependency>
 
     <!-- Plexus components dependencies -->
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-      <version>${plexus-utils.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.sonatype.plexus</groupId>
       <artifactId>plexus-build-api</artifactId>

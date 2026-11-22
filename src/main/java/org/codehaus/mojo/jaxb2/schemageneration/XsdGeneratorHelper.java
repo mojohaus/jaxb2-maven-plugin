@@ -59,8 +59,6 @@ import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.schemaenhancement.TransformSchema;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -290,9 +288,7 @@ public final class XsdGeneratorHelper {
             final File generatedSchemaFile = new File(schemaDirectory, currentResolver.getSourceFilename());
             final Document document = parseXmlToDocument(generatedSchemaFile, encoding);
             final Element schemaElement = document.getDocumentElement();
-            final boolean hasDefaultNamespace = schemaElement != null
-                    && (schemaElement.hasAttribute("xmlns")
-                            || StringUtils.isNotEmpty(schemaElement.getAttribute("xmlns")));
+            final boolean hasDefaultNamespace = schemaElement != null && schemaElement.hasAttribute("xmlns");
 
             if (!hasDefaultNamespace) {
                 final QualifyTargetNamespaceReferencesProcessor processor =
@@ -441,7 +437,11 @@ public final class XsdGeneratorHelper {
             final File originalFile = new File(schemaDirectory, currentResolver.getSourceFilename());
 
             if (newFilename != null && !newFilename.isEmpty()) {
-                File renamedFile = FileUtils.resolveFile(schemaDirectory, newFilename);
+                File renamedFile = schemaDirectory
+                        .toPath()
+                        .resolve(newFilename)
+                        .normalize()
+                        .toFile();
                 String renameResult = originalFile.renameTo(renamedFile) ? "Success " : "Failure ";
 
                 if (mavenLog.isDebugEnabled()) {
