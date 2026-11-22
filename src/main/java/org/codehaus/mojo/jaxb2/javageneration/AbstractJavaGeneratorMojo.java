@@ -20,11 +20,13 @@ package org.codehaus.mojo.jaxb2.javageneration;
  */
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +48,6 @@ import org.codehaus.mojo.jaxb2.shared.environment.locale.LocaleFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.logging.LoggingHandlerEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertyChangeEnvironmentFacet;
 import org.codehaus.mojo.jaxb2.shared.environment.sysprops.SystemPropertySaveEnvironmentFacet;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 
 /**
  * <p>Abstract superclass for Mojos generating Java source or binaries from XML schema(s) by invoking the JAXB XJC
@@ -574,7 +574,7 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
                 final String buildOutputDirectory = getProject().getBuild().getOutputDirectory();
                 final File targetXsdDirectory = new File(buildOutputDirectory, xsdPathWithinArtifact);
-                FileUtils.forceMkdir(targetXsdDirectory);
+                Files.createDirectories(targetXsdDirectory.toPath());
 
                 for (URL current : getSources()) {
 
@@ -604,7 +604,9 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
                         getLog().warn("File [" + FileSystemUtilities.getCanonicalPath(targetFile)
                                 + "] already exists. Not copying XSD file [" + current.getPath() + "] to it.");
                     }
-                    IOUtil.copy(current.openStream(), new FileWriter(targetFile));
+                    try (InputStream xsd = current.openStream()) {
+                        Files.copy(xsd, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    }
                 }
 
                 // Refresh the BuildContext

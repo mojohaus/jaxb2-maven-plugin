@@ -35,6 +35,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -44,14 +45,11 @@ import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.jaxb2.AbstractJaxbMojo;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * The Jaxb2 Maven Plugin needs to fiddle with the filesystem a great deal, to create and optionally prune
  * directories or detect/create various files. This utility class contains all such algorithms, and serves as
- * an entry point to any Plexus Utils methods.
+ * an entry point to the filesystem operations used by the plugin.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
  * @since 2.0
@@ -95,12 +93,14 @@ public final class FileSystemUtilities {
         return getCanonicalFile(file).getPath();
     }
 
+    private static final boolean IS_WINDOWS =
+            System.getProperty("os.name").toLowerCase(Locale.US).contains("windows");
+
     /**
      * Non-valid Characters for naming files, folders under Windows: <code>":", "*", "?", "\"", "<", ">", "|"</code>
      *
      * @see <a href="http://support.microsoft.com/?scid=kb%3Ben-us%3B177506&x=12&y=13">
      * http://support.microsoft.com/?scid=kb%3Ben-us%3B177506&x=12&y=13</a>
-     * @see org.codehaus.plexus.util.FileUtils
      */
     private static final String[] INVALID_CHARACTERS_FOR_WINDOWS_FILE_NAME = {":", "*", "?", "\"", "<", ">", "|"};
 
@@ -725,12 +725,23 @@ public final class FileSystemUtilities {
         }
     }
 
+    private static boolean isValidWindowsFileName(final File file) {
+        for (File current = file; current != null; current = current.getParentFile()) {
+            for (String invalidCharacter : INVALID_CHARACTERS_FOR_WINDOWS_FILE_NAME) {
+                if (current.getName().contains(invalidCharacter)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private static void validateFileOrDirectoryName(final File fileOrDir) {
 
-        if (Os.isFamily(Os.FAMILY_WINDOWS) && !FileUtils.isValidWindowsFileName(fileOrDir)) {
+        if (IS_WINDOWS && !isValidWindowsFileName(fileOrDir)) {
             throw new IllegalArgumentException(
                     "The file (" + fileOrDir + ") cannot contain any of the following characters: \n"
-                            + StringUtils.join(INVALID_CHARACTERS_FOR_WINDOWS_FILE_NAME, " "));
+                            + String.join(" ", INVALID_CHARACTERS_FOR_WINDOWS_FILE_NAME));
         }
     }
 
