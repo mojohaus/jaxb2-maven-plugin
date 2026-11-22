@@ -11,7 +11,7 @@ in `javageneration`) and `schemagen` and `testSchemagen` (`SchemaGenerationMojo`
 The XJC and Schemagen tools are not taken from the JDK; they come in as the `jaxb-xjc` and
 `jaxb-jxc` dependencies.
 
-- The site is built from `src/site/markdown`, with the FAQ in `src/site/fml/faq.fml`.
+- The site is built from `src/site/markdown`, including the FAQ (`faq.md`).
 
 ## Build gates
 
