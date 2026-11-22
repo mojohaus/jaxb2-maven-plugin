@@ -24,7 +24,7 @@ package org.codehaus.mojo.jaxb2.javageneration;
  * The constants are duplicated in lowercase since Maven's Mojo argument matcher is case sensitive.
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
- * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
+ * @see <a href="https://eclipse-ee4j.github.io/jaxb-ri/">The JAXB Reference Implementation</a>
  * @since 2.0
  */
 public enum SourceContentType {

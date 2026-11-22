@@ -10,11 +10,11 @@ file.
 This type of operation is done with a Filter, which - in this case - identifies Files to exclude
 from the normal operation. The Java world sports several projects that define Filters, such as
 [the filter definitions in Apache ANT](https://ant.apache.org/manual/Tasks/filter.html),
-the [LambdaJ](https://code.google.com/p/lambdaj/) from Google or the JDK 8 `java.util.stream`
+the [LambdaJ](https://github.com/mariofusco/lambdaj) from Google or the JDK 8 `java.util.stream`
 collection filtering. Most of these implementations, however, work in slightly different ways
 which tends to complicate the life of us programmers quite a bit. Just remembering the exact
 syntax to create a Filter from one of these projects can be somewhat problematic. Moreover, the
-JDK 8 mechanics cannot be used as the jaxb2-maven-plugin must be binary compatible with JDK 1.6+.
+the jaxb2-maven-plugin therefore defines its own Filter types, described below.
 
 ## Filters in the JAXB2 Maven Plugin
 

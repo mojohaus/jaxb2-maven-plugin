@@ -49,7 +49,7 @@ import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
  * upgrading from version 1.x of the plugin, read the documentation carefully.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
- * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
+ * @see <a href="https://eclipse-ee4j.github.io/jaxb-ri/">The JAXB Reference Implementation</a>
  */
 @Mojo(
         name = "testXjc",

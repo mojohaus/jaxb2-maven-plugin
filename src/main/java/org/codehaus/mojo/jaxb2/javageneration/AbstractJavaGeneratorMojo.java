@@ -52,11 +52,11 @@ import org.codehaus.plexus.util.IOUtil;
 /**
  * <p>Abstract superclass for Mojos generating Java source or binaries from XML schema(s) by invoking the JAXB XJC
  * binding compiler. Most of the Configuration options for the AbstractJavaGeneratorMojo are set or copied to the
- * XJC directly; refer to their documentation in the <a href="https://jaxb.java.net/">JAXB Reference Implementation</a>
+ * XJC directly; refer to their documentation in the <a href="https://eclipse-ee4j.github.io/jaxb-ri/">JAXB Reference Implementation</a>
  * site.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
- * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
+ * @see <a href="https://eclipse-ee4j.github.io/jaxb-ri/">The JAXB Reference Implementation</a>
  */
 public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
@@ -300,8 +300,9 @@ public abstract class AbstractJavaGeneratorMojo extends AbstractJaxbMojo {
 
     /**
      * <p>Corresponding XJC parameter: {@code target}.</p>
-     * <p>Permitted values: {@code "2.0"} and {@code "2.1"}. Avoid generating code that relies on JAXB newer than the
-     * version given. This will allow the generated code to run with JAXB 2.0 runtime (such as JavaSE 6.)</p>
+     * <p>Permitted values: {@code "2.3"} and {@code "3.0"}, the versions the bundled XJC accepts. Avoid generating
+     * code that relies on JAXB newer than the version given. This will allow the generated code to run with an older
+     * JAXB runtime, such as the {@code jakarta.xml.bind} 3.0 one.</p>
      *
      * @since 1.3
      */

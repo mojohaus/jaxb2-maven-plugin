@@ -1,7 +1,7 @@
 # About the Jaxb2-Maven-Plugin
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.codehaus.mojo/jaxb2-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.codehaus.mojo/jaxb2-maven-plugin)
-[![Build Status](https://github.com/mojohaus/jaxb2-maven-plugin/actions/workflows/maven.yml/badge.svg)](https://github.com/mojohaus/jaxb2-maven-plugin/actions/workflows/maven.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.codehaus.mojo/jaxb2-maven-plugin.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/org.codehaus.mojo/jaxb2-maven-plugin)
+[![Build Status](https://github.com/mojohaus/jaxb2-maven-plugin/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/mojohaus/jaxb2-maven-plugin/actions/workflows/maven.yml?query=branch%3Amaster)
 
 This Maven plugin uses Jakarta XML Binding to perform one of 2 main tasks:
 
@@ -14,6 +14,8 @@ Both tools were part of the JDK up to and including Java 8, and were removed fro
 therefore brings its own copies along as ordinary dependencies (`jaxb-xjc` and `jaxb-jxc`), which is why the
 generated code follows the Jakarta XML Binding version those artifacts implement rather than anything supplied
 by the JDK in use. Since 3.0.0 that means the `jakarta.xml.bind` namespace; 2.x generated `javax.xml.bind`.
+
+The plugin requires Maven 3.9.0 or later and Java 11 or later.
 
 ## Documentation
 

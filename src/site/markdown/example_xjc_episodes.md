@@ -16,8 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-Modular JAXB compilation with dependency episodes
-==============================================-->
+
+# Modular JAXB compilation with dependency episodes
 
 When several Maven modules compile schemas that reference each other's namespaces, each module
 would normally re-generate Java classes for the shared namespace. A JAXB *episode* file tells
@@ -64,7 +64,7 @@ the re-used classes), and reference it within the `episodes` parameter:
   <dependency>
     <groupId>org.codehaus.mojo.jaxb2.its</groupId>
     <artifactId>xjc-episode-schema-a</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </dependency>
 </dependencies>
 
@@ -83,7 +83,7 @@ the re-used classes), and reference it within the `episodes` parameter:
           <episode>
             <groupId>org.codehaus.mojo.jaxb2.its</groupId>
             <artifactId>xjc-episode-schema-a</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
           </episode>
         </episodes>
       </configuration>
