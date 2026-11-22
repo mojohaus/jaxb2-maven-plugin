@@ -1,5 +1,5 @@
 /**
- * <p>The jaxb2-maven-plugin wraps and adapts the <a href="https://jaxb.java.net/">JAXB reference implementation</a>
+ * <p>The jaxb2-maven-plugin wraps and adapts the <a href="https://eclipse-ee4j.github.io/jaxb-ri/">JAXB reference implementation</a>
  * to be useful within the Maven build process.</p>
  * <p>The plugin's code is divided into 3 main blocks, each placed within a separate package structure:</p>
  *
@@ -15,6 +15,6 @@
  * </ol>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
- * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
+ * @see <a href="https://eclipse-ee4j.github.io/jaxb-ri/">The JAXB Reference Implementation</a>
  */
 package org.codehaus.mojo.jaxb2;

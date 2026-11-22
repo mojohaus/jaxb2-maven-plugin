@@ -70,7 +70,7 @@ import org.codehaus.plexus.util.FileUtils;
  * pipeline by optionally letting a set of NodeProcessors improve the 'vanilla' XSD files.</p>
  *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>
- * @see <a href="https://jaxb.java.net/">The JAXB Reference Implementation</a>
+ * @see <a href="https://eclipse-ee4j.github.io/jaxb-ri/">The JAXB Reference Implementation</a>
  */
 public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
 

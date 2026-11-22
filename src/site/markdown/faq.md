@@ -32,7 +32,7 @@ An example is given on the XJC usage page.
 
 ### What tool is used by the jaxb2-maven-plugin to generate the XML schema definition files?
 
-The *schemagen* tool used by the plugin is part of the JDK distribution since Java 6.
+The *schemagen* tool used by the plugin is the one from the JAXB reference implementation. It was part of the JDK up to Java 8, and the plugin brings it along as the `jaxb-jxc` dependency.
 
 The jaxb2-maven-plugin provides some augmentations to the generated schema files, such
 as the ability to define a schema prefix and filename for each generated XML schema.
@@ -106,11 +106,11 @@ member belongs to the namespace `"http://another/namespace"`, as defined on line
 ```java
 package se.west.schema;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(namespace = Namespaces.SOME_NAMESPACE,
         propOrder = {"requiredElement", "aRequiredElementInAnotherNamespace",
@@ -145,11 +145,11 @@ as defined on line 21.
 ```java
 package se.west.schema;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(namespace = Namespaces.ANOTHER_NAMESPACE,
         propOrder = {"requiredElement", "anOptionalElementInSomeNamespace",

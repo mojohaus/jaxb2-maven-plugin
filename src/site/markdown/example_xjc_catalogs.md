@@ -16,8 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-XML Catalogs and XSDs from Maven Dependencies
-==========================================-->
+
+# XML Catalogs and XSDs from Maven Dependencies
 
 When XML schemas import other schemas using public URLs or abstract system IDs (such as
 `http://example.com/schemas/common.xsd`), XJC needs to resolve these identifiers to local files
@@ -99,7 +99,6 @@ Configuring the Plugin in `pom.xml`
 <plugin>
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>jaxb2-maven-plugin</artifactId>
-  <version>4.1.1-SNAPSHOT</version>
   <executions>
     <execution>
       <id>xjc</id>

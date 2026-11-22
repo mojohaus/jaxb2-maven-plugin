@@ -1,30 +1,30 @@
 # Basic Examples - XML Schema Generation
 
-> **Note**: These examples are valid for the 2.x version of the plugin, and do not work for the 
+> **Note**: These examples are valid for the 2.x and later versions of the plugin, and do not work for the 
 > jaxb2-maven-plugin version 1.x
 
 These basic examples illustrate how to generate XSDs from JAXB-annotated Java classes using the jaxb2-maven-plugin,
-and highlight the use of some of the plugin's common configuration options. This plugin runs the JDK distribution's
-SchemaGenerator compiler (check JAVA_HOME/bin/schemagen), and integrates the SchemaGenerator's configuration properties
+and highlight the use of some of the plugin's common configuration options. This plugin runs the
+SchemaGenerator compiler from the JAXB distribution (the `jaxb-jxc` dependency), and integrates the SchemaGenerator's configuration properties
 into a Maven project. Also, the jaxb2-maven-plugin
 [performs post-processing on generated XSD files](./example_schemagen_postprocessing.html) to improve usability
 and quality of the XSD files generated. 
 
 > ### Jaxb2-Maven-Plugin and `Schemagen` known issues
 >  
-> The `Schemagen` tool has been around in the JDK for quite awhile, and should be considered a mature codebase. 
+> The `Schemagen` tool has been around for quite awhile, and should be considered a mature codebase. 
 > However, schemagen has some long-outstanding issues, as is shown by the
 > 
-> [SchemaGen Issue Tracker on GitHub](https://github.com/javaee/jaxb-v2/labels/Component%3A%20schemagen).
+> [SchemaGen Issue Tracker on GitHub](https://github.com/eclipse-ee4j/jaxb-ri/labels/Component%3A%20schemagen).
 > 
-> The Jaxb2-Maven-Plugin delegates its operations to the JDK-installed schemagen tool, and performs some 
+> The Jaxb2-Maven-Plugin delegates its operations to the schemagen tool of the JAXB distribution, and performs some 
 > post-processing operations to yield schemas with somewhat improved usability than the XSDs emitted by SchemaGen. 
 > However, the Jaxb2-Maven-Plugin does not aim to replace schemagen's implementation. Issues within SchemaGen 
 > must be solved in that codebase. 
 
 ## SchemaGenerator in the JDK
 
-The JDK contains the documentation for the SchemaGenerator arguments and switches. However, that documentation is
+The `schemagen` command line tool documents the SchemaGenerator arguments and switches. However, that documentation is
 somewhat slender and does not provide a thorough explanation for which types of "Java Files" can be used to generate
 XML schema:
 
@@ -39,8 +39,8 @@ XML schema:
         -fullversion          : display full version information
         -help                 : display this usage message
 
-The help listing from the schemagen tool above is taken from a JDK 1.7 installation, and the arguments change
-a little for other major JDKs. However, it seems that the SchemaGenerator tool expects the following to be true
+The help listing from the schemagen tool above is taken from an old JDK installation, and the arguments change
+a little between versions. However, it seems that the SchemaGenerator tool expects the following to be true
 for each of its "java files" arguments:
 
 <table>
@@ -93,7 +93,7 @@ whitespace in paths whenever you need the plugin's `schemagen` goal to work prop
 XSD generation from JAXB-annotated Java classes uses schemagen from the JAXB specification to generate XSDs from
 bytecode. While the default JAXB settings are sometimes good enough for use, tailoring generated XSDs is a task that
 more often than not requires quite a lot of annotations injected into the source code. For further/full information
-about the JAXB annotations, please refer to the [JAXB Reference Implementation](https://jaxb.java.net/).
+about the JAXB annotations, please refer to the [JAXB Reference Implementation](https://eclipse-ee4j.github.io/jaxb-ri/).
 
 However, some best practises are recommended to generate good-quality XSD from annotated Java classes:
 
@@ -114,11 +114,11 @@ However, some best practises are recommended to generate good-quality XSD from a
 
         package se.west.schema;
 
-        import javax.xml.bind.annotation.XmlAccessType;
-        import javax.xml.bind.annotation.XmlAccessorType;
-        import javax.xml.bind.annotation.XmlAttribute;
-        import javax.xml.bind.annotation.XmlElement;
-        import javax.xml.bind.annotation.XmlType;
+        import jakarta.xml.bind.annotation.XmlAccessType;
+        import jakarta.xml.bind.annotation.XmlAccessorType;
+        import jakarta.xml.bind.annotation.XmlAttribute;
+        import jakarta.xml.bind.annotation.XmlElement;
+        import jakarta.xml.bind.annotation.XmlType;
 
         /**
          * This documentation will be copied as an XML Documentation Annotation for the ComplexType 'FooBar'.
@@ -168,7 +168,7 @@ However, some best practises are recommended to generate good-quality XSD from a
 
 The example above is by no means a complete guide to JAXB compliant class design, but serves to illustrate best
 practises which eliminate some of the more common mistakes for correct XSD generation. Again, for further/full
-information about the JAXB annotations, please refer to the [JAXB Reference Implementation](https://jaxb.java.net/).
+information about the JAXB annotations, please refer to the [JAXB Reference Implementation](https://eclipse-ee4j.github.io/jaxb-ri/).
 
 ## Standard (implicit) configuration
 
@@ -287,7 +287,7 @@ called `schemaSourceExcludeFilters`. This is a result of the parameter definitio
                 private List<Filter<File>> schemaSourceExcludeFilters;
 
 Please refer to the standard
-[Maven Documentation for configuring plugins](http://maven.apache.org/guides/mini/guide-configuring-plugins.html) for
+[Maven Documentation for configuring plugins](https://maven.apache.org/guides/mini/guide-configuring-plugins.html) for
 further information about configuring plugins.
 
 ### Default excludes

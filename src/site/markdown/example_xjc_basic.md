@@ -1,6 +1,6 @@
 # Basic Examples - Java Generation
 
-> **Note**: These examples are valid for the 2.x version of the plugin, and do not necessarily 
+> **Note**: These examples are valid for the 2.x and later versions of the plugin, and do not necessarily 
 > work for the jaxb2-maven-plugin version 1.x
 
 These basic examples show how to generate Java code from JAXB using the jaxb2-maven-plugin,
@@ -11,12 +11,9 @@ XJC's configuration properties into a Maven project. The plugin will delegate al
 to its [JAXB implementation dependencies](./dependencies.html). The actual JAXB dependencies used
 when compiling the plugin will also be collected and listed when the plugin is run in debug mode.
 
-Due to the construction of the Java platform the JAXB API used is the one defined by the platform.
-This means that the used JAXB API version will be the endorsed one of the JDK, regardless of what
-is specified in the plugin (or its dependencies). You may override the endorsed API outside of Maven
-and this plugin, but that is typically viewed as advanced usage. A better option is to align the
-version of the compiled code with the requirement on the JAXB runtime environment of the generated
-code.
+The JAXB API is no longer part of the JDK, so the project that compiles the generated code declares the
+`jakarta.xml.bind:jakarta.xml.bind-api` dependency itself. Align its version with the JAXB runtime
+environment that the generated code requires, using the `target` parameter if needed.
 
 **Note**: The plugin currently requires that you run it from within the maven project directory,
           i.e. where the `pom.xml` file resides. If the project is part of a multi-module Maven build,
@@ -82,26 +79,28 @@ plugin's JAXB implementation dependency (see the [target parameter](./xjc-mojo.h
     ...
     <dependencies>
         <!--
-            You need the JAXB API to be able to annotate your classes.
-            However, starting with Java 6 that API is included in the
-            Java SE platform so there is no need to declare a dependency.
+            The generated classes use the Jakarta XML Binding API, which the JDK
+            does not include, so the project declares it.
         -->
-        ...
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.5</version>
+        </dependency>
     </dependencies>
     ...
     <build>
         <pluginManagement>
             <plugins>
                 <!--
-                    If we e.g. execute on JDK 1.7, we should compile for Java 7 to get
-                    the same (or higher) JAXB API version as used during the xjc execution.
+                    Compile for Java 11 or later, which the Jakarta XML Binding 4
+                    API and the code generated for it require.
                 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <release>11</release>
                     </configuration>
                 </plugin>
             </plugins>
@@ -132,18 +131,25 @@ plugin's JAXB implementation dependency (see the [target parameter](./xjc-mojo.h
 
 ## Example 2: Aligning JDK with JAXB API and JAXB runtime environment
 
-So you want to use JAXB on JDK 8? You would then need to configure the jaxb2-maven-plugin for a Java 8+ project,
-which implies two separate configuration properties:
+So you want the generated code to run against an older Jakarta XML Binding runtime than the one the plugin
+uses? You would then configure two separate properties:
 
-1. *maven-compiler-plugin*: Define java version 8 for the compiler, to use the Java 8+ platform as the runtime
-    environment for the compiled code. Use 1.8 for both the `source` and `target` properties.
-2. *jaxb-maven-plugin*: Use the `target` configuration parameter to set the JAXB runtime version to 2.1, which is
-    included in the JDK 1.6 (starting with JDK 1.6u4).
+1. *jakarta.xml.bind-api*: Declare the API version your project and its runtime environment use, for
+    example 3.0.0.
+2. *jaxb2-maven-plugin*: Use the `target` configuration parameter to set the JAXB runtime version the generated
+    code may rely on, here 3.0, so that it avoids features of newer versions.
 
-The project can now be built with JDK 8.
+The project can now be built with the API version you chose.
 
     <project>
         ...
+        <dependencies>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+        </dependencies>
         <build>
             <pluginManagement>
                 <plugins>
@@ -151,8 +157,7 @@ The project can now be built with JDK 8.
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
-                            <source>1.8</source>
-                            <target>1.8</target>
+                            <release>11</release>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -171,7 +176,7 @@ The project can now be built with JDK 8.
                         </execution>
                     </executions>
                     <configuration>
-                        <target>2.1</target>
+                        <target>3.0</target>
                         ...
                     </configuration>
                 </plugin>
@@ -186,9 +191,9 @@ The project can now be built with JDK 8.
 Normally, you would use XML Schema Definitions as the standard type of JAXB source.
 However, other standards can be used as source type provided that the configuration parameter `sourceType`
 is assigned one of the existing values of the
-[org.codehaus.mojo.jaxb2.javageneration.SourceContentType](http://mojo.codehaus.org/jaxb2-maven-plugin/apidocs/org/codehaus/mojo/jaxb2/javageneration/SourceContentType.html)
+[org.codehaus.mojo.jaxb2.javageneration.SourceContentType](./apidocs/org/codehaus/mojo/jaxb2/javageneration/SourceContentType.html)
 enum. In the example below, the source files contain
-[Document Type Descriptions](http://en.wikipedia.org/wiki/Document_type_definition) instead of XML Schema, and
+[Document Type Descriptions](https://en.wikipedia.org/wiki/Document_type_definition) instead of XML Schema, and
 they are placed within the `src/main/dtd` directory.
 
 Note that the `sourceType` configuration parameter is case sensitive for matching the enum values.
@@ -351,7 +356,7 @@ One execution binding per unique configuration, as shown in the snippet below:
 
 By default, the XjcMojo searches directory `src/main/xjb` (and the XjcTestMojo searches `src/test/xjb`) for external XML
 schema generation binding files. Such files are used to control many aspects of the Java generation from XSD files;
-please refer to the [JAXB Reference Implementation](https://jaxb.java.net/) for full details. However, a small XJB
+please refer to the [JAXB Reference Implementation](https://eclipse-ee4j.github.io/jaxb-ri/) for full details. However, a small XJB
 file is found below.
 
         <jxb:bindings version="1.0"
