@@ -29,8 +29,6 @@ import org.codehaus.mojo.jaxb2.BufferingLog;
 import org.codehaus.mojo.jaxb2.schemageneration.postprocessing.NodeProcessor;
 import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.Validate;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -38,6 +36,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -310,7 +310,7 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
      *
      * @param expected The expected document data.
      * @param actual   The actual document data.
-     * @return A DetailedDiff object, describing all differences in documents supplied.
+     * @return A Diff object, describing all differences in documents supplied.
      * @throws org.xml.sax.SAXException If a SAXException was raised during parsing of the two Documents.
      * @throws IOException              If an I/O-related exception was raised while acquiring the data from the Readers.
      */
@@ -321,13 +321,8 @@ public abstract class AbstractSourceCodeAwareNodeProcessingTest {
         Validate.notNull(expected, "Cannot handle null expected argument.");
         Validate.notNull(actual, "Cannot handle null actual argument.");
 
-        // Ignore whitespace - and also normalize the Documents.
-        XMLUnit.setNormalize(true);
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setNormalize(true);
-
         // Compare and return
-        return XMLUnit.compareXML(expected, actual);
+        return DiffBuilder.compare(expected).withTest(actual).ignoreWhitespace().build();
     }
 
     private List<File> resolveSourceFiles() {
