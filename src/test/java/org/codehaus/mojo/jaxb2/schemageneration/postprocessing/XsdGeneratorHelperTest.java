@@ -35,15 +35,13 @@ import org.codehaus.mojo.jaxb2.shared.FileSystemUtilities;
 import org.codehaus.mojo.jaxb2.shared.filters.Filter;
 import org.codehaus.mojo.jaxb2.shared.filters.Filters;
 import org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.ElementNameAndAttributeQualifier;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,10 +54,6 @@ class XsdGeneratorHelperTest {
 
     @BeforeAll
     static void setupSharedState() {
-
-        // Configure XMLUnit.
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setIgnoreAttributeOrder(true);
 
         // Configure the TransformerFactory
         try {
@@ -203,10 +197,12 @@ class XsdGeneratorHelperTest {
 
         // Assert
         final Document expectedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(changedXml));
-        final Diff diff = new Diff(expectedDocument, processedDocument, null, new ElementNameAndAttributeQualifier());
-        diff.overrideElementQualifier(new ElementNameAndAttributeQualifier());
-
-        XMLAssert.assertXMLEqual(processedDocument, expectedDocument);
+        final Diff diff = DiffBuilder.compare(expectedDocument)
+                .withTest(processedDocument)
+                .ignoreWhitespace()
+                .checkForSimilar()
+                .build();
+        assertFalse(diff.hasDifferences(), diff.toString());
     }
 
     @Test
@@ -388,10 +384,12 @@ class XsdGeneratorHelperTest {
 
         // Assert
         final Document expectedDocument = XsdGeneratorHelper.parseXmlStream(new StringReader(processedEnumSchema));
-        final Diff diff = new Diff(expectedDocument, processedDocument, null, new ElementNameAndAttributeQualifier());
-        diff.overrideElementQualifier(new ElementNameAndAttributeQualifier());
-
-        XMLAssert.assertXMLEqual(processedDocument, expectedDocument);
+        final Diff diff = DiffBuilder.compare(expectedDocument)
+                .withTest(processedDocument)
+                .ignoreWhitespace()
+                .checkForSimilar()
+                .build();
+        assertFalse(diff.hasDifferences(), diff.toString());
     }
 
     @Test

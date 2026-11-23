@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB
@@ -35,7 +35,7 @@ class XsdAnnotationProcessorSemiDocumentedTest extends AbstractSourceCodeAwareNo
         final String processed = printDocument(document);
         // System.out.println("Got: " + processed);
 
-        assertTrue(compareXmlIgnoringWhitespace(expected, processed).identical());
+        assertFalse(compareXmlIgnoringWhitespace(expected, processed).hasDifferences());
     }
 
     /**
