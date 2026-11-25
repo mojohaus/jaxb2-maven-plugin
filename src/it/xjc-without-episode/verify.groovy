@@ -19,12 +19,12 @@
 
 // The build must complete even though no episode file was requested; before GitHub #169 XJC was
 // still handed an -episode argument pointing into a directory that had been cleared away.
-File addressTypeSource = new File( basedir, 'target/generated-sources/jaxb/com/example/myschema/AddressType.java' )
+File addressTypeSource = new File(basedir, 'target/generated-sources/jaxb/com/example/myschema/AddressType.java')
 assert addressTypeSource.exists()
 
-File addressTypeCompiled = new File( basedir, 'target/classes/com/example/myschema/AddressType.class' )
+File addressTypeCompiled = new File(basedir, 'target/classes/com/example/myschema/AddressType.class')
 assert addressTypeCompiled.exists()
 
 // ... and no episode file may be produced.
-File episodeDirectory = new File( basedir, 'target/generated-sources/jaxb/META-INF' )
+File episodeDirectory = new File(basedir, 'target/generated-sources/jaxb/META-INF')
 assert !episodeDirectory.exists(), "No META-INF should be generated when generateEpisode is false, found: " + episodeDirectory

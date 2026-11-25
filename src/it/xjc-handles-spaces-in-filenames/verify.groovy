@@ -22,87 +22,86 @@ import java.util.regex.Pattern
 
 // Assemble
 File buildLog = new File(basedir, 'build.log')
-List<String> lines = buildLog.readLines();
+List<String> lines = buildLog.readLines()
 
-String pathToLeafPackage = "target/generated-sources/jaxb/com/example/myschema/";
-File expectedAddressTypeFile = new File(basedir, pathToLeafPackage + "AddressType.java");
-File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFactory.java");
+String pathToLeafPackage = "target/generated-sources/jaxb/com/example/myschema/"
+File expectedAddressTypeFile = new File(basedir, pathToLeafPackage + "AddressType.java")
+File expectedObjectFactoryFile = new File(basedir, pathToLeafPackage + "ObjectFactory.java")
 
 /*
-+=================== [11 XJC Arguments] (Mac/Linux version)
-|
-| [0]: -xmlschema
-| [1]: -encoding
-| [2]: UTF-8
-| [3]: -d
-| [4]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/target/generated-sources/jaxb
-| [5]: -extension
-| [6]: -episode
-| [7]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/target/generated-sources/jaxb/META-INF/sun-jaxb.episode
-| [8]: -b
-| [9]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/src/main/xjb/spaced filename.xjb
-| [10]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/src/main/xsd/address.xsd
-|
-+=================== [End 11 XJC Arguments]
-
-+=================== [11 XJC Arguments] (Windows version)
-|
-| [0]: -xmlschema
-| [1]: -encoding
-| [2]: UTF-8
-| [3]: -d
-| [4]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\target\generated-sources\jaxb
-| [5]: -extension
-| [6]: -episode
-| [7]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\target\generated-sources\jaxb\META-INF\sun-jaxb.episode
-| [8]: -b
-| [9]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\src\main\xjb\spaced filename.xjb
-| [10]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\src\main\xsd\address.xsd
-|
-+=================== [End 11 XJC Arguments]
+ +=================== [11 XJC Arguments] (Mac/Linux version)
+ |
+ | [0]: -xmlschema
+ | [1]: -encoding
+ | [2]: UTF-8
+ | [3]: -d
+ | [4]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/target/generated-sources/jaxb
+ | [5]: -extension
+ | [6]: -episode
+ | [7]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/target/generated-sources/jaxb/META-INF/sun-jaxb.episode
+ | [8]: -b
+ | [9]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/src/main/xjb/spaced filename.xjb
+ | [10]: /Users/lj/Development/Projects/Codehaus/lennartj-jaxb2-maven-plugin/target/it/xjc-handles-spaces-in-filenames/src/main/xsd/address.xsd
+ |
+ +=================== [End 11 XJC Arguments]
+ +=================== [11 XJC Arguments] (Windows version)
+ |
+ | [0]: -xmlschema
+ | [1]: -encoding
+ | [2]: UTF-8
+ | [3]: -d
+ | [4]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\target\generated-sources\jaxb
+ | [5]: -extension
+ | [6]: -episode
+ | [7]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\target\generated-sources\jaxb\META-INF\sun-jaxb.episode
+ | [8]: -b
+ | [9]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\src\main\xjb\spaced filename.xjb
+ | [10]: E:\Mojohaus\jaxb2-maven-plugin\target\it\xjc-handles-spaces-in-filenames\src\main\xsd\address.xsd
+ |
+ +=================== [End 11 XJC Arguments]
  */
-def sep = Pattern.quote(System.getProperty("file.separator"));
-def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
-Pattern expectedBArgumentPattern  = Pattern.compile(xjcArgumentPatternPrefix + "\\-b");
+def sep = Pattern.quote(System.getProperty("file.separator"))
+def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: "
+Pattern expectedBArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + "\\-b")
 Pattern expectedXjbArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix
-        + ".*src/main/xjb/spaced filename.xjb".replace("/", sep));
-Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + ".*src(/|\\\\)main(/|\\\\)xsd(/|\\\\)address.xsd");
+        + ".*src/main/xjb/spaced filename.xjb".replace("/", sep))
+Pattern expectedSourceArgumentPattern = Pattern.compile(xjcArgumentPatternPrefix + ".*src(/|\\\\)main(/|\\\\)xsd(/|\\\\)address.xsd")
 
-boolean foundBArgument = false;
-boolean foundXjbArgument = false;
-boolean foundSourceArgument = false;
+boolean foundBArgument = false
+boolean foundXjbArgument = false
+boolean foundSourceArgument = false
 
 // Act
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if(!foundBArgument && expectedBArgumentPattern.matcher(trimmedLine).matches()) {
-    foundBArgument = true;
-  }
+    if(!foundBArgument && expectedBArgumentPattern.matcher(trimmedLine).matches()) {
+        foundBArgument = true
+    }
 
-  if(!foundXjbArgument && expectedXjbArgumentPattern.matcher(trimmedLine).matches()) {
-    foundXjbArgument = true;
-  }
+    if(!foundXjbArgument && expectedXjbArgumentPattern.matcher(trimmedLine).matches()) {
+        foundXjbArgument = true
+    }
 
-  if(!foundSourceArgument && expectedSourceArgumentPattern.matcher(trimmedLine).matches()) {
-    foundSourceArgument = true;
-  }
+    if(!foundSourceArgument && expectedSourceArgumentPattern.matcher(trimmedLine).matches()) {
+        foundSourceArgument = true
+    }
 }
 
 // Assert
 def missingRequired(Pattern pattern) {
-  return "Missing required pattern: [" + pattern.pattern() + "]" ;
+    return "Missing required pattern: [" + pattern.pattern() + "]"
 }
 
-assert foundBArgument, missingRequired(expectedBArgumentPattern);
-assert foundXjbArgument, missingRequired(expectedXjbArgumentPattern);
-assert foundSourceArgument, missingRequired(expectedSourceArgumentPattern);
+assert foundBArgument, missingRequired(expectedBArgumentPattern)
+assert foundXjbArgument, missingRequired(expectedXjbArgumentPattern)
+assert foundSourceArgument, missingRequired(expectedSourceArgumentPattern)
 
 assert expectedAddressTypeFile.exists() && expectedAddressTypeFile.isFile(), "Missing required file: [" +
-        expectedAddressTypeFile.getPath() + "]" ;
+expectedAddressTypeFile.getPath() + "]"
 assert expectedObjectFactoryFile.exists() && expectedObjectFactoryFile.isFile(), "Missing required file: [" +
-        expectedObjectFactoryFile.getPath() + "]" ;
+expectedObjectFactoryFile.getPath() + "]"

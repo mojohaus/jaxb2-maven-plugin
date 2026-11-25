@@ -20,69 +20,67 @@ import java.util.regex.Pattern
  */
 
 // Assemble
-File buildLog = new File(basedir, 'build.log');
-List<String> lines = buildLog.readLines();
+File buildLog = new File(basedir, 'build.log')
+List<String> lines = buildLog.readLines()
 
 /*
-+=================== [Filtered sources]
-|
-| 6 Exclude patterns:
-| [1/6]: (\p{javaLetterOrDigit}|\p{Punct})+README.*
-| [2/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xml
-| [3/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.txt
-| [4/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xjb
-| [5/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xsd
-| [6/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.properties
-|
-| 1 Sources:
-| [1/1]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/src/main/java
-|
-| 1 Results:
-| [1/1]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/src/main/java/se/west/gnat/Foo.java
-|
-+=================== [End Filtered sources]
-
-...
-
-+=================== [9 SchemaGen Arguments]
-|
-| [0]: -encoding
-| [1]: UTF-8
-| [2]: -d
-| [3]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/target/generated-resources/schemagen
-| [4]: -classpath
-| [5]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/src/main/java/
-| [6]: -episode
-| [7]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/target/generated-resources/schemagen/META-INF/sun-jaxb.episode
-| [8]: module1/src/main/java/se/west/gnat/Foo.java
-|
-+=================== [End 9 SchemaGen Arguments]
+ +=================== [Filtered sources]
+ |
+ | 6 Exclude patterns:
+ | [1/6]: (\p{javaLetterOrDigit}|\p{Punct})+README.*
+ | [2/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xml
+ | [3/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.txt
+ | [4/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xjb
+ | [5/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xsd
+ | [6/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.properties
+ |
+ | 1 Sources:
+ | [1/1]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/src/main/java
+ |
+ | 1 Results:
+ | [1/1]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/src/main/java/se/west/gnat/Foo.java
+ |
+ +=================== [End Filtered sources]
+ ...
+ +=================== [9 SchemaGen Arguments]
+ |
+ | [0]: -encoding
+ | [1]: UTF-8
+ | [2]: -d
+ | [3]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/target/generated-resources/schemagen
+ | [4]: -classpath
+ | [5]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/src/main/java/
+ | [6]: -episode
+ | [7]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-59/module1/target/generated-resources/schemagen/META-INF/sun-jaxb.episode
+ | [8]: module1/src/main/java/se/west/gnat/Foo.java
+ |
+ +=================== [End 9 SchemaGen Arguments]
  */
 
-def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: ";
-def sep = Pattern.quote(System.getProperty("file.separator"));
+def xjcArgumentPatternPrefix = "\\| \\[\\p{Digit}+\\]: "
+def sep = Pattern.quote(System.getProperty("file.separator"))
 
-final Pattern expectedSourcePattern  = Pattern.compile(xjcArgumentPatternPrefix
-        + ("module1/src/main/java/se/west/gnat/Foo.java").replace("/", sep));
+final Pattern expectedSourcePattern = Pattern.compile(xjcArgumentPatternPrefix
+        + ("module1/src/main/java/se/west/gnat/Foo.java").replace("/", sep))
 
-boolean foundSourceArgument = false;
+boolean foundSourceArgument = false
 
 // Act
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if(!foundSourceArgument && expectedSourcePattern.matcher(trimmedLine).matches()) {
-    foundSourceArgument = true;
-  }
+    if(!foundSourceArgument && expectedSourcePattern.matcher(trimmedLine).matches()) {
+        foundSourceArgument = true
+    }
 }
 
 // Assert
 static def missingRequired(Pattern pattern) {
-  return "Missing required pattern: [" + pattern.pattern() + "]" ;
+    return "Missing required pattern: [" + pattern.pattern() + "]"
 }
 
-assert foundSourceArgument, missingRequired(expectedSourcePattern);
+assert foundSourceArgument, missingRequired(expectedSourcePattern)

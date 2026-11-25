@@ -30,4 +30,4 @@ assert 1 == xml.complexType.size()
 assert 'foo' == xml.complexType[0].@name.text()
 
 final File testSchemagen = new File(basedir, 'target/generated-test-resources/schemagen/')
-assert !testSchemagen.exists(), "Found unexpected generated TestResources [" + testSchemagen.getAbsolutePath() + "]";
+assert !testSchemagen.exists(), "Found unexpected generated TestResources [" + testSchemagen.getAbsolutePath() + "]"

@@ -36,7 +36,7 @@ for (line in lines) {
     if (trimmedLine.isEmpty()) {
         continue
     }
-    
+
     if(!foundToStringPluginArgument && expectedToStringPluginPattern.matcher(trimmedLine).matches()) {
         foundToStringPluginArgument = true
     }

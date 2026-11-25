@@ -27,18 +27,18 @@ File addressTypeCompiled = new File(basedir, 'target/classes/com/example/myschem
 assert addressTypeCompiled.exists()
 
 // Validate that the @Generated annotations are injected into the source file.
-int hitCount = 0;
-List<String> lines = addressType.readLines();
+int hitCount = 0
+List<String> lines = addressType.readLines()
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if (trimmedLine.startsWith("@Generated(value = \"com.sun.tools.xjc.Driver\"")) {
-    hitCount++;
-  }
+    if (trimmedLine.startsWith("@Generated(value = \"com.sun.tools.xjc.Driver\"")) {
+        hitCount++
+    }
 }
 
-assert 19 == hitCount, "Found [" + hitCount + "] @Generated annotations. (Expected 19).";
+assert 19 == hitCount, "Found [" + hitCount + "] @Generated annotations. (Expected 19)."

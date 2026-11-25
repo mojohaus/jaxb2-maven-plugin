@@ -27,18 +27,18 @@ File addressTypeCompiled = new File(basedir, 'target/classes/com/example/myschem
 assert addressTypeCompiled.exists()
 
 // Validate that XJC ran with French locale.
-int hitCount = 0;
-List<String> lines = addressType.readLines();
+int hitCount = 0
+List<String> lines = addressType.readLines()
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if (trimmedLine.endsWith("Classe Java pour AddressType complex type.")) {
-    hitCount++;
-  }
+    if (trimmedLine.endsWith("Classe Java pour AddressType complex type.")) {
+        hitCount++
+    }
 }
 
-assert 1 == hitCount, "Found [" + hitCount + "] . (Expected 1).";
+assert 1 == hitCount, "Found [" + hitCount + "] . (Expected 1)."

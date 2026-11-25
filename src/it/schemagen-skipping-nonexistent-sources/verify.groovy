@@ -18,55 +18,53 @@
  */
 
 /*
-+=================== [Filtered sources]
-|
-| 6 Exclude patterns:
-| [1/6]: (\p{javaLetterOrDigit}|\p{Punct})+README.*
-| [2/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xml
-| [3/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.txt
-| [4/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xjb
-| [5/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xsd
-| [6/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.properties
-|
-| 1 Sources:
-| [1/1]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/schemagen-skipping-nonexistent-sources/src/main/java
-|
-| 0 Results:
-|
-+=================== [End Filtered sources]
-
-... and ...
-
-+=================== [Incorrect Plugin Configuration Detected]
-|
-| Property : sources
-| Problem  : At least one Java Source file has to be included.
-|
-+=================== [End Incorrect Plugin Configuration Detected]
+ +=================== [Filtered sources]
+ |
+ | 6 Exclude patterns:
+ | [1/6]: (\p{javaLetterOrDigit}|\p{Punct})+README.*
+ | [2/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xml
+ | [3/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.txt
+ | [4/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xjb
+ | [5/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.xsd
+ | [6/6]: (\p{javaLetterOrDigit}|\p{Punct})+\.properties
+ |
+ | 1 Sources:
+ | [1/1]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/schemagen-skipping-nonexistent-sources/src/main/java
+ |
+ | 0 Results:
+ |
+ +=================== [End Filtered sources]
+ ... and ...
+ +=================== [Incorrect Plugin Configuration Detected]
+ |
+ | Property : sources
+ | Problem  : At least one Java Source file has to be included.
+ |
+ +=================== [End Incorrect Plugin Configuration Detected]
  */
 File buildLog = new File(basedir, 'build.log')
 
-final String expectedConfigWarning = "| Problem  : At least one Java Source file has to be included.";
-final String expectedSkippingExecution = "[DEBUG] Skipping execution, as instructed.";
+final String expectedConfigWarning = "| Problem  : At least one Java Source file has to be included."
+final String expectedSkippingExecution = "[DEBUG] Skipping execution, as instructed."
 
-boolean foundIncorrectConfigWarning = false;
-boolean foundExpectedSkippingExecution = false;
+boolean foundIncorrectConfigWarning = false
+boolean foundExpectedSkippingExecution = false
 
-List<String> lines = buildLog.readLines();
+List<String> lines = buildLog.readLines()
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if(!foundIncorrectConfigWarning && trimmedLine.equalsIgnoreCase(expectedConfigWarning)) {
-    foundIncorrectConfigWarning = true;
-  }
+    if(!foundIncorrectConfigWarning && trimmedLine.equalsIgnoreCase(expectedConfigWarning)) {
+        foundIncorrectConfigWarning = true
+    }
 
-  if(!foundExpectedSkippingExecution && trimmedLine.equalsIgnoreCase(expectedSkippingExecution)) {
-    foundExpectedSkippingExecution = true;
-  }
+    if(!foundExpectedSkippingExecution && trimmedLine.equalsIgnoreCase(expectedSkippingExecution)) {
+        foundExpectedSkippingExecution = true
+    }
 }
 
 // Assert

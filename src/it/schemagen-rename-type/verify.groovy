@@ -20,21 +20,21 @@ import groovy.xml.XmlSlurper
 
 // Assemble
 def validateExistingFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]";
-  println "" + index + ". Expected file exists correctly. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]"
+    println "" + index + ". Expected file exists correctly. [" + path + "]"
 }
 
 def validateNonexistentFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert !aFile.exists(), "File should not exist: [" + path + "]";
-  println "" + index + ". File correctly non-existent. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert !aFile.exists(), "File should not exist: [" + path + "]"
+    println "" + index + ". File correctly non-existent. [" + path + "]"
 }
 
 def validateNonexistentDirectory(final File aDirectory, final int index) {
-  final String path = aDirectory.getCanonicalPath();
-  assert !aDirectory.exists(), "Directory should not exist: [" + path + "]";
-  println "" + index + ". Directory correctly non-existent. [" + path + "]";
+    final String path = aDirectory.getCanonicalPath()
+    assert !aDirectory.exists(), "Directory should not exist: [" + path + "]"
+    println "" + index + ". Directory correctly non-existent. [" + path + "]"
 }
 
 def outputDir = new File(basedir, 'target/generated-resources/schemagen')
@@ -42,26 +42,25 @@ def workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 def episodeFile = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb')
 
 /*
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
-
-  <xs:complexType name="RenamedFoo">
-    <xs:sequence/>
-    <xs:attribute name="renamedBar" type="xs:string">
-      <xs:annotation>
-        <xs:documentation><![CDATA[This is a Bar.]]></xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-  </xs:complexType>
-</xs:schema>
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+ <xs:complexType name="RenamedFoo">
+ <xs:sequence/>
+ <xs:attribute name="renamedBar" type="xs:string">
+ <xs:annotation>
+ <xs:documentation><![CDATA[This is a Bar.]]></xs:documentation>
+ </xs:annotation>
+ </xs:attribute>
+ </xs:complexType>
+ </xs:schema>
  */
 
 // Act: Validate content
-def xml = new XmlSlurper().parse(new File(outputDir, 'schema1.xsd'));
-def renamedFooType = xml.complexType[0];
-def renamedBarAttribute = renamedFooType.attribute[0];
+def xml = new XmlSlurper().parse(new File(outputDir, 'schema1.xsd'))
+def renamedFooType = xml.complexType[0]
+def renamedBarAttribute = renamedFooType.attribute[0]
 
-assert 1 == xml.complexType.size();
+assert 1 == xml.complexType.size()
 assert 'RenamedFoo' == renamedFooType.@name.text().trim()
 assert 'renamedBar' == renamedBarAttribute.@name.text().trim()
 assert 'xs:string' == renamedBarAttribute.@type.text().trim()
@@ -71,14 +70,14 @@ assert 'This is a Bar.' == renamedBarAttribute.annotation[0].documentation[0].te
 println "\nValidating work directory content"
 println "==================================="
 
-validateExistingFile(new File(workDir, 'schema1.xsd'), 1);
-validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2);
-validateExistingFile(new File(workDir, 'se/west/gnat/Foo.class'), 3);
+validateExistingFile(new File(workDir, 'schema1.xsd'), 1)
+validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2)
+validateExistingFile(new File(workDir, 'se/west/gnat/Foo.class'), 3)
 
 println "\nValidating output directory content"
 println "====================================="
 
-validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(episodeFile, 2);
-validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3);
-validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4);
+validateExistingFile(new File(outputDir, 'schema1.xsd'), 1)
+validateExistingFile(episodeFile, 2)
+validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3)
+validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4)
