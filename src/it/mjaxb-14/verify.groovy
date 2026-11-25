@@ -18,19 +18,19 @@
  */
 
 // Verify the existence of some of the generated classes
-File objectFactory = new File( basedir,'target/generated-sources/jaxb/com/example/myschema/ObjectFactory.java' )
+File objectFactory = new File(basedir,'target/generated-sources/jaxb/com/example/myschema/ObjectFactory.java')
 assert objectFactory.exists()
-File book = new File( basedir,'target/generated-sources/jaxb/com/example/myschema/Book.java' )
+File book = new File(basedir,'target/generated-sources/jaxb/com/example/myschema/Book.java')
 assert book.exists()
-File library = new File( basedir,'target/generated-sources/jaxb/com/example/myschema/Library.java' )
+File library = new File(basedir,'target/generated-sources/jaxb/com/example/myschema/Library.java')
 assert library.exists()
 
-File testSources = new File( basedir,'target/generated-test-sources/jaxb/' )
+File testSources = new File(basedir,'target/generated-test-sources/jaxb/')
 assert !testSources.exists()
 
-File objectFactoryCompiled = new File( basedir,'target/classes/com/example/myschema/ObjectFactory.class' )
+File objectFactoryCompiled = new File(basedir,'target/classes/com/example/myschema/ObjectFactory.class')
 assert objectFactoryCompiled.exists()
-File bookCompiled = new File( basedir,'target/classes/com/example/myschema/Book.class' )
+File bookCompiled = new File(basedir,'target/classes/com/example/myschema/Book.class')
 assert bookCompiled.exists()
-File libraryCompiled = new File( basedir,'target/classes/com/example/myschema/Library.class' )
+File libraryCompiled = new File(basedir,'target/classes/com/example/myschema/Library.class')
 assert libraryCompiled.exists()

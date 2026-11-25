@@ -17,8 +17,8 @@
  * under the License.
  */
 
-File aType = new File( basedir,'target/generated-sources/jaxb/com/example/schema/a/AType.java' )
+File aType = new File(basedir,'target/generated-sources/jaxb/com/example/schema/a/AType.java')
 assert aType.exists()
 
-File bType = new File( basedir,'target/generated-sources/jaxb/com/example/schema/b/BType.java' )
+File bType = new File(basedir,'target/generated-sources/jaxb/com/example/schema/b/BType.java')
 assert bType.exists()

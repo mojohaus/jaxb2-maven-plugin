@@ -19,39 +19,39 @@
 
 // Assemble
 def validateExistingFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]";
-  println "" + index + ". Expected file exists correctly. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]"
+    println "" + index + ". Expected file exists correctly. [" + path + "]"
 }
 
 def validateNonexistentFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert !aFile.exists(), "File should not exist: [" + path + "]";
-  println "" + index + ". File correctly non-existent. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert !aFile.exists(), "File should not exist: [" + path + "]"
+    println "" + index + ". File correctly non-existent. [" + path + "]"
 }
 
 def validateNonexistentDirectory(final File aDirectory, final int index) {
-  final String path = aDirectory.getCanonicalPath();
-  assert !aDirectory.exists(), "Directory should not exist: [" + path + "]";
-  println "" + index + ". Directory correctly non-existent. [" + path + "]";
+    final String path = aDirectory.getCanonicalPath()
+    assert !aDirectory.exists(), "Directory should not exist: [" + path + "]"
+    println "" + index + ". Directory correctly non-existent. [" + path + "]"
 }
 
 final File workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 
 // Validate that no schemas was produced by this invocation.
-def normalResult = new File(workDir, 'schema1.xsd');
-validateNonexistentFile(normalResult, 1);
+def normalResult = new File(workDir, 'schema1.xsd')
+validateNonexistentFile(normalResult, 1)
 
 // Validate that the expected JAXB error message is stashed in the log
-def expectedErrorMessage = 'Class has two properties of the same name "bar"';
-List<String> lines = new File(basedir, 'build.log').readLines();
+def expectedErrorMessage = 'Class has two properties of the same name "bar"'
+List<String> lines = new File(basedir, 'build.log').readLines()
 
-boolean foundExpectedErrorMessage = false;
+boolean foundExpectedErrorMessage = false
 
 for(line in lines) {
-  if(line.contains(expectedErrorMessage)) {
-    foundExpectedErrorMessage = true;
-  }
+    if(line.contains(expectedErrorMessage)) {
+        foundExpectedErrorMessage = true
+    }
 }
 
 assert foundExpectedErrorMessage, "Expected JAXB error message not found."

@@ -22,9 +22,9 @@
 // Expression: testEpisode.exists()
 import groovy.xml.XmlSlurper
 
-def testSchema = new File(basedir, 'target/generated-test-resources/schemagen/schema1.xsd');
+def testSchema = new File(basedir, 'target/generated-test-resources/schemagen/schema1.xsd')
 def testEpisode = new File(basedir, 'target/generated-test-resources/schemagen/META-INF' +
-        '/JAXB/episode_schemagen-test.xjb');
+        '/JAXB/episode_schemagen-test.xjb')
 
 assert testSchema.exists(), "Expected file [" + testSchema.getAbsolutePath() + "] not found."
 assert testEpisode.exists(), "Expected file [" + testEpisode.getAbsolutePath() + "] not found."
@@ -35,4 +35,4 @@ assert 1 == xml.complexType.size()
 assert 'foo' == xml.complexType[0].@name.text()
 
 File mainSchemagen = new File(basedir, 'target/generated-resources/schemagen/')
-assert !mainSchemagen.exists(), "Found unexpected generated Resources [" + mainSchemagen.getAbsolutePath() + "]";
+assert !mainSchemagen.exists(), "Found unexpected generated Resources [" + mainSchemagen.getAbsolutePath() + "]"

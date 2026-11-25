@@ -20,79 +20,79 @@ import java.util.regex.Pattern
  */
 
 /*
-+=================== [13 XJC Arguments]
-|
-| [0]: -xmlschema
-| [1]: -encoding
-| [2]: UTF-8
-| [3]: -p
-| [4]: com.example.myschema
-| [5]: -target
-| [6]: 2.0
-| [7]: -d
-| [8]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-16/target/generated-sources/jaxb
-| [9]: -extension
-| [10]: -episode
-| [11]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-16/target/generated-sources/jaxb/META-INF/sun-jaxb.episode
-| [12]: src/main/xsd/address.xsd
-|
-+=================== [End 13 XJC Arguments]
+ +=================== [13 XJC Arguments]
+ |
+ | [0]: -xmlschema
+ | [1]: -encoding
+ | [2]: UTF-8
+ | [3]: -p
+ | [4]: com.example.myschema
+ | [5]: -target
+ | [6]: 2.0
+ | [7]: -d
+ | [8]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-16/target/generated-sources/jaxb
+ | [9]: -extension
+ | [10]: -episode
+ | [11]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-16/target/generated-sources/jaxb/META-INF/sun-jaxb.episode
+ | [12]: src/main/xsd/address.xsd
+ |
+ +=================== [End 13 XJC Arguments]
  */
 File buildLog = new File(basedir, 'build.log')
 
-def logPattern = "\\| \\[\\p{Digit}+\\]: ";
-def sep = Pattern.quote(System.getProperty("file.separator"));
-Pattern expectedTargetPattern  = Pattern.compile(logPattern + "\\-target");
-Pattern expectedTargetVersionPattern = Pattern.compile(logPattern + "3.0");
-Pattern expectedExtensionPattern = Pattern.compile(logPattern + "\\-extension");
-Pattern expectedEpisodePattern = Pattern.compile(logPattern + "\\-episode");
+def logPattern = "\\| \\[\\p{Digit}+\\]: "
+def sep = Pattern.quote(System.getProperty("file.separator"))
+Pattern expectedTargetPattern = Pattern.compile(logPattern + "\\-target")
+Pattern expectedTargetVersionPattern = Pattern.compile(logPattern + "3.0")
+Pattern expectedExtensionPattern = Pattern.compile(logPattern + "\\-extension")
+Pattern expectedEpisodePattern = Pattern.compile(logPattern + "\\-episode")
 Pattern expectedEpisodeFilePattern = Pattern.compile(logPattern +
         ".*target" + sep + "generated-sources" + sep + "jaxb" + sep + "META-INF" + sep +
-        "JAXB" + sep + "episode_xjc\\.xjb");
+        "JAXB" + sep + "episode_xjc\\.xjb")
 
-boolean foundTarget = false;
-boolean foundTargetVersion = false;
-boolean foundExtension = false;
-boolean foundEpisode = false;
-boolean foundEpisodeFile = false;
+boolean foundTarget = false
+boolean foundTargetVersion = false
+boolean foundExtension = false
+boolean foundEpisode = false
+boolean foundEpisodeFile = false
 
-List<String> lines = buildLog.readLines();
+List<String> lines = buildLog.readLines()
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if(!foundTarget && expectedTargetPattern.matcher(trimmedLine).matches()) {
-    foundTarget = true;
-  }
+    if(!foundTarget && expectedTargetPattern.matcher(trimmedLine).matches()) {
+        foundTarget = true
+    }
 
-  if(!foundTargetVersion && expectedTargetVersionPattern.matcher(trimmedLine).matches()) {
-    foundTargetVersion = true;
-  }
+    if(!foundTargetVersion && expectedTargetVersionPattern.matcher(trimmedLine).matches()) {
+        foundTargetVersion = true
+    }
 
-  if(!foundExtension && expectedExtensionPattern.matcher(trimmedLine).matches()) {
-    foundExtension = true;
-  }
+    if(!foundExtension && expectedExtensionPattern.matcher(trimmedLine).matches()) {
+        foundExtension = true
+    }
 
-  if(!foundEpisode && expectedEpisodePattern.matcher(trimmedLine).matches()) {
-    foundEpisode = true;
-  }
+    if(!foundEpisode && expectedEpisodePattern.matcher(trimmedLine).matches()) {
+        foundEpisode = true
+    }
 
-  if(!foundEpisodeFile && expectedEpisodeFilePattern.matcher(trimmedLine).matches()) {
-    foundEpisodeFile = true;
-  }
+    if(!foundEpisodeFile && expectedEpisodeFilePattern.matcher(trimmedLine).matches()) {
+        foundEpisodeFile = true
+    }
 }
 
 // Assert some
 def missingRequired(Pattern pattern) {
-  return "Missing required pattern: [" + pattern.pattern() + "]" ;
+    return "Missing required pattern: [" + pattern.pattern() + "]"
 }
 
-assert foundTarget, missingRequired(expectedTargetPattern);
-assert foundTargetVersion, missingRequired(expectedTargetVersionPattern);
-assert foundExtension, missingRequired(expectedExtensionPattern);
-assert foundEpisode, missingRequired(expectedEpisodePattern);
-assert foundEpisodeFile, missingRequired(expectedEpisodeFilePattern);
+assert foundTarget, missingRequired(expectedTargetPattern)
+assert foundTargetVersion, missingRequired(expectedTargetVersionPattern)
+assert foundExtension, missingRequired(expectedExtensionPattern)
+assert foundEpisode, missingRequired(expectedEpisodePattern)
+assert foundEpisodeFile, missingRequired(expectedEpisodeFilePattern)
 

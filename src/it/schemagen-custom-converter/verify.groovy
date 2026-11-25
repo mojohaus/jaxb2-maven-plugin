@@ -20,44 +20,44 @@ import groovy.xml.XmlSlurper
 
 // Assemble
 def validateExistingFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]";
-  println "" + index + ". Expected file exists correctly. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]"
+    println "" + index + ". Expected file exists correctly. [" + path + "]"
 }
 
 def validateNonexistentFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert !aFile.exists(), "File should not exist: [" + path + "]";
-  println "" + index + ". File correctly non-existent. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert !aFile.exists(), "File should not exist: [" + path + "]"
+    println "" + index + ". File correctly non-existent. [" + path + "]"
 }
 
 def validateNonexistentDirectory(final File aDirectory, final int index) {
-  final String path = aDirectory.getCanonicalPath();
-  assert !aDirectory.exists(), "Directory should not exist: [" + path + "]";
-  println "" + index + ". Directory correctly non-existent. [" + path + "]";
+    final String path = aDirectory.getCanonicalPath()
+    assert !aDirectory.exists(), "Directory should not exist: [" + path + "]"
+    println "" + index + ". Directory correctly non-existent. [" + path + "]"
 }
 
 def outputDir = new File(basedir, 'some_project/target/generated-resources/schemagen')
 def workDir = new File(basedir, 'some_project/target/schemagen-work/compile_scope')
 
 // Act: Validate content
-def schemaElement = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
+def schemaElement = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'))
 
-assert 1 == schemaElement.complexType.size();
-assert "foo" == ("" + schemaElement.complexType[0].@name);
+assert 1 == schemaElement.complexType.size()
+assert "foo" == ("" + schemaElement.complexType[0].@name)
 
 // Assert
 println "\nValidating work directory content"
 println "==================================="
 
-validateExistingFile(new File(workDir, 'schema1.xsd'), 1);
-validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2);
-validateExistingFile(new File(workDir, 'se/west/gnat/Foo.class'), 3);
+validateExistingFile(new File(workDir, 'schema1.xsd'), 1)
+validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2)
+validateExistingFile(new File(workDir, 'se/west/gnat/Foo.class'), 3)
 
 println "\nValidating output directory content"
 println "====================================="
 
-validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(outputDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2);
-validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3);
-validateNonexistentDirectory(new File(basedir, 'some_project/target/generated-test-resources/schemagen/'), 4);
+validateExistingFile(new File(outputDir, 'schema1.xsd'), 1)
+validateExistingFile(new File(outputDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2)
+validateNonexistentFile(new File(outputDir, 'se/west/gnat/Foo.class'), 3)
+validateNonexistentDirectory(new File(basedir, 'some_project/target/generated-test-resources/schemagen/'), 4)

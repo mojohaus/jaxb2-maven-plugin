@@ -20,21 +20,21 @@ import groovy.xml.XmlSlurper
 
 // Assemble
 def validateExistingFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]";
-  println "" + index + ". Expected file exists correctly. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]"
+    println "" + index + ". Expected file exists correctly. [" + path + "]"
 }
 
 def validateNonexistentFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert !aFile.exists(), "File should not exist: [" + path + "]";
-  println "" + index + ". File correctly non-existent. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert !aFile.exists(), "File should not exist: [" + path + "]"
+    println "" + index + ". File correctly non-existent. [" + path + "]"
 }
 
 def validateNonexistentDirectory(final File aDirectory, final int index) {
-  final String path = aDirectory.getCanonicalPath();
-  assert !aDirectory.exists(), "Directory should not exist: [" + path + "]";
-  println "" + index + ". Directory correctly non-existent. [" + path + "]";
+    final String path = aDirectory.getCanonicalPath()
+    assert !aDirectory.exists(), "Directory should not exist: [" + path + "]"
+    println "" + index + ". Directory correctly non-existent. [" + path + "]"
 }
 
 def classesDir = new File(basedir, 'target/classes')
@@ -42,73 +42,66 @@ def outputDir = new File(basedir, 'target/generated-resources/schemagen')
 def workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 
 /*
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://gnat.west.se/foods" targetNamespace="http://gnat.west.se/foods" version="1.0">
-
-  <xs:element name="foodPreferences" type="tns:foodPreferences"/>
-
-  <xs:complexType name="foodPreferences">
-    <xs:annotation>
-      <xs:documentation><![CDATA[Trivial transport object type for enumerations.
-
-(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element minOccurs="0" name="preferences">
-        <xs:annotation>
-          <xs:documentation><![CDATA[A List of {@link FoodPreference} instances.]]></xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="preference" type="tns:foodPreference"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element minOccurs="0" name="coins">
-        <xs:annotation>
-          <xs:documentation><![CDATA[A List of {@link FoodPreference} instances.]]></xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="coin" type="tns:americanCoin"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:simpleType name="americanCoin">
-    <xs:annotation>
-      <xs:documentation><![CDATA[Simple enumeration example defining standard US coins.
-
-(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:int">
-      <xs:enumeration value="1"/>
-      <xs:enumeration value="5"/>
-      <xs:enumeration value="10"/>
-      <xs:enumeration value="25"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="foodPreference">
-    <xs:annotation>
-      <xs:documentation><![CDATA[Simple enumeration example defining some Food preferences.
-
-(author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="NONE"/>
-      <xs:enumeration value="LACTO_VEGETARIAN"/>
-      <xs:enumeration value="VEGAN"/>
-    </xs:restriction>
-  </xs:simpleType>
-</xs:schema>
-*/
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://gnat.west.se/foods" targetNamespace="http://gnat.west.se/foods" version="1.0">
+ <xs:element name="foodPreferences" type="tns:foodPreferences"/>
+ <xs:complexType name="foodPreferences">
+ <xs:annotation>
+ <xs:documentation><![CDATA[Trivial transport object type for enumerations.
+ (author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+ </xs:annotation>
+ <xs:sequence>
+ <xs:element minOccurs="0" name="preferences">
+ <xs:annotation>
+ <xs:documentation><![CDATA[A List of {@link FoodPreference} instances.]]></xs:documentation>
+ </xs:annotation>
+ <xs:complexType>
+ <xs:sequence>
+ <xs:element maxOccurs="unbounded" minOccurs="0" name="preference" type="tns:foodPreference"/>
+ </xs:sequence>
+ </xs:complexType>
+ </xs:element>
+ <xs:element minOccurs="0" name="coins">
+ <xs:annotation>
+ <xs:documentation><![CDATA[A List of {@link FoodPreference} instances.]]></xs:documentation>
+ </xs:annotation>
+ <xs:complexType>
+ <xs:sequence>
+ <xs:element maxOccurs="unbounded" minOccurs="0" name="coin" type="tns:americanCoin"/>
+ </xs:sequence>
+ </xs:complexType>
+ </xs:element>
+ </xs:sequence>
+ </xs:complexType>
+ <xs:simpleType name="americanCoin">
+ <xs:annotation>
+ <xs:documentation><![CDATA[Simple enumeration example defining standard US coins.
+ (author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+ </xs:annotation>
+ <xs:restriction base="xs:int">
+ <xs:enumeration value="1"/>
+ <xs:enumeration value="5"/>
+ <xs:enumeration value="10"/>
+ <xs:enumeration value="25"/>
+ </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="foodPreference">
+ <xs:annotation>
+ <xs:documentation><![CDATA[Simple enumeration example defining some Food preferences.
+ (author): <a href="mailto:lj@jguru.se">Lennart J&ouml;relid</a>, jGuru Europe AB]]></xs:documentation>
+ </xs:annotation>
+ <xs:restriction base="xs:string">
+ <xs:enumeration value="NONE"/>
+ <xs:enumeration value="LACTO_VEGETARIAN"/>
+ <xs:enumeration value="VEGAN"/>
+ </xs:restriction>
+ </xs:simpleType>
+ </xs:schema>
+ */
 
 // Act: Validate content
-def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
-assert 1 == xml.complexType.size();
+def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'))
+assert 1 == xml.complexType.size()
 
 def americanCoinElement = xml.simpleType.find { it.@name == 'americanCoin' }
 def foodPreferenceElement = xml.simpleType.find { it.@name == 'foodPreference' }
@@ -120,15 +113,15 @@ assert null != foodPreferenceElement.annotation.documentation.text()
 println "\nValidating work directory content"
 println "==================================="
 
-validateExistingFile(new File(workDir, 'schema1.xsd'), 1);
-validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2);
-validateExistingFile(new File(workDir, 'se/west/gnat/AmericanCoin.class'), 3);
-validateExistingFile(new File(workDir, 'se/west/gnat/FoodPreference.class'), 4);
-validateExistingFile(new File(workDir, 'se/west/gnat/FoodPreferences.class'), 5);
+validateExistingFile(new File(workDir, 'schema1.xsd'), 1)
+validateNonexistentFile(new File(workDir, 'META-INF/sun-jaxb.episode'), 2)
+validateExistingFile(new File(workDir, 'se/west/gnat/AmericanCoin.class'), 3)
+validateExistingFile(new File(workDir, 'se/west/gnat/FoodPreference.class'), 4)
+validateExistingFile(new File(workDir, 'se/west/gnat/FoodPreferences.class'), 5)
 
 println "\nValidating output directory content"
 println "====================================="
 
-validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(classesDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2);
-validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4);
+validateExistingFile(new File(outputDir, 'schema1.xsd'), 1)
+validateExistingFile(new File(classesDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2)
+validateNonexistentDirectory(new File(basedir, 'target/generated-test-resources/schemagen/'), 4)

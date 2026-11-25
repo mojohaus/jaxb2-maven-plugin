@@ -20,9 +20,9 @@
 import groovy.xml.XmlSlurper
 
 // Assemble
-final File outputDir = new File(basedir, 'target/generated-resources/schemagen');
-final File vanillaSchema = new File(basedir, 'target/schemagen-work/compile_scope/schema1.xsd');
-final File processedSchema = new File(outputDir, 'transform-test.xsd');
+final File outputDir = new File(basedir, 'target/generated-resources/schemagen')
+final File vanillaSchema = new File(basedir, 'target/schemagen-work/compile_scope/schema1.xsd')
+final File processedSchema = new File(outputDir, 'transform-test.xsd')
 
 assert vanillaSchema.exists(), "Expected file [" + vanillaSchema.getAbsolutePath() + "] not found."
 assert processedSchema.exists(), "Expected file [" + processedSchema.getAbsolutePath() + "] not found."

@@ -19,25 +19,25 @@
 import groovy.xml.XmlSlurper
 
 def validateExistingFile(final File aFile, final int index) {
-  final String path = aFile.getCanonicalPath();
-  assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]";
-  println "" + index + ". Expected file exists correctly. [" + path + "]";
+    final String path = aFile.getCanonicalPath()
+    assert aFile.exists() && aFile.isFile(), "Missing required file [" + path + "]"
+    println "" + index + ". Expected file exists correctly. [" + path + "]"
 }
 
 def outputDir = new File(basedir, 'target/generated-resources/schemagen')
 def workDir = new File(basedir, 'target/schemagen-work/compile_scope')
 
 // Act: Validate content
-def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'));
-assert 1 == xml.complexType.size();
-assert 'someType' == xml.complexType[0].@name.text();
+def xml = new XmlSlurper().parse(new File(workDir, 'schema1.xsd'))
+assert 1 == xml.complexType.size()
+assert 'someType' == xml.complexType[0].@name.text()
 
 // Assert
 println "\nValidating work directory content"
 println "==================================="
-validateExistingFile(new File(workDir, 'schema1.xsd'), 1);
+validateExistingFile(new File(workDir, 'schema1.xsd'), 1)
 
 println "\nValidating output directory content"
 println "====================================="
-validateExistingFile(new File(outputDir, 'schema1.xsd'), 1);
-validateExistingFile(new File(outputDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2);
+validateExistingFile(new File(outputDir, 'schema1.xsd'), 1)
+validateExistingFile(new File(outputDir, 'META-INF/JAXB/episode_schemagen.xjb'), 2)

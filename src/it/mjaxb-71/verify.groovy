@@ -18,21 +18,21 @@
  */
 
 /*
-+=================== [10 SchemaGen Arguments]
-|
-| [0]: -encoding
-| [1]: UTF-8
-| [2]: -d
-| [3]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-71/target/generated-resources/schemagen
-| [4]: -classpath
-| [5]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-71/src/main/fooBarSource/
-| [6]: -episode
-| [7]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-71/target/generated-resources/schemagen/META-INF/sun-jaxb.episode
-| [8]: src/main/fooBarSource/se/west/shauqra/FooWithEmptyXmlTypeName.java
-| [9]: src/main/fooBarSource/se/west/shauqra/FooWithSuppliedXmlTypeName.java
-|
-+=================== [End 10 SchemaGen Arguments]
-*/
+ +=================== [10 SchemaGen Arguments]
+ |
+ | [0]: -encoding
+ | [1]: UTF-8
+ | [2]: -d
+ | [3]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-71/target/generated-resources/schemagen
+ | [4]: -classpath
+ | [5]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-71/src/main/fooBarSource/
+ | [6]: -episode
+ | [7]: /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/mjaxb-71/target/generated-resources/schemagen/META-INF/sun-jaxb.episode
+ | [8]: src/main/fooBarSource/se/west/shauqra/FooWithEmptyXmlTypeName.java
+ | [9]: src/main/fooBarSource/se/west/shauqra/FooWithSuppliedXmlTypeName.java
+ |
+ +=================== [End 10 SchemaGen Arguments]
+ */
 import groovy.xml.XmlSlurper
 
 // Assemble
@@ -59,19 +59,19 @@ def expectedXmlForm = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </xs:schema>'''
 
 def slashify(String path) {
-  return path.replace("/", System.getProperty("file.separator"));
+    return path.replace("/", System.getProperty("file.separator"))
 }
 
-def ignoredPrefix = "[INFO] Ignored given or default sources [";
+def ignoredPrefix = "[INFO] Ignored given or default sources ["
 def ignoredSuffix = slashify("target/it/mjaxb-71/src/main/nonexistent], "
-        + "since it is not an existent file or directory.");
+        + "since it is not an existent file or directory.")
 
-def generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen');
-def vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd');
-def processedSchema = new File(generatedSchemaDir, 'customer-api.xsd');
-def generatedEpisode = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb');
-def buildLog = new File(basedir, 'build.log');
-final List<String> lines = buildLog.readLines();
+def generatedSchemaDir = new File(basedir, 'target/generated-resources/schemagen')
+def vanillaSchema = new File(generatedSchemaDir, 'schema1.xsd')
+def processedSchema = new File(generatedSchemaDir, 'customer-api.xsd')
+def generatedEpisode = new File(basedir, 'target/classes/META-INF/JAXB/episode_schemagen.xjb')
+def buildLog = new File(basedir, 'build.log')
+final List<String> lines = buildLog.readLines()
 
 assert processedSchema.exists(), "Expected file [" + processedSchema.getAbsolutePath() + "] not found."
 assert generatedEpisode.exists(), "Expected file [" + generatedEpisode.getAbsolutePath() + "] not found."
@@ -80,18 +80,18 @@ assert !vanillaSchema.exists(), "Found unexpected file [" + vanillaSchema.getAbs
 // Act
 def schemaElement = new XmlSlurper().parse(processedSchema)
 
-boolean foundIgnoreLine = false;
+boolean foundIgnoreLine = false
 
 for (line in lines) {
 
-  String trimmedLine = line.trim()
-  if (trimmedLine.isEmpty()) {
-    continue
-  };
+    String trimmedLine = line.trim()
+    if (trimmedLine.isEmpty()) {
+        continue
+    }
 
-  if (trimmedLine.contains(ignoredPrefix) && trimmedLine.contains(ignoredSuffix)) {
-    foundIgnoreLine = true;
-  }
+    if (trimmedLine.contains(ignoredPrefix) && trimmedLine.contains(ignoredSuffix)) {
+        foundIgnoreLine = true
+    }
 }
 
 // Assert
@@ -102,36 +102,42 @@ println "1. Found correct build statement about ignoring nonexistent source dire
 
 println "\nValidating namespace changes"
 println "==================================="
-def expectedTargetNS = 'http://acme.com/customer-api';
+def expectedTargetNS = 'http://acme.com/customer-api'
 assert "${schemaElement.@targetNamespace}" == expectedTargetNS,
-        "Incorrect target namespace ${schemaElement.@targetNamespace}. Expected " + expectedTargetNS + ".";
-println "1. Correct target namespace: " + expectedTargetNS;
+"Incorrect target namespace ${schemaElement.@targetNamespace}. Expected " + expectedTargetNS + "."
+println "1. Correct target namespace: " + expectedTargetNS
 
 println "\nValidating schema content"
 println "==================================="
 
-def namelessFooRootElements = schemaElement.element.findAll { it.@name == "customerForNamelessFoo" }
-def someFooRootElements = schemaElement.element.findAll { it.@name == "customerForSomeFoo" }
-def someFooComplexTypes = schemaElement.complexType.findAll { it.@name == "someFoo" }
+def namelessFooRootElements = schemaElement.element.findAll {
+    it.@name == "customerForNamelessFoo"
+}
+def someFooRootElements = schemaElement.element.findAll {
+    it.@name == "customerForSomeFoo"
+}
+def someFooComplexTypes = schemaElement.complexType.findAll {
+    it.@name == "someFoo"
+}
 
 assert 1 == namelessFooRootElements.size(),
-        "Got ${namelessFooRootElements.size} namelessFoo root elements. Expected 1.";
+"Got ${namelessFooRootElements.size} namelessFoo root elements. Expected 1."
 println "1. Got correct size for namelessFooRootElements."
 
 assert 1 == namelessFooRootElements[0].children().size(),
-        "Expected 1 child, but got ${namelessFooRootElements[0].children().size()}.";
+"Expected 1 child, but got ${namelessFooRootElements[0].children().size()}."
 println "2. Got correct size for namelessFooRootElements children."
 
-assert "${namelessFooRootElements[0].complexType.@name}" == "", "Got unexpected name for namelessFoo complex type.";
+assert "${namelessFooRootElements[0].complexType.@name}" == "", "Got unexpected name for namelessFoo complex type."
 println "3. Got correct name (none) for namelessFooRootElements complexType child."
 
-assert 1 == someFooRootElements.size(), "Got ${someFooRootElements.size} someFooRootElements. Expected 1.";
+assert 1 == someFooRootElements.size(), "Got ${someFooRootElements.size} someFooRootElements. Expected 1."
 println "4. Got correct size for someFooRootElements."
 
 assert "${someFooRootElements[0].@type}" == 'customer:someFoo',
-        "Got unexpected ComplexType type ${someFooRootElements[0].@type} for element " +
-                "${someFooRootElements[0].@name} Expected 'customer:someFoo'.";
+"Got unexpected ComplexType type ${someFooRootElements[0].@type} for element " +
+"${someFooRootElements[0].@name} Expected 'customer:someFoo'."
 println "5. Got correct ComplexType type 'customer:someFoo'."
 
-assert 1 == someFooComplexTypes.size(), "Got ${someFooComplexTypes.size} someFooComplexTypes. Expected 1.";
+assert 1 == someFooComplexTypes.size(), "Got ${someFooComplexTypes.size} someFooComplexTypes. Expected 1."
 println "6. Got correct size for someFooComplexTypes."

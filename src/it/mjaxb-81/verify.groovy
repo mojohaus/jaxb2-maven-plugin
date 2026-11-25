@@ -18,7 +18,7 @@
  */
 import groovy.xml.XmlSlurper
 
-File schema = new File( basedir,'target/generated-resources/schemagen/some.xsd' )
+File schema = new File(basedir,'target/generated-resources/schemagen/some.xsd')
 assert schema.exists()
 
 // Validate content as reported in issue MJAXB-81

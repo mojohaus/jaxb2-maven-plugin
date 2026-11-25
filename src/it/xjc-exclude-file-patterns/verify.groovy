@@ -19,102 +19,100 @@
 
 // Assemble
 File buildLog = new File(basedir, 'build.log')
-List<String> lines = buildLog.readLines();
+List<String> lines = buildLog.readLines()
 
 /*
-[DEBUG] Accepted configured sources [/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/someOtherXsds]
-[DEBUG] Accepted configured sources [/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/foo/gnat.txt]
-[INFO] Ignored given or default sources [src/main/nonexistent/paths], since it is not an existent file or directory.
-
-[INFO] Got resolvedSources: [
-/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/someOtherXsds/fooSchema.txt,
-/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/someOtherXsds/some_schema.bar,
-/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/foo/gnat.txt]
-
-[DEBUG] Processing file [0/5]: se/west/AddressTypeFromGnatTxt.java
-[DEBUG] Processing file [1/5]: se/west/FooBar.java
-[DEBUG] Processing file [2/5]: se/west/FooBaz.java
-[DEBUG] Processing file [3/5]: se/west/ObjectFactory.java
-[DEBUG] Processing file [4/5]: se/west/package-info.java
+ [DEBUG] Accepted configured sources [/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/someOtherXsds]
+ [DEBUG] Accepted configured sources [/Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/foo/gnat.txt]
+ [INFO] Ignored given or default sources [src/main/nonexistent/paths], since it is not an existent file or directory.
+ [INFO] Got resolvedSources: [
+ /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/someOtherXsds/fooSchema.txt,
+ /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/someOtherXsds/some_schema.bar,
+ /Users/lj/Development/Projects/Codehaus/github_jaxb2_plugin/target/it/xjc-include-file-patterns/src/main/foo/gnat.txt]
+ [DEBUG] Processing file [0/5]: se/west/AddressTypeFromGnatTxt.java
+ [DEBUG] Processing file [1/5]: se/west/FooBar.java
+ [DEBUG] Processing file [2/5]: se/west/FooBaz.java
+ [DEBUG] Processing file [3/5]: se/west/ObjectFactory.java
+ [DEBUG] Processing file [4/5]: se/west/package-info.java
  */
 
-def sep = System.getProperty("file.separator");
+def sep = System.getProperty("file.separator")
 
 def isProcessingFileLine(final String aLine, final String className) {
-  def marker = ("se/west/" + className + ".java").replace("/", System.getProperty("file.separator"));
-  return aLine.contains("[DEBUG] Processing file [") && aLine.contains(marker);
+    def marker = ("se/west/" + className + ".java").replace("/", System.getProperty("file.separator"))
+    return aLine.contains("[DEBUG] Processing file [") && aLine.contains(marker)
 }
 
 String expectedIgnoreLine = "Ignored given or default sources [src/main/nonexistent/paths], " +
-        "since it is not an existent file or directory.".replace("/", sep);
-String acceptedLinePrefix = "Accepted configured sources";
-String acceptedSomeOtherPath = "src/main/someOtherXsds".replace("/", sep);
-String acceptedFooGnatTxt = "src/main/foo/gnat.txt".replace("/", sep);
+        "since it is not an existent file or directory.".replace("/", sep)
+String acceptedLinePrefix = "Accepted configured sources"
+String acceptedSomeOtherPath = "src/main/someOtherXsds".replace("/", sep)
+String acceptedFooGnatTxt = "src/main/foo/gnat.txt".replace("/", sep)
 
-def foundIgnoreLine = false;
-def foundSomeOtherPathLine = false;
-def foundFooGnatTextLine = false;
-def foundProcessingShouldBeIgnoredAddressType = false;
-def foundProcessingAddressTypeFromGnatTxtType = false;
-def foundProcessingFooBarType = false;
-def foundProcessingFooBazType = false;
-def foundProcessingObjectFactoryType = false;
-def foundProcessingPackageInfoType = false;
+def foundIgnoreLine = false
+def foundSomeOtherPathLine = false
+def foundFooGnatTextLine = false
+def foundProcessingShouldBeIgnoredAddressType = false
+def foundProcessingAddressTypeFromGnatTxtType = false
+def foundProcessingFooBarType = false
+def foundProcessingFooBazType = false
+def foundProcessingObjectFactoryType = false
+def foundProcessingPackageInfoType = false
 
 // Act
 for (line in lines) {
 
-  String trimmedLine = line.trim()
+    String trimmedLine = line.trim()
 
-  if (!trimmedLine.isEmpty()) {
+    if (!trimmedLine.isEmpty()) {
 
-    // Check that the appropriate "ignored" lines are present
-    if (trimmedLine.contains(expectedIgnoreLine)) {
-      foundIgnoreLine = true;
+        // Check that the appropriate "ignored" lines are present
+        if (trimmedLine.contains(expectedIgnoreLine)) {
+            foundIgnoreLine = true
+        }
+
+        // Check that the appropriate "accepted" lines are present
+        if (trimmedLine.contains(acceptedLinePrefix)) {
+            if (trimmedLine.contains(acceptedSomeOtherPath)) {
+                foundSomeOtherPathLine = true
+            } else if (trimmedLine.contains(acceptedFooGnatTxt)) {
+                foundFooGnatTextLine = true
+            }
+        }
+
+        // Check what was processed
+        if (isProcessingFileLine(trimmedLine, "FooBar")) {
+            foundProcessingFooBarType = true
+        } else if (isProcessingFileLine(trimmedLine, "FooBaz")) {
+            foundProcessingFooBazType = true
+        } else if (isProcessingFileLine(trimmedLine, "ObjectFactory")) {
+            foundProcessingObjectFactoryType = true
+        } else if (isProcessingFileLine(trimmedLine, "package-info")) {
+            foundProcessingPackageInfoType = true
+        } else if (isProcessingFileLine(trimmedLine, "ShouldBeIgnoredAddressType")) {
+            foundProcessingShouldBeIgnoredAddressType = true
+        } else if (isProcessingFileLine(trimmedLine, "AddressTypeFromGnatTxt")) {
+            foundProcessingAddressTypeFromGnatTxtType = true
+        }
     }
-
-    // Check that the appropriate "accepted" lines are present
-    if (trimmedLine.contains(acceptedLinePrefix)) {
-      if (trimmedLine.contains(acceptedSomeOtherPath)) {
-        foundSomeOtherPathLine = true;
-      } else if (trimmedLine.contains(acceptedFooGnatTxt)) {
-        foundFooGnatTextLine = true;
-      }
-    }
-
-    // Check what was processed
-    if (isProcessingFileLine(trimmedLine, "FooBar")) {
-      foundProcessingFooBarType = true;
-    } else if (isProcessingFileLine(trimmedLine, "FooBaz")) {
-      foundProcessingFooBazType = true;
-    } else if (isProcessingFileLine(trimmedLine, "ObjectFactory")) {
-      foundProcessingObjectFactoryType = true;
-    } else if (isProcessingFileLine(trimmedLine, "package-info")) {
-      foundProcessingPackageInfoType = true;
-    } else if (isProcessingFileLine(trimmedLine, "ShouldBeIgnoredAddressType")) {
-      foundProcessingShouldBeIgnoredAddressType = true;
-    } else if (isProcessingFileLine(trimmedLine, "AddressTypeFromGnatTxt")) {
-      foundProcessingAddressTypeFromGnatTxtType = true;
-    }
-  }
 }
 
 // Assert
 def missingRequired(value) {
-  return "Missing required text: [" + value.replace("/", sep) + "]";
+    return "Missing required text: [" + value.replace("/", sep) + "]"
 }
 
 def illegalButPresent(value) {
-  return "Found illegal statement: [" + value.replace("/", sep) + "]";
+    return "Found illegal statement: [" + value.replace("/", sep) + "]"
 }
 
-assert foundIgnoreLine, missingRequired(expectedIgnoreLine);
-assert foundSomeOtherPathLine, missingRequired(acceptedSomeOtherPath);
-assert foundFooGnatTextLine, missingRequired(acceptedFooGnatTxt);
+assert foundIgnoreLine, missingRequired(expectedIgnoreLine)
+assert foundSomeOtherPathLine, missingRequired(acceptedSomeOtherPath)
+assert foundFooGnatTextLine, missingRequired(acceptedFooGnatTxt)
 
-assert !foundProcessingShouldBeIgnoredAddressType, illegalButPresent("se/west/ShouldBeIgnoredAddressType.java");
-assert foundProcessingFooBazType, missingRequired("se/west/FooBaz.java");
-assert foundProcessingAddressTypeFromGnatTxtType, missingRequired("se/west/AddressTypeFromGnatTxt.java");
-assert foundProcessingFooBarType, missingRequired("se/west/FooBar.java");
-assert foundProcessingObjectFactoryType, missingRequired("se/west/ObjectFactory.java");
+assert !foundProcessingShouldBeIgnoredAddressType, illegalButPresent("se/west/ShouldBeIgnoredAddressType.java")
+assert foundProcessingFooBazType, missingRequired("se/west/FooBaz.java")
+assert foundProcessingAddressTypeFromGnatTxtType, missingRequired("se/west/AddressTypeFromGnatTxt.java")
+assert foundProcessingFooBarType, missingRequired("se/west/FooBar.java")
+assert foundProcessingObjectFactoryType, missingRequired("se/west/ObjectFactory.java")
 assert foundProcessingPackageInfoType, missingRequired("se/west/package-info.java")

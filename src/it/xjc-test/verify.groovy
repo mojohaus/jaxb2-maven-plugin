@@ -17,11 +17,11 @@
  * under the License.
  */
 
-File addressType = new File( basedir,'target/generated-test-sources/jaxb/com/example/myschema/AddressType.java' )
+File addressType = new File(basedir,'target/generated-test-sources/jaxb/com/example/myschema/AddressType.java')
 assert addressType.exists()
 
-File mainSources = new File( basedir,'target/generated-sources/jaxb/' )
+File mainSources = new File(basedir,'target/generated-sources/jaxb/')
 assert !mainSources.exists()
 
-File addressTypeCompiled = new File( basedir,'target/test-classes/com/example/myschema/AddressType.class' )
+File addressTypeCompiled = new File(basedir,'target/test-classes/com/example/myschema/AddressType.class')
 assert addressTypeCompiled.exists()
