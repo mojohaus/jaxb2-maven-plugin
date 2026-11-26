@@ -90,6 +90,6 @@ Check the result with `mvn site` and open `target/site/index.html`.
 ## Pull requests
 
 - Squash and rebase merges are enabled; merge commits are not. Release Drafter, through the shared
-  MojoHaus `release-drafter.yml` workflow in `mojohaus/.github`, builds the release notes from pull request titles
-  and labels, so the title should describe the change for a user.
+  release-drafter workflow, builds the release notes from pull request titles and labels, so the title should
+  describe the change for a user.
 
