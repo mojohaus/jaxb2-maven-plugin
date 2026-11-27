@@ -368,6 +368,22 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
     }
 
     /**
+     * Imports the {@link #SYSTEM_TOOLS_CLASSLOADER_PACKAGES} into the given plugin realm.
+     * Maven gives all modules of a build that use this plugin the same plugin realm, so schemagen
+     * executions in a parallel build call this at the same time. {@link ClassRealm#importFrom(ClassLoader, String)}
+     * is not thread-safe, so the imports are made while holding the realm's lock.
+     *
+     * @param realm the plugin realm that loaded this mojo.
+     */
+    static void importSystemToolsPackages(final ClassRealm realm) {
+        synchronized (realm) {
+            for (String current : SYSTEM_TOOLS_CLASSLOADER_PACKAGES) {
+                realm.importFrom((ClassLoader) null, current);
+            }
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -383,10 +399,7 @@ public abstract class AbstractXsdGeneratorMojo extends AbstractJaxbMojo {
             // is delegated to that ClassLoader, to comply with SchemaGen's internal reflective loading
             // of classes. Otherwise we will have ClassCastExceptions instead of proper execution.
             //
-            final ClassRealm localRealm = (ClassRealm) getClass().getClassLoader();
-            for (String current : SYSTEM_TOOLS_CLASSLOADER_PACKAGES) {
-                localRealm.importFrom((ClassLoader) null, current);
-            }
+            importSystemToolsPackages((ClassRealm) getClass().getClassLoader());
 
             // Configure the ThreadContextClassLoaderBuilder, to enable synthesizing a correct ClassPath for the tool.
             final ThreadContextClassLoaderBuilder classLoaderBuilder = ThreadContextClassLoaderBuilder.createFor(

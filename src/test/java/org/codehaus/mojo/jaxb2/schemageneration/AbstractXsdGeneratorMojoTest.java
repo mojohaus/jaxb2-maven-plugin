@@ -22,11 +22,18 @@ package org.codehaus.mojo.jaxb2.schemageneration;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.maven.model.Resource;
 import org.codehaus.mojo.jaxb2.BufferingLog;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -153,6 +160,42 @@ class AbstractXsdGeneratorMojoTest {
         assertTrue(generatedXsd.delete());
         assertTrue(outDir.delete());
         assertTrue(mojo.isReGenerationRequired());
+    }
+
+    @Test
+    void importSystemToolsPackagesFromParallelExecutions() throws Exception {
+        // Maven shares one plugin realm between all modules that use the plugin, so parallel schemagen
+        // executions import into the same realm at the same moment. Without a lock, this corrupts the
+        // realm's TreeSet of imports about once per few thousand rounds.
+        final int threads = 2;
+        final int rounds = 20_000;
+        final ClassWorld world = new ClassWorld();
+        final ExecutorService pool = Executors.newFixedThreadPool(threads);
+        try {
+            for (int round = 0; round < rounds; round++) {
+                final ClassRealm pluginRealm = world.newRealm("plugin-" + round);
+                // With a build extension, Maven imports the project realm into the plugin realm first.
+                pluginRealm.importFrom(world.newRealm("project-" + round), "");
+
+                final CyclicBarrier start = new CyclicBarrier(threads);
+                final List<Future<?>> executions = new ArrayList<>();
+                for (int i = 0; i < threads; i++) {
+                    executions.add(pool.submit(() -> {
+                        start.await();
+                        AbstractXsdGeneratorMojo.importSystemToolsPackages(pluginRealm);
+                        return null;
+                    }));
+                }
+                for (Future<?> execution : executions) {
+                    execution.get();
+                }
+
+                world.disposeRealm("plugin-" + round);
+                world.disposeRealm("project-" + round);
+            }
+        } finally {
+            pool.shutdownNow();
+        }
     }
 
     private static URL createFileUrl(final File file) throws MalformedURLException {
